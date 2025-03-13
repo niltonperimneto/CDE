@@ -1,15 +1,6 @@
+
 CDE - The Common Destop Environment
 ===
-
-It is a fork of the Commond Desktop Enviroment hosted on SourceForge
-
-The purpose to this fork on Github is to iterate on the Arch Linux support and build.
-Commits are welcomed and they will be submitted to upstream if authorized
-It should be the groundwork of making an Arch User Repository (AUR) with the explicit purpose of being Arch Linux first
-
-Maybe the scope of this fork widens in the future if there's time and interest, but for now it will be kept simple.
-
-# From the SourceForge readme
 
 In 2012, CDE was opensourced under the terms of the LGPL V2 license by
 the Open Group.
@@ -19,33 +10,14 @@ license. See the COPYING file for details.
 
 # Downloading
 
-Downloading this release:
+git clone https://github.com/niltonperimneto/CDE.git
 
-CDE may be downloaded in source form from the Common Desktop
-Environment website:
-
-http://sourceforge.net/projects/cdesktopenv/
-
-Or via git:
-
-git clone git://git.code.sf.net/p/cdesktopenv/code CDE
-
-The git repository will always be more up to date than the
-downloadable tarballs we make available, so if you have problems,
-please try the latest version from git master.
-
-Note also that the master branch may be unstable, so your milage may
-vary.
-
-# Compiling
+# Compiling on Arch Linux
 
 Complete build and installation instructions can be found on the CDE
 wiki:
 
 http://sourceforge.net/p/cdesktopenv/wiki/Home/
-
-Please go there and read the appropriate section(s) for your OS (Linux
-or FreeBSD/OpenBSD/NetBSD currently) prior to attmpting to build it.
 
 There are a variety of dependencies that must be met, as well as
 specific set up steps required to build, especially relating to
@@ -68,37 +40,26 @@ $ make
 $ sudo make install
 ```
 
-NOTE: BSD users must currently install and use gmake to compile, as
-well as specify the location of the TCL libraries and headers.  So
-the instructions for them would looke like:
-
-```
-$ ./autogen.sh
-$ ./configure --with-tcl=/usr/local/lib/tcl8.6 MAKE="gmake"
-$ gmake
-$ sudo gmake install
-```
-
-Of course change to location of your TCL directory as needed for your
-system.
-
 # Support
 
-## Mailing list
+## Disclaimer
 
-https://lists.sourceforge.net/lists/listinfo/cdesktopenv-devel
+It is a fork of the Commond Desktop Enviroment hosted on SourceForge: 
 
-## IRC
+```
 
-There is a CDE IRC channel on irc.libera.chat, channel #cde
+https://sourceforge.net/p/cdesktopenv/code/ci/master/tree/
 
-## Patches welcome
+```
 
-Please see
+The purpose to this fork on Github is to iterate on the Arch Linux support and build.
+Commits are welcomed and they will be submitted to upstream if authorized
+It should be the groundwork of making an Arch User Repository (AUR) with the explicit purpose of being Arch Linux first
 
-https://sourceforge.net/p/cdesktopenv/wiki/Contributing%20to%20CDE/
+Maybe the scope of this fork widens in the future if there's time and interest, but for now it will be kept simple.
 
-for information on how to contribute.
+
+
 
 
 
