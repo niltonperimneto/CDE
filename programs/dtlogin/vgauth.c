@@ -48,7 +48,7 @@
  **	AUDIT       HP C2 security enhancements; checks for existence of
  **                 SECUREPASSWD file and authenticates user against
  **                 password contained in that file. Also performs
- **                 self-auditing of login actions.  Incompatible with 
+ **                 self-auditing of login actions.  Incompatible with
  **                 #ifdef SecureWare
  **
  **     __AFS        AFS 3 authentication mechanism
@@ -64,28 +64,28 @@
  ****************************************************************************
  ************************************<+>*************************************/
 
-
 /***************************************************************************
  *
  *  Includes & Defines
  *
  ***************************************************************************/
 
-#include	<stdio.h>
-#include	<fcntl.h>
-#include	<stdlib.h>
-#include	<pwd.h>
+#include <fcntl.h>
+#include <pwd.h>
+#include <stdio.h>
+#include <stdlib.h>
 
 /* necessary for bzero */
 #ifdef SVR4
-#include        <X11/Xfuncs.h>
-#ifdef  sun
-#include        <shadow.h>
+#include <X11/Xfuncs.h>
+#ifdef sun
+#include <shadow.h>
 #endif
 #endif
 
-#include	"vg.h"
-#include	"vgmsg.h"
+#include "sysauth.h"
+#include "vg.h"
+#include "vgmsg.h"
 
 /*
  * Define as generic those without platform specific code.
@@ -101,17 +101,11 @@
  *
  ***************************************************************************/
 
-
-
-
 /***************************************************************************
  *
  *  External declarations (SUN)
  *
  ***************************************************************************/
-
-
-
 
 /***************************************************************************
  *
@@ -119,12 +113,9 @@
  *
  ***************************************************************************/
 
-static void Audit( struct passwd *p, char *msg, int errnum) ;
-static int  PasswordAged( struct passwd *pw) ;
-static void WriteBtmp( char *name) ;
-
-
-
+static void Audit(struct passwd *p, char *msg, int errnum);
+static int PasswordAged(struct passwd *pw);
+static void WriteBtmp(char *name);
 
 /***************************************************************************
  *
@@ -132,47 +123,32 @@ static void WriteBtmp( char *name) ;
  *
  ***************************************************************************/
 
-
-
-
 /***************************************************************************
  *
  *  Audit (SUN)
  *
  ***************************************************************************/
 
-static void 
-Audit( struct passwd *p, char *msg, int errnum )
-{
+static void Audit(struct passwd *p, char *msg, int errnum) {
 
-    /*
-     * make sure program is back to super-user...
-     */
+  /*
+   * make sure program is back to super-user...
+   */
 
-    seteuid(0);
+  seteuid(0);
 
-    return;
+  return;
 }
-
-
-
 
 /***************************************************************************
  *
  *  WriteBtmp (SUN)
  *
  *  log bad login attempts
- *  
+ *
  ***************************************************************************/
 
-static void 
-WriteBtmp( char *name )
-{
-    return;
-}
-
-
-
+static void WriteBtmp(char *name) { return; }
 
 /***************************************************************************
  *
@@ -180,49 +156,44 @@ WriteBtmp( char *name )
  *
  *  see if password has aged
  ***************************************************************************/
-#define SECONDS_IN_WEEK		604800L
+#define SECONDS_IN_WEEK 604800L
 
-static int 
-PasswordAged( struct passwd *pw )
-{
-    long change_week;	/* week password was changed (1/1/70 = Week 0) */
-    long last_week;	/* week after which password must change */
-    long first_week;	/* week before which password can't change */
-    long this_week;	/* this week derived from time() */
-    char *file;		/* help file name */
-    char *command;	/* the /bin/passwd command string */
+static int PasswordAged(struct passwd *pw) {
+  long change_week; /* week password was changed (1/1/70 = Week 0) */
+  long last_week;   /* week after which password must change */
+  long first_week;  /* week before which password can't change */
+  long this_week;   /* this week derived from time() */
+  char *file;       /* help file name */
+  char *command;    /* the /bin/passwd command string */
 
-    if (*pw->pw_age == NULL)
-	return(0);
+  if (*pw->pw_age == NULL)
+    return (0);
 
-    first_week = last_week = change_week = (long) a64l(pw->pw_age);
-    last_week &= 0x3f;				/* first six bits */
-    first_week = (first_week >> 6) & 0x3f;	/* next six bits */
-    change_week >>= 12;				/* everything else */
+  first_week = last_week = change_week = (long)a64l(pw->pw_age);
+  last_week &= 0x3f;                     /* first six bits */
+  first_week = (first_week >> 6) & 0x3f; /* next six bits */
+  change_week >>= 12;                    /* everything else */
 
-    this_week = (long) time((long *) 0) / SECONDS_IN_WEEK;
+  this_week = (long)time((long *)0) / SECONDS_IN_WEEK;
 
-/*
-**	Password aging conditions:
-**	*   if the last week is less than the first week (e.g., the aging
-**	    field looks like "./"), only the superuser can change the
-**	    password.  We don't request a new password.
-**	*   if the week the password was last changed is after this week,
-**	    we have a problem, and request a new password.
-**	*   if this week is after the specified aging time, we request
-**	    a new password.
-*/
-    if (last_week < first_week)
-	return(0);
+  /*
+  **	Password aging conditions:
+  **	*   if the last week is less than the first week (e.g., the aging
+  **	    field looks like "./"), only the superuser can change the
+  **	    password.  We don't request a new password.
+  **	*   if the week the password was last changed is after this week,
+  **	    we have a problem, and request a new password.
+  **	*   if this week is after the specified aging time, we request
+  **	    a new password.
+  */
+  if (last_week < first_week)
+    return (0);
 
-    if (change_week <= this_week && this_week <= (change_week + last_week))
-	return(0);
+  if (change_week <= this_week && this_week <= (change_week + last_week))
+    return (0);
 
-    return(1);
+  return (1);
 }
-
-
-    
 
 /***************************************************************************
  *
@@ -233,93 +204,82 @@ PasswordAged( struct passwd *pw )
  *  return codes indicate authentication results.
  ***************************************************************************/
 
-#define MAXATTEMPTS	3
+#define MAXATTEMPTS 3
 
-extern Widget focusWidget;		/* login or password text field	   */
-struct  passwd nouser = {"", "nope"};	/* invalid user password struct	   */
+extern Widget focusWidget;           /* login or password text field	   */
+struct passwd nouser = {"", "nope"}; /* invalid user password struct	   */
 
-int 
-Verify( char *name, char *passwd )
-{
+int Verify(char *name, char *passwd) {
 
-    static int		login_attempts = 0; /* # failed authentications	   */
-    
-    struct passwd	*p;		/* password structure */
-    struct spwd         *sp;            /* shadow info */
-    char 		*crypt();
+  static int login_attempts = 0; /* # failed authentications	   */
 
-    int			n;
+  struct passwd *p; /* password structure */
+  struct spwd *sp;  /* shadow info */
+  char *crypt();
 
-    p = getpwnam(name);
-    sp = getspnam(name);
-    
-    if (!p || strlen(name) == 0 ||
-        strcmp (crypt (passwd, sp->sp_pwdp), sp->sp_pwdp)) {
+  int n;
 
-	if ( focusWidget == passwd_text ) {
-	
-	    WriteBtmp(name);
+  p = getpwnam(name);
+  sp = getspnam(name);
 
-	    if ((++login_attempts % MAXATTEMPTS) == 0 ) {
+  if (!p || strlen(name) == 0 ||
+      strcmp(crypt(passwd, sp->sp_pwdp), sp->sp_pwdp)) {
 
-		if (p->pw_name == NULL )
-		    p = &nouser;
+    if (focusWidget == passwd_text) {
 
-		Audit(p, " Failed login (bailout)", 1);
+      WriteBtmp(name);
 
-	    }
-	}
-	
-	return(VF_INVALID);
+      if ((++login_attempts % MAXATTEMPTS) == 0) {
+
+        if (p->pw_name == NULL)
+          p = &nouser;
+
+        Audit(p, " Failed login (bailout)", 1);
+      }
     }
 
+    return (VF_INVALID);
+  }
 
-    /*
-     *  check password aging...
-     */
+  /*
+   *  check password aging...
+   */
 
-     if ( PasswordAged(p) ) return(VF_PASSWD_AGED);
+  if (PasswordAged(p))
+    return (VF_PASSWD_AGED);
 
-    /*
-     *  verify home directory exists...
-     */
+  /*
+   *  verify home directory exists...
+   */
 
-    if(chdir(p->pw_dir) < 0) {
-	Audit(p, " attempted to login - no home directory", 1);
-        return(VF_HOME);
-    }
+  if (chdir(p->pw_dir) < 0) {
+    Audit(p, " attempted to login - no home directory", 1);
+    return (VF_HOME);
+  }
 
+  /*
+   *  validate uid and gid...
+   */
 
-    /*
-     *  validate uid and gid...
-     */
+  if ((p->pw_gid < 0) || (setgid(p->pw_gid) == -1)) {
 
+    Audit(p, " attempted to login - bad group id", 1);
+    return (VF_BAD_GID);
+  }
 
-    if ((p->pw_gid < 0)      || 
-	(setgid(p->pw_gid) == -1)) {
+  if ((p->pw_uid < 0) || (seteuid(p->pw_uid) == -1)) {
 
-	Audit(p, " attempted to login - bad group id", 1);
-	return(VF_BAD_GID);
-    }
+    Audit(p, " attempted to login - bad user id", 1);
+    return (VF_BAD_UID);
+  }
 
-    if ((p->pw_uid < 0)      || 
-	(seteuid(p->pw_uid) == -1)) {
+  /*
+   * verify ok...
+   */
 
-	Audit(p, " attempted to login - bad user id", 1);
-	return(VF_BAD_UID);
-    }
-
-
-
-    /*
-     * verify ok...
-     */
-
-    Audit(p, " Successful login", 0);
-    return(VF_OK);
+  Audit(p, " Successful login", 0);
+  return (VF_OK);
 }
-
-
 
 /***************************************************************************
  *
@@ -337,18 +297,18 @@ Verify( char *name, char *passwd )
  ***************************************************************************
  ***************************************************************************/
 
-#ifdef _AIX 
+#ifdef _AIX
 /***************************************************************************
  *
  *  Start authentication routines (AIX)
  *
  ***************************************************************************/
 
-#include	<time.h>
-#include	<sys/types.h>
-#include	<usersec.h>
-#include	<userpw.h>
-#include	<userconf.h>
+#include <sys/types.h>
+#include <time.h>
+#include <userconf.h>
+#include <userpw.h>
+#include <usersec.h>
 
 /***************************************************************************
  *
@@ -356,21 +316,15 @@ Verify( char *name, char *passwd )
  *
  ***************************************************************************/
 
-
-
-
 /***************************************************************************
  *
  *  Procedure declarations (AIX)
  *
  ***************************************************************************/
 
-static void Audit( struct passwd *p, char *msg, int errnum) ;
-static int  PasswordAged(char *name, struct passwd *pw) ;
-static void WriteBtmp( char *name) ;
-
-
-
+static void Audit(struct passwd *p, char *msg, int errnum);
+static int PasswordAged(char *name, struct passwd *pw);
+static void WriteBtmp(char *name);
 
 /***************************************************************************
  *
@@ -378,47 +332,32 @@ static void WriteBtmp( char *name) ;
  *
  ***************************************************************************/
 
-
-
-
 /***************************************************************************
  *
  *  Audit (AIX)
  *
  ***************************************************************************/
 
-static void 
-Audit( struct passwd *p, char *msg, int errnum )
-{
+static void Audit(struct passwd *p, char *msg, int errnum) {
 
-    /*
-     * make sure program is back to super-user...
-     */
+  /*
+   * make sure program is back to super-user...
+   */
 
-    seteuid(0);
+  seteuid(0);
 
-    return;
+  return;
 }
-
-
-
 
 /***************************************************************************
  *
  *  WriteBtmp (AIX)
  *
  *  log bad login attempts
- *  
+ *
  ***************************************************************************/
 
-static void 
-WriteBtmp( char *name )
-{
-    return;
-}
-
-
-
+static void WriteBtmp(char *name) { return; }
 
 /***************************************************************************
  *
@@ -426,75 +365,65 @@ WriteBtmp( char *name )
  *
  *  see if password has aged
  ***************************************************************************/
-#define SECONDS_IN_WEEK		604800L
+#define SECONDS_IN_WEEK 604800L
 
-static int 
-PasswordAged(char *name, struct passwd *pw )
-{
+static int PasswordAged(char *name, struct passwd *pw) {
   struct userpw *pupw; /* authentication information from getuserpw() */
-  struct userpw  upw;  /* working authentication information */
+  struct userpw upw;   /* working authentication information */
   int err;             /* return code from getconfattr() */
   ulong maxage;        /* maximun age from getconfattr() */
   ulong now;           /* time now */
 
- /*
-  * Determine user password aging criteria. Note that only
-  * the 'lastupdate' and 'flags' fields are set by this operation.
-  */
+  /*
+   * Determine user password aging criteria. Note that only
+   * the 'lastupdate' and 'flags' fields are set by this operation.
+   */
   setpwdb(S_READ);
-  if ((pupw = getuserpw(name)) != NULL)
-  {
+  if ((pupw = getuserpw(name)) != NULL) {
     upw.upw_lastupdate = pupw->upw_lastupdate;
     upw.upw_flags = pupw->upw_flags;
-  }
-  else
-  {
+  } else {
     upw.upw_lastupdate = 0;
     upw.upw_flags = 0;
   }
   endpwdb();
 
- /*
-  * Consider password as having not expired if nocheck set.
-  */
-  if (upw.upw_flags & PW_NOCHECK) return(FALSE);
+  /*
+   * Consider password as having not expired if nocheck set.
+   */
+  if (upw.upw_flags & PW_NOCHECK)
+    return (FALSE);
 
- /*
-  * Get system password aging criteria.
-  */
-  err = getconfattr (SC_SYS_PASSWD, SC_MAXAGE, (void *)&maxage, SEC_INT);
-  if (!err && maxage)
-  {
-   /*
-    * Change from weeks to seconds
-    */
+  /*
+   * Get system password aging criteria.
+   */
+  err = getconfattr(SC_SYS_PASSWD, SC_MAXAGE, (void *)&maxage, SEC_INT);
+  if (!err && maxage) {
+    /*
+     * Change from weeks to seconds
+     */
     maxage = maxage * SECONDS_IN_WEEK;
-    now = time ((long *) 0);
+    now = time((long *)0);
 
-    if ((upw.upw_lastupdate + maxage) >= now)
-    {
-     /*
-      * Password has not expired.
-      */
-      return(FALSE);
+    if ((upw.upw_lastupdate + maxage) >= now) {
+      /*
+       * Password has not expired.
+       */
+      return (FALSE);
     }
-  }
-  else
-  {
-   /*
-    * Could not retrieve system password aging info or maxage set to
-    * zero. In either case, consider password has having not expired.
-    */
-    return(FALSE);
+  } else {
+    /*
+     * Could not retrieve system password aging info or maxage set to
+     * zero. In either case, consider password has having not expired.
+     */
+    return (FALSE);
   }
 
- /* 
-  * We haven't returned by now, so indicate password has expired.
-  */
-  return(TRUE);
+  /*
+   * We haven't returned by now, so indicate password has expired.
+   */
+  return (TRUE);
 }
-
-    
 
 /***************************************************************************
  *
@@ -505,90 +434,79 @@ PasswordAged(char *name, struct passwd *pw )
  *  return codes indicate authentication results.
  ***************************************************************************/
 
-#define MAXATTEMPTS	3
+#define MAXATTEMPTS 3
 
-extern Widget focusWidget;		/* login or password text field	   */
-struct  passwd nouser = {"", "nope"};	/* invalid user password struct	   */
+extern Widget focusWidget;           /* login or password text field	   */
+struct passwd nouser = {"", "nope"}; /* invalid user password struct	   */
 
-int 
-Verify( char *name, char *passwd )
-{
+int Verify(char *name, char *passwd) {
 
-    static int		login_attempts = 0; /* # failed authentications	   */
-    
-    struct passwd	*p;		/* password structure */
-    char 		*crypt();
+  static int login_attempts = 0; /* # failed authentications	   */
 
-    int			n;
+  struct passwd *p; /* password structure */
+  char *crypt();
 
-    p = getpwnam(name);
-    
-    if (!p || strlen(name) == 0 ||
-        strcmp (crypt (passwd, p->pw_passwd), p->pw_passwd)) {
+  int n;
 
-	if ( focusWidget == passwd_text ) {
-	
-	    WriteBtmp(name);
+  p = getpwnam(name);
 
-	    if ((++login_attempts % MAXATTEMPTS) == 0 ) {
+  if (!p || strlen(name) == 0 ||
+      strcmp(crypt(passwd, p->pw_passwd), p->pw_passwd)) {
 
-		if (p->pw_name == NULL )
-		    p = &nouser;
+    if (focusWidget == passwd_text) {
 
-		Audit(p, " Failed login (bailout)", 1);
+      WriteBtmp(name);
 
-	    }
-	}
-	
-	return(VF_INVALID);
+      if ((++login_attempts % MAXATTEMPTS) == 0) {
+
+        if (p->pw_name == NULL)
+          p = &nouser;
+
+        Audit(p, " Failed login (bailout)", 1);
+      }
     }
 
+    return (VF_INVALID);
+  }
 
-    /*
-     *  check password aging...
-     */
+  /*
+   *  check password aging...
+   */
 
-     if ( PasswordAged(name,p) ) return(VF_PASSWD_AGED);
+  if (PasswordAged(name, p))
+    return (VF_PASSWD_AGED);
 
-    /*
-     *  verify home directory exists...
-     */
+  /*
+   *  verify home directory exists...
+   */
 
-    if(chdir(p->pw_dir) < 0) {
-	Audit(p, " attempted to login - no home directory", 1);
-        return(VF_HOME);
-    }
+  if (chdir(p->pw_dir) < 0) {
+    Audit(p, " attempted to login - no home directory", 1);
+    return (VF_HOME);
+  }
 
+  /*
+   *  validate uid and gid...
+   */
 
-    /*
-     *  validate uid and gid...
-     */
+  if ((p->pw_gid < 0) || (setgid(p->pw_gid) == -1)) {
 
+    Audit(p, " attempted to login - bad group id", 1);
+    return (VF_BAD_GID);
+  }
 
-    if ((p->pw_gid < 0)      || 
-	(setgid(p->pw_gid) == -1)) {
+  if ((p->pw_uid < 0)) {
+    Audit(p, " attempted to login - bad user id", 1);
+    return (VF_BAD_UID);
+  }
 
-	Audit(p, " attempted to login - bad group id", 1);
-	return(VF_BAD_GID);
-    }
+  /*
+   * verify ok...
+   */
 
-    if ((p->pw_uid < 0)) {
-	Audit(p, " attempted to login - bad user id", 1);
-	return(VF_BAD_UID);
-    }
-
-
-
-    /*
-     * verify ok...
-     */
-
-    Audit(p, " Successful login", 0);
-    return(VF_OK);
+  Audit(p, " Successful login", 0);
+  return (VF_OK);
 }
-
-
-
 
 /***************************************************************************
  *
@@ -596,7 +514,6 @@ Verify( char *name, char *passwd )
  *
  ***************************************************************************/
 #endif /* _AIX */
-
 
 /***************************************************************************
  ***************************************************************************
@@ -614,7 +531,6 @@ Verify( char *name, char *passwd )
  *
  ***************************************************************************/
 
-
 /***************************************************************************
  *
  *  These are a set of routine to do simple password, home dir, uid, and gid
@@ -626,17 +542,11 @@ Verify( char *name, char *passwd )
  *
  ***************************************************************************/
 
-
-
-
 /***************************************************************************
  *
  *  External declarations (generic)
  *
  ***************************************************************************/
-
-
-
 
 /***************************************************************************
  *
@@ -644,12 +554,9 @@ Verify( char *name, char *passwd )
  *
  ***************************************************************************/
 
-static void Audit( struct passwd *p, char *msg, int errnum) ;
-static int  PasswordAged( struct passwd *pw) ;
-static void WriteBtmp( char *name) ;
-
-
-
+static void Audit(struct passwd *p, char *msg, int errnum);
+static int PasswordAged(struct passwd *pw);
+static void WriteBtmp(char *name);
 
 /***************************************************************************
  *
@@ -657,47 +564,32 @@ static void WriteBtmp( char *name) ;
  *
  ***************************************************************************/
 
-
-
-
 /***************************************************************************
  *
  *  Audit (generic)
  *
  ***************************************************************************/
 
-static void 
-Audit( struct passwd *p, char *msg, int errnum )
-{
+static void Audit(struct passwd *p, char *msg, int errnum) {
 
-    /*
-     * make sure program is back to super-user...
-     */
+  /*
+   * make sure program is back to super-user...
+   */
 
-    seteuid(0);
+  seteuid(0);
 
-    return;
+  return;
 }
-
-
-
 
 /***************************************************************************
  *
  *  WriteBtmp (generic)
  *
  *  log bad login attempts
- *  
+ *
  ***************************************************************************/
 
-static void 
-WriteBtmp( char *name )
-{
-    return;
-}
-
-
-
+static void WriteBtmp(char *name) { return; }
 
 /***************************************************************************
  *
@@ -705,15 +597,9 @@ WriteBtmp( char *name )
  *
  *  see if password has aged
  ***************************************************************************/
-#define SECONDS_IN_WEEK		604800L
+#define SECONDS_IN_WEEK 604800L
 
-static int 
-PasswordAged( struct passwd *pw )
-{
-  return(FALSE);
-}
-
-    
+static int PasswordAged(struct passwd *pw) { return (FALSE); }
 
 /***************************************************************************
  *
@@ -724,93 +610,80 @@ PasswordAged( struct passwd *pw )
  *  return codes indicate authentication results.
  ***************************************************************************/
 
-#define MAXATTEMPTS	3
+#define MAXATTEMPTS 3
 
-extern Widget focusWidget;		/* login or password text field	   */
-struct  passwd nouser = {"", "nope"};	/* invalid user password struct	   */
+extern Widget focusWidget;           /* login or password text field	   */
+struct passwd nouser = {"", "nope"}; /* invalid user password struct	   */
 
-int 
-Verify( char *name, char *passwd )
-{
+int Verify(char *name, char *passwd) {
 
-    static int		login_attempts = 0; /* # failed authentications	   */
-    
-    struct passwd	*p;		/* password structure */
-    char 		*crypt();
+  static int login_attempts = 0; /* # failed authentications	   */
 
-    int			n;
+  struct passwd *p; /* password structure */
+  char *crypt();
 
-    p = getpwnam(name);
-    
-    if (!p || strlen(name) == 0 ||
-        strcmp (crypt (passwd, p->pw_passwd), p->pw_passwd)) {
+  int n;
 
-	if ( focusWidget == passwd_text ) {
-	
-	    WriteBtmp(name);
+  p = getpwnam(name);
 
-	    if ((++login_attempts % MAXATTEMPTS) == 0 ) {
+  if (!p || strlen(name) == 0 ||
+      strcmp(crypt(passwd, p->pw_passwd), p->pw_passwd)) {
 
-		if (p->pw_name == NULL )
-		    p = &nouser;
+    if (focusWidget == passwd_text) {
 
-		Audit(p, " Failed login (bailout)", 1);
+      WriteBtmp(name);
 
-	    }
-	}
-	
-	return(VF_INVALID);
+      if ((++login_attempts % MAXATTEMPTS) == 0) {
+
+        if (p->pw_name == NULL)
+          p = &nouser;
+
+        Audit(p, " Failed login (bailout)", 1);
+      }
     }
 
+    return (VF_INVALID);
+  }
 
-    /*
-     *  check password aging...
-     */
+  /*
+   *  check password aging...
+   */
 
-     if ( PasswordAged(p) ) return(VF_PASSWD_AGED);
-         
+  if (PasswordAged(p))
+    return (VF_PASSWD_AGED);
 
-    /*
-     *  verify home directory exists...
-     */
+  /*
+   *  verify home directory exists...
+   */
 
-    if(chdir(p->pw_dir) < 0) {
-	Audit(p, " attempted to login - no home directory", 1);
-        return(VF_HOME);
-    }
+  if (chdir(p->pw_dir) < 0) {
+    Audit(p, " attempted to login - no home directory", 1);
+    return (VF_HOME);
+  }
 
+  /*
+   *  validate uid and gid...
+   */
 
-    /*
-     *  validate uid and gid...
-     */
+  if ((p->pw_gid < 0) || (setgid(p->pw_gid) == -1)) {
 
+    Audit(p, " attempted to login - bad group id", 1);
+    return (VF_BAD_GID);
+  }
 
-    if ((p->pw_gid < 0)      || 
-	(setgid(p->pw_gid) == -1)) {
+  if ((p->pw_uid < 0) || (seteuid(p->pw_uid) == -1)) {
 
-	Audit(p, " attempted to login - bad group id", 1);
-	return(VF_BAD_GID);
-    }
+    Audit(p, " attempted to login - bad user id", 1);
+    return (VF_BAD_UID);
+  }
 
-    if ((p->pw_uid < 0)      || 
-	(seteuid(p->pw_uid) == -1)) {
+  /*
+   * verify ok...
+   */
 
-	Audit(p, " attempted to login - bad user id", 1);
-	return(VF_BAD_UID);
-    }
-
-
-
-    /*
-     * verify ok...
-     */
-
-    Audit(p, " Successful login", 0);
-    return(VF_OK);
+  Audit(p, " Successful login", 0);
+  return (VF_OK);
 }
-
-
-
 
 /***************************************************************************
  *
@@ -818,8 +691,6 @@ Verify( char *name, char *passwd )
  *
  ***************************************************************************/
 #endif /* generic */
-
-
 
 /***************************************************************************
  ***************************************************************************

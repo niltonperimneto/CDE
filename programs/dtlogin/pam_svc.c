@@ -42,31 +42,30 @@
  * Header Files
  */
 
-#include <utmpx.h>
-#include <stdio.h>
-#include <string.h>
-#include <errno.h>
-#include <dirent.h>
-#include <sys/param.h>
-#include <pwd.h>
-#include <security/pam_appl.h>
 #include "pam_svc.h"
 #include "dm.h"
 #include "solaris.h"
+#include <dirent.h>
+#include <errno.h>
+#include <grp.h>
+#include <pwd.h>
+#include <security/pam_appl.h>
+#include <stdio.h>
+#include <string.h>
+#include <sys/param.h>
+#include <utmpx.h>
 
 /*
  * Local function declarations
  */
 
-static int login_conv(int num_msg, struct pam_message **msg,
-    		      struct pam_response **response, void *appdata_ptr);
+static int login_conv(int num_msg, const struct pam_message **msg,
+                      struct pam_response **response, void *appdata_ptr);
 
-static char* create_devname(char* short_devname);
-
-
+static char *create_devname(char *short_devname);
 
 /*
- * Local structures and variables 
+ * Local structures and variables
  */
 
 static struct pam_conv pam_conv = {login_conv, NULL};
@@ -81,34 +80,33 @@ static int pam_auth_trys = 0;
  *
  ****************************************************************************/
 
-int 
-PamInit(char* prog_name,
-        char* user, 
-	char* line_dev,
-        char* display_name)
-{
-	int status=PAM_SUCCESS;
+int PamInit(char *prog_name, char *user, char *line_dev, char *display_name) {
+  int status = PAM_SUCCESS;
 
-        if (!pamh) {
-            /* Open PAM (Plugable Authentication module ) connection */
-	    status = pam_start( prog_name, user, &pam_conv, &pamh );
-	    if (status != PAM_SUCCESS) {
-        	Debug("PamInit: pam_start error=%d\n", status);
-	        pamh = NULL;
-	    } else {
-        	Debug("PamInit: pam_start success\n");
-	    }
-	} else {
-	    if (prog_name) pam_set_item(pamh, PAM_SERVICE, prog_name);
-	    if (user) pam_set_item(pamh, PAM_USER, user);
-	}
+  if (!pamh) {
+    /* Open PAM (Plugable Authentication module ) connection */
+    status = pam_start(prog_name, user, &pam_conv, &pamh);
+    if (status != PAM_SUCCESS) {
+      Debug("PamInit: pam_start error=%d\n", status);
+      pamh = NULL;
+    } else {
+      Debug("PamInit: pam_start success\n");
+    }
+  } else {
+    if (prog_name)
+      pam_set_item(pamh, PAM_SERVICE, prog_name);
+    if (user)
+      pam_set_item(pamh, PAM_USER, user);
+  }
 
-	if (status == PAM_SUCCESS) {
-            if (line_dev) pam_set_item(pamh, PAM_TTY, line_dev);
-	    if (display_name) pam_set_item(pamh, PAM_RHOST, display_name);
-	}
+  if (status == PAM_SUCCESS) {
+    if (line_dev)
+      pam_set_item(pamh, PAM_TTY, line_dev);
+    if (display_name)
+      pam_set_item(pamh, PAM_RHOST, display_name);
+  }
 
-	return(status);
+  return (status);
 }
 
 /****************************************************************************
@@ -118,69 +116,60 @@ PamInit(char* prog_name,
  *
  ****************************************************************************/
 
-int
-PamAuthenticate ( char*   prog_name,
-		  char*   display_name,
-		  char*   user_passwd,
-		  char*   user, 
-		  char*   line )
-{
-	int status;
-        char* user_str = user ? user : "NULL";
-        char* line_str = line ? line : "NULL";
-	char* line_dev = create_devname(line_str);  
+int PamAuthenticate(char *prog_name, char *display_name, char *user_passwd,
+                    char *user, char *line) {
+  int status;
+  char *user_str = user ? user : "NULL";
+  char *line_str = line ? line : "NULL";
+  char *line_dev = create_devname(line_str);
 
-        Debug("PamAuthenticate: prog_name=%s\n", prog_name);
-        Debug("PamAuthenticate: display_name=%s\n", display_name);
-        Debug("PamAuthenticate: user=%s\n", user_str);
-        Debug("PamAuthenticate: line=%s\n", line_str);
-        Debug("PamAuthenticate: line_dev=%s\n", line_dev);
+  Debug("PamAuthenticate: prog_name=%s\n", prog_name);
+  Debug("PamAuthenticate: display_name=%s\n", display_name);
+  Debug("PamAuthenticate: user=%s\n", user_str);
+  Debug("PamAuthenticate: line=%s\n", line_str);
+  Debug("PamAuthenticate: line_dev=%s\n", line_dev);
 
-	if (user_passwd) {
-	    if (strlen(user_passwd) == 0) {
-	        Debug("PamAuthenticate: user passwd empty\n"); 
-	    } else {
-	        Debug("PamAuthenticate: user passwd present\n"); 
-	    }
-        }
-        else {
-	    Debug("PamAuthenticate: user passwd NULL\n");
+  if (user_passwd) {
+    if (strlen(user_passwd) == 0) {
+      Debug("PamAuthenticate: user passwd empty\n");
+    } else {
+      Debug("PamAuthenticate: user passwd present\n");
+    }
+  } else {
+    Debug("PamAuthenticate: user passwd NULL\n");
 
-	    /* Password challenge required for dtlogin authentication */
-	    return(PAM_AUTH_ERR);
-        }
+    /* Password challenge required for dtlogin authentication */
+    return (PAM_AUTH_ERR);
+  }
 
-	status = PamInit(prog_name, user, line_dev, display_name);
+  status = PamInit(prog_name, user, line_dev, display_name);
 
-	if (status == PAM_SUCCESS) {
-	   struct passwd *pwd;
+  if (status == PAM_SUCCESS) {
+    struct passwd *pwd;
 
-	   saved_user_passwd = user_passwd;
-           status = pam_authenticate( pamh, 0 );
-	   pam_auth_trys++;
+    saved_user_passwd = user_passwd;
+    status = pam_authenticate(pamh, 0);
+    pam_auth_trys++;
 
-	   if (status != PAM_SUCCESS) {
-	      sleep(PAM_LOGIN_SLEEPTIME);
-	      if (pam_auth_trys > PAM_LOGIN_MAXTRIES) {
-	         sleep(PAM_LOGIN_DISABLETIME);
-	      }
-	   }
-	};
+    if (status != PAM_SUCCESS) {
+      sleep(PAM_LOGIN_SLEEPTIME);
+      if (pam_auth_trys > PAM_LOGIN_MAXTRIES) {
+        sleep(PAM_LOGIN_DISABLETIME);
+      }
+    }
+  };
 
-	if (status != PAM_SUCCESS) {
-            Debug("PamAuthenticate: PAM error=%d\n", status);
-	    if (pamh) {
-                Debug("PamAuthenticate: calling pam_end\n");
-	        pam_end(pamh, PAM_ABORT);
-		pamh=NULL;
-	    }
-	}  
+  if (status != PAM_SUCCESS) {
+    Debug("PamAuthenticate: PAM error=%d\n", status);
+    if (pamh) {
+      Debug("PamAuthenticate: calling pam_end\n");
+      pam_end(pamh, PAM_ABORT);
+      pamh = NULL;
+    }
+  }
 
-	return(status);
+  return (status);
 }
-
-
-
 
 /****************************************************************************
  * PamAccounting
@@ -188,274 +177,241 @@ PamAuthenticate ( char*   prog_name,
  * Work related to open and close of user sessions
  ****************************************************************************/
 
-int
-PamAccounting( char*   prog_name,
-	       char*   display_name,
-	       char*   entry_id,
-	       char*   user, 
-	       char*   line, 
-	       pid_t   pid,
-	       int     entry_type,
-	       int     exitcode )
-{
-	int session_type, status;
-        char *user_str = user ? user : "NULL";
-        char *line_str = line ? line : "NULL";
-	char *line_dev = create_devname(line_str);  
-	char *tty_line;
+int PamAccounting(char *prog_name, char *display_name, char *entry_id,
+                  char *user, char *line, pid_t pid, int entry_type,
+                  int exitcode) {
+  int session_type, status;
+  char *user_str = user ? user : "NULL";
+  char *line_str = line ? line : "NULL";
+  char *line_dev = create_devname(line_str);
+  char *tty_line;
 
-        Debug("PamAccounting: prog_name=%s\n", prog_name);
-        Debug("PamAccounting: display_name=%s\n", display_name);
-        Debug("PamAccounting: entry_id=%c %c %c %c\n", entry_id[0],
-				   entry_id[1], entry_id[2], entry_id[3]);
-        Debug("PamAccounting: user=%s\n", user_str);
-        Debug("PamAccounting: line=%s\n", line_str);
-        Debug("PamAccounting: line_dev=%s\n", line_dev);
-        Debug("PamAccounting: pid=%d\n", pid);
-        Debug("PamAccounting: entry_type=%d\n", entry_type);
-        Debug("PamAccounting: exitcode=%d\n", exitcode);
+  Debug("PamAccounting: prog_name=%s\n", prog_name);
+  Debug("PamAccounting: display_name=%s\n", display_name);
+  Debug("PamAccounting: entry_id=%c %c %c %c\n", entry_id[0], entry_id[1],
+        entry_id[2], entry_id[3]);
+  Debug("PamAccounting: user=%s\n", user_str);
+  Debug("PamAccounting: line=%s\n", line_str);
+  Debug("PamAccounting: line_dev=%s\n", line_dev);
+  Debug("PamAccounting: pid=%d\n", pid);
+  Debug("PamAccounting: entry_type=%d\n", entry_type);
+  Debug("PamAccounting: exitcode=%d\n", exitcode);
 
-        /* Open Solaris PAM (Plugable Authentication module ) connection */
+  /* Open Solaris PAM (Plugable Authentication module ) connection */
 
-	if (entry_type == ACCOUNTING) {
-	    tty_line = line;
-	}
-	else {
-	    tty_line = line_dev;
-	}
+  if (entry_type == ACCOUNTING) {
+    tty_line = line;
+  } else {
+    tty_line = line_dev;
+  }
 
-	status = PamInit(prog_name, user, tty_line, display_name);
+  status = PamInit(prog_name, user, tty_line, display_name);
 
+  /* Session accounting */
 
-	/* Session accounting */
+  if (status == PAM_SUCCESS)
+    switch (entry_type) {
+    case USER_PROCESS:
+      /* New user session, open session accounting logs */
+      status = pam_open_session(pamh, 0);
+      if (status != PAM_SUCCESS) {
+        Debug("PamAccounting: USER_PROCESS open_session error=%d\n", status);
+      }
+      session_type = SOLARIS_LOGIN;
+      status = solaris_setutmp_mgmt(user, tty_line, display_name, session_type,
+                                    entry_type, entry_id);
+      if (status != SOLARIS_SUCCESS) {
+        Debug("PamAccounting: USER_PRCESS set_utmp error=%d\n", status);
+      }
+      break;
 
-	if (status == PAM_SUCCESS) switch(entry_type) {
-	    case USER_PROCESS:
-		/* New user session, open session accounting logs */
-		status = pam_open_session(pamh, 0);
-		if (status != PAM_SUCCESS) {
-                    Debug("PamAccounting: USER_PROCESS open_session error=%d\n",
-								 status); 
-		}
-		session_type = SOLARIS_LOGIN;
-		status = solaris_setutmp_mgmt(user, tty_line, display_name, 
-					session_type, entry_type, entry_id); 
-	        if (status != SOLARIS_SUCCESS) {
-                    Debug("PamAccounting: USER_PRCESS set_utmp error=%d\n", 
-								status);
- 		}
-		break;
+    case ACCOUNTING:
+      /*
+       * User session has terminated, mark it DEAD and close
+       * the sessions accounting logs.
+       */
+      status = pam_open_session(pamh, 0);
+      if (status != PAM_SUCCESS) {
+        Debug("PamAccounting: ACCOUNTING open_session error=%d\n", status);
+      }
+      entry_type = DEAD_PROCESS;
+      session_type = SOLARIS_NOLOG;
+      status = solaris_setutmp_mgmt(user, tty_line, display_name, session_type,
+                                    entry_type, entry_id);
 
+      if (status != SOLARIS_SUCCESS) {
+        Debug("PamAccounting: ACCOUNTING set_utmp error=%d\n", status);
+      }
+      /* Intentional fall thru */
 
-	    case ACCOUNTING:
-		/* 
-		 * User session has terminated, mark it DEAD and close 
-		 * the sessions accounting logs. 
-		 */
-		status = pam_open_session(pamh, 0);
-	        if (status != PAM_SUCCESS) {
-                    Debug("PamAccounting: ACCOUNTING open_session error=%d\n",
-								 status); 
-	        }
-		entry_type = DEAD_PROCESS;
-		session_type = SOLARIS_NOLOG;
-		status = solaris_setutmp_mgmt(user, tty_line, display_name, 
-					 session_type, entry_type, entry_id); 
+    case DEAD_PROCESS:
+      /* Cleanup account files for dead processes */
+      status = pam_close_session(pamh, 0);
+      if (status != PAM_SUCCESS) {
+        Debug("PamAccounting: DEAD_PROCES close_session error=%d\n", status);
+      }
 
-	        if (status != SOLARIS_SUCCESS) {
-                    Debug("PamAccounting: ACCOUNTING set_utmp error=%d\n", 
-								status);
- 		}
-		/* Intentional fall thru */
+      status = solaris_reset_utmp_mgmt(&user, &tty_line, &display_name, 0,
+                                       entry_type, entry_id);
 
+      if (status != SOLARIS_SUCCESS) {
+        Debug("PamAccounting: DEAD_PROCESS reset_utmp error=%d\n", status);
+      }
+      break;
 
-	    case DEAD_PROCESS:
-		/* Cleanup account files for dead processes */
-		status = pam_close_session(pamh, 0);
-	        if (status != PAM_SUCCESS) {
-                    Debug("PamAccounting: DEAD_PROCES close_session error=%d\n",
-								 status); 
-	        }
+    case LOGIN_PROCESS:
+    default:
+      status = pam_open_session(pamh, 0);
+      if (status != PAM_SUCCESS) {
+        Debug("PamAccounting:LOGIN_PROCESS open_session error=%d\n", status);
+      }
+      session_type = 0;
+      status = solaris_setutmp_mgmt(user, tty_line, display_name, session_type,
+                                    entry_type, entry_id);
+      if (status != SOLARIS_SUCCESS) {
+        Debug("PamAccounting: LOGIN_PROCESS set_utmp error=%d\n", status);
+      }
+      break;
+    }
 
-		status = solaris_reset_utmp_mgmt(&user, &tty_line,
-						 &display_name, 0,
-						 entry_type, entry_id);
-
-		if (status != SOLARIS_SUCCESS) {
-                    Debug("PamAccounting: DEAD_PROCESS reset_utmp error=%d\n",
-								      status);
-		}
-		break;
-
-
-	    case LOGIN_PROCESS:
-	    default:	
-		status = pam_open_session(pamh, 0);
-	        if (status != PAM_SUCCESS) {
-                    Debug("PamAccounting:LOGIN_PROCESS open_session error=%d\n",
-								 status); 
-	        }
-		session_type = 0;
-		status = solaris_setutmp_mgmt(user, tty_line, display_name, 
-					 session_type, entry_type, entry_id); 
-	        if (status != SOLARIS_SUCCESS) {
-                    Debug("PamAccounting: LOGIN_PROCESS set_utmp error=%d\n",
-								status);
- 		}
-		break;
-	}
-
-	free(line_dev);
-	return(status);
+  free(line_dev);
+  return (status);
 }
-
-
 
 /****************************************************************************
  * PamSetCred
  *
- * Set Users login credentials: uid, gid, and group lists 
+ * Set Users login credentials: uid, gid, and group lists
  ****************************************************************************/
 
-int
-PamSetCred(char* prog_name, char* user, uid_t uid, gid_t gid) 
-{
-	int cred_type, status;
-        char* user_str = user ? user : "NULL";
+int PamSetCred(char *prog_name, char *user, uid_t uid, gid_t gid) {
+  int cred_type, status;
+  char *user_str = user ? user : "NULL";
 
-        Debug("PamSetCred: prog_name=%s\n", prog_name);
-        Debug("PamSetCred: user=%s\n", user_str);
-        Debug("PamSetCred: uid=%d\n", uid);
-        Debug("PamSetCred: gid=%d\n", gid);
+  Debug("PamSetCred: prog_name=%s\n", prog_name);
+  Debug("PamSetCred: user=%s\n", user_str);
+  Debug("PamSetCred: uid=%d\n", uid);
+  Debug("PamSetCred: gid=%d\n", gid);
 
-	status = PamInit(prog_name, user, NULL, NULL);
+  status = PamInit(prog_name, user, NULL, NULL);
 
-	/* Set users credentials */
+  /* Set users credentials */
 
-	if (status == PAM_SUCCESS && setgid(gid) == -1) 
-	    status = SOLARIS_BAD_GID; 
+  if (status == PAM_SUCCESS && setgid(gid) == -1)
+    status = SOLARIS_BAD_GID;
 
-	if (status == PAM_SUCCESS &&
-	    ( !user) || (initgroups(user, gid) == -1) ) 
-	     status = SOLARIS_INITGROUP_FAIL;
+  if (status == PAM_SUCCESS && (!user) || (initgroups(user, gid) == -1))
+    status = SOLARIS_INITGROUP_FAIL;
 
-	if (status == PAM_SUCCESS)
-	    status = pam_setcred(pamh, PAM_ESTABLISH_CRED);
+  if (status == PAM_SUCCESS)
+    status = pam_setcred(pamh, PAM_ESTABLISH_CRED);
 
-	if (status == PAM_SUCCESS && (setuid(uid) == -1))
-	    status = SOLARIS_BAD_UID;
+  if (status == PAM_SUCCESS && (setuid(uid) == -1))
+    status = SOLARIS_BAD_UID;
 
-	if (status != PAM_SUCCESS) {
-            Debug("PamSetCred: user=%s, err=%d)\n", user, status);
-	}
+  if (status != PAM_SUCCESS) {
+    Debug("PamSetCred: user=%s, err=%d)\n", user, status);
+  }
 
-	return(status);
+  return (status);
 }
-
 
 /***************************************************************************
  * create_devname
  *
- * A utility function.  Takes short device name like "console" and returns 
+ * A utility function.  Takes short device name like "console" and returns
  * a long device name like "/dev/console"
  ***************************************************************************/
 
-static char* 
-create_devname(char* short_devname)
-{
-       char* long_devname;
+static char *create_devname(char *short_devname) {
+  char *long_devname;
 
-       if (short_devname == NULL)
-	  short_devname = "";
+  if (short_devname == NULL)
+    short_devname = "";
 
-       long_devname = (char *) malloc (strlen(short_devname) + 5);
+  long_devname = (char *)malloc(strlen(short_devname) + 5);
 
-       if (long_devname == NULL)
-	  return(NULL); 
+  if (long_devname == NULL)
+    return (NULL);
 
-       strcpy(long_devname,"/dev/");
-       strcat(long_devname, short_devname);
-	
-       return(long_devname);
+  strcpy(long_devname, "/dev/");
+  strcat(long_devname, short_devname);
+
+  return (long_devname);
 }
-
 
 /*****************************************************************************
  * login_conv():
  *
- * This is a conv (conversation) function called from the PAM 
+ * This is a conv (conversation) function called from the PAM
  * authentication scheme.  It returns the user's password when requested by
  * internal PAM authentication modules and also logs any internal PAM error
  * messages.
  *****************************************************************************/
 
-static int
-login_conv(int num_msg, struct pam_message **msg,
-           struct pam_response **response, void *appdata_ptr)
-{
-	struct pam_message	*m;
-	struct pam_response	*r;
-	char 			*temp;
-	int			k;
+static int login_conv(int num_msg, const struct pam_message **msg,
+                      struct pam_response **response, void *appdata_ptr) {
+  struct pam_message *m;
+  struct pam_response *r;
+  char *temp;
+  int k;
 
 #ifdef lint
-	conv_id = conv_id;
+  conv_id = conv_id;
 #endif
-	if (num_msg <= 0)
-		return (PAM_CONV_ERR);
+  if (num_msg <= 0)
+    return (PAM_CONV_ERR);
 
-	*response = (struct pam_response*) 
-				calloc(num_msg, sizeof (struct pam_response));
-	if (*response == NULL)
-		return (PAM_CONV_ERR);
+  *response =
+      (struct pam_response *)calloc(num_msg, sizeof(struct pam_response));
+  if (*response == NULL)
+    return (PAM_CONV_ERR);
 
-	(void) memset(*response, 0, sizeof (struct pam_response));
+  (void)memset(*response, 0, sizeof(struct pam_response));
 
-	k = num_msg;
-	m = *msg;
-	r = *response;
-	while (k--) {
+  k = num_msg;
+  m = *msg;
+  r = *response;
+  while (k--) {
 
-		switch (m->msg_style) {
+    switch (m->msg_style) {
 
-		case PAM_PROMPT_ECHO_OFF:
-                    if (saved_user_passwd != NULL) {
-                        r->resp = (char *) malloc(strlen(saved_user_passwd)+1);
-                        if (r->resp == NULL) {
-			  /* __pam_free_resp(num_msg, *response); */
-                            *response = NULL;
-                            return (PAM_CONV_ERR);
-                        }
-                        (void) strcpy(r->resp, saved_user_passwd);
-                        r->resp_retcode=0;
-                    }
+    case PAM_PROMPT_ECHO_OFF:
+      if (saved_user_passwd != NULL) {
+        r->resp = (char *)malloc(strlen(saved_user_passwd) + 1);
+        if (r->resp == NULL) {
+          /* __pam_free_resp(num_msg, *response); */
+          *response = NULL;
+          return (PAM_CONV_ERR);
+        }
+        (void)strcpy(r->resp, saved_user_passwd);
+        r->resp_retcode = 0;
+      }
 
-                    m++;
-                    r++;
-                    break;
+      m++;
+      r++;
+      break;
 
+    case PAM_ERROR_MSG:
+      if (m->msg != NULL) {
+        Debug("login_conv ERROR: %s\n", m->msg);
+      }
+      m++;
+      r++;
+      break;
 
-		case PAM_ERROR_MSG:
-			if (m->msg != NULL) { 
-	    	 	    Debug ("login_conv ERROR: %s\n", m->msg); 
-			}
-			m++;
-			r++;
-			break;
+    case PAM_TEXT_INFO:
+      if (m->msg != NULL) {
+        Debug("login_conv INFO: %s\n", m->msg);
+      }
+      m++;
+      r++;
+      break;
 
-		case PAM_TEXT_INFO:
-			if (m->msg != NULL) { 
-	    	 	    Debug ("login_conv INFO: %s\n", m->msg); 
-			}
-			m++;
-			r++;
-			break;
-
-		default:
-	    	 	Debug ("login_conv: Unexpected case %d\n", 
-				m->msg_style);
-			break;
-		}
-	}
-	return (PAM_SUCCESS);
+    default:
+      Debug("login_conv: Unexpected case %d\n", m->msg_style);
+      break;
+    }
+  }
+  return (PAM_SUCCESS);
 }

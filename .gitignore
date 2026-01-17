@@ -1,0 +1,30 @@
+# Meson
+build/
+meson-logs/
+meson-private/
+*.log
+
+# CDE Build Artifacts
+.cache/
+cde/programs/dtlogin/dtlogin.service
+cde/programs/dtlogin/dtlogin.service.in
+
+# Rust
+target/
+**/*.rs.bk
+
+# Editors
+.vscode/
+*.swp
+*~
+
+# Object files and libraries (be careful if some are checked in, but generally safe for new builds)
+*.o
+*.a
+*.so
+*.lo
+*.la
+
+# Autotools generated (optional, but good to keep clean if we are fully replacing)
+# Makefile
+# Makefile.in

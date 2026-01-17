@@ -31,27 +31,24 @@
  *
  * Copyright (c) 1990 by Sun Microsystems, Inc.
  */
-#include <stdint.h>
-#include <rpc/rpc.h>
-#include <util/tt_xdr_utils.h>
-#include <memory.h>
-#include <cde_config.h>
 #include "tt_options.h"
+#include <memory.h>
+#include <rpc/rpc.h>
+#include <stdint.h>
+#include <util/tt_xdr_utils.h>
 
 typedef bool_t (*local_xdrproc_t)(XDR *, caddr_t *);
 
 #ifndef OPT_XDR_LONG_TYPE
 #if defined(OPT_CONST_CORRECT)
-# define OPT_XDR_LONG_TYPE	const long
+#define OPT_XDR_LONG_TYPE const long
 #else
-# define OPT_XDR_LONG_TYPE	long
+#define OPT_XDR_LONG_TYPE long
 #endif
 #endif
-static bool_t
-tt_x_putlong(XDR *xp, OPT_XDR_LONG_TYPE *)
-{
-    xp->x_handy += 4;
-    return TRUE;
+static bool_t tt_x_putlong(XDR *xp, OPT_XDR_LONG_TYPE *) {
+  xp->x_handy += 4;
+  return TRUE;
 }
 
 static bool_t
@@ -70,8 +67,8 @@ tt_x_putbytes(XDR *xp, caddr_t, unsigned int len)
 tt_x_putbytes(XDR *xp, caddr_t, int len)
 #endif
 {
-    xp->x_handy += RNDUP (len);
-    return TRUE;
+  xp->x_handy += RNDUP(len);
+  return TRUE;
 }
 
 rpc_inline_t *
@@ -81,67 +78,60 @@ tt_x_inline(XDR *xp, unsigned int len)
 tt_x_inline(XDR *xp, int len)
 #endif
 {
-	/* Be paranoid -- some code really expects inline to
-	 * always succeed, so we keep a small buffer around
-	 * just in case.  Not too paranoid, though -- it's
-	 * legal to not support inline!
-	 */
-    /* It is better to promote len to caddr_t than demote x_base to
-       int for 64 bit arch.
-    */
-    if (len > 0 && (caddr_t) (intptr_t) len < xp->x_base) {
-	xp->x_handy += RNDUP (len);
+  /* Be paranoid -- some code really expects inline to
+   * always succeed, so we keep a small buffer around
+   * just in case.  Not too paranoid, though -- it's
+   * legal to not support inline!
+   */
+  /* It is better to promote len to caddr_t than demote x_base to
+     int for 64 bit arch.
+  */
+  if (len > 0 && (caddr_t)(intptr_t)len < xp->x_base) {
+    xp->x_handy += RNDUP(len);
 
-	return (rpc_inline_t *) xp->x_private;
-    } else
-	return 0;
+    return (rpc_inline_t *)xp->x_private;
+  } else
+    return 0;
 }
 
+unsigned long _tt_xdr_sizeof(xdrproc_t f, void *data) {
+  _Tt_xdr_size_stream x;
 
-unsigned long
-_tt_xdr_sizeof(xdrproc_t f, void *data)
-{
-	_Tt_xdr_size_stream x;
-
-	if ((*(local_xdrproc_t)f) ((XDR *)x, (caddr_t *)data) == TRUE) {
-		return x.getsize();
-	} else {
-		return 0;
-	}
+  if ((*(local_xdrproc_t)f)((XDR *)x, (caddr_t *)data) == TRUE) {
+    return x.getsize();
+  } else {
+    return 0;
+  }
 }
 
-_Tt_xdr_size_stream::
-_Tt_xdr_size_stream() {
-	memset (&ops, 0, sizeof ops);
+_Tt_xdr_size_stream::_Tt_xdr_size_stream() {
+  memset(&ops, 0, sizeof ops);
 #if defined(OPT_BUG_SUNOS_4)
-	ops.x_putlong = (int (*)(...))tt_x_putlong;
-	ops.x_putbytes = (int (*)(...))tt_x_putbytes;
-	ops.x_inline = (long *(*)(...))tt_x_inline;
+  ops.x_putlong = (int (*)(...))tt_x_putlong;
+  ops.x_putbytes = (int (*)(...))tt_x_putbytes;
+  ops.x_inline = (long *(*)(...))tt_x_inline;
 #elif defined(OPT_BUG_AIX)
-	ops.x_putlong = (int (*)(XDR *, long *))tt_x_putlong;
-	ops.x_putbytes = (int (*)(XDR *, caddr_t, u_int))tt_x_putbytes;
-	ops.x_inline = (long *(*)(XDR *, u_int))tt_x_inline;
+  ops.x_putlong = (int (*)(XDR *, long *))tt_x_putlong;
+  ops.x_putbytes = (int (*)(XDR *, caddr_t, u_int))tt_x_putbytes;
+  ops.x_inline = (long *(*)(XDR *, u_int))tt_x_inline;
 #elif defined(OPT_BUG_SUNOS_5)
-	ops.x_putlong = tt_x_putlong;
-	ops.x_putbytes = (bool_t (*)(XDR *, caddr_t, int))tt_x_putbytes;
-	ops.x_inline = tt_x_inline;
+  ops.x_putlong = tt_x_putlong;
+  ops.x_putbytes = (bool_t (*)(XDR *, caddr_t, int))tt_x_putbytes;
+  ops.x_inline = tt_x_inline;
 #elif defined(CRAY)
-	ops.x_putlong = tt_x_putlong;
-	ops.x_putbytes = tt_x_putbytes;
-	ops.x_inline = (inline_t *(*)(...))tt_x_inline;
+  ops.x_putlong = tt_x_putlong;
+  ops.x_putbytes = tt_x_putbytes;
+  ops.x_inline = (inline_t * (*)(...)) tt_x_inline;
 #else
-	ops.x_putlong = tt_x_putlong;
-	ops.x_putbytes = tt_x_putbytes;
-	ops.x_inline = tt_x_inline;
+  ops.x_putlong = tt_x_putlong;
+  ops.x_putbytes = tt_x_putbytes;
+  ops.x_inline = tt_x_inline;
 #endif
-	xdrstream.x_op = XDR_ENCODE;
-	xdrstream.x_ops = &ops;
-	xdrstream.x_handy = 0;
-	xdrstream.x_private = (caddr_t) buf;
-	xdrstream.x_base = (caddr_t) sizeof buf;
+  xdrstream.x_op = XDR_ENCODE;
+  xdrstream.x_ops = &ops;
+  xdrstream.x_handy = 0;
+  xdrstream.x_private = (caddr_t)buf;
+  xdrstream.x_base = (caddr_t)sizeof buf;
 }
 
-_Tt_xdr_size_stream::
-operator XDR *() {
-	return(&xdrstream);
-}
+_Tt_xdr_size_stream::operator XDR *() { return (&xdrstream); }

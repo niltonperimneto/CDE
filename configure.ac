@@ -352,17 +352,7 @@ AC_PATH_X
 AC_PATH_XTRA
 
 dnl check some compiler flags
-C_FLAG_CHECK([-Wno-format-truncation])
-CXX_FLAG_CHECK([-Wno-format-truncation])
 
-C_FLAG_CHECK([-fno-strict-aliasing])
-CXX_FLAG_CHECK([-fno-strict-aliasing])
-
-C_FLAG_CHECK([-Wno-write-strings])
-CXX_FLAG_CHECK([-Wno-write-strings])
-
-C_FLAG_CHECK([-Wno-unused-result])
-CXX_FLAG_CHECK([-Wno-unused-result])
 
 
 dnl Add X11 goodies here

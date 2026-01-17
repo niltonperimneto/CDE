@@ -1,0 +1,3 @@
+[submodule "cde/programs/alacritty"]
+	path = cde/programs/alacritty
+	url = https://github.com/alacritty/alacritty.git
