@@ -1,0 +1,2 @@
+# XmRemoveFromPostFromList
+library call`XmRemoveFromPostFromList`a RowColumn function that disables a menu for a particular widgetXmRemoveFromPostFromListRowColumn functionsXmRemoveFromPostFromList#include <Xm/RowColumn.h>

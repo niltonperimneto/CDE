@@ -1,0 +1,3 @@
+XmSimpleSpinBoxlibrary callXmSimpleSpinBoxa simple SpinBox widget class#include <Xm/SSpinB.h>DESCRIPTIONThe XmSimpleSpinBox widget is a user interface control to increment and decrement
+an arbitrary TextField. For example, it can be used to cycle through the months
+of the year or days of the month.Widget subclassing is not supported for the XmSimpleSpinBox widget class.ClassesThe XmSimpleSpinBox widget inherits behavior and resources from theCore,CompositeandXmManagerclasses.

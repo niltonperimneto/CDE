@@ -1,0 +1,2 @@
+# XmTransferSetParameters
+library call`XmTransferSetParameters`A toolkit function that establishes parameters to be passed by the next call to XmTransferValueXmTransferSetParameterstoolkit functionsXmTransferSetParameters#include <Xm/Transfer.h>

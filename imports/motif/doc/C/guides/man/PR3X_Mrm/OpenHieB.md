@@ -1,0 +1,2 @@
+# MrmOpenHierarchyFromBuffer
+library call`MrmOpenHierarchyFromBuffer`Allocates a hierarchy ID and opens a buffer containing a memory image of a UID fileMrmOpenHierarchyFrom\\%Bufferuil functionsMrmOpenHierarchyFrom\\%Buffer#include <Mrm/MrmPublic.h>

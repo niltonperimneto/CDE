@@ -1,0 +1,82 @@
+# TopLevelShell
+library call`TopLevelShell`The TopLevelShell widget classTopLevelShellwidget classTopLevelShell&npzwc;#include &lt;Xm/Xm.h>
+&npzwc;#include &lt;X11/Shell.h>
+## DESCRIPTION
+
+
+TopLevelShell is used for normal top-level windows such as any
+additional top-level widgets an application needs.
+### Classes
+
+
+TopLevelShell inherits behavior and resources from`Core`,`Composite`,`Shell`,`WMShell`, and`VendorShell`.
+
+The class pointer is`topLevelShellWidgetClass`.
+
+The class name is`TopLevelShell`.
+### New Resources
+
+
+The following table defines a set of widget resources used by the programmer
+to specify data. The programmer can also set the resource values for the
+inherited classes to set attributes for this widget. To reference a
+resource by name or by class in a.Xdefaultsfile, remove the`XmN`or`XmC`prefix and use the remaining letters. To specify one of the defined
+values for a resource in a.Xdefaultsfile, remove the`Xm`prefix and use
+the remaining letters (in either lowercase or uppercase, but include any
+underscores between words).
+The codes in the access column indicate if the given resource can be
+set at creation time (C),
+set by using`XtSetValues`(S),
+retrieved by using`XtGetValues`(G), or is not applicable (N/A).
+
+`TopLevelShell Resource Set``Name``Class``Type``Default``Access`XmNiconicXmCIconicBooleanFalseCSGXmNiconNameXmCIconNameStringNULLCSGXmNiconNameEncodingXmCIconNameEncodingAtomdynamicCSG
+
+* **`XmNiconic`** 
+
+If True when the widget iscreated, specifies that the widget
+should start as an icon when it is realized. A value of False
+indicates that the widget is not to be realized as an icon. This
+resource will only override the`XmNinitialState`resource when
+specified in the call that creates the widget.
+* **`XmNiconName`** 
+
+Specifies the short form of the application name to be displayed by the
+window manager when the application is iconified.
+When`XtGetValues`is called on this resource, the returned value
+is a pointer to the actual resource value and
+should not be freed.
+* **`XmNiconNameEncoding`** 
+
+Specifies a property type that represents the encoding of the`XmNiconName`string.
+If a language procedure has been set, the default is None; otherwise,
+the default is`XA_STRING`. When the widget is realized, if the value
+is None, the corresponding name is assumed to be in the current locale.
+The name is passed to`XmbTextListToTextProperty`with an encoding
+style of`XStdICCTextStyle`. The resulting encoding is`STRING`if the name is fully convertible to`STRING`, otherwise`COMPOUND_TEXT`.
+The values of the encoding resources are not changed; they remain None.
+
+### Inherited Resources
+
+
+TopLevelShell inherits behavior and resources from the following
+superclasses. For a complete description of each resource, refer to the
+reference page for that superclass.
+
+`VendorShell Resource Set``Name``Class``Type``Default``Access`XmNaudibleWarningXmCAudibleWarningunsigned charXmBELLCSGXmNbuttonFontListXmCButtonFontListXmFontListdynamicCSGXmNbuttonRenderTableXmCButtonRenderTableXmRenderTabledynamicCSGXmNdefaultFontListXmCDefaultFontListXmFontListdynamicCGXmNdeleteResponseXmCDeleteResponseunsigned charXmDESTROYCSGXmNinputMethodXmCInputMethodStringNULLCSGXmNinputPolicyXmCInputPolicyXmInputPolicyXmPER_SHELLCSGXmNkeyboardFocusPolicyXmCKeyboardFocusPolicyunsigned charXmEXPLICITCSGXmNlabelFontListXmCLabelFontListXmFontListdynamicCSGXmNlabelRenderTableXmCLabelRenderTabelXmRenderTabledynamicCSGXmNlayoutDirectionXmCLayoutDirectionXmDirectionXmLEFT_TO_RIGHTCGXmNmwmDecorationsXmCMwmDecorationsint-1CGXmNmwmFunctionsXmCMwmFunctionsint-1CGXmNmwmInputModeXmCMwmInputModeint-1CGXmNmwmMenuXmCMwmMenuStringNULLCGXmNpreeditTypeXmCPreeditTypeStringdynamicCSGXmNshellUnitTypeXmCShellUnitTypeunsigned charXmPIXELSCSGXmNtextFontListXmCTextFontListXmFontListdynamicCSGXmNtextRenderTableXmCTextRenderTableXmRenderTabledynamicCSGXmNunitTypeXmCUnitTypeunsigned charXmPIXELSCSGXmNuseAsyncGeometryXmCUseAsyncGeometryBooleanFalseCSG
+
+`WMShell Resource Set``Name``Class``Type``Default``Access`XmNbaseHeightXmCBaseHeightintXtUnspecifiedShellIntCSGXmNbaseWidthXmCBaseWidthintXtUnspecifiedShellIntCSGXmNheightIncXmCHeightIncintXtUnspecifiedShellIntCSGXmNiconMaskXmCIconMaskPixmapNULLCSGXmNiconPixmapXmCIconPixmapPixmapNULLCSGXmNiconWindowXmCIconWindowWindowNULLCSGXmNiconXXmCIconXintXtUnspecifiedShellIntCSGXmNiconYXmCIconYintXtUnspecifiedShellIntCSGXmNinitialStateXmCInitialStateintNormalStateCSGXmNinputXmCInputBooleanTrueCSGXmNmaxAspectXXmCMaxAspectXintXtUnspecifiedShellIntCSGXmNmaxAspectYXmCMaxAspectYintXtUnspecifiedShellIntCSGXmNmaxHeightXmCMaxHeightintXtUnspecifiedShellIntCSGXmNmaxWidthXmCMaxWidthintXtUnspecifiedShellIntCSGXmNminAspectXXmCMinAspectXintXtUnspecifiedShellIntCSGXmNminAspectYXmCMinAspectYintXtUnspecifiedShellIntCSGXmNminHeightXmCMinHeightintXtUnspecifiedShellIntCSGXmNminWidthXmCMinWidthintXtUnspecifiedShellIntCSGXmNtitleXmCTitleStringdynamicCSGXmNtitleEncodingXmCTitleEncodingAtomdynamicCSGXmNtransientXmCTransientBooleanFalseCSGXmNwaitForWmXmCWaitForWmBooleanTrueCSGXmNwidthIncXmCWidthIncintXtUnspecifiedShellIntCSGXmNwindowGroupXmCWindowGroupWindowdynamicCSGXmNwinGravityXmCWinGravityintdynamicCSGXmNwmTimeoutXmCWmTimeoutint5000 msCSG
+
+`Shell Resource Set``Name``Class``Type``Default``Access`XmNallowShellResizeXmCAllowShellResizeBooleanFalseCGXmNcreatePopupChildProcXmCCreatePopupChildProcXtCreatePopupChildProcNULLCSGXmNgeometryXmCGeometryStringNULLCSGXmNoverrideRedirectXmCOverrideRedirectBooleanFalseCSGXmNpopdownCallbackXmCCallbackXtCallbackListNULLCXmNpopupCallbackXmCCallbackXtCallbackListNULLCXmNsaveUnderXmCSaveUnderBooleanFalseCSGXmNvisualXmCVisualVisual *CopyFromParentCSG
+
+`Composite Resource Set``Name``Class``Type``Default``Access`XmNchildrenXmCReadOnlyWidgetListNULLGXmNinsertPositionXmCInsertPositionXtOrderProcNULLCSGXmNnumChildrenXmCReadOnlyCardinal0G
+
+`Core Resource Set``Name``Class``Type``Default``Access`XmNacceleratorsXmCAcceleratorsXtAcceleratorsdynamicCSGXmNancestorSensitiveXmCSensitiveBooleandynamicGXmNbackgroundXmCBackgroundPixeldynamicCSGXmNbackgroundPixmapXmCPixmapPixmapXmUNSPECIFIED_PIXMAPCSGXmNborderColorXmCBorderColorPixelXtDefaultForegroundCSGXmNborderPixmapXmCPixmapPixmapXmUNSPECIFIED_PIXMAPCSGXmNborderWidthXmCBorderWidthDimension0CSGXmNcolormapXmCColormapColormapdynamicCGXmNdepthXmCDepthintdynamicCGXmNdestroyCallbackXmCCallbackXtCallbackListNULLCXmNheightXmCHeightDimensiondynamicCSGXmNinitialResourcesPersistentXmCInitialResourcesPersistentBooleanTrueCXmNmappedWhenManagedXmCMappedWhenManagedBooleanTrueCSGXmNscreenXmCScreenScreen *dynamicCGXmNsensitiveXmCSensitiveBooleanTrueCSGXmNtranslationsXmCTranslationsXtTranslationsdynamicCSGXmNwidthXmCWidthDimensiondynamicCSGXmNxXmCPositionPosition0CSGXmNyXmCPositionPosition0CSG
+### Translations
+
+
+There are no translations for TopLevelShell.
+## RELATED
+
+
+&cdeman.Composite;, &cdeman.Core;, &cdeman.Shell;, &cdeman.WMShell;, and
+&cdeman.VendorShell;.
