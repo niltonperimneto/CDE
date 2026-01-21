@@ -1,0 +1,2 @@
+Never use software from sources
+you would not trust with your firstborn.If in doubt about a program, don't use it at all.

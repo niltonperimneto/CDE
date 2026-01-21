@@ -1,0 +1,1 @@
+Kalender - ReferenzReferenzFensterMenüsDialogfensterBefehlszeilenschnittstelleKalendermenü 'Datei'Menü 'Datei'Aktuelle Ansicht

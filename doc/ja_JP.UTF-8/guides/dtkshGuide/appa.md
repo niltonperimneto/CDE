@@ -1,0 +1,32 @@
+dtkshコマンドコマンドこの付録は、dtkshによってサポートされているコマンドのリストを含んで
+います。これらのコマンドの多くが、対応するMotif、Xtイントリンシクス、Xlibの
+コマンドとほとんど同等です。値を返すコマンドは、コマンドを呼び出す際の最初の
+パラメータである環境変数として、戻り変数を持っていなければなりません。
+より多くの相違点を持つコマンドもあります。次のサブセクションは、各dtkshコマンドの概観を示しています。
+一般的に、パラメータの順序と型は対応するCプロシージャと同じです。例外は注記します。
+コマンドの機能およびパラメータの詳細は、Xlib、Xtイントリンシクス、Motifプロシージャの
+標準的なドキュメントを参照してください。コマンドの定義において、var,var2,var3などの名前がついているパラメータは、
+値が返される環境変数の名前をシェル・スクリプトで指定することを示します。variableは、戻り値を受け取る環境変数を示します。ブール値を返すコマンド(if文の一部として、直接、使用できます)は、注記します。[]で囲まれたパラメータはオプションです。組み込みXlibコマンドXBelldisplay volumeXClearAreadisplay drawable[optional GC arguments]x y width heightexposuresXClearWindowdisplay drawableXCopyAreadisplay src dest
+srcX srcY width height destX destY[optional GCarguments]XDefineCursordisplay window cursorXDrawArcdisplay drawable[optional GC arguments]x y width height
+angle1angle2XDrawLinedisplay drawable[optional GC arguments]x1 y1 x2 y2XDrawLinesdisplay drawable[-coordinateMode] [optional GC arguments]x1 y1x2 y2 [x3 y3 ...]coordinateModeは、CoordModeOriginまたはCoordModePreviousのいずれかです。XDrawPointdisplay drawable[optional GC arguments]x yXDrawPointsdisplay drawable[-coordinateMode] [optional GC
+arguments]x1 y1[x2 y2 x3 y3 ...]coordinateModeは、CoordModeOriginまたはCoordModePreviousのどちらかです。XDrawRectangledisplay drawable[optional GC arguments]x y width heightXDrawSegmentsdisplay drawable[optional GC arguments]x1 y1 x2 y2[x3 y3 x4y4 ...]XDrawStringdisplay drawable[optional GC arguments]x y stringXDrawImageStringdisplay
+drawable[optional GC arguments]x y stringXFillArcdisplay drawable[optional GC arguments]x y width height
+angle1angle2XFillPolygondisplay drawable[-shape] [-coordinateMode]
+[optional GCarguments]x1 y1 x2 y2...shapeは、Complex、Convex、またはNonconvexのいずれかであり、coordinateModeは、CoordModeOriginまたはCoordModePrevious.のどちらかです。XFillRectangledisplay drawable[optional GC arguments]x y width heightXFlushdisplayXHeightOfScreenvariablescreenXRaiseWindowdisplay windowXRootWindowOfScreenvariablescreenXSyncdisplaydiscarddiscardは、trueまたはfalseのどちらかです。XTextWidthvariablefontNamestringXTextWidthコマンドは対応するXlibプロシージャとは異なっています。これは、
+コマンドがフォント構造体のポインタではなく、フォントの名前をとるためです。XUndefineCursordisplay windowXWidthOfScreenvariablescreen組み込みXtイントリンシクス・コマンドコマンドXtイントリンシクスXtイントリンシクス・コマンド新規ウィジェットを生成するのに使用するすべてのXtイントリンシクス・コマンドは、
+ユーザに新規ウィジェットのウィジェット・クラスを指定することを要求します。
+ウィジェット(またはガジェット)・クラス名はMotifが提供する標準のクラス名です。
+例えば、Motifのプッシュ・ボタン・ウィジェットの名前はXmPushButton、Motifの
+ラベル・ガジェットの名前はXmLabelGadgetです。XtAddCallbackwidgetHandlecallbackNameksh-commandXtAddCallbackcallbackName標準MotifまたはXtコールバック名前の1つで、XtまたはXm接頭辞を
+取ったものです。例えば、activateCallbackなどです。XtAddEventHandlerwidgetHandleeventMasknonMaskableFlagksh-commandXtAddEventHandlereventMaskは、mask|mask|maskという形式をとり、構成要素のmaskは、 Xイベント・
+マスクの標準セットのいずれかです。nonMaskableFlagはtrueまたはfalseのいずれかです。XtAddInputvariable[-r]fileDescriptorksh-commandXtAddInputXツールキットを用いて、示されるファイル記述子を、交互の入力ソースとして登録
+します。入力リソースが不要になり、ファイル記述子を閉じる場合、シェル・スクリプト
+の入力ハンドラが、入力ソースを登録解除します。-rオプション(rawモード)を指定すると、dtkshは、入力ソースから使用可能な
+データを自動的に読み込みません。指定したkshellコマンドですべてのデータを読み込み
+ます。-rが指定されていない場合は、ksh-commandで
+指定したコマンドが、完全行(行がエスケープされていない改行文字またはファイルの
+終りで終了している行)を読み込んだ時、またはファイルの終りに達した時のみ起動され
+ます。rawモードは、テキストではないデータを処理するハンドラ、またはdtkshを
+データ行で自動的に読み込みたくないハンドラでは有効です。ファイルの終りが検出され
+ると、シェル・スクリプトの入力ハンドラが、XtRemoveInputを使用して、必要に応じて
+入力ソースを削除し、ファイル記述子を閉じます。すべての場合も、ハンドラが使用できるいくつかの環境変数が設定されます。これら環境変数には次のようなものがあります。

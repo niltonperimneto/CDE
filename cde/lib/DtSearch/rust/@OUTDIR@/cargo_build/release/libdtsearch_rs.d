@@ -1,0 +1,1 @@
+/home/niltonperimneto/cdesktopenv-code/cde/lib/DtSearch/rust/@OUTDIR@/cargo_build/release/libdtsearch_rs.a: /home/niltonperimneto/cdesktopenv-code/cde/lib/DtSearch/rust/src/format.rs /home/niltonperimneto/cdesktopenv-code/cde/lib/DtSearch/rust/src/lib.rs

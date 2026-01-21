@@ -1,0 +1,81 @@
+# ApplicationShell
+library call`ApplicationShell`The ApplicationShell widget classApplicationShellwidget classApplicationShell&npzwc;#include &lt;Xm/Xm.h>
+&npzwc;#include &lt;X11/Shell.h>
+## DESCRIPTION
+
+
+ApplicationShell is used as the main top-level window for an application. An
+application should have more than one ApplicationShell only if it implements
+multiple logical applications.
+### Classes
+
+
+ApplicationShell inherits behavior and resources from`Core`,`Composite`,`Shell`,`WMShell`,`VendorShell`, and`TopLevelShell`.
+
+The class pointer is`applicationShellWidgetClass`.
+
+The class name is`ApplicationShell`.
+### New Resources
+
+
+The following table defines a set of widget resources used by the programmer
+to specify data. The programmer can also set the resource values for the
+inherited classes to set attributes for this widget. To reference a
+resource by name or by class in a.Xdefaultsfile, remove the`XmN`or`XmC`prefix and use the remaining letters. To specify one of the defined
+values for a resource in a.Xdefaultsfile,
+remove the`Xm`prefix and use
+the remaining letters (in either lowercase or uppercase, but include any
+underscores between words).
+The codes in the access column indicate if the given resource can be
+set at creation time (C),
+set by using`XtSetValues`(S),
+retrieved by using`XtGetValues`(G), or is not applicable (N/A).
+
+`ApplicationShell Resource Set``Name``Class``Type``Default``Access`XmNargcXmCArgcint0CSGXmNargvXmCArgvString *NULLCSG
+
+* **`XmNargc`** 
+
+Specifies the number of arguments given in the`XmNargv`resource.
+The function`XtInitialize`sets this resource on
+the shell widget instance it creates by using its
+parameters as the values.
+* **`XmNargv`** 
+
+Specifies the argument list required by a session manager to restart the
+application if it is killed. This list should be updated at
+appropriate points by the application if a new state has been reached that can
+be directly restarted.
+The function`XtInitialize`sets this resource on
+the shell widget instance it creates by using its
+parameters as the values.
+When`XtGetValues`is called on this resource, the returned value
+is a pointer to the actual resource value and
+should not be freed.
+
+### Inherited Resources
+
+
+ApplicationShell inherits behavior and resources from the following
+superclasses. For a complete description of each resource, refer to the
+reference page for that superclass.
+
+`TopLevelShell Resource Set``Name``Class``Type``Default``Access`XmNiconicXmCIconicBooleanFalseCSGXmNiconNameXmCIconNameStringNULLCSGXmNiconNameEncodingXmCIconNameEncodingAtomdynamicCSG
+
+`VendorShell Resource Set``Name``Class``Type``Default``Access`XmNaudibleWarningXmCAudibleWarningunsigned charXmBELLCSGXmNbuttonFontListXmCButtonFontListXmFontListdynamicCSGXmNbuttonRenderTableXmCButtonRenderTableXmRenderTabledynamicCSGXmNdefaultFontListXmCDefaultFontListXmFontListdynamicCGXmNdeleteResponseXmCDeleteResponseunsigned charXmDESTROYCSGXmNinputMethodXmCInputMethodStringNULLCSGXmNinputPolicyXmCInputPolicyXmInputPolicyXmPER_SHELLCSGXmNkeyboardFocusPolicyXmCKeyboardFocusPolicyunsigned charXmEXPLICITCSGXmNlabelFontListXmCLabelFontListXmFontListdynamicCSGXmNlabelRenderTableXmCLabelRenderTabelXmRenderTabledynamicCSGXmNlayoutDirectionXmCLayoutDirectionXmDirectionXmLEFT_TO_RIGHTCGXmNmwmDecorationsXmCMwmDecorationsint-1CGXmNmwmFunctionsXmCMwmFunctionsint-1CGXmNmwmInputModeXmCMwmInputModeint-1CGXmNmwmMenuXmCMwmMenuStringNULLCGXmNpreeditTypeXmCPreeditTypeStringdynamicCSGXmNshellUnitTypeXmCShellUnitTypeunsigned charXmPIXELSCSGXmNtextFontListXmCTextFontListXmFontListdynamicCSGXmNtextRenderTableXmCTextRenderTableXmRenderTabledynamicCSGXmNunitTypeXmCUnitTypeunsigned charXmPIXELSCSGXmNuseAsyncGeometryXmCUseAsyncGeometryBooleanFalseCSG
+
+`WMShell Resource Set``Name``Class``Type``Default``Access`XmNbaseHeightXmCBaseHeightintXtUnspecifiedShellIntCSGXmNbaseWidthXmCBaseWidthintXtUnspecifiedShellIntCSGXmNheightIncXmCHeightIncintXtUnspecifiedShellIntCSGXmNiconMaskXmCIconMaskPixmapNULLCSGXmNiconPixmapXmCIconPixmapPixmapNULLCSGXmNiconWindowXmCIconWindowWindowNULLCSGXmNiconXXmCIconXintXtUnspecifiedShellIntCSGXmNiconYXmCIconYintXtUnspecifiedShellIntCSGXmNinitialStateXmCInitialStateintNormalStateCSGXmNinputXmCInputBooleanTrueCSGXmNmaxAspectXXmCMaxAspectXintXtUnspecifiedShellIntCSGXmNmaxAspectYXmCMaxAspectYintXtUnspecifiedShellIntCSGXmNmaxHeightXmCMaxHeightintXtUnspecifiedShellIntCSGXmNmaxWidthXmCMaxWidthintXtUnspecifiedShellIntCSGXmNminAspectXXmCMinAspectXintXtUnspecifiedShellIntCSGXmNminAspectYXmCMinAspectYintXtUnspecifiedShellIntCSGXmNminHeightXmCMinHeightintXtUnspecifiedShellIntCSGXmNminWidthXmCMinWidthintXtUnspecifiedShellIntCSGXmNtitleXmCTitleStringdynamicCSGXmNtitleEncodingXmCTitleEncodingAtomdynamicCSGXmNtransientXmCTransientBooleanFalseCSGXmNwaitForWmXmCWaitForWmBooleanTrueCSGXmNwidthIncXmCWidthIncintXtUnspecifiedShellIntCSGXmNwindowGroupXmCWindowGroupWindowdynamicCSGXmNwinGravityXmCWinGravityintdynamicCSGXmNwmTimeoutXmCWmTimeoutint5000 msCSG
+
+`Shell Resource Set``Name``Class``Type``Default``Access`XmNallowShellResizeXmCAllowShellResizeBooleanFalseCGXmNcreatePopupChildProcXmCCreatePopupChildProcXtCreatePopupChildProcNULLCSGXmNgeometryXmCGeometryStringNULLCSGXmNoverrideRedirectXmCOverrideRedirectBooleanFalseCSGXmNpopdownCallbackXmCCallbackXtCallbackListNULLCXmNpopupCallbackXmCCallbackXtCallbackListNULLCXmNsaveUnderXmCSaveUnderBooleanFalseCSGXmNvisualXmCVisualVisual *CopyFromParentCSG
+
+`Composite Resource Set``Name``Class``Type``Default``Access`XmNchildrenXmCReadOnlyWidgetListNULLGXmNinsertPositionXmCInsertPositionXtOrderProcNULLCSGXmNnumChildrenXmCReadOnlyCardinal0G
+
+`Core Resource Set``Name``Class``Type``Default``Access`XmNacceleratorsXmCAcceleratorsXtAcceleratorsdynamicCSGXmNancestorSensitiveXmCSensitiveBooleandynamicGXmNbackgroundXmCBackgroundPixeldynamicCSGXmNbackgroundPixmapXmCPixmapPixmapXmUNSPECIFIED_PIXMAPCSGXmNborderColorXmCBorderColorPixelXtDefaultForegroundCSGXmNborderPixmapXmCPixmapPixmapXmUNSPECIFIED_PIXMAPCSGXmNborderWidthXmCBorderWidthDimension0CSGXmNcolormapXmCColormapColormapdynamicCGXmNdepthXmCDepthintdynamicCGXmNdestroyCallbackXmCCallbackXtCallbackListNULLCXmNheightXmCHeightDimensiondynamicCSGXmNinitialResourcesPersistentXmCInitialResourcesPersistentBooleanTrueCXmNmappedWhenManagedXmCMappedWhenManagedBooleanTrueCSGXmNscreenXmCScreenScreen *dynamicCGXmNsensitiveXmCSensitiveBooleanTrueCSGXmNtranslationsXmCTranslationsXtTranslationsdynamicCSGXmNwidthXmCWidthDimensiondynamicCSGXmNxXmCPositionPosition0CSGXmNyXmCPositionPosition0CSG
+### Translations
+
+
+There are no translations for ApplicationShell.
+## RELATED
+
+
+&cdeman.Composite;, &cdeman.Core;, &cdeman.Shell;, &cdeman.WMShell;,
+&cdeman.VendorShell;, and &cdeman.TopLevelShell;.

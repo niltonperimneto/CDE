@@ -28,13 +28,13 @@
  * the Copyright Laws of the United States.  USE OF A COPYRIGHT
  * NOTICE IS PRECAUTIONARY ONLY AND DOES NOT IMPLY PUBLICATION
  * OR DISCLOSURE.
- * 
+ *
  * THIS SOFTWARE CONTAINS CONFIDENTIAL INFORMATION AND TRADE
  * SECRETS OF HAL COMPUTER SYSTEMS INTERNATIONAL, LTD.  USE,
  * DISCLOSURE, OR REPRODUCTION IS PROHIBITED WITHOUT THE
  * PRIOR EXPRESS WRITTEN PERMISSION OF HAL COMPUTER SYSTEMS
  * INTERNATIONAL, LTD.
- * 
+ *
  *                         RESTRICTED RIGHTS LEGEND
  * Use, duplication, or disclosure by the Government is subject
  * to the restrictions as set forth in subparagraph (c)(l)(ii)
@@ -44,22 +44,22 @@
  *          HAL COMPUTER SYSTEMS INTERNATIONAL, LTD.
  *                  1315 Dell Avenue
  *                  Campbell, CA  95008
- * 
+ *
  */
-
-
 
 #ifndef _macro_h
 #define _macro_h 1
 
+#include <stdint.h>
+
 /* bit manipulation macros */
-#define BIT_TEST(x, y)  ( ((x) & (y)) == (y) )
-#define RESET_BIT(x, y)  x &= (~(y)) 
-#define SET_BIT(x, y)    x |= (y)  
-#define BITS_IN(TYPE)    ( 8*sizeof(TYPE) )
+#define BIT_TEST(x, y) (((x) & (y)) == (y))
+#define RESET_BIT(x, y) x &= (~(y))
+#define SET_BIT(x, y) x |= (y)
+#define BITS_IN(TYPE) (8 * sizeof(TYPE))
 
 /* comparison macros */
-#define INRANGE(x, low, high) ((x>=low) && (x<=high))  
+#define INRANGE(x, low, high) ((x >= low) && (x <= high))
 
 #undef MIN
 #undef MAX
@@ -67,23 +67,24 @@
 #define MIN(x, y) (((x) < (y)) ? (x) : (y))
 #define MAX(x, y) (((x) > (y)) ? (x) : (y))
 
-#define TOBOOLEAN(x) ( ((x) == 1 ) ? true : false )
-#define TOBIT(x) ( ((x) == true ) ? 1 : 0 )
+#define TOBOOLEAN(x) (((x) == 1) ? true : false)
+#define TOBIT(x) (((x) == true) ? 1 : 0)
 
 /* secure XtNewString macro */
-#define XtsNewString(str) \
-    ((str) != NULL ? (char *)(memcpy(XtMalloc((unsigned)strlen(str) + 1), \
-     str, (unsigned)strlen(str) + 1)) : NULL)
+#define XtsNewString(str)                                                      \
+  ((str) != NULL ? (char *)(memcpy(XtMalloc((unsigned)strlen(str) + 1), str,   \
+                                   (unsigned)strlen(str) + 1))                 \
+                 : NULL)
 
 /* little endian to/from big endian swap macros. */
 
-#define ORDER_SWAP(type, value)					\
-{								\
-   type tmp = value;						\
-   int n = sizeof(type) - 1;					\
-   for (int i = 0; i <= n; ++i)					\
-      ((uint8_t *)&value)[i] = ((uint8_t *)&tmp)[n - i];	\
-}
+#define ORDER_SWAP(type, value)                                                \
+  {                                                                            \
+    type tmp = value;                                                          \
+    int n = sizeof(type) - 1;                                                  \
+    for (int i = 0; i <= n; ++i)                                               \
+      ((uint8_t *)&value)[i] = ((uint8_t *)&tmp)[n - i];                       \
+  }
 
 #define ORDER_SWAP_FLOAT(x) ORDER_SWAP(float, x)
 #define ORDER_SWAP_LONG(x) ORDER_SWAP(long, x)

@@ -1,0 +1,1 @@
+Sample Decimal-Aligned Table345.021211.02221.3blueredyellow

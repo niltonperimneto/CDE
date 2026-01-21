@@ -1,0 +1,1 @@
+IndiceAttività della Gestione delle informazioniInformation Manager Reference

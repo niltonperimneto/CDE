@@ -5,7 +5,7 @@ libtt_shim_target = custom_target('libtt',
   output : ['libtt.so'], 
   command : [
     'sh', '-c',
-    'export RUSTFLAGS="-C relocation-model=pic" && cargo build --release --manifest-path @CURRENT_SOURCE_DIR@/Cargo.toml && cp @CURRENT_SOURCE_DIR@/target/release/libtt_shim.so @OUTPUT0@'
+    'export RUSTFLAGS="-C relocation-model=pic -C link-arg=-Wl,-soname,libtt.so" && cargo build --release --manifest-path @CURRENT_SOURCE_DIR@/Cargo.toml && cp @CURRENT_SOURCE_DIR@/target/release/libtt_shim.so @OUTPUT0@'
   ],
   build_by_default : true,
   install : true,

@@ -455,6 +455,11 @@ pub extern "C" fn tt_message_session_set(_m: *mut c_void, _s: *const c_char) -> 
 }
 
 #[no_mangle]
+pub extern "C" fn tt_message_handler(_m: *mut c_void) -> *mut c_char {
+    ptr::null_mut()
+}
+
+#[no_mangle]
 pub extern "C" fn tt_message_file_set(m: *mut c_void, f: *const c_char) -> TtStatus {
     if !m.is_null() {
         let msg = unsafe { &mut *(m as *mut TtMessage) };

@@ -27,47 +27,45 @@
  * UNPUBLISHED -- rights reserved under the Copyright Laws of the United
  * States.  Use of a copyright notice is precautionary only and does not
  * imply publication or disclosure.
- * 
+ *
  * This software contains confidential information and trade secrets of HaL
  * Computer Systems, Inc.  Use, disclosure, or reproduction is prohibited
  * without the prior express written permission of HaL Computer Systems, Inc.
- * 
+ *
  *                         RESTRICTED RIGHTS LEGEND
  * Use, duplication, or disclosure by the Government is subject to
  * restrictions as set forth in subparagraph (c)(l)(ii) of the Rights in
  * Technical Data and Computer Software clause at DFARS 252.227-7013.
  *                        HaL Computer Systems, Inc.
  *                  1315 Dell Avenue, Campbell, CA  95008
- * 
+ *
  */
-
-
 
 #ifndef _types_h
 #define _types_h 1
 
 #ifdef C_API
-#include <stdint.h>
 #include "utility/c_iostream.h"
+#include <stdint.h>
 #else
-#include <cstdint>
 #include <iostream>
+#include <stdint.h>
 using namespace std;
 #endif
 
-#define true  1
+#define true 1
 #define false 0
 
 typedef char Boolean;
-typedef void* voidPtr;
-typedef char* charPtr;
+typedef void *voidPtr;
+typedef char *charPtr;
 
 typedef intptr_t mmdb_pos_t;
 
 enum io_status { done, fail };
 
 class root;
-typedef Boolean (*cmp_func_ptr_t)(const void*, const void*);
-typedef void (*app_func_ptr_t)(const void*);
-typedef void (*print_func_ptr_t)(ostream&, const void*);
+typedef Boolean (*cmp_func_ptr_t)(const void *, const void *);
+typedef void (*app_func_ptr_t)(const void *);
+typedef void (*print_func_ptr_t)(ostream &, const void *);
 #endif

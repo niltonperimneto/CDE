@@ -17,7 +17,7 @@ cpp = find_program('cpp')
 custom_target('UNIXbindings',
   input : 'UNIXbindings.cpp',
   output : 'UNIXbindings',
-  command : [cpp, '-P', '-DXCOMM=#', '-I' + meson.source_root() + '/include', '@INPUT@', '@OUTPUT@'],
+  command : [cpp, '-P', '-DXCOMM=#', '-I' + meson.project_source_root() + '/include', '@INPUT@', '@OUTPUT@'],
   install : true,
   install_dir : get_option('prefix') / 'lib/X11/app-defaults/C'
 )

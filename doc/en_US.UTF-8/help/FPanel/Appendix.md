@@ -1,0 +1,36 @@
+
+# The Main Panel
+Main Panel
+
+The Main Panel is the horizontal window at the bottom of the display. It
+contains a number of controls you use often, including the workspace
+switch, which lets you change to other workspaces.
+# Subpanels
+subpanel
+
+If a control in the Main Panel has an arrow button above it, then the
+control has a subpanel. Subpanels contain additional controls.
+To display the subpanel, click the arrow.
+
+Subpanels always contain:
+
+An Install Icon control. Use this control to customize the subpanel.
+
+A labelled copy of the control in the Main Panel.
+# Front Panel Controls
+
+
+Some controls start applications when the control is
+clicked.
+Some controls are drop zones&emdash;you can drag a file from File
+Manager or Application Manager to the control. Others, like the
+clock, date, and busy light, are indicators.
+Many of the controls in the Front Panel start applications when you click
+them&emdash;for example, the File Manager and Style Manager controls.
+Some controls are drop zones&emdash;for example, the Printer and Trash Can
+controls. You can drag a file from File Manager or Application Manager
+to the control.
+Certain controls, such as the clock and busy light, are indicators that tell
+you something about the state of your system. Other controls have dual
+purpose; for example, the Calendar and Mailer controls are both indicators
+and buttons for starting applications.

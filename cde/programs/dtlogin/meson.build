@@ -53,7 +53,7 @@ if host_machine.system() == 'linux'
 endif
 
 dtlogin_src = [
-  'access.c', 'auth.c', 'genauth.c', 'daemon.c', 'dm.c',
+  'access.c', 'auth.c', 'daemon.c', 'dm.c',
   'dpylist.c', 'error.c', 'file.c', 'mitauth.c', 'protodpy.c', 'policy.c',
   'reset.c', 'server.c', 'session.c', 'socket.c', 'util.c',
   'verify.c', 'sysauth.c', 'fontpath.c', 'qualify.c', 'choose.c', 'netaddr.c',
@@ -95,7 +95,7 @@ executable('dtgreet',
 )
 
 dtchooser_src = [
-  'chooser.c', 'dtchooser.c', 'vglogo.c', 'vgutil.c', 'vgcallback.c', 'vglang.c'
+  'chooser.c', 'vglogo.c', 'vgutil.c', 'vgcallback.c', 'vglang.c'
 ]
 
 executable('dtchooser',

@@ -47,10 +47,28 @@ static  char sccsid[] = "@(#)getdate.y 1.10 94/11/07 Copyr 1993 Sun Microsystems
 #include <ctype.h>
 #include <string.h>
 #include <time.h>
+#include <sys/types.h>
+#include <sys/timeb.h>
 #include "getdate.h"
 #ifdef SVR4
 #include <sys/time.h>
 #endif /* SVR4 */
+
+#define DATE_BBOT   (-1) /* Bad beginning of time */
+#define DATE_AEOT   (-2) /* After end of time     */
+#define DATE_BMONTH (-3) /* Bad month             */
+#define DATE_BDAY   (-4) /* Bad day               */
+#define DATE_BMIN   (-5) /* Bad minute            */
+#define DATE_BHOUR  (-6) /* Bad hour              */
+#define DATE_CONV   (-7) /* Conversion error      */
+
+#define BOT_YEAR    1970
+#define EOT_YEAR    2037
+
+static time_t timeconv(int hh, int mm, int ss, int mer);
+static time_t daylcorr(time_t future, time_t now);
+static int yylex(void);
+static void yyerror(char *s);
 
 #ifndef NULL
 #define	NULL	0

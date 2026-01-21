@@ -1,0 +1,1 @@
+Table des matièresTâches du Gestionnaire des informationsInformation Manager Reference

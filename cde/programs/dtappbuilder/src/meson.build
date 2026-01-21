@@ -1,0 +1,6 @@
+subdir('libAButil')
+subdir('libABobj')
+subdir('libABobjXm')
+subdir('libABil')
+subdir('abmf')
+subdir('ab')

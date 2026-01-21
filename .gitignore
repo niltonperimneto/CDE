@@ -3,6 +3,7 @@ build/
 meson-logs/
 meson-private/
 *.log
+log.txt
 
 # CDE Build Artifacts
 .cache/
@@ -28,3 +29,6 @@ target/
 # Autotools generated (optional, but good to keep clean if we are fully replacing)
 # Makefile
 # Makefile.in
+
+# Verification outputs
+verification_output/

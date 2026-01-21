@@ -9,12 +9,13 @@ add_project_arguments('-DANSICPP', '-DMULTIBYTE', '-DNLS16', '-D_GNU_SOURCE', '-
 
 common_c_args = []
 
-inc = include_directories('include')
+inc = include_directories('include', '.')
 
 # Dependencies
 libm = cc.find_library('m', required : false)
 libdl = cc.find_library('dl', required : false)
 libcrypt = cc.find_library('crypt', required : false)
+liblmdb = cc.find_library('lmdb', required : true)
 
 # X11 Dependencies
 dep_x11 = dependency('x11')
@@ -58,6 +59,12 @@ conf_data.set('CDE_VERSION_MAJOR', ver_arr[0])
 conf_data.set('CDE_VERSION_MINOR', ver_arr[1])
 conf_data.set('CDE_VERSION_MICRO', ver_arr[2])
 conf_data.set('CDE_VERSION_DEV', '') # Set to -dev if needed
+
+# Configure cde_config.h
+if host_machine.endian() == 'big'
+  conf_data.set('WORDS_BIGENDIAN', 1)
+endif
+configure_file(output : 'cde_config.h', configuration : conf_data)
 
 # Subdirectories
 subdir('include')

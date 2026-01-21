@@ -1,0 +1,1 @@
+stringstrcatstrdupstrncatstrcmpstrncmpstring operators

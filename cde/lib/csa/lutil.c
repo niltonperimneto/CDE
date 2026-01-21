@@ -29,12 +29,12 @@
  *  (c) Copyright 1993, 1994 Sun Microsystems, Inc.
  */
 
-#include <sys/param.h>
 #include <EUSCompat.h>
+#include <rpc/rpc.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <rpc/rpc.h>
+#include <sys/param.h>
 #include <unistd.h>
 #if defined(sun)
 #include <netdb.h>
@@ -53,143 +53,130 @@
 #include "lutil.h"
 
 #if !defined(__linux__)
-extern char * strdup(const char *);
+extern char *strdup(const char *);
 #endif
 
-extern char *
-_DtCmGetPrefix(char *str, char sep)
-{
-        char buf[BUFSIZ];
-        char *ptr;
+extern char *_DtCmGetPrefix(char *str, char sep) {
+  char buf[BUFSIZ];
+  char *ptr;
 
-        if (str == NULL)
-                return(NULL);
+  if (str == NULL)
+    return (NULL);
 
-        ptr = buf;
-        while (*str && *str != sep)
-                *ptr++ = *str++;
-        if (ptr == buf)
-                return(NULL);
-        else {
-                *ptr = '\0';
-                return(strdup(buf));
-        }
+  ptr = buf;
+  while (*str && *str != sep)
+    *ptr++ = *str++;
+  if (ptr == buf)
+    return (NULL);
+  else {
+    *ptr = '\0';
+    return (strdup(buf));
+  }
 }
 
-extern char *
-_DtCmGetLocalHost(void)
-{
-	static char *host = NULL;
+extern char *_DtCmGetLocalHost(void) {
+  static char *host = NULL;
 
-	if (host == NULL) {
-		host = (char *)malloc(MAXHOSTNAMELEN+1);
+  if (host == NULL) {
+    host = (char *)malloc(MAXHOSTNAMELEN + 1);
 #if defined(sun)
-		(void)sysinfo(SI_HOSTNAME, host, MAXHOSTNAMELEN);
+    (void)sysinfo(SI_HOSTNAME, host, MAXHOSTNAMELEN);
 #else
-		(void)gethostname(host, MAXHOSTNAMELEN);
+    (void)gethostname(host, MAXHOSTNAMELEN);
 #endif /* sun */
-	}
+  }
 
-	return (host);
+  return (host);
 }
 
-extern char *
-_DtCmGetLocalDomain(char *hostname)
-{
-	static char	*domain = NULL;
-	char		buf[BUFSIZ], *ptr;
-	CLIENT		*cl;
+extern char *_DtCmGetLocalDomain(char *hostname) {
+  static char *domain = NULL;
+  char buf[BUFSIZ], *ptr;
+  CLIENT *cl;
 
-	if (domain == NULL) {
-		domain = (char *)malloc(BUFSIZ);
+  if (domain == NULL) {
+    domain = (char *)malloc(BUFSIZ);
 #if defined(sun)
-		sysinfo(SI_SRPC_DOMAIN, domain, BUFSIZ - 1);
+    sysinfo(SI_SRPC_DOMAIN, domain, BUFSIZ - 1);
 #else
-		getdomainname(domain, BUFSIZ - 1);
+    getdomainname(domain, BUFSIZ - 1);
 #endif /* sun */
 
-		/* check domain name */
-		/* this is a hack to find out the domain name that
-		 * is acceptable to the rpc interface, e.g.
-		 * DGDO.Eng.Sun.COM is returned by sysinfo but
-		 * this name is not acceptable to the rpc interface
-		 * hence we need to stripe out the first component
-		 */
-		ptr = domain;
-		if (hostname == NULL) hostname = _DtCmGetLocalHost();
-		while (1) {
-			snprintf(buf, sizeof buf, "%s.%s", hostname, ptr);
-			if ((cl = clnt_create(buf, 100068, 5, "udp")) == NULL) {
-				ptr = strchr(ptr, '.');
-				if (ptr)
-					ptr++;
-				else
-					break;
-			} else {
-				clnt_destroy(cl);
-				break;
-			}
-		}
-		if (ptr && ptr != domain)
-			domain = ptr;
-	}
+    /* check domain name */
+    /* this is a hack to find out the domain name that
+     * is acceptable to the rpc interface, e.g.
+     * DGDO.Eng.Sun.COM is returned by sysinfo but
+     * this name is not acceptable to the rpc interface
+     * hence we need to stripe out the first component
+     */
+    ptr = domain;
+    if (hostname == NULL)
+      hostname = _DtCmGetLocalHost();
+    while (1) {
+      snprintf(buf, sizeof buf, "%s.%s", hostname, ptr);
+      if ((cl = clnt_create(buf, 100068, 5, "udp")) == NULL) {
+        ptr = strchr(ptr, '.');
+        if (ptr)
+          ptr++;
+        else
+          break;
+      } else {
+        clnt_destroy(cl);
+        break;
+      }
+    }
+    if (ptr && ptr != domain)
+      domain = ptr;
+  }
 
-	return (domain);
+  return (domain);
 }
 
-extern char *
-_DtCmGetHostAtDomain(void)
-{
-	static char	*hostname = NULL;
-	char		*host;
+extern char *_DtCmGetHostAtDomain(void) {
+  static char *hostname = NULL;
+  char *host;
 
-	if (hostname == NULL) {
-		hostname = malloc(BUFSIZ);
+  if (hostname == NULL) {
+    hostname = malloc(BUFSIZ);
 
-		host = _DtCmGetLocalHost();
-		if (strchr(host, '.') == NULL)
-			snprintf(hostname, BUFSIZ, "%s.%s", host,
-				_DtCmGetLocalDomain(host));
-		else
-			/* XXX strcpy unsafe here */
-			strcpy(hostname, host);
-	}
+    host = _DtCmGetLocalHost();
+    if (strchr(host, '.') == NULL)
+      snprintf(hostname, BUFSIZ, "%s.%s", host, _DtCmGetLocalDomain(host));
+    else
+      /* XXX strcpy unsafe here - fixed */
+      snprintf(hostname, BUFSIZ, "%s", host);
+  }
 
-	return (hostname);
+  return (hostname);
 }
 
-extern char *
-_DtCmGetUserName(void)
-{
-        static char *name = NULL;
-	_Xgetpwparams	pwd_buf;
-	struct passwd *	pwd_ret;
+extern char *_DtCmGetUserName(void) {
+  static char *name = NULL;
+  _Xgetpwparams pwd_buf;
+  struct passwd *pwd_ret;
 
-        if (name == NULL) {
-	  name = malloc(BUFSIZ);
+  if (name == NULL) {
+    name = malloc(BUFSIZ);
 
-	  if ((pwd_ret = _XGetpwuid(geteuid(), pwd_buf)) == NULL)
-	    strcpy(name, "nobody");
-	  else
-	    strcpy(name, pwd_ret->pw_name);
-        }
+    if ((pwd_ret = _XGetpwuid(geteuid(), pwd_buf)) == NULL)
+      snprintf(name, BUFSIZ, "nobody");
+    else
+      snprintf(name, BUFSIZ, "%s", pwd_ret->pw_name);
+  }
 
-	return name;
+  return name;
 }
 
 /*
  * this routine checks whether the given name is a valid user name
  */
-extern boolean_t
-_DtCmIsUserName(char *user)
-{
-	_Xgetpwparams	pwd_buf;
-	struct passwd *	pwd_ret;
+extern boolean_t _DtCmIsUserName(char *user) {
+  _Xgetpwparams pwd_buf;
+  struct passwd *pwd_ret;
 
-	pwd_ret = _XGetpwnam(user, pwd_buf);
-	if (pwd_ret == NULL)
-		return (B_FALSE);
-	else
-		return (B_TRUE);
+  pwd_ret = _XGetpwnam(user, pwd_buf);
+  if (pwd_ret == NULL)
+    return (B_FALSE);
+  else
+    return (B_TRUE);
 }
-

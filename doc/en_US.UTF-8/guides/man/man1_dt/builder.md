@@ -1,0 +1,2 @@
+dtbuilderuser cmddtbuilderthe
+CDE Application Builderdtbuilderprojectfile-useWCclass

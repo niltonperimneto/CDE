@@ -1,0 +1,15 @@
+はじめに共通デスクトップ環境 国際化対応プログラマーズ・ガイドは、デスクトップを国際化に対応させ、アプリケーションが一貫性のあるユーザ・インタフェースでさまざまな言語と文化的規約をサポートできるようにするための情報を提供しています。特にこのガイドは、世界中に分散されるアプリケーションの作成方法について、開発者向けのガイドラインとヒントを提供しています。デスクトップ内の異なったレイヤに渡って、国際化トピックの全般的な概要を提供します。リファレンスやさらに詳しいドキュメントを示しています。標準的なドキュメントが参照されている場合もあります。このガイドの目的は、既存のリファレンスや概念的なドキュメントの複製をつくることではなく、国際化に特有なトピックに関するガイドラインと規約を提供することです。オープンなソフトウェア環境における特定の構成要素やレイヤではなく、国際化トピックに焦点を置いています。対象読者このマニュアルは、アプリケーション・プログラマと開発者、および、その関連分野の人々を対象として、さまざまなレベルの情報を提供しています。マニュアルの構成マニュアルの内容を説明します。第１章「国際化入門」は、ロケール、フォント、描画、入力、クライアント間通信、ユーザ・ビジュアル・テキストの抽出など、デスクトップ内の国際化とローカライズについての概要です。国際化規格の意義についての情報も提供しています。第２章「国際化と共通デスクトップ環境」は、ロケール管理、ローカライズされたリソース、フォント管理、ローカライズされたテキスト・タスク、ローカライズされたテキストに対応したクライアント間通信、国際化対応の関数など、開発者がアプリケーションを国際化対応にする場合に共通して考慮しなければならない一連のトピックを提供しています。第３章「国際化と分散ネットワーク」は、分散ネットワークでのエンコードされた文字の処理に関連するトピックについて論じています。クライアント間の相互運用に関する基本指針や例を示し、国際化に対応した分散環境へと開発者を導きます。第４章「Xt、Xlib、および、Motif依存」には、国際化対応アプリケーション、ロケール管理、ローカライズされたテキスト、国際的なユーザ・インタフェース言語(UIL)、ローカライズされたアプリケーションなどのトピックを提供しています。付録Ａ「メッセージ・ガイドライン」は、メッセージ記述に関する一連のガイドラインです。関連出版物このマニュアルで提供されているトピックに関するさらに詳しい情報は、次の文献を参照してください。ISO C: ISO/IEC 9899:1990,Programming Languages --- C(technically identical to ANS X3.159-1989,
+Programming Language C).ISO/IEC 9945-1: 1990, (IEEE Standard 1003.1)Information Technology - Portable Operating System Interface (POSIX) - Part
+1: System Application Program Interface (API) [C Language].ISO/IEC DIS 9945-2: 1992, (IEEE Standard 1003.2-Draft)Information Technology - Portable Operating System Interface (POSIX) - Part
+2: Shell and Utilities.Motif:Motif Programmer's
+Reference,Revision 1.2, Open Software Foundation,
+Prentice Hall, 1992, ISBN: 0-13-643115-1.Scheifler, W. R.,X Window System, The
+Complete Reference to Xlib, Xprotocol, ICCCM, XLFD- X Version
+11, Release 5, Digital Press, 1992, ISBN: 1-55558- 088-2.X/Open:X/Open CAE Specification System
+Interface Definition, Issue 4, X/Open Company Ltd., 1992, ISBN:
+1-872630-46-4.X/Open:X/Open CAE Specification Commands
+and Utilities, Issue 4, X/Open Company Ltd., 1992, ISBN: 1-872630-48-0.X/Open:X/Open CAE Specification System
+Interface and Headers, Issue 4, X/Open Company Ltd., 1992, ISBN:
+1-872630-47-2.X/Open:X/Open Internationalization Guide, X/Open Company Ltd., 1992, ISBN: 1-872630-20-0.ISO/IEC 10646-1:1993 (E):Information
+Technology - Universal Multi-Octet Coded Character Set (UCS). Part 1: Architecture
+and Basic Multilingual Plane.DocBook SGMLマークアップとはこのマニュアルは、DocBook文書型定義(DTD)を使用するSGML(Standard Generalized Mark-up Language）で書かれています。次の表に、さまざまな意味要素に対応するDocBookマークアップを示します。DocBook SGMLマークアップマークアップ表示意味要素例AaBbCc123コマンド名lsは、ファイルをリストする場合に使用します。AaBbCc123コマンドのオプションls&minus;aは、すべてのファイルをリストする場合に使用します。AaBbCc123コマンド行 （実際の名前や値と置換えます）ファイルを削除するには、rmファイル名と入力します。AaBbCc123ファイル名とディレクトリ名自分の.loginファイルを編集してください。AaBbCc123書籍名、新しい単語や用語、強調語ユーザーズ・ガイドの第６章を参照してください。これは、classオプションと呼ばれています。これを実行するには、rootである必要があります。

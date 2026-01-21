@@ -1,0 +1,21 @@
+[package]
+name = "libcsa_xdr"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+crate-type = ["staticlib", "rlib"]
+
+[dependencies]
+libc = "0.2"
+xdr-codec = "0.2"
+
+[build-dependencies]
+cbindgen = "0.26"
+bindgen = "0.69"
+# We assume xdrgen is installed as a binary tool (cargo install xdrgen)
+
+[profile.release]
+strip = false
+lto = false
+

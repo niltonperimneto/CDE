@@ -1,0 +1,10 @@
+Common Desktop Environment: Guide de l'utilisateur du Gestionnaire des informations&Preface;
+&Gstart;
+&RdBooks;
+&Navigate;
+&Search;
+&Bkmarks;
+&Mngrafx;
+&Printing;
+&Custom;
+&Gloss;

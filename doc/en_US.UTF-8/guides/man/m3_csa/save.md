@@ -1,0 +1,3 @@
+# csa_save
+library call`csa_save`saves calendar entries into an archive file#include <xcsa.h>CSA_return_code`csa_save`CSA_session_handlesessionCSA_stringarchive_nameCSA_uint32number_attributesCSA_attribute *attributesCSA_enum *operatorsCSA_booleandelete_entryCSA_extension *save_extensions
+## DESCRIPTION
