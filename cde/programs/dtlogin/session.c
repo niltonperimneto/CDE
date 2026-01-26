@@ -107,6 +107,8 @@
 #endif
 
 int ApplyFontPathMods(struct display *d, Display *dpy); // fontpath.c
+int Verify(struct display *d, struct greet_info *greet,
+           struct verify_info *verify); // verify.c
 
 #ifdef SIA
 

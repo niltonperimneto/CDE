@@ -49,14 +49,16 @@
  * system includes
  */
 #include <X11/Xlib.h>
+#include <libgen.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/stat.h>
 
 /*
  * Canvas Engine
  */
-/* #include "CanvasP.h" REMOVED */
-/* #include "CanvasSegP.h" REMOVED */
+#include "CanvasP.h"
+#include "CanvasSegP.h"
 #include "dthelp_engine.h"
 
 /*
@@ -814,44 +816,56 @@ int _DtHelpUpdatePath(DtHelpDispAreaStruct *pDAS,
   /*
    * now create and set the topic
    */
+  /*
+   * Attempt to use Rust Engine if available and Markdown content exists
+   */
+  Boolean md_loaded = False;
+
   if (pDAS->rust_engine) {
-    /*
-     * RUST PATH: Bypass legacy FormatToc and CanvasSetTopic.
-     * 1. Set text (hardcoded for now, mimicking loading)
-     * 2. Calculate height
-     * 3. Set scrollbars
-     */
-    const char *rust_content =
-        "# Rust via CDE\n\nThis content replaces the legacy SGML parser.\nIt "
-        "is safer, faster, and renders using cosmic-text.\n\nVerify "
-        "scrolling:"
-        "\n1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\n13\n14\n15\n16\n17\n18\n19\n2"
-        "0";
+    char *volName = _DtHelpCeGetVolumeName(volume_handle);
+    if (volName && loc_id) {
+      char mdPath[1024];
+      char *dirCopy = strdup(volName);
+      char *dirName = dirname(dirCopy);
+      struct stat st;
 
-    dthelp_engine_set_text(pDAS->rust_engine, rust_content);
+      /* Construct path: volume_dir/markdown/loc_id.md */
+      /* Assuming loc_id maps to filename. For Home, it might be Home.md */
+      snprintf(mdPath, sizeof(mdPath), "%s/markdown/%s.md", dirName, loc_id);
 
+      if (stat(mdPath, &st) == 0) {
+        /* File exists, load it */
+        FILE *fp = fopen(mdPath, "r");
+        if (fp) {
+          fseek(fp, 0, SEEK_END);
+          long fsize = ftell(fp);
+          fseek(fp, 0, SEEK_SET);
+
+          char *string = malloc(fsize + 1);
+          fread(string, 1, fsize, fp);
+          string[fsize] = 0;
+          fclose(fp);
+
+          dthelp_engine_set_text(pDAS->rust_engine, string);
+          free(string);
+          md_loaded = True;
+        }
+      }
+      free(dirCopy);
+    }
+  }
+
+  if (md_loaded) {
+    /* RUST PATH */
     /* Calculate height based on current width */
     width = pDAS->dispWidth;
-    /* We need to ensure width is valid. If 0 (early init), might default to
-     * something or wait for resize */
     if (width < 100)
       width = 400; // Fallback
 
     height = dthelp_engine_get_height(pDAS->rust_engine, width);
 
-    /*
-     * We don't have a legacy topic handle, so we set it to NULL.
-     * SetList logic later uses topic_handle, so we might need to be careful.
-     * But we are bypassing _DtCanvasSetTopic.
-     */
-    topic_handle = NULL;
+    topic_handle = NULL; /* No legacy handle */
     result = 0;
-
-    /* SetMaxPositions handles setting pDAS->maxYpos etc */
-    /* Note: SetMaxPositions might rely on pDAS->canvas metrics if we aren't
-       careful? Looking at SetList.c, SetMaxPositions takes width/height as
-       args. */
-
   } else {
     /* LEGACY PATH */
     result =

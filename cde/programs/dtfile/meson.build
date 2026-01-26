@@ -36,23 +36,7 @@ custom_target('dtfile.config',
   install_dir : join_paths(get_option('prefix'), 'config', 'C') # configdir
 )
 
-custom_target('dtfile_error',
-  input : 'dtfile_error.cpp',
-  output : 'dtfile_error',
-  command : [cpp_cmd, script_flags, '@INPUT@'],
-  capture : true,
-  install : true,
-  install_dir : join_paths(get_option('prefix'), 'bin')
-)
 
-custom_target('dterror.ds',
-  input : 'dterror.src',
-  output : 'dterror.ds',
-  command : [cpp_cmd, script_flags, '@INPUT@'],
-  capture : true,
-  install : true,
-  install_dir : join_paths(get_option('prefix'), 'bin') 
-)
 
 executable('dtfile',
   dtfile_src,

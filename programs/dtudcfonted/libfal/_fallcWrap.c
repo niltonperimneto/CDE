@@ -79,491 +79,424 @@ from the X Consortium.
  *		 Katsuhisa Yano		TOSHIBA Corp.
  */
 
-#include <stdint.h>
-#include "_fallibint.h"
 #include "_fallcint.h"
+#include "_fallibint.h"
+#include <stdint.h>
 #if defined(__linux__)
 #include <locale.h>
 #else
 #include <X11/Xlocale.h>
 #endif
-#include <X11/Xos.h>
 #include "_falutil.h"
+#include <X11/Xos.h>
 
-extern void _fallcInitLoader(
-    void
-);
+extern void _fallcInitLoader(void);
 
 #ifdef XTHREADS
 LockInfoPtr _Xi18n_lock;
 #endif
 
-char *
-falSetLocaleModifiers(const char   *modifiers)
-{
-    XLCd lcd = _fallcCurrentLC();
-    char *user_mods;
+char *falSetLocaleModifiers(const char *modifiers) {
+  XLCd lcd = _fallcCurrentLC();
+  char *user_mods;
 
-    if (!lcd)
-	return (char *) NULL;
-    if (!modifiers)
-	return lcd->core->modifiers;
-    user_mods = getenv("XMODIFIERS");
-    modifiers = (*lcd->methods->map_modifiers) (lcd,
-						user_mods, (char *)modifiers);
-    if (modifiers) {
-	if (lcd->core->modifiers)
-	    Xfree(lcd->core->modifiers);
-	lcd->core->modifiers = (char *)modifiers;
-    }
-    return (char *)modifiers;
+  if (!lcd)
+    return (char *)NULL;
+  if (!modifiers)
+    return lcd->core->modifiers;
+  user_mods = getenv("XMODIFIERS");
+  modifiers = (*lcd->methods->map_modifiers)(lcd, user_mods, (char *)modifiers);
+  if (modifiers) {
+    if (lcd->core->modifiers)
+      Xfree(lcd->core->modifiers);
+    lcd->core->modifiers = (char *)modifiers;
+  }
+  return (char *)modifiers;
 }
 
-Bool
-falSupportsLocale(void)
-{
-    return _fallcCurrentLC() != (XLCd)NULL;
-}
+Bool falSupportsLocale(void) { return _fallcCurrentLC() != (XLCd)NULL; }
 
-Bool _fallcValidModSyntax(char *mods, char **valid_mods)
-{
-    int i;
-    char **ptr;
+Bool _fallcValidModSyntax(char *mods, char **valid_mods) {
+  int i;
+  char **ptr;
 
-    while (mods && (*mods == '@')) {
-	mods++;
-	if (*mods == '@')
-	    break;
-	for (ptr = valid_mods; *ptr; ptr++) {
-	    i = strlen(*ptr);
-	    if (strncmp(mods, *ptr, i) || ((mods[i] != '=')))
-		continue;
-	    mods = strchr(mods+i+1, '@');
-	    break;
-	}
+  while (mods && (*mods == '@')) {
+    mods++;
+    if (*mods == '@')
+      break;
+    for (ptr = valid_mods; *ptr; ptr++) {
+      i = strlen(*ptr);
+      if (strncmp(mods, *ptr, i) || ((mods[i] != '=')))
+        continue;
+      mods = strchr(mods + i + 1, '@');
+      break;
     }
-    return !mods || !*mods;
+  }
+  return !mods || !*mods;
 }
 
 static const char *im_valid[] = {"im", (char *)NULL};
 
 /*ARGSUSED*/
-char *
-_fallcDefaultMapModifiers (XLCd lcd, char *user_mods, char *prog_mods)
-{
-    int i;
-    char *mods;
+char *_fallcDefaultMapModifiers(XLCd lcd, char *user_mods, char *prog_mods) {
+  int i;
+  char *mods;
 
-    if (!_fallcValidModSyntax(prog_mods, (char **)im_valid))
-	return (char *)NULL;
-    if (!_fallcValidModSyntax(user_mods, (char **)im_valid))
-	return (char *)NULL;
-    i = strlen(prog_mods) + 1;
+  if (!_fallcValidModSyntax(prog_mods, (char **)im_valid))
+    return (char *)NULL;
+  if (!_fallcValidModSyntax(user_mods, (char **)im_valid))
+    return (char *)NULL;
+  i = strlen(prog_mods) + 1;
+  if (user_mods)
+    i += strlen(user_mods);
+  mods = Xmalloc(i);
+  if (mods) {
+    strcpy(mods, prog_mods);
     if (user_mods)
-	i += strlen(user_mods);
-    mods = Xmalloc(i);
-    if (mods) {
-	strcpy(mods, prog_mods);
-	if (user_mods)
-	    strcat(mods, user_mods);
-    }
-    return mods;
+      strcat(mods, user_mods);
+  }
+  return mods;
 }
 
 typedef struct _XLCdListRec {
-    struct _XLCdListRec *next;
-    XLCd lcd;
-    int ref_count;
+  struct _XLCdListRec *next;
+  XLCd lcd;
+  int ref_count;
 } XLCdListRec, *XLCdList;
 
 static XLCdList lcd_list = NULL;
 
 typedef struct _XlcLoaderListRec {
-    struct _XlcLoaderListRec *next;
-    XLCdLoadProc proc;
+  struct _XlcLoaderListRec *next;
+  XLCdLoadProc proc;
 } XlcLoaderListRec, *XlcLoaderList;
 
 static XlcLoaderList loader_list = NULL;
 
-void
-_fallcRemoveLoader(XLCdLoadProc proc)
-{
-    XlcLoaderList loader, prev;
+void _fallcRemoveLoader(XLCdLoadProc proc) {
+  XlcLoaderList loader, prev;
 
-    if (loader_list == NULL)
-	return;
-
-    prev = loader = loader_list;
-    if (loader->proc == proc) {
-	loader_list = loader->next;
-	Xfree(loader);
-	return;
-    }
-
-    while (loader = loader->next) {
-	if (loader->proc == proc) {
-	    prev->next = loader->next;
-	    Xfree(loader);
-	    return;
-	}
-	prev = loader;
-    }
-
+  if (loader_list == NULL)
     return;
-}
 
-Bool
-_fallcAddLoader(XLCdLoadProc proc, XlcPosition position)
-{
-    XlcLoaderList loader, last;
+  prev = loader = loader_list;
+  if (loader->proc == proc) {
+    loader_list = loader->next;
+    Xfree(loader);
+    return;
+  }
 
-    _fallcRemoveLoader(proc);		/* remove old loader, if exist */
-
-    loader = (XlcLoaderList) Xmalloc(sizeof(XlcLoaderListRec));
-    if (loader == NULL)
-	return False;
-
-    loader->proc = proc;
-
-    if (loader_list == NULL)
-	position = XlcHead;
-
-    if (position == XlcHead) {
-	loader->next = loader_list;
-	loader_list = loader;
-    } else {
-	last = loader_list;
-	while (last->next)
-	    last = last->next;
-
-	loader->next = NULL;
-	last->next = loader;
+  while (loader = loader->next) {
+    if (loader->proc == proc) {
+      prev->next = loader->next;
+      Xfree(loader);
+      return;
     }
+    prev = loader;
+  }
 
-    return True;
+  return;
 }
 
-XLCd
-_falOpenLC(char *name)
-{
-    XLCd lcd;
-    XlcLoaderList loader;
-    XLCdList cur;
+Bool _fallcAddLoader(XLCdLoadProc proc, XlcPosition position) {
+  XlcLoaderList loader, last;
+
+  _fallcRemoveLoader(proc); /* remove old loader, if exist */
+
+  loader = (XlcLoaderList)Xmalloc(sizeof(XlcLoaderListRec));
+  if (loader == NULL)
+    return False;
+
+  loader->proc = proc;
+
+  if (loader_list == NULL)
+    position = XlcHead;
+
+  if (position == XlcHead) {
+    loader->next = loader_list;
+    loader_list = loader;
+  } else {
+    last = loader_list;
+    while (last->next)
+      last = last->next;
+
+    loader->next = NULL;
+    last->next = loader;
+  }
+
+  return True;
+}
+
+extern XrmQuark falrmPermStringToQuark(const char *);
+
+XLCd _falOpenLC(char *name) {
+  XLCd lcd;
+  XlcLoaderList loader;
+  XLCdList cur;
 #if !defined(X_NOT_STDC_ENV) && !defined(X_LOCALE)
-    char siname[256];
-    char *_fallcMapOSLocaleName();
+  char siname[256];
+  char *_fallcMapOSLocaleName(char *, char *);
 #endif
 
-    if (name == NULL) {
-	name = setlocale (LC_CTYPE, (char *)NULL);
+  if (name == NULL) {
+    name = setlocale(LC_CTYPE, (char *)NULL);
 #if !defined(X_NOT_STDC_ENV) && !defined(X_LOCALE)
-	name = _fallcMapOSLocaleName (name, siname);
+    name = _fallcMapOSLocaleName(name, siname);
 #endif
+  }
+
+  _XLockMutex(_Xi18n_lock);
+
+  /*
+   * search for needed lcd, if found return it
+   */
+  for (cur = lcd_list; cur; cur = cur->next) {
+    if (!strcmp(cur->lcd->core->name, name)) {
+      lcd = cur->lcd;
+      cur->ref_count++;
+      _XUnlockMutex(_Xi18n_lock);
+      return lcd;
     }
+  }
 
-    _XLockMutex(_Xi18n_lock);
+  if (!loader_list)
+    _fallcInitLoader();
 
-    /*
-     * search for needed lcd, if found return it
-     */
-    for (cur = lcd_list; cur; cur = cur->next) {
-	if (!strcmp (cur->lcd->core->name, name)) {
-	    lcd = cur->lcd;
-	    cur->ref_count++;
-	    _XUnlockMutex(_Xi18n_lock);
-            return lcd;
-	}
+  /*
+   * not there, so try to get and add to list
+   */
+  for (loader = loader_list; loader; loader = loader->next) {
+    lcd = (*loader->proc)(name);
+    if (lcd) {
+      cur = (XLCdList)Xmalloc(sizeof(XLCdListRec));
+      if (cur) {
+        cur->lcd = lcd;
+        cur->ref_count = 1;
+        cur->next = lcd_list;
+        lcd_list = cur;
+      } else {
+        (*lcd->methods->close)(lcd);
+        lcd = (XLCd)NULL;
+      }
+      break;
     }
-
-    if (!loader_list)
-	_fallcInitLoader();
-
-    /*
-     * not there, so try to get and add to list
-     */
-    for (loader = loader_list; loader; loader = loader->next) {
-	lcd = (*loader->proc)(name);
-	if (lcd) {
-	    cur = (XLCdList) Xmalloc (sizeof(XLCdListRec));
-	    if (cur) {
-		cur->lcd = lcd;
-		cur->ref_count = 1;
-		cur->next = lcd_list;
-		lcd_list = cur;
-	    } else {
-		(*lcd->methods->close)(lcd);
-		lcd = (XLCd) NULL;
-	    }
-	    break;
-	}
-    }
+  }
+  return (XLCd)NULL;
 }
 
-void
-_falCloseLC(XLCd lcd)
-{
-    XLCdList cur, *prev;
+void _falCloseLC(XLCd lcd) {
+  XLCdList cur, *prev;
 
-    for (prev = &lcd_list; cur = *prev; prev = &cur->next) {
-	if (cur->lcd == lcd) {
-	    if (--cur->ref_count < 1) {
-		(*lcd->methods->close)(lcd);
-		*prev = cur->next;
-		Xfree(cur);
-	    }
-	    break;
-	}
+  for (prev = &lcd_list; cur = *prev; prev = &cur->next) {
+    if (cur->lcd == lcd) {
+      if (--cur->ref_count < 1) {
+        (*lcd->methods->close)(lcd);
+        *prev = cur->next;
+        Xfree(cur);
+      }
+      break;
     }
+  }
 }
 
 /*
  * Get the XLCd for the current locale
  */
 
-XLCd
-_fallcCurrentLC(void)
-{
-    XLCd lcd;
-    static XLCd last_lcd = NULL;
+XLCd _fallcCurrentLC(void) {
+  XLCd lcd;
+  static XLCd last_lcd = NULL;
 
-    lcd = _falOpenLC((char *) NULL);
+  lcd = _falOpenLC((char *)NULL);
 
-    if (last_lcd)
-	_falCloseLC(last_lcd);
+  if (last_lcd)
+    _falCloseLC(last_lcd);
 
-    last_lcd = lcd;
+  last_lcd = lcd;
 
-    return lcd;
+  return lcd;
 }
 
-XrmMethods
-_falrmInitParseInfo(XPointer *state)
-{
-    XLCd lcd = _falOpenLC((char *) NULL);
+XrmMethods _falrmInitParseInfo(XPointer *state) {
+  XLCd lcd = _falOpenLC((char *)NULL);
 
-    if (lcd == (XLCd) NULL)
-	return (XrmMethods) NULL;
+  if (lcd == (XLCd)NULL)
+    return (XrmMethods)NULL;
 
-    return (*lcd->methods->init_parse_info)(lcd, state);
+  return (*lcd->methods->init_parse_info)(lcd, state);
 }
 
-int
-falmbTextPropertyToTextList(
-    Display *dpy,
-    XTextProperty *text_prop,
-    char ***list_ret,
-    int *count_ret)
-{
-    XLCd lcd = _fallcCurrentLC();
+int falmbTextPropertyToTextList(Display *dpy, XTextProperty *text_prop,
+                                char ***list_ret, int *count_ret) {
+  XLCd lcd = _fallcCurrentLC();
 
-    if (lcd == NULL)
-	return XLocaleNotSupported;
+  if (lcd == NULL)
+    return XLocaleNotSupported;
 
-    return (*lcd->methods->mb_text_prop_to_list)(lcd, dpy, text_prop, list_ret,
-						 count_ret);
+  return (*lcd->methods->mb_text_prop_to_list)(lcd, dpy, text_prop, list_ret,
+                                               count_ret);
 }
 
-int
-falwcTextPropertyToTextList(
-    Display *dpy,
-    XTextProperty *text_prop,
-    wchar_t ***list_ret,
-    int *count_ret)
-{
-    XLCd lcd = _fallcCurrentLC();
+int falwcTextPropertyToTextList(Display *dpy, XTextProperty *text_prop,
+                                wchar_t ***list_ret, int *count_ret) {
+  XLCd lcd = _fallcCurrentLC();
 
-    if (lcd == NULL)
-	return XLocaleNotSupported;
+  if (lcd == NULL)
+    return XLocaleNotSupported;
 
-    return (*lcd->methods->wc_text_prop_to_list)(lcd, dpy, text_prop, list_ret,
-						 count_ret);
+  return (*lcd->methods->wc_text_prop_to_list)(lcd, dpy, text_prop, list_ret,
+                                               count_ret);
 }
 
-int
-falmbTextListToTextProperty(
-    Display *dpy,
-    char **list,
-    int count,
-    XICCEncodingStyle style,
-    XTextProperty *text_prop)
-{
-    XLCd lcd = _fallcCurrentLC();
+int falmbTextListToTextProperty(Display *dpy, char **list, int count,
+                                XICCEncodingStyle style,
+                                XTextProperty *text_prop) {
+  XLCd lcd = _fallcCurrentLC();
 
-    if (lcd == NULL)
-	return XLocaleNotSupported;
+  if (lcd == NULL)
+    return XLocaleNotSupported;
 
-    return (*lcd->methods->mb_text_list_to_prop)(lcd, dpy, list, count, style,
-						 text_prop);
+  return (*lcd->methods->mb_text_list_to_prop)(lcd, dpy, list, count, style,
+                                               text_prop);
 }
 
-int
-falwcTextListToTextProperty(
-    Display *dpy,
-    wchar_t **list,
-    int count,
-    XICCEncodingStyle style,
-    XTextProperty *text_prop)
-{
-    XLCd lcd = _fallcCurrentLC();
+int falwcTextListToTextProperty(Display *dpy, wchar_t **list, int count,
+                                XICCEncodingStyle style,
+                                XTextProperty *text_prop) {
+  XLCd lcd = _fallcCurrentLC();
 
-    if (lcd == NULL)
-	return XLocaleNotSupported;
+  if (lcd == NULL)
+    return XLocaleNotSupported;
 
-    return (*lcd->methods->wc_text_list_to_prop)(lcd, dpy, list, count, style,
-						 text_prop);
+  return (*lcd->methods->wc_text_list_to_prop)(lcd, dpy, list, count, style,
+                                               text_prop);
 }
 
-void
-falwcFreeStringList(wchar_t **list)
-{
-    XLCd lcd = _fallcCurrentLC();
+void falwcFreeStringList(wchar_t **list) {
+  XLCd lcd = _fallcCurrentLC();
 
-    if (lcd == NULL)
-	return;
+  if (lcd == NULL)
+    return;
 
-    (*lcd->methods->wc_free_string_list)(lcd, list);
+  (*lcd->methods->wc_free_string_list)(lcd, list);
 }
 
-char *
-falDefaultString(void)
-{
-    XLCd lcd = _fallcCurrentLC();
+char *falDefaultString(void) {
+  XLCd lcd = _fallcCurrentLC();
 
-    if (lcd == NULL)
-	return (char *) NULL;
+  if (lcd == NULL)
+    return (char *)NULL;
 
-    return (*lcd->methods->default_string)(lcd);
+  return (*lcd->methods->default_string)(lcd);
 }
 
-void
-_fallcCopyFromArg(char *src, char *dst, int size)
-{
-    if (size == sizeof(long))
-	*((long *) dst) = (long) src;
+void _fallcCopyFromArg(char *src, char *dst, int size) {
+  if (size == sizeof(long))
+    *((long *)dst) = (long)src;
 #ifdef LONG64
-    else if (size == sizeof(int))
-	*((int *) dst) = (int) (intptr_t) src;
+  else if (size == sizeof(int))
+    *((int *)dst) = (int)(intptr_t)src;
 #endif
-    else if (size == sizeof(short))
-	*((short *) dst) = (short) (intptr_t) src;
-    else if (size == sizeof(char))
-	*((char *) dst) = (char) (intptr_t) src;
-    else if (size == sizeof(XPointer))
-	*((XPointer *) dst) = (XPointer) src;
-    else if (size > sizeof(XPointer))
-	memcpy(dst, (char *) src, size);
-    else
-	memcpy(dst, (char *) &src, size);
+  else if (size == sizeof(short))
+    *((short *)dst) = (short)(intptr_t)src;
+  else if (size == sizeof(char))
+    *((char *)dst) = (char)(intptr_t)src;
+  else if (size == sizeof(XPointer))
+    *((XPointer *)dst) = (XPointer)src;
+  else if (size > sizeof(XPointer))
+    memcpy(dst, (char *)src, size);
+  else
+    memcpy(dst, (char *)&src, size);
 }
 
-void
-_fallcCopyToArg(char *src, char **dst, int size)
-{
-    if (size == sizeof(long))
-	*((long *) *dst) = *((long *) src);
-    else if (size == sizeof(short))
-	*((short *) *dst) = *((short *) src);
-    else if (size == sizeof(char))
-	*((char *) *dst) = *((char *) src);
-    else if (size == sizeof(XPointer))
-	*((XPointer *) *dst) = *((XPointer *) src);
-    else
-	memcpy(*dst, src, size);
+void _fallcCopyToArg(char *src, char **dst, int size) {
+  if (size == sizeof(long))
+    *((long *)*dst) = *((long *)src);
+  else if (size == sizeof(short))
+    *((short *)*dst) = *((short *)src);
+  else if (size == sizeof(char))
+    *((char *)*dst) = *((char *)src);
+  else if (size == sizeof(XPointer))
+    *((XPointer *)*dst) = *((XPointer *)src);
+  else
+    memcpy(*dst, src, size);
 }
 
-void
-_fallcCountVaList(va_list var, int *count_ret)
-{
-    int count;
+void _fallcCountVaList(va_list var, int *count_ret) {
+  int count;
 
-    for (count = 0; va_arg(var, char *); count++)
-	va_arg(var, XPointer);
+  for (count = 0; va_arg(var, char *); count++)
+    va_arg(var, XPointer);
 
-    *count_ret = count;
+  *count_ret = count;
 }
 
-void
-_fallcVaToArgList(va_list var, int count, XlcArgList *args_ret)
-{
-    XlcArgList args;
+void _fallcVaToArgList(va_list var, int count, XlcArgList *args_ret) {
+  XlcArgList args;
 
-    *args_ret = args = (XlcArgList) Xmalloc(sizeof(XlcArg) * count);
-    if (args == (XlcArgList) NULL)
-	return;
+  *args_ret = args = (XlcArgList)Xmalloc(sizeof(XlcArg) * count);
+  if (args == (XlcArgList)NULL)
+    return;
 
-    for ( ; count-- > 0; args++) {
-	args->name = va_arg(var, char *);
-	args->value = va_arg(var, XPointer);
-    }
+  for (; count-- > 0; args++) {
+    args->name = va_arg(var, char *);
+    args->value = va_arg(var, XPointer);
+  }
 }
 
-void
-_fallcCompileResourceList(XlcResourceList resources, int num_resources)
-{
-    for ( ; num_resources-- > 0; resources++)
-	resources->xrm_name = falrmPermStringToQuark(resources->name);
+void _fallcCompileResourceList(XlcResourceList resources, int num_resources) {
+  for (; num_resources-- > 0; resources++)
+    resources->xrm_name = falrmPermStringToQuark(resources->name);
 }
 
-char *
-_fallcGetValues(
-    XPointer base,
-    XlcResourceList resources,
-    int num_resources,
-    XlcArgList args,
-    int num_args,
-    unsigned long mask)
-{
-    XlcResourceList res;
-    XrmQuark xrm_name;
-    int count;
+char *_fallcGetValues(XPointer base, XlcResourceList resources,
+                      int num_resources, XlcArgList args, int num_args,
+                      unsigned long mask) {
+  XlcResourceList res;
+  XrmQuark xrm_name;
+  int count;
 
-    for ( ; num_args-- > 0; args++) {
-	res = resources;
-	count = num_resources;
-	xrm_name = falrmPermStringToQuark(args->name);
+  for (; num_args-- > 0; args++) {
+    res = resources;
+    count = num_resources;
+    xrm_name = falrmPermStringToQuark(args->name);
 
-	for ( ; count-- > 0; res++) {
-	    if (xrm_name == res->xrm_name && (mask & res->mask)) {
-		    _fallcCopyToArg(base + res->offset, &args->value, res->size);
-		break;
-	    }
-	}
-
-	if (count < 0)
-	    return args->name;
+    for (; count-- > 0; res++) {
+      if (xrm_name == res->xrm_name && (mask & res->mask)) {
+        _fallcCopyToArg(base + res->offset, &args->value, res->size);
+        break;
+      }
     }
 
-    return NULL;
+    if (count < 0)
+      return args->name;
+  }
+
+  return NULL;
 }
 
-char *
-_fallcSetValues(
-    XPointer base,
-    XlcResourceList resources,
-    int num_resources,
-    XlcArgList args,
-    int num_args,
-    unsigned long mask)
-{
-    XlcResourceList res;
-    XrmQuark xrm_name;
-    int count;
+char *_fallcSetValues(XPointer base, XlcResourceList resources,
+                      int num_resources, XlcArgList args, int num_args,
+                      unsigned long mask) {
+  XlcResourceList res;
+  XrmQuark xrm_name;
+  int count;
 
-    for ( ; num_args-- > 0; args++) {
-	res = resources;
-	count = num_resources;
-	xrm_name = falrmPermStringToQuark(args->name);
+  for (; num_args-- > 0; args++) {
+    res = resources;
+    count = num_resources;
+    xrm_name = falrmPermStringToQuark(args->name);
 
-	for ( ; count-- > 0; res++) {
-	    if (xrm_name == res->xrm_name && (mask & res->mask)) {
-		_fallcCopyFromArg(args->value, base + res->offset, res->size);
-		break;
-	    }
-	}
-
-	if (count < 0)
-	    return args->name;
+    for (; count-- > 0; res++) {
+      if (xrm_name == res->xrm_name && (mask & res->mask)) {
+        _fallcCopyFromArg(args->value, base + res->offset, res->size);
+        break;
+      }
     }
 
-    return NULL;
+    if (count < 0)
+      return args->name;
+  }
+
+  return NULL;
 }

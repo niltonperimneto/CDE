@@ -25,6 +25,7 @@ resource_c_args = [
   '-DBINDIR="/usr/bin"',
   '-DXDMDIR="/var/dt"',
   '-DKORNSHELL="/usr/bin/ksh"', 
+  '-DDEF_NLS_DIR="' + get_option('prefix') + '/lib/nls"',
   '-DUNIXCONN', '-DTCPCONN', '-DXDMCP',
   '-DLARGECURSORS', '-DR2_COMPAT', '-DOPAQUE', '-DSHAPE', '-DPAM'
 ]
@@ -44,6 +45,7 @@ common_c_args = [
   '-DBINDIR="/usr/bin"',
   '-DXDMDIR="/var/dt"',
   '-DKORNSHELL="/usr/bin/ksh"',
+  '-DDEF_NLS_DIR="' + get_option('prefix') + '/lib/nls"',
   '-DUNIXCONN', '-DTCPCONN', '-DXDMCP',
   '-DLARGECURSORS', '-DR2_COMPAT', '-DOPAQUE', '-DSHAPE', '-DPAM'
 ]
@@ -54,11 +56,16 @@ endif
 
 dtlogin_src = [
   'access.c', 'auth.c', 'daemon.c', 'dm.c',
-  'dpylist.c', 'error.c', 'file.c', 'mitauth.c', 'protodpy.c', 'policy.c',
+  'dpylist.c', 'error.c', 'file.c', 'genauth.c', 'mitauth.c', 'protodpy.c', 'policy.c',
   'reset.c', 'server.c', 'session.c', 'socket.c', 'util.c',
   'verify.c', 'sysauth.c', 'fontpath.c', 'qualify.c', 'choose.c', 'netaddr.c',
   'xdmcp.c', 'pam_svc.c', 'solaris.c' 
 ]
+
+dep_libsystemd = dependency('libsystemd', required: false)
+if dep_libsystemd.found()
+  common_c_args += '-DHAVE_LIBSYSTEMD'
+endif
 # On linux we also need xdmauth.c
 if host_machine.system() == 'linux'
     dtlogin_src += 'xdmauth.c'
@@ -73,14 +80,15 @@ executable('dtlogin',
     libDtWidget_dep, libDtSvc_dep, libtt_dep, libm, dep_tirpc, dep_xmu, dep_xau,
     dependency('xdmcp'),
     dependency('pam', required: false),
-    dependency('libcrypt', required: false)
+    dependency('libcrypt', required: false),
+    dep_libsystemd
   ],
   c_args : common_c_args,
   install : true
 )
 
 dtgreet_src = [
-  'vgcallback.c', 'vglogo.c', 'vgmain.c', 'vgutil.c', 'vglang.c'
+  'vgcallback.c', 'vglogo.c', 'vgmain.c', 'vgutil.c', 'vglang.c', 'vgmodules.c'
 ]
 
 executable('dtgreet',
@@ -95,7 +103,7 @@ executable('dtgreet',
 )
 
 dtchooser_src = [
-  'chooser.c', 'vglogo.c', 'vgutil.c', 'vgcallback.c', 'vglang.c'
+  'chooser.c', 'vglogo.c', 'vgutil.c', 'vgcallback.c', 'vglang.c', 'vgmodules.c'
 ]
 
 executable('dtchooser',
@@ -115,9 +123,9 @@ systemd_config = configuration_data()
 systemd_config.set('bindir', join_paths(get_option('prefix'), 'bin'))
 
 configure_file(
-  input : '../../contrib/rc/systemd/dtlogin.service.in',
+  input : '../../../contrib/rc/systemd/dtlogin.service',
   output : 'dtlogin.service',
-  configuration : systemd_config,
+  copy: true,
   install : true,
   install_dir : 'lib/systemd/system'
 )

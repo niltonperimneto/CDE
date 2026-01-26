@@ -1,0 +1,11 @@
+subdir('icons')
+subdir('palettes')
+subdir('fontaliases')
+subdir('dsdm')
+subdir('dtappintegrate')
+subdir('dtopen')
+subdir('dtudcfonted')
+subdir('dtudcexch')
+subdir('dtsr')
+subdir('dtdocbook')
+# subdir('types') # Already handled in cde/programs/types? Check later.

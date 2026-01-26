@@ -17,20 +17,13 @@ libcsa_xdr_inc = include_directories('rust/include')
 yacc = find_program('yacc', 'bison')
 sed = find_program('sed')
 
-reparser_c = custom_target('reparser_c',
+reparser = custom_target('reparser',
   input : 'reparser.y',
-  output : 'reparser.c',
-  command : ['sh', '-c', '@0@ -y -d @INPUT@ && sed -e s/yyparse/_DtCm_rule_parser/g -e s/yy/_DtCm_yy/g y.tab.c > $1 && rm y.tab.c'.format(yacc.full_path()), 'sh', '@OUTPUT@']
+  output : ['reparser.c', 'reparser.h'],
+  command : ['sh', '-c', '@0@ -y -d @INPUT@ && sed -e s/yyparse/_DtCm_rule_parser/g -e s/yy/_DtCm_yy/g y.tab.c > @OUTPUT0@ && sed s/yy/_DtCm_yy/g y.tab.h > @OUTPUT1@'.format(yacc.full_path())]
 )
 
-reparser_h = custom_target('reparser_h',
-  input : 'reparser.y',
-  output : 'reparser.h',
-  depends : reparser_c,
-  command : ['sh', '-c', 'sed s/yy/_DtCm_yy/g y.tab.h > @OUTPUT@ && rm y.tab.h']
-)
-
-csa_generated = [reparser_c, reparser_h]
+csa_generated = [reparser]
 
 csa_sources = [
   'agent.c', 'api.c', 'appt4.c', 'attr.c', 'calendar.c',

@@ -1,0 +1,5 @@
+#!/bin/sh
+# Replacement for dthelpgen.ds/dthelpgen.dtsh using dtdialog
+# This script is called by dthelpgen to display a working dialog.
+
+exec dtdialog --working --title "dthelpgen" --message "Generating browser information. Please wait."

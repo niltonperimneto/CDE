@@ -27,40 +27,37 @@
  *  Development Agreement for the CDEnext PST.
  *  This is unpublished proprietary source code of FUJITSU LIMITED
  */
-#include <stdio.h>
+#ifndef _SYNCX_H
+#define _SYNCX_H
+
+#include "_falutil.h"
 #include <X11/Xlib.h>
 #include <X11/Xresource.h>
-#include "_falutil.h"
+#include <stdio.h>
 
-extern XrmQuark falrmStringToQuark(
-    const char* 	/* string */
+extern XrmQuark falrmStringToQuark(const char * /* string */
 );
-extern XrmString falrmQuarkToString(
-    XrmQuark 		/* quark */
+extern XrmString falrmQuarkToString(XrmQuark /* quark */
 );
 
-extern char *falGetAtomName(
-    Display*		/* display */,
-    Atom		/* atom */
+extern char *falGetAtomName(Display * /* display */, Atom /* atom */
 );
 
-extern char **falListFonts(
-    Display*		/* display */,
-    const char*		/* pattern */,
-    int			/* maxnames */,
-    int*		/* actual_count_return */
+extern char **falListFonts(Display * /* display */, const char * /* pattern */,
+                           int /* maxnames */, int * /* actual_count_return */
 );
 
-extern char **falListFontsWithInfo(
-    Display*		/* display */,
-    const char*		/* pattern */,
-    int			/* maxnames */,
-    int*		/* count_return */,
-    XFontStruct**	/* info_return */
+extern char **falListFontsWithInfo(Display * /* display */,
+                                   const char * /* pattern */,
+                                   int /* maxnames */, int * /* count_return */,
+                                   XFontStruct ** /* info_return */
 );
 
-extern XFontStruct *falLoadQueryFont(
-    Display*		/* display */,
-    const char*		/* name */
+extern XFontStruct *falLoadQueryFont(Display * /* display */,
+                                     const char * /* name */
 );
 
+extern Atom falInternAtom(Display * /* display */, const char * /* name */,
+                          Bool /* only_if_exists */
+);
+#endif /* _SYNCX_H */

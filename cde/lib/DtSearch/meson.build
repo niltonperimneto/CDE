@@ -49,7 +49,7 @@ cargo_builder = custom_target('dtsearch_rs_static',
   output : 'libdtsearch_rs.a',
   command : [
     'sh', '-c', 
-    'cargo build --release --manifest-path @SOURCE_ROOT@/lib/DtSearch/rust/Cargo.toml --target-dir @OUTDIR@/cargo_build && cp @OUTDIR@/cargo_build/release/libdtsearch_rs.a @OUTPUT@'
+    'cargo build --release --manifest-path @SOURCE_ROOT@/cde/lib/DtSearch/rust/Cargo.toml --target-dir @OUTDIR@/cargo_build && cp @OUTDIR@/cargo_build/release/libdtsearch_rs.a @OUTPUT@'
   ],
   build_by_default : true,
   console : true
@@ -57,8 +57,9 @@ cargo_builder = custom_target('dtsearch_rs_static',
 
 libDtSearch = shared_library('DtSearch',
   dtsearch_sources + [boolyac_c_h],
-  include_directories : [inc, include_directories('raima'), include_directories('../../include/Dt'), include_directories('.')],
-  dependencies : [libraima_dep, libm, libDtSvc_dep],
+  include_directories : [inc, include_directories('raima'), include_directories('../../include/Dt'), include_directories('.'), include_directories('../../..')],
+  link_whole : libraima,
+  dependencies : [libm, libDtSvc_dep],
   sources : [cargo_builder], 
   c_args : [
     common_c_args,
@@ -72,3 +73,5 @@ libDtSearch_dep = declare_dependency(
   link_with : libDtSearch,
   include_directories : include_directories('.')
 )
+
+meson.override_dependency('dtsearch', libDtSearch_dep)

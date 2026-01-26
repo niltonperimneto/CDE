@@ -1,3 +1,19 @@
+/*
+ * dtdialog - CDE Dialog Utility
+ *
+ * A replacement for dtksh dialog scripts.
+ * Displays Motif dialogs (error, warning, info, working) via command line.
+ *
+ * Usage:
+ *   dtdialog --error   --title "Title" --message "Message"
+ *   dtdialog --warning --title "Title" --message "Message"
+ *   dtdialog --info    --title "Title" --message "Message"
+ *   dtdialog --working --title "Title" --message "Message"
+ *
+ * Copyright (c) 2026 CDE Modernization Project
+ * Licensed under GPL v3.0
+ */
+
 use anyhow::Result;
 use clap::Parser;
 use std::os::unix::process::CommandExt;
@@ -77,6 +93,11 @@ fn main() -> Result<()> {
     if let Some(title) = args.title {
         cmd.arg("--title").arg(title);
     }
+
+    // Set Window Class for dtwm integration (Icon, Style)
+    // Alacritty format: --class instance,general
+    let instance = args.name.as_deref().unwrap_or("dtterm");
+    cmd.arg("--class").arg(format!("{},Dtterm", instance));
 
     // Geometry translation is complex (WxH+X+Y), Alacritty supports --position and --dimensions in older versions or config
     // For now we might ignore geometry or implement partial parsing if critical.

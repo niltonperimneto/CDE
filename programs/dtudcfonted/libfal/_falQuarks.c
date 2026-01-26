@@ -205,7 +205,7 @@ ExpandQuarkTable(void)
     XrmQuark q;
 
     oldentries = quarkTable;
-    if (oldmask = quarkMask)
+    if ((oldmask = quarkMask))
 	newmask = (oldmask << 1) + 1;
     else {
 	if (!stringTable) {
@@ -237,12 +237,12 @@ ExpandQuarkTable(void)
     quarkMask = newmask;
     quarkRehash = quarkMask - 2;
     for (oldidx = 0; oldidx <= oldmask; oldidx++) {
-	if (entry = oldentries[oldidx]) {
+	if ((entry = oldentries[oldidx])) {
 	    if (entry & LARGEQUARK)
 		q = entry & (LARGEQUARK-1);
 	    else
 		q = (entry >> QUARKSHIFT) & QUARKMASK;
-	    for (sig = 0, s = NAME(q); c = *s++; )
+	    for (sig = 0, s = NAME(q); (c = *s++); )
 		sig = (sig << 1) + c;
 	    newidx = HASH(sig);
 	    if (entries[newidx]) {
@@ -272,7 +272,7 @@ XrmQuark _falrmInternalStringToQuark(
 
     idx = HASH(sig);
     _XLockMutex(_Xglobal_lock);
-    while (entry = quarkTable[idx]) {
+    while ((entry = quarkTable[idx])) {
 	if (entry & LARGEQUARK)
 	    q = entry & (LARGEQUARK-1);
 	else {
@@ -390,7 +390,7 @@ XrmQuark falrmStringToQuark(const char *name)
     if (!name)
 	return (NULLQUARK);
 
-    for (tname = (char *)name; c = *tname++; )
+    for (tname = (char *)name; (c = *tname++); )
 	sig = (sig << 1) + c;
 
     return _falrmInternalStringToQuark(name, tname-(char *)name-1, sig, False);
@@ -405,7 +405,7 @@ XrmQuark falrmPermStringToQuark(
     if (!name)
 	return (NULLQUARK);
 
-    for (tname = (char *)name; c = *tname++; )
+    for (tname = (char *)name; (c = *tname++); )
 	sig = (sig << 1) + c;
 
     return _falrmInternalStringToQuark(name, tname-(char *)name-1, sig, True);

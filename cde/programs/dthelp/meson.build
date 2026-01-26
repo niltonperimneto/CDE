@@ -1,4 +1,4 @@
 subdir('dthelpview')
-# subdir('dthelpgen')
+subdir('dthelpgen')
 # subdir('dthelpprint')
 # subdir('parser')

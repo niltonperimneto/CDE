@@ -43,12 +43,12 @@
 /*
  * system includes
  */
-#include <unistd.h>
 #include <fcntl.h>
-#include <stdlib.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <sys/stat.h>
+#include <unistd.h>
 
 /*
  * Canvas Engine includes
@@ -58,9 +58,9 @@
 /*
  * private includes
  */
-#include "bufioI.h"
 #include "CanvasOsI.h"
 #include "FormatUtilI.h"
+#include "bufioI.h"
 
 #ifdef NLS16
 #endif
@@ -99,184 +99,169 @@
  *    _DtCvRunInterp calls a script and maybe gets data.
  *
  *********************************************************************/
-int
-_DtCvRunInterp(
-    int			(*filter_exec)(void *, const char *, char **),
-    _DtCvPointer	  client_data,
-    char		 *interp,
-    char                 *data,
-    char                **ret_data)
-{
-    int          result;
-    int          myFd;
-    FILE        *myFile;
-    int          size;
-    int          writeBufSize = 0;
-    char        *writeBuf     = NULL;
-    char        *ptr;
-    char        *fileName;
-    char        *newData;
-    char         readBuf[BUFSIZ];
-    BufFilePtr   myBufFile;
+int _DtCvRunInterp(int (*filter_exec)(void *, const char *, char **),
+                   _DtCvPointer client_data, char *interp, char *data,
+                   char **ret_data) {
+  int result;
+  int myFd;
+  FILE *myFile;
+  int size;
+  int writeBufSize = 0;
+  char *writeBuf = NULL;
+  char *ptr;
+  char *fileName;
+  char *newData;
+  char readBuf[BUFSIZ];
+  BufFilePtr myBufFile;
 
-    /*
-     * ask for permission to run the interperator command.
-     */
-    newData = data;
-    if (filter_exec != NULL && (*filter_exec)(client_data,data,&newData) != 0)
-	return -1;
+  /*
+   * ask for permission to run the interperator command.
+   */
+  newData = data;
+  if (filter_exec != NULL && (*filter_exec)(client_data, data, &newData) != 0)
+    return -1;
 
-    /*
-     * open a temporary file to write the data to.
-     */
-    fileName = tempnam(NULL, NULL);
-    if (fileName == NULL)
-      {
-	if (newData != data)
-	    free(newData);
-	return -1;
-      }
-
-    /*
-     * write the data to file.
-     */
-    result = -1;
-#if defined(__linux__)
-    myFd   = open(fileName, O_WRONLY | O_CREAT | O_TRUNC, S_IRWXU | S_IRWXG | S_IRWXO);
-#else
-    myFd   = open(fileName, O_WRONLY | O_CREAT | O_TRUNC);
-#endif
-    if (myFd != -1)
-      {
-	/*
-	 * write the data to the file
-	 */
-        result = write(myFd, newData, strlen(newData));
-
-	if (result != -1)
-	  {
-	    /*
-	     * change the access permissions so the interpreter can read
-	     * the file.
-	     */
-	    result = fchmod(myFd, S_IRUSR | S_IRGRP | S_IROTH);
-	  }
-
-        /*
-         * close the file.
-         */
-        close(myFd);
-      }
-
+  /*
+   * open a temporary file to write the data to.
+   */
+  fileName = tempnam(NULL, NULL);
+  if (fileName == NULL) {
     if (newData != data)
-	free(newData);
+      free(newData);
+    return -1;
+  }
 
-    if (result == -1)
-      {
-	unlink(fileName);
-	free(fileName);
-	return -1;
-      }
+  /*
+   * write the data to file.
+   */
+  result = -1;
+#if defined(__linux__)
+  myFd =
+      open(fileName, O_WRONLY | O_CREAT | O_TRUNC, S_IRWXU | S_IRWXG | S_IRWXO);
+#else
+  myFd = open(fileName, O_WRONLY | O_CREAT | O_TRUNC);
+#endif
+  if (myFd != -1) {
+    /*
+     * write the data to the file
+     */
+    result = write(myFd, newData, strlen(newData));
+
+    if (result != -1) {
+      /*
+       * change the access permissions so the interpreter can read
+       * the file.
+       */
+      result = fchmod(myFd, S_IRUSR | S_IRGRP | S_IROTH);
+    }
 
     /*
-     * create the system command string with its parameters
+     * close the file.
      */
-    ptr = (char *) malloc(sizeof(interp) + strlen(fileName) + 1);
-    if (!ptr)
-      {
-	unlink(fileName);
-	free(fileName);
-        return -1;
-      }
+    close(myFd);
+  }
 
-    strcpy (ptr, interp);
-    strcat (ptr, " ");
-    strcat (ptr, fileName);
+  if (newData != data)
+    free(newData);
 
-    myFile = popen(ptr, "r");
-
-    /*
-     * free the command
-     */
-    free (ptr);
-
-    /*
-     * check for problems
-     */
-    if (!myFile) /* couldn't create execString process */
-      {
-	unlink(fileName);
-	free(fileName);
-        return -1;
-      }
-
-    /*
-     * create a file handler for the pipe.
-     */
-    myBufFile = _DtHelpCeCreatePipeBufFile(myFile);
-    if (myBufFile == NULL)
-      {
-        (void) pclose(myFile); /* don't check for error, it was popen'd */
-	unlink(fileName);
-	free(fileName);
-        return -1;
-      }
-
-    /*
-     * read the file the pipe writes to until the pipe finishes.
-     * Create a string from the results
-     */
-    do {
-        readBuf[0] = '\0';
-        ptr        = readBuf;
-
-        result = _DtHelpCeGetNxtBuf(myBufFile, readBuf, &ptr, BUFSIZ);
-
-        if (result > 0)
-          {
-            size = strlen(readBuf);
-            if (writeBuf == NULL)
-                writeBuf = (char *) malloc (size + 1);
-            else
-                writeBuf = (char *) realloc (writeBuf, writeBufSize + size + 1);
-
-            if (writeBuf != NULL)
-              {
-                writeBuf[writeBufSize] = '\0';
-                strcat(writeBuf, readBuf);
-                writeBufSize += size;
-              }
-            else
-                result = -1;
-          }
-    } while (result != -1 && !feof(FileStream(myBufFile)));
-
-    /*
-     * close the pipe
-     */
-    _DtHelpCeBufFileClose (myBufFile, True);
-
-    if (result == -1)
-      {
-	if (writeBuf != NULL)
-	    free(writeBuf);
-	
-	writeBuf = NULL;
-      }
-    else
-	result = 0;
-
-    /*
-     * unlink the temporary file and free the memory.
-     */
+  if (result == -1) {
     unlink(fileName);
     free(fileName);
+    return -1;
+  }
 
-    /*
-     * return the data
-     */
-    *ret_data = writeBuf;
+  /*
+   * create the system command string with its parameters
+   */
+  ptr = (char *)malloc(sizeof(interp) + strlen(fileName) + 1);
+  if (!ptr) {
+    unlink(fileName);
+    free(fileName);
+    return -1;
+  }
 
-    return result;
+  strcpy(ptr, interp);
+  strcat(ptr, " ");
+  strcat(ptr, fileName);
 
-}  /* End _DtCvRunInterp */
+  myFile = popen(ptr, "r");
+
+  /*
+   * free the command
+   */
+  free(ptr);
+
+  /*
+   * check for problems
+   */
+  if (!myFile) /* couldn't create execString process */
+  {
+    unlink(fileName);
+    free(fileName);
+    return -1;
+  }
+
+  /*
+   * create a file handler for the pipe.
+   */
+  myBufFile = _DtHelpCeCreatePipeBufFile(myFile);
+  if (myBufFile == NULL) {
+    (void)pclose(myFile); /* don't check for error, it was popen'd */
+    unlink(fileName);
+    free(fileName);
+    return -1;
+  }
+
+  /*
+   * read the file the pipe writes to until the pipe finishes.
+   * Create a string from the results
+   */
+  do {
+    readBuf[0] = '\0';
+    ptr = readBuf;
+
+    result = _DtHelpCeGetNxtBuf(myBufFile, readBuf, &ptr, BUFSIZ);
+
+    if (result > 0) {
+      size = strlen(readBuf);
+      if (writeBuf == NULL)
+        writeBuf = (char *)malloc(size + 1);
+      else
+        writeBuf = (char *)realloc(writeBuf, writeBufSize + size + 1);
+
+      if (writeBuf != NULL) {
+        writeBuf[writeBufSize] = '\0';
+        strcat(writeBuf, readBuf);
+        writeBufSize += size;
+      } else
+        result = -1;
+    }
+  } while (result != -1 && !feof(FileStream(myBufFile)));
+
+  /*
+   * close the pipe
+   */
+  _DtHelpCeBufFileClose(myBufFile, True);
+
+  if (result == -1) {
+    if (writeBuf != NULL)
+      free(writeBuf);
+
+    writeBuf = NULL;
+  } else
+    result = 0;
+
+  /*
+   * unlink the temporary file and free the memory.
+   */
+  unlink(fileName);
+  free(fileName);
+
+  /*
+   * return the data
+   */
+  *ret_data = writeBuf;
+
+  return result;
+
+} /* End _DtCvRunInterp */

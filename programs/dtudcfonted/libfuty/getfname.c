@@ -225,7 +225,7 @@ get_default_file(
 		if ((buf[0] == '#') || (buf[0] == '\0')) {
 			continue;
 		}
-		if (falcom_split_data( buf, FALCOM_DATA_ELM, &elm ) == -1) {
+		if (falcom_split_data( buf, FALCOM_DATA_ELM, elm ) == -1) {
 			ret = -4;
 			continue;
 		}

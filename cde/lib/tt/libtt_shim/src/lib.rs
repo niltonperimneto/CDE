@@ -987,3 +987,63 @@ pub extern "C" fn tt_message_context_set(
 ) -> TtStatus {
     TT_OK
 }
+
+// Additional Stubs for dtcreate
+
+#[no_mangle]
+pub extern "C" fn tt_prequest_create(_scope: TtScope, _op: *const c_char) -> *mut c_void {
+    // Returns a TtMessage pointer
+    eprintln!("[libtt_shim] tt_prequest_create stub called");
+    tt_message_create()
+}
+
+#[no_mangle]
+pub extern "C" fn tt_pattern_address_add(_p: *mut c_void, _a: c_int) -> TtStatus {
+    eprintln!("[libtt_shim] tt_pattern_address_add stub called");
+    TT_OK
+}
+
+#[no_mangle]
+pub extern "C" fn tt_ptype_declare(_ptype: *const c_char) -> TtStatus {
+    eprintln!("[libtt_shim] tt_ptype_declare stub called");
+    TT_OK
+}
+
+// Additional Stubs for dtexec / dtdbcache
+
+#[no_mangle]
+pub extern "C" fn tt_message_address(_m: *mut c_void) -> c_int {
+    eprintln!("[libtt_shim] tt_message_address stub called");
+    0 // TT_PROCEDURE
+}
+
+#[no_mangle]
+pub extern "C" fn tt_message_class(_m: *mut c_void) -> TtClass {
+    eprintln!("[libtt_shim] tt_message_class stub called");
+    0 // TT_REQUEST
+}
+
+#[no_mangle]
+pub extern "C" fn tt_session_quit(
+    _sess: *const c_char,
+    _sessid: *const c_char,
+    _force: c_int,
+) -> TtStatus {
+    // Note: Signature varies based on version, but CDE uses 3 args usually (sess, procid, force)?
+    // Or maybe just (sess, sessid, force).
+    // Wait, typical signature: tt_session_quit(const char *sessid, const char *procid, int force)
+    eprintln!("[libtt_shim] tt_session_quit stub called");
+    TT_OK
+}
+
+#[no_mangle]
+pub extern "C" fn tt_message_receive() -> *mut c_void {
+    eprintln!("[libtt_shim] tt_message_receive stub called");
+    ptr::null_mut()
+}
+
+#[no_mangle]
+pub extern "C" fn tt_session_join(_sess: *const c_char) -> TtStatus {
+    eprintln!("[libtt_shim] tt_session_join stub called");
+    TT_OK
+}
