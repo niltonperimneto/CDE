@@ -79,3 +79,5 @@ libDtSvc_dep = declare_dependency(
   include_directories : dtsvc_inc,
   dependencies : [libtt_dep]
 )
+
+meson.override_dependency('DtSvc', libDtSvc_dep)
