@@ -44,64 +44,64 @@
  * (c) Copyright 1990, 1993, 1994, 1996 Hewlett-Packard Company.
  * (c) Copyright 1993, 1994, 1996 International Business Machines Corp.
  * (c) Copyright 1993, 1994, 1996 Sun Microsystems, Inc.
- * (c) Copyright 1993, 1994, 1996 Novell, Inc. 
+ * (c) Copyright 1993, 1994, 1996 Novell, Inc.
  * (c) Copyright 1996 FUJITSU LIMITED.
  * (c) Copyright 1996 Hitachi.
  */
 
-
+#include <dirent.h>
 #include <stdio.h>
 #include <string.h>
-#include <dirent.h>
-#include <time.h>
-#include <sys/types.h>
-#include <sys/stat.h>
 #include <sys/param.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <time.h>
 
-#include <sys/socket.h>
-#include <netinet/in.h>
 #include <netdb.h>
+#include <netinet/in.h>
+#include <sys/socket.h>
 #ifdef _SUN_OS
 #include <arpa/inet.h>
 #include <string.h>
 #endif /* _SUN_OS */
 
-#include <X11/Intrinsic.h>
-#include <X11/Xutil.h>
-#include <X11/Xatom.h>
-#include <X11/StringDefs.h>
-#include <X11/keysymdef.h>
-#include <Dt/DtP.h>
-#include <Dt/Connect.h>
-#include <Dt/UserMsg.h>
-#include <Dt/SessionM.h>
-#include <Dt/MsgLog.h>
 #include "Sm.h"
-#include "SmSave.h"
-#include "SmResource.h"
+#include "SmDB.h"
 #include "SmError.h"
 #include "SmGlobals.h"
+#include "SmProp.h"
+#include "SmProperty.h"
+#include "SmProtocol.h"
+#include "SmResource.h"
+#include "SmRestore.h"
+#include "SmSave.h"
 #include "SmUI.h"
 #include "SmWindow.h"
-#include "SmProtocol.h"
-#include "SmRestore.h"
 #include "SmXSMP.h"
-#include "SmDB.h"
-#include "SmProperty.h"
-#include "SmProp.h"
 #include "Srv.h"
 #include "SrvFile_io.h"
+#include <Dt/Connect.h>
+#include <Dt/DtP.h>
+#include <Dt/MsgLog.h>
+#include <Dt/SessionM.h>
+#include <Dt/UserMsg.h>
+#include <X11/Intrinsic.h>
+#include <X11/StringDefs.h>
+#include <X11/XKBlib.h>
+#include <X11/Xatom.h>
+#include <X11/Xutil.h>
+#include <X11/keysymdef.h>
 
-#ifdef   MULTIBYTE
-#include <stdlib.h>
+#ifdef MULTIBYTE
 #include <limits.h>
+#include <stdlib.h>
 #endif
 
 #include <X11/Xlibint.h>
 
 typedef struct _ProxyClientCache {
-	Window		window;
-	int		screen;
+  Window window;
+  int screen;
 } ProxyClientCache, *ProxyClientCachePtr;
 
 static ProxyClientCachePtr proxyList;
@@ -112,67 +112,40 @@ static int proxyCacheAllocIncrement = 10;
 /*
  * Local Function Declarations
  */
-static void CacheProxyClient (
-	Boolean			firstClient, 
-	int			screenNum, 
-	Window			window);
+static void CacheProxyClient(Boolean firstClient, int screenNum, Window window);
 
-static void PruneSessionDirectory ();
+static void PruneSessionDirectory();
 
-static Boolean WriteClientDatabase ();
+static Boolean WriteClientDatabase();
 
-static void OutputXSMPClients (
-	ClientDB		outputDB);
+static void OutputXSMPClients(ClientDB outputDB);
 
-static void OutputProxyClients (
-	ClientDB		outputDB);
+static void OutputProxyClients(ClientDB outputDB);
 
-static Boolean CheckRequiredProperties (
-	ClientRecPtr		pClientRec);
+static Boolean CheckRequiredProperties(ClientRecPtr pClientRec);
 
-static void PrintStartupInfo( 
-			ClientDB outputDB,
-                        int screen,
-                        Window window);
-static int QueryServerSettings( void ) ;
-static int SaveCustomizeSettings( void ) ;
-static int OutputResource( void ) ;
-static void PrintPointerControl( 
-                        XrmDatabase *smBase) ;
-static void PrintSessionInfo( 
-                        XrmDatabase *smBase) ;
-static void PrintScreenSaver( 
-                        XrmDatabase *smBase) ;
-static int PrintFontPaths( 
-                        XrmDatabase *smBase,
-                        char **fontPath,
-                        int numPaths) ;
-static int PrintKeyboardControl( 
-                        XrmDatabase *smBase);
-static int PrintPointerMapping( 
-                        XrmDatabase *smBase,
-                        char *buttonRet,
-                        int numButton) ;
-static void PrintWorkHintString( 
-                        FILE *hintFile,
-                        char *hintString) ;
-static void PrintCmdHintString( 
-                        FILE *hintFile,
-                        char *hintString) ;
-static void PrintCmdString( 
-                        FILE *cmdFile,
-                        char *cmdString) ;
-static void PrintRemoteCmdString( 
-                        FILE *cmdFile,
-                        char *cmdString) ;
-
+static void PrintStartupInfo(ClientDB outputDB, int screen, Window window);
+static int QueryServerSettings(void);
+static int SaveCustomizeSettings(void);
+static int OutputResource(void);
+static void PrintPointerControl(XrmDatabase *smBase);
+static void PrintSessionInfo(XrmDatabase *smBase);
+static void PrintScreenSaver(XrmDatabase *smBase);
+static int PrintFontPaths(XrmDatabase *smBase, char **fontPath, int numPaths);
+static int PrintKeyboardControl(XrmDatabase *smBase);
+static int PrintPointerMapping(XrmDatabase *smBase, char *buttonRet,
+                               int numButton);
+static void PrintWorkHintString(FILE *hintFile, char *hintString);
+static void PrintCmdHintString(FILE *hintFile, char *hintString);
+static void PrintCmdString(FILE *cmdFile, char *cmdString);
+static void PrintRemoteCmdString(FILE *cmdFile, char *cmdString);
 
 /*
  * Global variables that are exposed
  */
-SmScreenInfo		screenSaverVals;
-SmAudioInfo		audioVals;
-SmKeyboardInfo		keyboardVals;
+SmScreenInfo screenSaverVals;
+SmAudioInfo audioVals;
+SmKeyboardInfo keyboardVals;
 
 /*
  * Variables global to this module only
@@ -182,18 +155,15 @@ SmKeyboardInfo		keyboardVals;
  * used as a buffer to write resources into
  * before they are written out
  */
-static int	resSize = 10000;
-static char	*resSpec;
+static int resSize = 10000;
+static char *resSpec;
 
 /*
  * Vars used to maintain state that is sent to the SaveState
  * function.
  */
-static Boolean	saveHome;
-int		saveMode;
-
-
-
+static Boolean saveHome;
+int saveMode;
 
 /*************************************<->*************************************
  *
@@ -210,12 +180,8 @@ int		saveMode;
  *  mode = whether the session is to be reset or restarted
  *
  *************************************<->***********************************/
-void
-SetupSaveState(
-        Boolean 	saveToHome,
-        int 		mode)
-{
-  unsigned char		*propData;
+void SetupSaveState(Boolean saveToHome, int mode) {
+  unsigned char *propData;
 
   /*
    * Cache saveToHome and mode - they will be needed after all of
@@ -228,28 +194,25 @@ SetupSaveState(
    * First set up the save paths so we know if we have to do anything here
    */
   if ((SetSavePath(saveToHome, mode)) == -1)
-      return;
+    return;
 
   /*
    * Take care of the save mode property on the root window so that the
    * clients will know how to save this file (if they save files)
    */
-  if(saveToHome == False)
-  {
-      propData = (unsigned char *) SM_CURRENT_DIRECTORY;
-  }
-  else
-  {
-      propData = (unsigned char *) SM_HOME_DIRECTORY;
+  if (saveToHome == False) {
+    propData = (unsigned char *)SM_CURRENT_DIRECTORY;
+  } else {
+    propData = (unsigned char *)SM_HOME_DIRECTORY;
   }
 
   /*
    * Change the save mode to give the subdirectory saved to
    *
    */
-  XChangeProperty(smGD.display, RootWindow(smGD.display, 0),
-		  XaSmSaveMode, XA_STRING, 8, PropModeReplace,
-		   propData, strlen((char *)propData));
+  XChangeProperty(smGD.display, RootWindow(smGD.display, 0), XaSmSaveMode,
+                  XA_STRING, 8, PropModeReplace, propData,
+                  strlen((char *)propData));
   XFlush(smGD.display);
 }
 
@@ -280,33 +243,24 @@ SetupSaveState(
  *	1. User initiates a Save Home Session via the Style Manager
  *	2. The Session Manager receives a SM_XSESSION_EXIT message
  *	3. The Session Manager receives a SM_SAVE_SESSION message
- * 
+ *
  *************************************<->***********************************/
-void
-SaveState(
-        Boolean 		saveToHome,
-        int 			mode,
-	int                     saveType,
-	Bool                    shutdown,
-	int                     interactStyle,
-	Bool                    fast,
-	Bool                    global)
-{
+void SaveState(Boolean saveToHome, int mode, int saveType, Bool shutdown,
+               int interactStyle, Bool fast, Bool global) {
   /*
    * Notify XSMP clients of the save
    */
-  SaveYourselfReqProc (NULL, NULL, saveType, shutdown, interactStyle, 
-			fast, global);
+  SaveYourselfReqProc(NULL, NULL, saveType, shutdown, interactStyle, fast,
+                      global);
 }
-
 
 /*************************************<->*************************************
  *
- *  CompleteSave 
+ *  CompleteSave
  *
  *  Description:
  *  -----------
- *  Called after the XSMP clients have saved their state.  In charge of 
+ *  Called after the XSMP clients have saved their state.  In charge of
  *  calling all routines that save session information for XSMP client
  *  and Proxy clients as well as settings, resources, etc.
  *
@@ -314,16 +268,14 @@ SaveState(
  *  -------
  *
  *************************************<->***********************************/
-int 
-CompleteSave (void)
-{
+int CompleteSave(void) {
 
-  FILE 			*convertFP;
-  unsigned char		*propData;
-  char			*tmpPath, tmpVersion[20];
+  FILE *convertFP;
+  unsigned char *propData;
+  char *tmpPath, tmpVersion[20];
 
-  Boolean 		saveToHome = saveHome;
-  int			mode = saveMode;
+  Boolean saveToHome = saveHome;
+  int mode = saveMode;
 
   /*
    * If this is a Home session and the user is logging out, return
@@ -331,28 +283,26 @@ CompleteSave (void)
    * ICCC clients don't save their state when a Home session is
    * exited.
    */
-  if (smGD.sessionType == HOME_SESSION && 
-      smXSMP.saveState.shutdown == True && 
+  if (smGD.sessionType == HOME_SESSION && smXSMP.saveState.shutdown == True &&
       smSettings.startState == DtSM_HOME_STATE)
-      return (0);
+    return (0);
 
   /*
    * Start a wait state - don't want anything to happen while
    * ICCC clients are being saved
    */
   ShowWaitState(True);
-  
-  resSpec = (char *) SM_MALLOC(resSize * sizeof(char));
-  if (resSpec==NULL)
-  {
-      PrintErrnoError(DtError, smNLS.cantMallocErrorString);
-      return(-1);
+
+  resSpec = (char *)SM_MALLOC(resSize * sizeof(char));
+  if (resSpec == NULL) {
+    PrintErrnoError(DtError, smNLS.cantMallocErrorString);
+    return (-1);
   }
 
-  if (!WriteClientDatabase ()) {
-      ShowWaitState(False);
-      SM_FREE(resSpec);
-      return (-1);
+  if (!WriteClientDatabase()) {
+    ShowWaitState(False);
+    SM_FREE(resSpec);
+    return (-1);
   }
 
   /*
@@ -367,42 +317,37 @@ CompleteSave (void)
    * go to the resource database at this point and be written to the
    * resource file with the rest of the resources (below).
    */
-  if(smRes.querySettings == True)
-  {
-      QueryServerSettings();
-  }
-  else
-  {
-      SaveCustomizeSettings();
+  if (smRes.querySettings == True) {
+    QueryServerSettings();
+  } else {
+    SaveCustomizeSettings();
   }
 
   /*
    * Do the output of resource information.
    */
-  if(OutputResource())
-  {
-      ShowWaitState(False);
-      SM_FREE(resSpec);
-      return(-1);
+  if (OutputResource()) {
+    ShowWaitState(False);
+    SM_FREE(resSpec);
+    return (-1);
   }
 
   XDeleteProperty(smGD.display, DefaultRootWindow(smGD.display), XaSmSaveMode);
- 
-  /* 
+
+  /*
    * Go save the default palette at this time
    */
-  if(saveToHome == True)
-     SaveDefaultPalette(smGD.display, smGD.savePath, DtSM_HOME_STATE);
+  if (saveToHome == True)
+    SaveDefaultPalette(smGD.display, smGD.savePath, DtSM_HOME_STATE);
   else
-     SaveDefaultPalette(smGD.display, smGD.savePath, mode);
- 
-  PruneSessionDirectory ();
+    SaveDefaultPalette(smGD.display, smGD.savePath, mode);
+
+  PruneSessionDirectory();
 
   ShowWaitState(False);
 
-  return(0);
+  return (0);
 }
-
 
 /*************************************<->*************************************
  *
@@ -412,170 +357,158 @@ CompleteSave (void)
  *	of directories exceeds the smRes.numSessionsBackedup.
  *
  *  Inputs: void
- * 
+ *
  *************************************<->***********************************/
-static void
-PruneSessionDirectory (void)
-{
-	DIR			* dirp;
-	struct dirent 		* dp;
-	int			numDirs = 0;
-	struct			stat buf;
-	time_t			oldestTime;
-	char			*clientDB;
-	char			*dirPrefix;
-	char			*oldDir;	/* the .old dir */
-	char			*oldestDir;
-	char			*saveDir;
-	char			*tmpDir;
+static void PruneSessionDirectory(void) {
+  DIR *dirp;
+  struct dirent *dp;
+  int numDirs = 0;
+  struct stat buf;
+  time_t oldestTime;
+  char *clientDB;
+  char *dirPrefix;
+  char *oldDir; /* the .old dir */
+  char *oldestDir;
+  char *saveDir;
+  char *tmpDir;
 
-	if ((dirp = opendir (smGD.savePath)) == NULL)
-		return;
+  if ((dirp = opendir(smGD.savePath)) == NULL)
+    return;
 
-	clientDB = (char*) XtMalloc((2*MAXPATHLEN) + 1);
-	oldestDir = (char*) XtMalloc(MAXPATHLEN + 1);
-	saveDir = (char*) XtMalloc(MAXPATHLEN + 1);
-	tmpDir = (char*) XtMalloc(MAXPATHLEN + 1);
-	
-	dirPrefix = XtMalloc (strlen (smGD.restoreSession) + 2);
-	sprintf (dirPrefix, "%s.", smGD.restoreSession);
-	if (strlen (dirPrefix) > 5) {
-		dirPrefix[4] = '.';
-		dirPrefix[5] = '\000';
-	}
+  clientDB = (char *)XtMalloc((2 * MAXPATHLEN) + 1);
+  oldestDir = (char *)XtMalloc(MAXPATHLEN + 1);
+  saveDir = (char *)XtMalloc(MAXPATHLEN + 1);
+  tmpDir = (char *)XtMalloc(MAXPATHLEN + 1);
 
-	oldDir = XtMalloc (strlen (smGD.restoreSession) + 
-			   strlen (SM_OLD_EXTENSION) + 2);
-	sprintf (oldDir, "%s.%s", smGD.restoreSession, SM_OLD_EXTENSION);
+  dirPrefix = XtMalloc(strlen(smGD.restoreSession) + 2);
+  sprintf(dirPrefix, "%s.", smGD.restoreSession);
+  if (strlen(dirPrefix) > 5) {
+    dirPrefix[4] = '.';
+    dirPrefix[5] = '\000';
+  }
 
-	(void) time (&oldestTime);
+  oldDir = XtMalloc(strlen(smGD.restoreSession) + strlen(SM_OLD_EXTENSION) + 2);
+  sprintf(oldDir, "%s.%s", smGD.restoreSession, SM_OLD_EXTENSION);
 
-	while ((dp = readdir (dirp)) != NULL) {
-		/*
-		 * Do some sanity checks to limit the number of * stat() 
-		 * calls.  Note that for backward compatibility with CDE 
-		 * 1.0 if a ".old" directory exists, keep it.
-		 */
-		if ((!strcmp (dp->d_name, ".")) || 
-		    (!strcmp (dp->d_name, "..")) ||
-		    (!strcmp (dp->d_name, oldDir)) ||
-		    (strncmp  (dp->d_name, dirPrefix, strlen (dirPrefix))))
-			continue;
+  (void)time(&oldestTime);
 
-		sprintf (tmpDir, "%s/%s", smGD.savePath, dp->d_name);
+  while ((dp = readdir(dirp)) != NULL) {
+    /*
+     * Do some sanity checks to limit the number of * stat()
+     * calls.  Note that for backward compatibility with CDE
+     * 1.0 if a ".old" directory exists, keep it.
+     */
+    if ((!strcmp(dp->d_name, ".")) || (!strcmp(dp->d_name, "..")) ||
+        (!strcmp(dp->d_name, oldDir)) ||
+        (strncmp(dp->d_name, dirPrefix, strlen(dirPrefix))))
+      continue;
 
-                if (((stat (tmpDir, &buf)) == 0) && S_ISDIR (buf.st_mode)) {
-			if (buf.st_mtime < oldestTime) {
-				/*
-				 * Keep track of the oldest dir in case
-				 * it needs to be removed
-				 */
-				oldestTime = buf.st_mtime;
-				strcpy (oldestDir, tmpDir);
-			}
-			numDirs++;
-		}
-        }
-	closedir(dirp);
+    sprintf(tmpDir, "%s/%s", smGD.savePath, dp->d_name);
 
-	if (numDirs > smRes.numSessionsBackedup) {
-		/*
-		 * Need to remove the oldest directory.  The general
-		 * process (using "home" as an example) is:
-		 *
-		 *   mv home home.tmp
-		 *   mv oldestDir home
-		 *   Execute the DiscardCommand props in the home directory
-		 *   rm -rf home
-		 *   mv home.tmp home
-		 *
-		 * The reason this is done is because when the 
-		 * DiscardCommand were saved, the directory at the time of
-		 * the save contained "home".  For example, a DiscardCommand
-		 * may look like:
-		 *
-		 *    rm -f /u/somebody/.dt/sessions/home/app.state
-		 *
-		 * yet because of the session archiving, the app.state
-		 * file may actually be in a directory like:
-		 *
-		 *    /u/somebody/.dt/sessions/home.<tempnam>
-		 */ 
+    if (((stat(tmpDir, &buf)) == 0) && S_ISDIR(buf.st_mode)) {
+      if (buf.st_mtime < oldestTime) {
+        /*
+         * Keep track of the oldest dir in case
+         * it needs to be removed
+         */
+        oldestTime = buf.st_mtime;
+        strcpy(oldestDir, tmpDir);
+      }
+      numDirs++;
+    }
+  }
+  closedir(dirp);
 
-		char		* tmpName;
-                int len, tfd;
+  if (numDirs > smRes.numSessionsBackedup) {
+    /*
+     * Need to remove the oldest directory.  The general
+     * process (using "home" as an example) is:
+     *
+     *   mv home home.tmp
+     *   mv oldestDir home
+     *   Execute the DiscardCommand props in the home directory
+     *   rm -rf home
+     *   mv home.tmp home
+     *
+     * The reason this is done is because when the
+     * DiscardCommand were saved, the directory at the time of
+     * the save contained "home".  For example, a DiscardCommand
+     * may look like:
+     *
+     *    rm -f /u/somebody/.dt/sessions/home/app.state
+     *
+     * yet because of the session archiving, the app.state
+     * file may actually be in a directory like:
+     *
+     *    /u/somebody/.dt/sessions/home.<tempnam>
+     */
 
-                len = strlen(smGD.savePath) + strlen(smGD.restoreSession) 
-                  + strlen("XXXXXX") + 3;
-		tmpName = XtCalloc (1, len);
-		sprintf(tmpName, "%s/%s.XXXXXX", smGD.savePath, 
-                        smGD.restoreSession);
+    char *tmpName;
+    int len, tfd;
 
-                if ((tfd = mkstemp(tmpName)) == -1)
-                  {
-                    PrintErrnoError(DtError, smNLS.cantCreateDirsString);
-                  }
-                else
-                  {
-                    close(tfd);
-                    unlink(tmpName);
+    len = strlen(smGD.savePath) + strlen(smGD.restoreSession) +
+          strlen("XXXXXX") + 3;
+    tmpName = XtCalloc(1, len);
+    sprintf(tmpName, "%s/%s.XXXXXX", smGD.savePath, smGD.restoreSession);
 
-                    sprintf (saveDir, "%s/%s", 
-                             smGD.savePath, smGD.restoreSession);
+    if ((tfd = mkstemp(tmpName)) == -1) {
+      PrintErrnoError(DtError, smNLS.cantCreateDirsString);
+    } else {
+      close(tfd);
+      unlink(tmpName);
 
-                    MoveDirectory (saveDir, tmpName, False);
-                    MoveDirectory (oldestDir, saveDir, False);
+      sprintf(saveDir, "%s/%s", smGD.savePath, smGD.restoreSession);
 
-                    sprintf (clientDB, "%s/%s/%s", smGD.savePath, 
-                             smGD.restoreSession, SM_CLIENT_FILE2);
+      MoveDirectory(saveDir, tmpName, False);
+      MoveDirectory(oldestDir, saveDir, False);
 
-                    ExecuteDiscardCommands (clientDB);
+      sprintf(clientDB, "%s/%s/%s", smGD.savePath, smGD.restoreSession,
+              SM_CLIENT_FILE2);
 
-                    MoveDirectory (tmpName, saveDir, True);
-                  }
-		XtFree (tmpName);
-	}
+      ExecuteDiscardCommands(clientDB);
 
-	/*
-	 * If exiting and the current session is a Current session
-	 * but smSettings.startState has been set to to a 
-	 * Home session (this would be true if a user started a 
-	 * Current session but used the Style Manager to set the session
-	 * upon next login to be a Home session), then if a home
-	 * directory exists, mv current to current.old
-	 */
+      MoveDirectory(tmpName, saveDir, True);
+    }
+    XtFree(tmpName);
+  }
 
-	if (smXSMP.saveState.shutdown && smGD.sessionType == CURRENT_SESSION &&
-	    smSettings.startState == DtSM_HOME_STATE) {
+  /*
+   * If exiting and the current session is a Current session
+   * but smSettings.startState has been set to to a
+   * Home session (this would be true if a user started a
+   * Current session but used the Style Manager to set the session
+   * upon next login to be a Home session), then if a home
+   * directory exists, mv current to current.old
+   */
 
-		sprintf (tmpDir, "%s/%s", smGD.savePath, SM_HOME_DIRECTORY);
+  if (smXSMP.saveState.shutdown && smGD.sessionType == CURRENT_SESSION &&
+      smSettings.startState == DtSM_HOME_STATE) {
 
-                if (((stat (tmpDir, &buf)) == 0) && S_ISDIR (buf.st_mode)) {
+    sprintf(tmpDir, "%s/%s", smGD.savePath, SM_HOME_DIRECTORY);
 
-			sprintf (saveDir, "%s/%s", smGD.savePath, oldDir);
+    if (((stat(tmpDir, &buf)) == 0) && S_ISDIR(buf.st_mode)) {
 
-                	if (((stat (saveDir, &buf)) == 0) && 
-					S_ISDIR (buf.st_mode)) {
+      sprintf(saveDir, "%s/%s", smGD.savePath, oldDir);
 
-				sprintf (clientDB, "/bin/rm -rf %s", saveDir);
-				SystemCmd (clientDB);
+      if (((stat(saveDir, &buf)) == 0) && S_ISDIR(buf.st_mode)) {
 
-				sprintf (oldestDir, "%s/%s", smGD.savePath, 
-					SM_CURRENT_DIRECTORY);
+        sprintf(clientDB, "/bin/rm -rf %s", saveDir);
+        SystemCmd(clientDB);
 
-				MoveDirectory (oldestDir, saveDir, False);
-			}
-		}
-	}
+        sprintf(oldestDir, "%s/%s", smGD.savePath, SM_CURRENT_DIRECTORY);
 
-	XtFree(clientDB);
-	XtFree(dirPrefix);
-	XtFree(oldDir);
-	XtFree(oldestDir);
-	XtFree(saveDir);
-	XtFree(tmpDir);
+        MoveDirectory(oldestDir, saveDir, False);
+      }
+    }
+  }
+
+  XtFree(clientDB);
+  XtFree(dirPrefix);
+  XtFree(oldDir);
+  XtFree(oldestDir);
+  XtFree(saveDir);
+  XtFree(tmpDir);
 }
-
 
 /*************************************<->*************************************
  *
@@ -584,47 +517,45 @@ PruneSessionDirectory (void)
  *  Description: Writes the client database (for XSMP and Proxy clients)
  *
  *  Inputs: None
- * 
+ *
  *  Returns True if the database is wrtten OK; False otherwise
  *
  *************************************<->***********************************/
-static Boolean
-WriteClientDatabase (void)
-{
-	char			*db;
-	ClientDB		outputDB;
+static Boolean WriteClientDatabase(void) {
+  char *db;
+  ClientDB outputDB;
 
-	db = (char*) XtMalloc(MAXPATHLEN + 1);
-	(void) sprintf (db, "%s/%s/%s", smGD.savePath, smGD.restoreSession,
-			SM_CLIENT_FILE2);
+  db = (char *)XtMalloc(MAXPATHLEN + 1);
+  (void)sprintf(db, "%s/%s/%s", smGD.savePath, smGD.restoreSession,
+                SM_CLIENT_FILE2);
 
-	if ((outputDB = OpenOutputClientDB (db, smXSMP.dbVersion,
-					    smXSMP.dbSessionId)) == NULL) {
-		char		* str;
+  if ((outputDB = OpenOutputClientDB(db, smXSMP.dbVersion,
+                                     smXSMP.dbSessionId)) == NULL) {
+    char *str;
 
-		str = strdup ((char *) GETMESSAGE (40, 18,
-			"The following database file cannot be opened for writing:\n\n   %s\n\nThe session will not be saved."));
+    str = strdup((char *)GETMESSAGE(
+        40, 18,
+        "The following database file cannot be opened for writing:\n\n   "
+        "%s\n\nThe session will not be saved."));
 
-		if (str) {
-			DtMsgLogMessage (smGD.programName, DtMsgLogError,
-					 str, db);
-			free (str);
-		}
-			
-		XtFree(db);
-		return (False);
-	}
-	XtFree(db);
+    if (str) {
+      DtMsgLogMessage(smGD.programName, DtMsgLogError, str, db);
+      free(str);
+    }
 
-	OutputProxyClients (outputDB);
-	
-	OutputXSMPClients (outputDB);
+    XtFree(db);
+    return (False);
+  }
+  XtFree(db);
 
-	CloseClientDB (outputDB, True);
+  OutputProxyClients(outputDB);
 
-	return (True);
+  OutputXSMPClients(outputDB);
+
+  CloseClientDB(outputDB, True);
+
+  return (True);
 }
-
 
 /*************************************<->*************************************
  *
@@ -633,21 +564,15 @@ WriteClientDatabase (void)
  *  Description: Outputs the Proxy clients
  *
  *  Inputs: database pointer
- * 
+ *
  *  Returns: void
  *
  *************************************<->***********************************/
-static void
-OutputProxyClients (
-	ClientDB		outputDB)
-{
-	int		i;
-	for (i = 0; i < numProxyClients; i++)
-		PrintStartupInfo (outputDB, 
-				  proxyList[i].screen, 
-				  proxyList[i].window);
+static void OutputProxyClients(ClientDB outputDB) {
+  int i;
+  for (i = 0; i < numProxyClients; i++)
+    PrintStartupInfo(outputDB, proxyList[i].screen, proxyList[i].window);
 }
-
 
 /*************************************<->*************************************
  *
@@ -656,78 +581,69 @@ OutputProxyClients (
  *  Description: Outputs the XSMP clients
  *
  *  Inputs: database pointer
- * 
+ *
  *  Returns: void
  *
  *************************************<->***********************************/
-static void
-OutputXSMPClients (
-	ClientDB		outputDB)
-{
-	XSMPClientDBRec		dbRec;
-	ClientRecPtr            pClientRec;
+static void OutputXSMPClients(ClientDB outputDB) {
+  XSMPClientDBRec dbRec;
+  ClientRecPtr pClientRec;
 
-	for (pClientRec = connectedList; pClientRec != NULL;
-		pClientRec = pClientRec->next) {
+  for (pClientRec = connectedList; pClientRec != NULL;
+       pClientRec = pClientRec->next) {
 
-		dbRec.restartHint = pClientRec->restartHint;
-		(void) GetCardPropertyValue (pClientRec, SmRestartStyleHint, 
-					     &dbRec.restartHint);
+    dbRec.restartHint = pClientRec->restartHint;
+    (void)GetCardPropertyValue(pClientRec, SmRestartStyleHint,
+                               &dbRec.restartHint);
 
-		if (dbRec.restartHint == SmRestartNever)
-			continue;
+    if (dbRec.restartHint == SmRestartNever)
+      continue;
 
-		if (!pClientRec->active)
-			continue;
+    if (!pClientRec->active)
+      continue;
 
-		if (!CheckRequiredProperties (pClientRec))
-			continue;
+    if (!CheckRequiredProperties(pClientRec))
+      continue;
 
-		dbRec.screenNum = 0;
+    dbRec.screenNum = 0;
 
-		dbRec.clientId = pClientRec->clientId;
-		dbRec.clientHost = pClientRec->clientHost;
+    dbRec.clientId = pClientRec->clientId;
+    dbRec.clientHost = pClientRec->clientHost;
 
-		dbRec.program = GetArrayPropertyValue (pClientRec, 
-					SmProgram);
-		dbRec.cwd = GetArrayPropertyValue (pClientRec, 
-					SmCurrentDirectory);
+    dbRec.program = GetArrayPropertyValue(pClientRec, SmProgram);
+    dbRec.cwd = GetArrayPropertyValue(pClientRec, SmCurrentDirectory);
 
-		dbRec.restartCommand = GetListOfArrayPropertyValue (pClientRec,
-					SmRestartCommand);
-		dbRec.cloneCommand = GetListOfArrayPropertyValue (pClientRec,
-					SmCloneCommand);
-		dbRec.discardCommand = GetListOfArrayPropertyValue (pClientRec,
-					SmDiscardCommand);
-		dbRec.environment = GetListOfArrayPropertyValue (pClientRec,
-					SmEnvironment);
+    dbRec.restartCommand =
+        GetListOfArrayPropertyValue(pClientRec, SmRestartCommand);
+    dbRec.cloneCommand =
+        GetListOfArrayPropertyValue(pClientRec, SmCloneCommand);
+    dbRec.discardCommand =
+        GetListOfArrayPropertyValue(pClientRec, SmDiscardCommand);
+    dbRec.environment = GetListOfArrayPropertyValue(pClientRec, SmEnvironment);
 
-		if (!PutXSMPClientDBRec (outputDB, &dbRec)) {
-			
-			char		*str;
+    if (!PutXSMPClientDBRec(outputDB, &dbRec)) {
 
-			str = strdup ((char *) GETMESSAGE (40, 19,
-				"Application '%s' cannot be saved."));
+      char *str;
 
-			if (str) {
-				DtMsgLogMessage (smGD.programName, 
-						 DtMsgLogError, str, 
-					 	 dbRec.program);
-				free (str);
-			}
-		}
+      str = strdup(
+          (char *)GETMESSAGE(40, 19, "Application '%s' cannot be saved."));
 
-		if (dbRec.restartCommand)
-			XtFree ((char *) dbRec.restartCommand);
-		if (dbRec.cloneCommand)
-			XtFree ((char *) dbRec.cloneCommand);
-		if (dbRec.discardCommand)
-			XtFree ((char *) dbRec.discardCommand);
-		if (dbRec.environment)
-			XtFree ((char *) dbRec.environment);
-	}
+      if (str) {
+        DtMsgLogMessage(smGD.programName, DtMsgLogError, str, dbRec.program);
+        free(str);
+      }
+    }
+
+    if (dbRec.restartCommand)
+      XtFree((char *)dbRec.restartCommand);
+    if (dbRec.cloneCommand)
+      XtFree((char *)dbRec.cloneCommand);
+    if (dbRec.discardCommand)
+      XtFree((char *)dbRec.discardCommand);
+    if (dbRec.environment)
+      XtFree((char *)dbRec.environment);
+  }
 }
-
 
 /*************************************<->*************************************
  *
@@ -736,62 +652,62 @@ OutputXSMPClients (
  *  Description: Check a client's required properties
  *
  *  Inputs: ClientRecPtr
- * 
+ *
  *  Returns: True if the client has all of the required properties;
  *	otherwise returns False
  *
  *************************************<->***********************************/
-static Boolean
-CheckRequiredProperties (
-	ClientRecPtr		pClientRec)
-{
-	PropertyRecPtr		pPropRec;
-	char			* str;
-	char			* program = NULL;
+static Boolean CheckRequiredProperties(ClientRecPtr pClientRec) {
+  PropertyRecPtr pPropRec;
+  char *str;
+  char *program = NULL;
 
-	if ((program = GetArrayPropertyValue (pClientRec, SmProgram)) == NULL){
+  if ((program = GetArrayPropertyValue(pClientRec, SmProgram)) == NULL) {
 
-		str = strdup ((char *) GETMESSAGE (40, 23,
-			"The following application did not set the required\nproperty '%s':\n\n   %s\n\nThis application will not be saved."));
+    str = strdup((char *)GETMESSAGE(
+        40, 23,
+        "The following application did not set the required\nproperty "
+        "'%s':\n\n   %s\n\nThis application will not be saved."));
 
-		if (str) {
-			DtMsgLogMessage (smGD.programName, DtMsgLogError, str, 
-					 SmProgram, pClientRec->clientId);
-			free (str);
-		}
-		return (False);
-	}
+    if (str) {
+      DtMsgLogMessage(smGD.programName, DtMsgLogError, str, SmProgram,
+                      pClientRec->clientId);
+      free(str);
+    }
+    return (False);
+  }
 
-	if ((pPropRec = GetPropertyRec (pClientRec, SmRestartCommand)) == NULL){
+  if ((pPropRec = GetPropertyRec(pClientRec, SmRestartCommand)) == NULL) {
 
-		str = strdup ((char *) GETMESSAGE (40, 24,
-			"24 Application '%s' will not be saved because it did not set\nthe required property '%s'."));
+    str = strdup(
+        (char *)GETMESSAGE(40, 24,
+                           "24 Application '%s' will not be saved because it "
+                           "did not set\nthe required property '%s'."));
 
-		if (str) {
-			DtMsgLogMessage (smGD.programName, DtMsgLogError,
-					 str, program, SmRestartCommand);
-			free (str);
-		}
-		return (False);
-	}
+    if (str) {
+      DtMsgLogMessage(smGD.programName, DtMsgLogError, str, program,
+                      SmRestartCommand);
+      free(str);
+    }
+    return (False);
+  }
 
-	if ((pPropRec = GetPropertyRec (pClientRec, SmCloneCommand)) == NULL) {
-		/*
-		 * This is a warning - still want to save the client
-		 */
-		str = strdup ((char *) GETMESSAGE (40, 25,
-			"Application '%s' did not set the required property '%s'."));
+  if ((pPropRec = GetPropertyRec(pClientRec, SmCloneCommand)) == NULL) {
+    /*
+     * This is a warning - still want to save the client
+     */
+    str = strdup((char *)GETMESSAGE(
+        40, 25, "Application '%s' did not set the required property '%s'."));
 
-		if (str) {
-			DtMsgLogMessage (smGD.programName, DtMsgLogWarning, str,
-					 program, SmCloneCommand);
-			free (str);
-		}
-	}
+    if (str) {
+      DtMsgLogMessage(smGD.programName, DtMsgLogWarning, str, program,
+                      SmCloneCommand);
+      free(str);
+    }
+  }
 
-	return (True);
+  return (True);
 }
-
 
 /*************************************<->*************************************
  *
@@ -800,7 +716,7 @@ CheckRequiredProperties (
  *
  *  Description:
  *  -----------
- *  Notify Proxy clients - calls routines to find top level windows, and 
+ *  Notify Proxy clients - calls routines to find top level windows, and
  *  notifies the Proxy clients about an impending save.
  *
  *  Inputs:
@@ -810,94 +726,80 @@ CheckRequiredProperties (
  *  -------
  *
  *************************************<->***********************************/
-void 
-NotifyProxyClients (void)
-{
-  unsigned int 		topListLength, containedListLength;
-  WindowInfo 		* topList;	/* list of top-level windows */
-  WindowInfo 		topLevelWindowInfo;
-  Atom 			actualType;
-  int 			actualFormat;
-  unsigned long 	nitems;
-  unsigned long 	leftover;
-  unsigned char 	* data = NULL;
-  Boolean		containedClient;
-  int 			i, j;
-  int			numClients = 0;
+void NotifyProxyClients(void) {
+  unsigned int topListLength, containedListLength;
+  WindowInfo *topList; /* list of top-level windows */
+  WindowInfo topLevelWindowInfo;
+  Atom actualType;
+  int actualFormat;
+  unsigned long nitems;
+  unsigned long leftover;
+  unsigned char *data = NULL;
+  Boolean containedClient;
+  int i, j;
+  int numClients = 0;
 
   /*
    * Save off the clients currently running.  This will be done
    * one screen at a time
    */
-  for(j = 0;j < smGD.numSavedScreens;j++)
-  {
-      /*
-       * Get a list of children of the root window. If there are none
-       * return with an error condition.
-       */
-      if(GetTopLevelWindows(j,&topList,&topListLength, &containedListLength))
-	  return;
-  
-      /*
-       * Figure out how to restart the client associate with each window.
-       */
-      for (i=0 ; i<(topListLength + containedListLength); ++i)
-      {
-	  topLevelWindowInfo=topList[i];
+  for (j = 0; j < smGD.numSavedScreens; j++) {
+    /*
+     * Get a list of children of the root window. If there are none
+     * return with an error condition.
+     */
+    if (GetTopLevelWindows(j, &topList, &topListLength, &containedListLength))
+      return;
 
-	  if(i >= topListLength)
-	  {
-	      containedClient = True;
-	  }
-	  else
-	  {
-	      containedClient = False;
-	  }
-      
-	  /*
-	   * If this window is my window - skip it I don't want to
-	   * save myself because I will be started automatically
-	   */
-	  if (XGetWindowProperty(smGD.display, topLevelWindowInfo.wid,
-				 XA_WM_CLASS,0L,
-				 (long)BUFSIZ,False,XA_STRING,&actualType,
-				 &actualFormat,&nitems,&leftover,
-				 &data)==Success)
-	  {
-	      if (actualType==XA_STRING &&
-		  !strcmp((char *) data, SM_RESOURCE_NAME))
-	      {
-		  SM_FREE((char *)data);
-		  continue;
-	      }
-	      else
-	      {
-		  SM_FREE((char *)data);
-	      }
-	  }
-      
-	 /*
-	  * If the client participates in the WM_SAVE_YOURSELF protocol, 
-	  * send the appropriate messages and wait for the proper 
-	  * responses.
-	  */
-	 (void) SaveYourself(topLevelWindowInfo);
+    /*
+     * Figure out how to restart the client associate with each window.
+     */
+    for (i = 0; i < (topListLength + containedListLength); ++i) {
+      topLevelWindowInfo = topList[i];
 
-	 CacheProxyClient ((numClients == 0), j, topLevelWindowInfo.wid);
-
-	 numClients++;
+      if (i >= topListLength) {
+        containedClient = True;
+      } else {
+        containedClient = False;
       }
 
       /*
-       * Free space malloc'd by GetTopLevelWindowInfo
+       * If this window is my window - skip it I don't want to
+       * save myself because I will be started automatically
        */
-      if(topListLength > 0)
-      {
-	  SM_FREE((char *) topList);
+      if (XGetWindowProperty(smGD.display, topLevelWindowInfo.wid, XA_WM_CLASS,
+                             0L, (long)BUFSIZ, False, XA_STRING, &actualType,
+                             &actualFormat, &nitems, &leftover,
+                             &data) == Success) {
+        if (actualType == XA_STRING &&
+            !strcmp((char *)data, SM_RESOURCE_NAME)) {
+          SM_FREE((char *)data);
+          continue;
+        } else {
+          SM_FREE((char *)data);
+        }
       }
+
+      /*
+       * If the client participates in the WM_SAVE_YOURSELF protocol,
+       * send the appropriate messages and wait for the proper
+       * responses.
+       */
+      (void)SaveYourself(topLevelWindowInfo);
+
+      CacheProxyClient((numClients == 0), j, topLevelWindowInfo.wid);
+
+      numClients++;
+    }
+
+    /*
+     * Free space malloc'd by GetTopLevelWindowInfo
+     */
+    if (topListLength > 0) {
+      SM_FREE((char *)topList);
+    }
   }
 }
-
 
 /*************************************<->*************************************
  *
@@ -917,69 +819,59 @@ NotifyProxyClients (void)
  *  -------
  *
  *************************************<->***********************************/
-static void CacheProxyClient (
-	Boolean			firstClient, 
-	int			screenNum, 
-	Window			window)
-{
-	if (firstClient)
-		numProxyClients = 0;
+static void CacheProxyClient(Boolean firstClient, int screenNum,
+                             Window window) {
+  if (firstClient)
+    numProxyClients = 0;
 
-	if (numProxyClients >= numProxyAllocated) {
-		numProxyAllocated += proxyCacheAllocIncrement;
-		proxyList = (ProxyClientCachePtr) XtRealloc ((char *) proxyList,
-			numProxyAllocated * sizeof (ProxyClientCache));
-	}
+  if (numProxyClients >= numProxyAllocated) {
+    numProxyAllocated += proxyCacheAllocIncrement;
+    proxyList = (ProxyClientCachePtr)XtRealloc(
+        (char *)proxyList, numProxyAllocated * sizeof(ProxyClientCache));
+  }
 
-	proxyList[numProxyClients].screen = screenNum;
-	proxyList[numProxyClients].window = window;
+  proxyList[numProxyClients].screen = screenNum;
+  proxyList[numProxyClients].window = window;
 
-	numProxyClients++;
+  numProxyClients++;
 }
 
-
-
 /*************************************<->*************************************
  *
  *  PrintStartupInfo -
  *
  *  Description:
  *  -----------
- *  Output startup information for one proxy client 
+ *  Output startup information for one proxy client
  *
  *  Inputs:
  *  ------
  *  outputDB = a pointer to the client database
  *  screen = which screen the client is running on
  *  window = the top level window of the lient
- * 
+ *
  *  Outputs:
  *  -------
  *
  *  Comments:
  *  --------
- * 
+ *
  *************************************<->***********************************/
-static void
-PrintStartupInfo(
-	ClientDB outputDB,
-        int screen,
-        Window window)
-{
-  Boolean		writeStatus;
-  int 			wargc;
-  char 			** wargv;
-  char 			*clientMachine;
-  XWindowAttributes 	windowAttr;
-  Boolean		remoteHost;
-  Boolean		xsmpClient;
-  ProxyClientDBRec 	dbRec;
-  char			** argv;
-  int			i;
-  Status		status;
+static void PrintStartupInfo(ClientDB outputDB, int screen, Window window) {
+  Boolean writeStatus;
+  int wargc;
+  char **wargv;
+  char *clientMachine;
+  XWindowAttributes windowAttr;
+  Boolean remoteHost;
+  Boolean xsmpClient;
+  ProxyClientDBRec dbRec;
+  char **argv;
+  int i;
+  Status status;
 
 #ifdef _SUN_OS /* pull out quotes from OpenWindow tools commands */
-  char 			* ptr;
+  char *ptr;
 #endif
 
   /*
@@ -988,81 +880,78 @@ PrintStartupInfo(
   if ((XGetWindowAttributes(smGD.display, window, &windowAttr)) == 0)
     return;
 
-  if (GetStandardProperties(window, screen, &wargc, &wargv, 
-			    &clientMachine, &xsmpClient)==0)
+  if (GetStandardProperties(window, screen, &wargc, &wargv, &clientMachine,
+                            &xsmpClient) == 0)
     return;
-  
+
   /*
    * If the client doesn't have a WM_COMMAND property, we can't restart it
    */
-  if (!wargv||!wargv[0]) 
+  if (!wargv || !wargv[0])
     return;
 
   /*
    * If the client is an XSMP client, don't save it as a Proxy client.
    */
   if (xsmpClient)
-     return;
+    return;
 
 #ifdef _SUN_OS /* pull out quotes from OpenWindow tools commands */
   if (wargc == 1) {
-     ptr = wargv[0];
-     /* check for foreground */
-     if ((ptr = strstr (ptr, "fg \"")) != NULL) {
-        if (strlen (ptr) > 3)
-           ptr[3] = ' ';
-        if ((ptr = strchr (ptr, '"')) != NULL)
-           ptr[0] = ' ';
-     }
+    ptr = wargv[0];
+    /* check for foreground */
+    if ((ptr = strstr(ptr, "fg \"")) != NULL) {
+      if (strlen(ptr) > 3)
+        ptr[3] = ' ';
+      if ((ptr = strchr(ptr, '"')) != NULL)
+        ptr[0] = ' ';
+    }
 
-     /* check for background */
-     if ((ptr = strstr (wargv[0], "bg \"")) != NULL) {
-        if (strlen (ptr) > 3)
-           ptr[3] = ' ';
-        if ((ptr = strchr (ptr, '"')) != NULL)
-           ptr[0] = ' ';
-     }
+    /* check for background */
+    if ((ptr = strstr(wargv[0], "bg \"")) != NULL) {
+      if (strlen(ptr) > 3)
+        ptr[3] = ' ';
+      if ((ptr = strchr(ptr, '"')) != NULL)
+        ptr[0] = ' ';
+    }
   }
 #endif
-  
+
   /*
    * Find out if the client is running locally
    */
   dbRec.clientHost = NULL;
-  if(clientMachine != NULL)
-  {
-      if(DtIsLocalHostP(clientMachine) == FALSE)
-      {
-	  dbRec.clientHost = clientMachine;
-      }
+  if (clientMachine != NULL) {
+    if (DtIsLocalHostP(clientMachine) == FALSE) {
+      dbRec.clientHost = clientMachine;
+    }
   }
 
   /*
    * Must NULL-terminate the WM_COMMAND before writing it
    */
-  argv = (char **) XtMalloc ((wargc + 1) * sizeof (char *));
+  argv = (char **)XtMalloc((wargc + 1) * sizeof(char *));
   if (!argv)
-      return;
+    return;
 
   for (i = 0; i < wargc; i++)
-      argv[i] = wargv[i];
+    argv[i] = wargv[i];
   argv[wargc] = NULL;
 
   dbRec.command = argv;
   dbRec.screenNum = screen;
 
-  writeStatus = PutProxyClientDBRec (outputDB, &dbRec);
+  writeStatus = PutProxyClientDBRec(outputDB, &dbRec);
 
-  XtFree ((char *) argv);
+  XtFree((char *)argv);
 
-  if (writeStatus == False)
-  {
+  if (writeStatus == False) {
     /*
      * There should be an error written here - however
      * since this means that there already is a write error to
      * the disk - no error can be written
      */
-    (void) CloseClientDB (outputDB, True);
+    (void)CloseClientDB(outputDB, True);
 
     /*
      * On a write error - move the old session back to
@@ -1071,13 +960,10 @@ PrintStartupInfo(
     XFreeStringList(wargv);
 
     strcat(smGD.savePath, "/");
-    if(smGD.sessionType == HOME_SESSION)
-    {
-        strcat(smGD.savePath, SM_HOME_DIRECTORY);
-    }
-    else
-    {
-        strcat(smGD.savePath, SM_CURRENT_DIRECTORY);
+    if (smGD.sessionType == HOME_SESSION) {
+      strcat(smGD.savePath, SM_HOME_DIRECTORY);
+    } else {
+      strcat(smGD.savePath, SM_CURRENT_DIRECTORY);
     }
 
     MoveDirectory(smGD.etcPath, smGD.savePath, False);
@@ -1090,7 +976,6 @@ PrintStartupInfo(
   XFreeStringList(wargv);
 }
 
-
 /*************************************<->*************************************
  *
  *  QueryServerSettings ()
@@ -1105,7 +990,7 @@ PrintStartupInfo(
  *  ------
  *  smGD.settingPath = (global) pointer to file where
  *			setting info should be saved.
- * 
+ *
  *  Outputs:
  *  -------
  *
@@ -1115,252 +1000,226 @@ PrintStartupInfo(
  *  considerably, and is therefore only called when the user specifies
  *  that all settings should be queried.  Otherwise, only settings set in
  *  the customizer should be saved.
- * 
+ *
  *************************************<->***********************************/
-static int 
-QueryServerSettings( void )
-{
-    int			i, numLoops;
-    char		**fontPath;
-    KeySym		*tmpSyms, tmpMod;
-    XModifierKeymap	*modMap;
-    char		*buttonRet;
-    int			numButton, numPaths;
-    int			buttonSize = 128;
-    XrmDatabase 	smBase = NULL;
-    char		tmpChar[35];
+static int QueryServerSettings(void) {
+  int i, numLoops;
+  char **fontPath;
+  KeySym *tmpSyms, tmpMod;
+  XModifierKeymap *modMap;
+  char *buttonRet;
+  int numButton, numPaths;
+  int buttonSize = 128;
+  XrmDatabase smBase = NULL;
+  char tmpChar[35];
 
+  buttonRet = (char *)SM_MALLOC(buttonSize * sizeof(char));
+  if (buttonRet == NULL) {
+    PrintErrnoError(DtError, smNLS.cantMallocErrorString);
+    return (-1);
+  }
 
-    buttonRet = (char *) SM_MALLOC(buttonSize * sizeof(char));
-    if (buttonRet==NULL)
-    {
-	PrintErrnoError(DtError, smNLS.cantMallocErrorString);
-	return(-1);
+  /*
+   * First set up all pointer control parameters
+   * These are simple integer values that get saved
+   * here, then read into a structure and set at restore
+   * time
+   */
+  XGetPointerControl(smGD.display, &smSettings.accelNum, &smSettings.accelDenom,
+                     &smSettings.threshold);
+  PrintPointerControl(&smBase);
+
+  /*
+   * Get all the screen saver values.  These are all simple integer
+   * values that are read back into a structure and set at restore
+   * time.
+   */
+  XGetScreenSaver(smGD.display, &screenSaverVals.smTimeout,
+                  &screenSaverVals.smInterval, &screenSaverVals.smPreferBlank,
+                  &screenSaverVals.smAllowExp);
+  PrintScreenSaver(&smBase);
+
+  /*
+   *  Write out all font path information.
+   *  Write out all the paths one by one concatenated by commas.
+   */
+  fontPath = XGetFontPath(smGD.display, &numPaths);
+  if (fontPath != NULL) {
+    if (PrintFontPaths(&smBase, fontPath, numPaths) != 0) {
+      XFreeFontPath(fontPath);
+      SM_FREE(buttonRet);
+      return (-1);
     }
+  }
 
-    /*
-     * First set up all pointer control parameters
-     * These are simple integer values that get saved
-     * here, then read into a structure and set at restore
-     * time
-     */
-    XGetPointerControl(smGD.display, &smSettings.accelNum,
-		       &smSettings.accelDenom,
-		       &smSettings.threshold);
-    PrintPointerControl(&smBase);
-
-    /*
-     * Get all the screen saver values.  These are all simple integer
-     * values that are read back into a structure and set at restore
-     * time.
-     */
-    XGetScreenSaver(smGD.display, &screenSaverVals.smTimeout,
-		    &screenSaverVals.smInterval,
-		    &screenSaverVals.smPreferBlank,
-		    &screenSaverVals.smAllowExp);
-    PrintScreenSaver(&smBase);
-
-    /*
-     *  Write out all font path information. 
-     *  Write out all the paths one by one concatenated by commas.
-     */
-    fontPath = XGetFontPath(smGD.display, &numPaths);
-    if(fontPath != NULL)
-    {
-	if(PrintFontPaths(&smBase, fontPath, numPaths) != 0)
-	{
-	    XFreeFontPath(fontPath);
-	    SM_FREE(buttonRet);
-	    return(-1);
-	}
-    }
-
-    /*
-     * Write out all the keyboard control information.
-     */
-    XGetKeyboardControl(smGD.display, &smSettings.kbdState);
-    if(PrintKeyboardControl(&smBase) != 0)
-    {
-	if (fontPath)
-	    XFreeFontPath(fontPath);
-	return(-1);
-    }
-    
-    /*
-     * Put all the button modifier information into the resource database.
-     * Find out the number of buttons and then write out the character
-     * string for each button.
-     */
-    numButton = XGetPointerMapping(smGD.display, (unsigned char *)buttonRet, 128);
-    if(numButton > 128)
-    {
-	buttonRet = (char *) SM_REALLOC(buttonRet, numButton * sizeof(char));
-	if (buttonRet==NULL)
-	{
-	    if (fontPath)
-		XFreeFontPath(fontPath);
-	    PrintErrnoError(DtError, smNLS.cantMallocErrorString);
-	    return(-1);
-	}
-	numButton = XGetPointerMapping(smGD.display, (unsigned char *)buttonRet, numButton);
-    }
-    if(PrintPointerMapping(&smBase, buttonRet,
-			   numButton)  != 0)
-    {
-	if (fontPath)
-	    XFreeFontPath(fontPath);
-	SM_FREE(buttonRet);
-	return(-1);
-    }
-
-    /*
-     * Put all keyboard mapping information in the resource database
-     * Don't bother putting this in a separate print function because
-     * the customizer doesn't do keymap savings this way.
-     */
-    smSettings.numKeyCode = smGD.display->max_keycode -
-	smGD.display->min_keycode;
-    tmpSyms = XGetKeyboardMapping(smGD.display,
-				  (KeyCode) smGD.display->min_keycode,
-				  smSettings.numKeyCode,
-				  &smSettings.keySymPerCode);
-    if(tmpSyms == NULL)
-    {
-	if (fontPath)
-	    XFreeFontPath(fontPath);
-	SM_FREE(buttonRet);
-	PrintErrnoError(DtError, smNLS.cantMallocErrorString);
-	return(-1);
-    }
-    
-    strcpy(resSpec, SM_RESOURCE_CLASS);
-    strcat(resSpec, "*");
-    strcat(resSpec, SmCnumKeyCode);
-    strcat(resSpec, ":");
-    sprintf(tmpChar,"%d", smSettings.numKeyCode);
-    strcat(resSpec, tmpChar);
-    XrmPutLineResource( &smBase, resSpec);
-    
-    strcpy(resSpec, SM_RESOURCE_CLASS);
-    strcat(resSpec, "*");
-    strcat(resSpec, SmCkeySymsPerKey);
-    strcat(resSpec, ":");
-    sprintf(tmpChar,"%d", smSettings.keySymPerCode);
-    strcat(resSpec, tmpChar);
-    XrmPutLineResource( &smBase, resSpec);
-
-    strcpy(resSpec, SM_RESOURCE_CLASS);
-    strcat(resSpec, "*");
-    strcat(resSpec, SmCkeySyms);
-    strcat(resSpec, ":");
-    numLoops = smSettings.numKeyCode * smSettings.keySymPerCode;
-    sprintf(tmpChar,"%ld", tmpSyms[0]);
-    strcat(resSpec, tmpChar);
-    for(i = 1;i < numLoops;i++)
-    {
-	if((strlen(resSpec) + 5) >= resSize)
-	{
-	    resSize += 5000;
-	    resSpec = (char *) SM_REALLOC(resSpec, resSize * sizeof(char));
-	    if (resSpec==NULL)
-	    {
-		SM_FREE((char *)tmpSyms);
-		if (fontPath)
-		    SM_FREE((char *)fontPath);
-		SM_FREE(buttonRet);
-		PrintErrnoError(DtError, smNLS.cantMallocErrorString);
-		return(-1);
-	    }
-	}
-	strcat(resSpec, ",");
-	sprintf(tmpChar,"%ld", tmpSyms[i]);
-	strcat(resSpec, tmpChar);
-    }
-    XrmPutLineResource( &smBase, resSpec);
-	
-
-    /*
-     * Write out all keyboard modifier info.  This will be a pretty slow
-     * process considering that every keycode will have to be turned into
-     * a keysym before writing.  Don't bother putting print stuff in a
-     * separate function because it will not be handled in the customize
-     * version.
-     */
-    modMap = XGetModifierMapping(smGD.display);
-    if(modMap == NULL)
-    {
-	SM_FREE((char *)tmpSyms);
-	if (fontPath)
-	    XFreeFontPath(fontPath);
-	SM_FREE(buttonRet);
-	PrintErrnoError(DtError, smNLS.cantMallocErrorString);
-	return(-1);
-    }
-
-    strcpy(resSpec, SM_RESOURCE_CLASS);
-    strcat(resSpec, "*");
-    strcat(resSpec, SmCmaxKeyPerMod);
-    strcat(resSpec, ":");
-    sprintf(tmpChar,"%d", modMap->max_keypermod);
-    strcat(resSpec, tmpChar);
-    XrmPutLineResource( &smBase, resSpec);
-
-    strcpy(resSpec, SM_RESOURCE_CLASS);
-    strcat(resSpec, "*");
-    strcat(resSpec, SmCmodMap);
-    strcat(resSpec, ":");
-    numLoops = (8 * modMap->max_keypermod) - 1;
-    for(i = 0;i <= numLoops;i++)
-    {
-	if((strlen(resSpec) + 9) >= resSize)
-	{
-	    resSize += 5000;
-	    resSpec = (char *) SM_REALLOC(resSpec, resSize * sizeof(char));
-	    if (resSpec==NULL)
-	    {
-		SM_FREE((char *)tmpSyms);
-		XFreeModifiermap(modMap);
-		if (fontPath)
-		    XFreeFontPath(fontPath);
-		SM_FREE(buttonRet);
-		PrintErrnoError(DtError, smNLS.cantMallocErrorString);
-		return(-1);
-	    }
-	}
-	tmpMod = XKeycodeToKeysym(smGD.display, modMap->modifiermap[i], 0);
-	sprintf(tmpChar,"%ld", tmpMod);
-	strcat(resSpec, tmpChar);
-	if(i != numLoops)
-	{
-	    strcat(resSpec, ",");
-	}
-    }
-    XrmPutLineResource( &smBase, resSpec);
-    
-
-    /*
-     * Print session manager settings
-     */
-    PrintSessionInfo(&smBase);
-    
-    /*
-     * Write settings resources out to disk
-     */
-    XrmPutFileDatabase(smBase, smGD.settingPath);
-
-    /*
-     * Free all allocated resources
-     */
+  /*
+   * Write out all the keyboard control information.
+   */
+  XGetKeyboardControl(smGD.display, &smSettings.kbdState);
+  if (PrintKeyboardControl(&smBase) != 0) {
     if (fontPath)
-	XFreeFontPath(fontPath);
-    SM_FREE((char *)tmpSyms);
-    XFreeModifiermap(modMap);
+      XFreeFontPath(fontPath);
+    return (-1);
+  }
+
+  /*
+   * Put all the button modifier information into the resource database.
+   * Find out the number of buttons and then write out the character
+   * string for each button.
+   */
+  numButton = XGetPointerMapping(smGD.display, (unsigned char *)buttonRet, 128);
+  if (numButton > 128) {
+    buttonRet = (char *)SM_REALLOC(buttonRet, numButton * sizeof(char));
+    if (buttonRet == NULL) {
+      if (fontPath)
+        XFreeFontPath(fontPath);
+      PrintErrnoError(DtError, smNLS.cantMallocErrorString);
+      return (-1);
+    }
+    numButton =
+        XGetPointerMapping(smGD.display, (unsigned char *)buttonRet, numButton);
+  }
+  if (PrintPointerMapping(&smBase, buttonRet, numButton) != 0) {
+    if (fontPath)
+      XFreeFontPath(fontPath);
     SM_FREE(buttonRet);
-    XrmDestroyDatabase(smBase);
-    return(0);
+    return (-1);
+  }
+
+  /*
+   * Put all keyboard mapping information in the resource database
+   * Don't bother putting this in a separate print function because
+   * the customizer doesn't do keymap savings this way.
+   */
+  smSettings.numKeyCode = smGD.display->max_keycode - smGD.display->min_keycode;
+  tmpSyms =
+      XGetKeyboardMapping(smGD.display, (KeyCode)smGD.display->min_keycode,
+                          smSettings.numKeyCode, &smSettings.keySymPerCode);
+  if (tmpSyms == NULL) {
+    if (fontPath)
+      XFreeFontPath(fontPath);
+    SM_FREE(buttonRet);
+    PrintErrnoError(DtError, smNLS.cantMallocErrorString);
+    return (-1);
+  }
+
+  strcpy(resSpec, SM_RESOURCE_CLASS);
+  strcat(resSpec, "*");
+  strcat(resSpec, SmCnumKeyCode);
+  strcat(resSpec, ":");
+  sprintf(tmpChar, "%d", smSettings.numKeyCode);
+  strcat(resSpec, tmpChar);
+  XrmPutLineResource(&smBase, resSpec);
+
+  strcpy(resSpec, SM_RESOURCE_CLASS);
+  strcat(resSpec, "*");
+  strcat(resSpec, SmCkeySymsPerKey);
+  strcat(resSpec, ":");
+  sprintf(tmpChar, "%d", smSettings.keySymPerCode);
+  strcat(resSpec, tmpChar);
+  XrmPutLineResource(&smBase, resSpec);
+
+  strcpy(resSpec, SM_RESOURCE_CLASS);
+  strcat(resSpec, "*");
+  strcat(resSpec, SmCkeySyms);
+  strcat(resSpec, ":");
+  numLoops = smSettings.numKeyCode * smSettings.keySymPerCode;
+  sprintf(tmpChar, "%ld", tmpSyms[0]);
+  strcat(resSpec, tmpChar);
+  for (i = 1; i < numLoops; i++) {
+    if ((strlen(resSpec) + 5) >= resSize) {
+      resSize += 5000;
+      resSpec = (char *)SM_REALLOC(resSpec, resSize * sizeof(char));
+      if (resSpec == NULL) {
+        SM_FREE((char *)tmpSyms);
+        if (fontPath)
+          SM_FREE((char *)fontPath);
+        SM_FREE(buttonRet);
+        PrintErrnoError(DtError, smNLS.cantMallocErrorString);
+        return (-1);
+      }
+    }
+    strcat(resSpec, ",");
+    sprintf(tmpChar, "%ld", tmpSyms[i]);
+    strcat(resSpec, tmpChar);
+  }
+  XrmPutLineResource(&smBase, resSpec);
+
+  /*
+   * Write out all keyboard modifier info.  This will be a pretty slow
+   * process considering that every keycode will have to be turned into
+   * a keysym before writing.  Don't bother putting print stuff in a
+   * separate function because it will not be handled in the customize
+   * version.
+   */
+  modMap = XGetModifierMapping(smGD.display);
+  if (modMap == NULL) {
+    SM_FREE((char *)tmpSyms);
+    if (fontPath)
+      XFreeFontPath(fontPath);
+    SM_FREE(buttonRet);
+    PrintErrnoError(DtError, smNLS.cantMallocErrorString);
+    return (-1);
+  }
+
+  strcpy(resSpec, SM_RESOURCE_CLASS);
+  strcat(resSpec, "*");
+  strcat(resSpec, SmCmaxKeyPerMod);
+  strcat(resSpec, ":");
+  sprintf(tmpChar, "%d", modMap->max_keypermod);
+  strcat(resSpec, tmpChar);
+  XrmPutLineResource(&smBase, resSpec);
+
+  strcpy(resSpec, SM_RESOURCE_CLASS);
+  strcat(resSpec, "*");
+  strcat(resSpec, SmCmodMap);
+  strcat(resSpec, ":");
+  numLoops = (8 * modMap->max_keypermod) - 1;
+  for (i = 0; i <= numLoops; i++) {
+    if ((strlen(resSpec) + 9) >= resSize) {
+      resSize += 5000;
+      resSpec = (char *)SM_REALLOC(resSpec, resSize * sizeof(char));
+      if (resSpec == NULL) {
+        SM_FREE((char *)tmpSyms);
+        XFreeModifiermap(modMap);
+        if (fontPath)
+          XFreeFontPath(fontPath);
+        SM_FREE(buttonRet);
+        PrintErrnoError(DtError, smNLS.cantMallocErrorString);
+        return (-1);
+      }
+    }
+    tmpMod = XkbKeycodeToKeysym(smGD.display, modMap->modifiermap[i], 0, 0);
+    sprintf(tmpChar, "%ld", tmpMod);
+    strcat(resSpec, tmpChar);
+    if (i != numLoops) {
+      strcat(resSpec, ",");
+    }
+  }
+  XrmPutLineResource(&smBase, resSpec);
+
+  /*
+   * Print session manager settings
+   */
+  PrintSessionInfo(&smBase);
+
+  /*
+   * Write settings resources out to disk
+   */
+  XrmPutFileDatabase(smBase, smGD.settingPath);
+
+  /*
+   * Free all allocated resources
+   */
+  if (fontPath)
+    XFreeFontPath(fontPath);
+  SM_FREE((char *)tmpSyms);
+  XFreeModifiermap(modMap);
+  SM_FREE(buttonRet);
+  XrmDestroyDatabase(smBase);
+  return (0);
 }
 
-
 /*************************************<->*************************************
  *
  *  SaveCustomizeSettings ()
@@ -1377,7 +1236,7 @@ QueryServerSettings( void )
  *  smGD.resourcePath = (global) a pointer
  *			to where the settings should be stored.
  *
- * 
+ *
  *  Outputs:
  *  -------
  *
@@ -1387,186 +1246,157 @@ QueryServerSettings( void )
  *  This routine is the default saved for saving settings.  If the user
  *  wants all settings saved, they have to set a resource saying that that
  *  will be the case.
- * 
+ *
  *************************************<->***********************************/
-static int 
-SaveCustomizeSettings( void )
-{
-    int			i,numPaths;
-    char		**fontPath;
-    XrmDatabase 	smBase = NULL;
-    char		*tmpChar[20], *ptrRet = NULL, *tmpKey;
-    Status		newStat;
-	char		tmpMap[128];
+static int SaveCustomizeSettings(void) {
+  int i, numPaths;
+  char **fontPath;
+  XrmDatabase smBase = NULL;
+  char *tmpChar[20], *ptrRet = NULL, *tmpKey;
+  Status newStat;
+  char tmpMap[128];
 
+  if (smCust.pointerChange) {
+    newStat = _DtGetSmPointer(smGD.display, smGD.topLevelWindow,
+                              XaDtSmPointerInfo, &ptrRet);
+    if (newStat != Success) {
+      smToSet.pointerChange = False;
+      smToSet.pointerMapChange = False;
+    } else {
+      sscanf(ptrRet, "%d %s %d %d %s", &smToSet.numButton, tmpMap,
+             &smSettings.accelNum, &smSettings.threshold, smToSet.dClickBuf);
+      smSettings.accelDenom = 1;
 
-    if(smCust.pointerChange)
-    {
-	newStat = _DtGetSmPointer(smGD.display, smGD.topLevelWindow,
-				 XaDtSmPointerInfo, &ptrRet);
-	if(newStat != Success)
-	{
-	    smToSet.pointerChange = False;
-	    smToSet.pointerMapChange = False;
-	}
-	else
-	{
-	    sscanf(ptrRet, "%d %s %d %d %s",
-		   &smToSet.numButton,
-		   tmpMap,
-		   &smSettings.accelNum,
-		   &smSettings.threshold,
-		   smToSet.dClickBuf);
-	    smSettings.accelDenom = 1;
-
-	    tmpKey = strtok(tmpMap, "_");
-	    i = 0;
-	    while(tmpKey != NULL)
-	    {
-		smToSet.pointerMap[i] = (char) atoi(tmpKey);
-		i++;
-		tmpKey = strtok(NULL, "_");
-	    }
-
-
-	    /*
-	     * append a \n to dClickBuf because it was scanned out
-	     */
-	    strcat(smToSet.dClickBuf, "\n");
-	}
-        if (ptrRet) XFree(ptrRet);
-    }
-				     
-    if(smToSet.pointerChange == True)
-    {
-	PrintPointerControl(&smBase);
-    }
-
-    if(smToSet.pointerMapChange == True)
-    {
-	if(PrintPointerMapping(&smBase, smToSet.pointerMap,
-			    smToSet.numButton) != 0)
-	{
-	    return(-1);
-	}
-    }
-
-    if(smToSet.screenSavChange == True)
-    {
-	PrintScreenSaver(&smBase);
-    }
-
-    if(smCust.audioChange == True)
-    {
-      newStat = _DtGetSmAudio(smGD.display, smGD.topLevelWindow,
-				   XaDtSmAudioInfo, &audioVals);
-     
-      if(newStat == Success)
-      {
-        smSettings.kbdState.bell_percent = audioVals.smBellPercent;
-        smSettings.kbdState.bell_pitch = audioVals.smBellPitch;
-        smSettings.kbdState.bell_duration = audioVals.smBellDuration;
-      }  
-      else
-      {
-        smToSet.audioChange = False;
+      tmpKey = strtok(tmpMap, "_");
+      i = 0;
+      while (tmpKey != NULL) {
+        smToSet.pointerMap[i] = (char)atoi(tmpKey);
+        i++;
+        tmpKey = strtok(NULL, "_");
       }
+
+      /*
+       * append a \n to dClickBuf because it was scanned out
+       */
+      strcat(smToSet.dClickBuf, "\n");
     }
-    
-    if (smToSet.audioChange)
-    {
-      strcpy(resSpec, SM_RESOURCE_CLASS);
-      strcat(resSpec, "*");
-      strcat(resSpec, SmCbellPercent);
-      strcat(resSpec, ":");
-      sprintf((char *)tmpChar,"%d",smSettings.kbdState.bell_percent);
-      strcat(resSpec, (char *)tmpChar);
-      XrmPutLineResource(&smBase, resSpec);
+    if (ptrRet)
+      XFree(ptrRet);
+  }
 
-      strcpy(resSpec, SM_RESOURCE_CLASS);
-      strcat(resSpec, "*");
-      strcat(resSpec, SmCbellPitch);
-      strcat(resSpec, ":");
-      sprintf((char *)tmpChar,"%d",smSettings.kbdState.bell_pitch);
-      strcat(resSpec, (char *)tmpChar);
-      XrmPutLineResource(&smBase, resSpec);
+  if (smToSet.pointerChange == True) {
+    PrintPointerControl(&smBase);
+  }
 
-      strcpy(resSpec, SM_RESOURCE_CLASS);
-      strcat(resSpec, "*");
-      strcat(resSpec, SmCbellDuration);
-      strcat(resSpec, ":");
-      sprintf((char *)tmpChar,"%d",smSettings.kbdState.bell_duration);
-      strcat(resSpec, (char *)tmpChar);
-      XrmPutLineResource(&smBase, resSpec);
+  if (smToSet.pointerMapChange == True) {
+    if (PrintPointerMapping(&smBase, smToSet.pointerMap, smToSet.numButton) !=
+        0) {
+      return (-1);
     }
+  }
 
-    if(smCust.keyboardChange == True)
-    {
-      newStat = _DtGetSmKeyboard(smGD.display, smGD.topLevelWindow,
-                                      XaDtSmKeyboardInfo, &keyboardVals);
-      if(newStat == Success)
-      {
-        smSettings.kbdState.key_click_percent = keyboardVals.smKeyClickPercent;
-        smSettings.kbdState.global_auto_repeat = keyboardVals.smGlobalAutoRepeat;
-      }
-      else
-      {
-        smToSet.keyboardChange = False;
-      }
+  if (smToSet.screenSavChange == True) {
+    PrintScreenSaver(&smBase);
+  }
+
+  if (smCust.audioChange == True) {
+    newStat = _DtGetSmAudio(smGD.display, smGD.topLevelWindow, XaDtSmAudioInfo,
+                            &audioVals);
+
+    if (newStat == Success) {
+      smSettings.kbdState.bell_percent = audioVals.smBellPercent;
+      smSettings.kbdState.bell_pitch = audioVals.smBellPitch;
+      smSettings.kbdState.bell_duration = audioVals.smBellDuration;
+    } else {
+      smToSet.audioChange = False;
     }
+  }
 
-    if(smToSet.keyboardChange == True)
-    {
-      strcpy(resSpec, SM_RESOURCE_CLASS);
-      strcat(resSpec, "*");
-      strcat(resSpec, SmCkeyClick);
-      strcat(resSpec, ":");
-      sprintf((char *)tmpChar,"%d", smSettings.kbdState.key_click_percent);
-      strcat(resSpec, (char *)tmpChar);
-      XrmPutLineResource(&smBase, resSpec);
+  if (smToSet.audioChange) {
+    strcpy(resSpec, SM_RESOURCE_CLASS);
+    strcat(resSpec, "*");
+    strcat(resSpec, SmCbellPercent);
+    strcat(resSpec, ":");
+    sprintf((char *)tmpChar, "%d", smSettings.kbdState.bell_percent);
+    strcat(resSpec, (char *)tmpChar);
+    XrmPutLineResource(&smBase, resSpec);
 
-      strcpy(resSpec, SM_RESOURCE_CLASS);
-      strcat(resSpec, "*");
-      strcat(resSpec, SmCglobalRepeats);
-      strcat(resSpec, ":");
-      sprintf((char *)tmpChar,"%d", smSettings.kbdState.global_auto_repeat);
-      strcat(resSpec, (char *)tmpChar);
-      XrmPutLineResource(&smBase, resSpec);
+    strcpy(resSpec, SM_RESOURCE_CLASS);
+    strcat(resSpec, "*");
+    strcat(resSpec, SmCbellPitch);
+    strcat(resSpec, ":");
+    sprintf((char *)tmpChar, "%d", smSettings.kbdState.bell_pitch);
+    strcat(resSpec, (char *)tmpChar);
+    XrmPutLineResource(&smBase, resSpec);
+
+    strcpy(resSpec, SM_RESOURCE_CLASS);
+    strcat(resSpec, "*");
+    strcat(resSpec, SmCbellDuration);
+    strcat(resSpec, ":");
+    sprintf((char *)tmpChar, "%d", smSettings.kbdState.bell_duration);
+    strcat(resSpec, (char *)tmpChar);
+    XrmPutLineResource(&smBase, resSpec);
+  }
+
+  if (smCust.keyboardChange == True) {
+    newStat = _DtGetSmKeyboard(smGD.display, smGD.topLevelWindow,
+                               XaDtSmKeyboardInfo, &keyboardVals);
+    if (newStat == Success) {
+      smSettings.kbdState.key_click_percent = keyboardVals.smKeyClickPercent;
+      smSettings.kbdState.global_auto_repeat = keyboardVals.smGlobalAutoRepeat;
+    } else {
+      smToSet.keyboardChange = False;
     }
+  }
 
+  if (smToSet.keyboardChange == True) {
+    strcpy(resSpec, SM_RESOURCE_CLASS);
+    strcat(resSpec, "*");
+    strcat(resSpec, SmCkeyClick);
+    strcat(resSpec, ":");
+    sprintf((char *)tmpChar, "%d", smSettings.kbdState.key_click_percent);
+    strcat(resSpec, (char *)tmpChar);
+    XrmPutLineResource(&smBase, resSpec);
 
-    /*
-     *  Write out all font path information. 
-     *  Write out all the paths one by one concatenated by commas.
-     */
+    strcpy(resSpec, SM_RESOURCE_CLASS);
+    strcat(resSpec, "*");
+    strcat(resSpec, SmCglobalRepeats);
+    strcat(resSpec, ":");
+    sprintf((char *)tmpChar, "%d", smSettings.kbdState.global_auto_repeat);
+    strcat(resSpec, (char *)tmpChar);
+    XrmPutLineResource(&smBase, resSpec);
+  }
 
-    fontPath = XGetFontPath(smGD.display, &numPaths);
-    if(fontPath != NULL) {
-	if(PrintFontPaths(&smBase,  fontPath, numPaths) != 0) {
-	    XFreeFontPath(fontPath);
-	    return(-1);
-	}
+  /*
+   *  Write out all font path information.
+   *  Write out all the paths one by one concatenated by commas.
+   */
+
+  fontPath = XGetFontPath(smGD.display, &numPaths);
+  if (fontPath != NULL) {
+    if (PrintFontPaths(&smBase, fontPath, numPaths) != 0) {
+      XFreeFontPath(fontPath);
+      return (-1);
     }
+  }
 
-    /*
-     * Save session manager settings
-     */
-    PrintSessionInfo(&smBase);
-    
-    if (fontPath)
-	XFreeFontPath(fontPath);
+  /*
+   * Save session manager settings
+   */
+  PrintSessionInfo(&smBase);
 
-    /*
-     * Write settings resources out to disk
-     */
-    XrmPutFileDatabase(smBase, smGD.settingPath);
-    XrmDestroyDatabase(smBase);
+  if (fontPath)
+    XFreeFontPath(fontPath);
 
-    return(0);
+  /*
+   * Write settings resources out to disk
+   */
+  XrmPutFileDatabase(smBase, smGD.settingPath);
+  XrmDestroyDatabase(smBase);
+
+  return (0);
 }
 
-
-
 /*************************************<->*************************************
  *
  *  OutputResource ()
@@ -1581,7 +1411,7 @@ SaveCustomizeSettings( void )
  *  ------
  *  smGD.resourcePath = (global) file name
  *			where property contents should be saved.
- * 
+ *
  *  Outputs:
  *  -------
  *
@@ -1592,147 +1422,128 @@ SaveCustomizeSettings( void )
  *  resources in the system.  It is however, the best representation (the
  *  values with the highest priority) without becoming overly invasive
  *  and slow.
- * 
+ *
  *************************************<->***********************************/
-static int 
-OutputResource( void )
-{
-    Atom 		actualType;
-    int	 		actualFormat;
-    unsigned long	nitems, leftover; 
-    char	 	*data = NULL;
-    XrmDatabase		db;
-    Status		newStat;
-    char		*fontBuf = NULL, *langPtr, tmpChar[20], *sessionRes;
-    float		fltYRes;
-    int			intYRes;
-    char                *preeditBuf = NULL;
+static int OutputResource(void) {
+  Atom actualType;
+  int actualFormat;
+  unsigned long nitems, leftover;
+  char *data = NULL;
+  XrmDatabase db;
+  Status newStat;
+  char *fontBuf = NULL, *langPtr, tmpChar[20], *sessionRes;
+  float fltYRes;
+  int intYRes;
+  char *preeditBuf = NULL;
 
-    /*
-     * Add anything to the Resource Manager property that needs to be added
-     */
+  /*
+   * Add anything to the Resource Manager property that needs to be added
+   */
 
-    /*
-     * Write out the LANG variable and the screen's Y resolution
-     */
-    *resSpec = 0;
-    langPtr = getenv("LANG");
-    if((langPtr != NULL) && (*langPtr != 0))
-    {
-	snprintf(resSpec, resSize, "%s*%s: %s\n", SM_RESOURCE_NAME, SmNsessionLang,
-		langPtr);
+  /*
+   * Write out the LANG variable and the screen's Y resolution
+   */
+  *resSpec = 0;
+  langPtr = getenv("LANG");
+  if ((langPtr != NULL) && (*langPtr != 0)) {
+    snprintf(resSpec, resSize, "%s*%s: %s\n", SM_RESOURCE_NAME, SmNsessionLang,
+             langPtr);
+  } else {
+    snprintf(resSpec, resSize, "%s*%s:   \n", SM_RESOURCE_NAME, SmNsessionLang);
+  }
+
+  fltYRes = ((float)DisplayHeight(smGD.display, 0) /
+             (float)DisplayHeightMM(smGD.display, 0)) *
+            1000;
+  intYRes = fltYRes;
+
+  if (*resSpec == 0) {
+    strcpy(resSpec, SM_RESOURCE_NAME);
+  } else {
+    strcat(resSpec, SM_RESOURCE_NAME);
+  }
+  strcat(resSpec, "*");
+  strcat(resSpec, SmNdisplayResolution);
+  strcat(resSpec, ":");
+  sprintf(tmpChar, "%d", intYRes);
+  strcat(resSpec, tmpChar);
+  strcat(resSpec, "\n");
+  _DtAddToResource(smGD.display, resSpec);
+
+  if (smCust.fontChange == True) {
+    newStat = _DtGetSmFont(smGD.display, smGD.topLevelWindow, XaDtSmFontInfo,
+                           &fontBuf);
+    if (newStat == Success) {
+      /*
+       * Create the auxillary resource file
+       */
+      if (SetFontSavePath(langPtr) != -1) {
+        db = XrmGetStringDatabase(fontBuf);
+
+        if (intYRes < MED_RES_Y_RES) {
+          sessionRes = SM_LOW_RES_EXT;
+        } else {
+          if (intYRes >= HIGH_RES_Y_RES) {
+            sessionRes = SM_HIGH_RES_EXT;
+          } else {
+            sessionRes = SM_MED_RES_EXT;
+          }
+        }
+
+        strcat(smGD.fontPath, "/");
+        strcat(smGD.fontPath, SM_FONT_FILE);
+
+        strcat(smGD.fontPath, ".");
+        strcat(smGD.fontPath, sessionRes);
+
+        XrmPutFileDatabase(db, smGD.fontPath);
+        XrmDestroyDatabase(db);
+      }
+
+      /*
+       * Now add this to the resource manager property to be saved
+       */
+      _DtAddToResource(smGD.display, fontBuf);
     }
-    else
-    {
-	snprintf(resSpec, resSize, "%s*%s:   \n", SM_RESOURCE_NAME, SmNsessionLang);
+    if (fontBuf)
+      XFree(fontBuf);
+  }
+
+  if (smCust.preeditChange == True) {
+    newStat = _DtGetSmPreedit(smGD.display, smGD.topLevelWindow,
+                              XaDtSmPreeditInfo, &preeditBuf);
+    if (newStat == Success) {
+      _DtAddToResource(smGD.display, preeditBuf);
     }
+    if (preeditBuf)
+      XFree(preeditBuf);
+  }
 
-    fltYRes = ((float) DisplayHeight(smGD.display, 0) /
-	(float) DisplayHeightMM(smGD.display, 0)) * 1000;
-    intYRes = fltYRes;
+  if ((smCust.dClickChange == True) && (smToSet.dClickBuf[0] != 0)) {
+    _DtAddToResource(smGD.display, (char *)smToSet.dClickBuf);
+  }
 
-    if(*resSpec == 0)
-    {
-	strcpy(resSpec, SM_RESOURCE_NAME);
-    }
-    else
-    {
-	strcat(resSpec, SM_RESOURCE_NAME);
-    }
-    strcat(resSpec, "*");
-    strcat(resSpec, SmNdisplayResolution);
-    strcat(resSpec, ":");
-    sprintf(tmpChar, "%d",intYRes);
-    strcat(resSpec, tmpChar);
-    strcat(resSpec, "\n");
-    _DtAddToResource(smGD.display, resSpec);
-    
-    if(smCust.fontChange == True)
-    {
-	newStat = _DtGetSmFont(smGD.display, smGD.topLevelWindow,
-			      XaDtSmFontInfo, &fontBuf);
-	if(newStat == Success)
-	{
-	    /*
-	     * Create the auxillary resource file
-	     */
-	    if(SetFontSavePath(langPtr) != -1)
-	    {
-		db = XrmGetStringDatabase(fontBuf);
-	    
-		if(intYRes < MED_RES_Y_RES)
-		{
-		    sessionRes = SM_LOW_RES_EXT;
-		}
-		else
-		{
-		    if(intYRes >= HIGH_RES_Y_RES)
-		    {
-			sessionRes = SM_HIGH_RES_EXT;
-		    }
-		    else
-		    {
-			sessionRes = SM_MED_RES_EXT;
-		    }
-		}
+  /*
+   * Get the contents of the _DT_SM_PREFERENCES property
+   */
+  data = _DtGetResString(smGD.display, _DT_ATR_PREFS);
 
-		strcat(smGD.fontPath, "/");
-		strcat(smGD.fontPath, SM_FONT_FILE);
-		
-		strcat(smGD.fontPath, ".");
-		strcat(smGD.fontPath, sessionRes);
-		    
-		XrmPutFileDatabase(db, smGD.fontPath);    
-		XrmDestroyDatabase(db);
-	    }
-	    
-	    /*
-	     * Now add this to the resource manager property to be saved
-	     */
-	    _DtAddToResource(smGD.display, fontBuf);
-	}
-        if (fontBuf) XFree(fontBuf);
-    }
+  /*
+   * Get _DT_SM_PREFERENCES database 'db'.
+   */
+  db = XrmGetStringDatabase((char *)data);
 
-    if(smCust.preeditChange == True)
-    {
-	newStat = _DtGetSmPreedit(smGD.display, smGD.topLevelWindow,
-				  XaDtSmPreeditInfo, &preeditBuf);
-	if(newStat == Success)
-	{
-	    _DtAddToResource(smGD.display, preeditBuf);
-	}
-	if (preeditBuf) XFree(preeditBuf);
-    }
+  XrmPutFileDatabase(db, smGD.resourcePath);
 
-    if((smCust.dClickChange == True) && (smToSet.dClickBuf[0] != 0))
-    {
-	_DtAddToResource(smGD.display, (char *)smToSet.dClickBuf);
-    }
+  /*
+   * Don't forget to free your data
+   */
+  SM_FREE((char *)data);
+  XrmDestroyDatabase(db);
 
-    /*
-     * Get the contents of the _DT_SM_PREFERENCES property
-     */
-    data = _DtGetResString(smGD.display, _DT_ATR_PREFS);
-
-   /* 
-    * Get _DT_SM_PREFERENCES database 'db'.
-    */
-    db  = XrmGetStringDatabase((char *)data);
-
-    XrmPutFileDatabase(db, smGD.resourcePath);
-
-    /*
-     * Don't forget to free your data
-     */
-    SM_FREE((char *)data);
-    XrmDestroyDatabase(db);
-    
-    return(0);
+  return (0);
 }
 
-
-
 /*************************************<->*************************************
  *
  *  PrintPointerControl (smBase)
@@ -1750,48 +1561,44 @@ OutputResource( void )
  *  resSpec = a buffer to hold string resource information until it is
  *            printed.
  *  smSettings = place where settings are stored.
- * 
+ *
  *  Outputs:
  *  -------
  *
  *  Comments:
  *  --------
- * 
+ *
  *************************************<->***********************************/
-static void 
-PrintPointerControl(
-        XrmDatabase *smBase)
-{
-    char tmpChar[20];
-    
-    strcpy(resSpec, SM_RESOURCE_CLASS);
-    strcat(resSpec, "*");
-    strcat(resSpec, SmCaccelNum);
-    strcat(resSpec, ":");
-    sprintf(tmpChar, "%d", smSettings.accelNum);
-    strcat(resSpec, tmpChar);
-    XrmPutLineResource(smBase, resSpec);
-    
-    strcpy(resSpec, SM_RESOURCE_CLASS);
-    strcat(resSpec, "*");
-    strcat(resSpec, SmCaccelDenom);
-    strcat(resSpec, ":");
-    sprintf(tmpChar, "%d",smSettings.accelDenom);
-    strcat(resSpec, tmpChar);
-    XrmPutLineResource(smBase, resSpec);
-    
-    strcpy(resSpec, SM_RESOURCE_CLASS);
-    strcat(resSpec, "*");
-    strcat(resSpec, SmCthreshold);
-    strcat(resSpec, ":");
-    sprintf(tmpChar, "%d",smSettings.threshold);
-    strcat(resSpec, tmpChar);
-    XrmPutLineResource(smBase, resSpec);
+static void PrintPointerControl(XrmDatabase *smBase) {
+  char tmpChar[20];
 
-    return;
+  strcpy(resSpec, SM_RESOURCE_CLASS);
+  strcat(resSpec, "*");
+  strcat(resSpec, SmCaccelNum);
+  strcat(resSpec, ":");
+  sprintf(tmpChar, "%d", smSettings.accelNum);
+  strcat(resSpec, tmpChar);
+  XrmPutLineResource(smBase, resSpec);
+
+  strcpy(resSpec, SM_RESOURCE_CLASS);
+  strcat(resSpec, "*");
+  strcat(resSpec, SmCaccelDenom);
+  strcat(resSpec, ":");
+  sprintf(tmpChar, "%d", smSettings.accelDenom);
+  strcat(resSpec, tmpChar);
+  XrmPutLineResource(smBase, resSpec);
+
+  strcpy(resSpec, SM_RESOURCE_CLASS);
+  strcat(resSpec, "*");
+  strcat(resSpec, SmCthreshold);
+  strcat(resSpec, ":");
+  sprintf(tmpChar, "%d", smSettings.threshold);
+  strcat(resSpec, tmpChar);
+  XrmPutLineResource(smBase, resSpec);
+
+  return;
 }
 
-
 /*************************************<->*************************************
  *
  *  PrintSessionInfo (smBase)
@@ -1809,44 +1616,40 @@ PrintPointerControl(
  *  resSpec = a buffer to hold string resource information until it is
  *            printed.
  *  smSettings = place where settings are stored.
- * 
+ *
  *  Outputs:
  *  -------
  *
  *  Comments:
  *  --------
- * 
+ *
  *************************************<->***********************************/
-static void 
-PrintSessionInfo(
-        XrmDatabase *smBase)
-{
-    char tmpChar[20];
+static void PrintSessionInfo(XrmDatabase *smBase) {
+  char tmpChar[20];
 
-    /*
-     * Write out the settings for logout confirmation and
-     * the correct session to return to
-     */
-    strcpy(resSpec, SM_RESOURCE_CLASS);
-    strcat(resSpec, "*");
-    strcat(resSpec, SmCshutDownState);
-    strcat(resSpec, ":");
-    sprintf(tmpChar, "%d",smSettings.confirmMode);
-    strcat(resSpec, tmpChar);
-    XrmPutLineResource(smBase, resSpec);
-    
-    strcpy(resSpec, SM_RESOURCE_CLASS);
-    strcat(resSpec, "*");
-    strcat(resSpec, SmCshutDownMode);
-    strcat(resSpec, ":");
-    sprintf(tmpChar, "%d",smSettings.startState);
-    strcat(resSpec, tmpChar);
-    XrmPutLineResource(smBase, resSpec);
+  /*
+   * Write out the settings for logout confirmation and
+   * the correct session to return to
+   */
+  strcpy(resSpec, SM_RESOURCE_CLASS);
+  strcat(resSpec, "*");
+  strcat(resSpec, SmCshutDownState);
+  strcat(resSpec, ":");
+  sprintf(tmpChar, "%d", smSettings.confirmMode);
+  strcat(resSpec, tmpChar);
+  XrmPutLineResource(smBase, resSpec);
 
-    return;
+  strcpy(resSpec, SM_RESOURCE_CLASS);
+  strcat(resSpec, "*");
+  strcat(resSpec, SmCshutDownMode);
+  strcat(resSpec, ":");
+  sprintf(tmpChar, "%d", smSettings.startState);
+  strcat(resSpec, tmpChar);
+  XrmPutLineResource(smBase, resSpec);
+
+  return;
 }
 
-
 /*************************************<->*************************************
  *
  *  PrintScreenSaver (smBase)
@@ -1863,71 +1666,65 @@ PrintSessionInfo(
  *  smBase = pointer to newly opened resource db used to store setting info
  *  resSpec = a buffer to hold string resource information until it is
  *            printed.
- * 
+ *
  *  Outputs:
  *  -------
  *
  *  Comments:
  *  --------
- * 
+ *
  *************************************<->***********************************/
-static void 
-PrintScreenSaver(
-        XrmDatabase *smBase)
-{
-    Status		newScreenStat;
-    char 		tmpChar[20];
+static void PrintScreenSaver(XrmDatabase *smBase) {
+  Status newScreenStat;
+  char tmpChar[20];
 
-    if(smCust.screenSavChange == True)
-    {
-	newScreenStat = _DtGetSmScreen(smGD.display, smGD.topLevelWindow,
-				      XaDtSmScreenInfo, &screenSaverVals);
-	/*
-	 *  If the property has been deleted, it means that we return to
-	 *  the default
-	 */
-	if(newScreenStat != Success)
-	{
-	    return;
-	}
+  if (smCust.screenSavChange == True) {
+    newScreenStat = _DtGetSmScreen(smGD.display, smGD.topLevelWindow,
+                                   XaDtSmScreenInfo, &screenSaverVals);
+    /*
+     *  If the property has been deleted, it means that we return to
+     *  the default
+     */
+    if (newScreenStat != Success) {
+      return;
     }
+  }
 
-    strcpy(resSpec, SM_RESOURCE_CLASS);
-    strcat(resSpec, "*");
-    strcat(resSpec, SmCtimeout);
-    strcat(resSpec, ":");
-    sprintf(tmpChar, "%d", screenSaverVals.smTimeout);
-    strcat(resSpec, tmpChar);
-    XrmPutLineResource(smBase, resSpec);
-    
-    strcpy(resSpec, SM_RESOURCE_CLASS);
-    strcat(resSpec, "*");
-    strcat(resSpec, SmCinterval);
-    strcat(resSpec, ":");
-    sprintf(tmpChar, "%d", screenSaverVals.smInterval);
-    strcat(resSpec, tmpChar);
-    XrmPutLineResource(smBase, resSpec);
-    
-    strcpy(resSpec, SM_RESOURCE_CLASS);
-    strcat(resSpec, "*");
-    strcat(resSpec, SmCpreferBlank);
-    strcat(resSpec, ":");
-    sprintf(tmpChar, "%d", screenSaverVals.smPreferBlank);
-    strcat(resSpec, tmpChar);
-    XrmPutLineResource(smBase, resSpec);
-    
-    strcpy(resSpec, SM_RESOURCE_CLASS);
-    strcat(resSpec, "*");
-    strcat(resSpec, SmCallowExp);
-    strcat(resSpec, ":");
-    sprintf(tmpChar, "%d", screenSaverVals.smAllowExp);
-    strcat(resSpec, tmpChar);
-    XrmPutLineResource(smBase, resSpec);
+  strcpy(resSpec, SM_RESOURCE_CLASS);
+  strcat(resSpec, "*");
+  strcat(resSpec, SmCtimeout);
+  strcat(resSpec, ":");
+  sprintf(tmpChar, "%d", screenSaverVals.smTimeout);
+  strcat(resSpec, tmpChar);
+  XrmPutLineResource(smBase, resSpec);
 
-    return;
+  strcpy(resSpec, SM_RESOURCE_CLASS);
+  strcat(resSpec, "*");
+  strcat(resSpec, SmCinterval);
+  strcat(resSpec, ":");
+  sprintf(tmpChar, "%d", screenSaverVals.smInterval);
+  strcat(resSpec, tmpChar);
+  XrmPutLineResource(smBase, resSpec);
+
+  strcpy(resSpec, SM_RESOURCE_CLASS);
+  strcat(resSpec, "*");
+  strcat(resSpec, SmCpreferBlank);
+  strcat(resSpec, ":");
+  sprintf(tmpChar, "%d", screenSaverVals.smPreferBlank);
+  strcat(resSpec, tmpChar);
+  XrmPutLineResource(smBase, resSpec);
+
+  strcpy(resSpec, SM_RESOURCE_CLASS);
+  strcat(resSpec, "*");
+  strcat(resSpec, SmCallowExp);
+  strcat(resSpec, ":");
+  sprintf(tmpChar, "%d", screenSaverVals.smAllowExp);
+  strcat(resSpec, tmpChar);
+  XrmPutLineResource(smBase, resSpec);
+
+  return;
 }
 
-
 /*************************************<->*************************************
  *
  *  PrintFontPaths (smBase, fontPaths, numPaths)
@@ -1946,53 +1743,44 @@ PrintScreenSaver(
  *            printed
  *  fontPaths = font paths to be saved
  *  numPaths = number of font paths to be saved
- * 
+ *
  *  Outputs:
  *  -------
  *  resSize = made bigger if current buffer is too small to hold all font info
  *
  *  Comments:
  *  --------
- * 
+ *
  *************************************<->***********************************/
-static int 
-PrintFontPaths(
-        XrmDatabase *smBase,
-        char **fontPath,
-        int numPaths)
-{
-    int	i;
-    
-    /* If no fp save req'd, just pretend we did it */
-    if (smRes.saveFontPath == False) return 0;
+static int PrintFontPaths(XrmDatabase *smBase, char **fontPath, int numPaths) {
+  int i;
 
-    strcpy(resSpec, SM_RESOURCE_CLASS);
-    strcat(resSpec, "*");
-    strcat(resSpec, SmCfontPath);
-    strcat(resSpec, ":");
-    strcat(resSpec, *fontPath);
-    for(i = 1;i < numPaths;i++)
-    {
-	if((strlen(resSpec) + strlen(fontPath[i]) + 1) >= resSize)
-	{
-	    resSize += 5000;
-	    resSpec = (char *) SM_REALLOC(resSpec, resSize * sizeof(char));
-	    if (resSpec==NULL)
-	    {
-		PrintErrnoError(DtError, smNLS.cantMallocErrorString);
-		return(-1);
-	    }
-	}
-	strcat(resSpec, ",");
-	strcat(resSpec, fontPath[i]);
+  /* If no fp save req'd, just pretend we did it */
+  if (smRes.saveFontPath == False)
+    return 0;
+
+  strcpy(resSpec, SM_RESOURCE_CLASS);
+  strcat(resSpec, "*");
+  strcat(resSpec, SmCfontPath);
+  strcat(resSpec, ":");
+  strcat(resSpec, *fontPath);
+  for (i = 1; i < numPaths; i++) {
+    if ((strlen(resSpec) + strlen(fontPath[i]) + 1) >= resSize) {
+      resSize += 5000;
+      resSpec = (char *)SM_REALLOC(resSpec, resSize * sizeof(char));
+      if (resSpec == NULL) {
+        PrintErrnoError(DtError, smNLS.cantMallocErrorString);
+        return (-1);
+      }
     }
-    XrmPutLineResource(smBase, resSpec);
+    strcat(resSpec, ",");
+    strcat(resSpec, fontPath[i]);
+  }
+  XrmPutLineResource(smBase, resSpec);
 
-    return(0);
+  return (0);
 }
 
-
-
 /*************************************<->*************************************
  *
  *  PrintKeyboardControl (smBase)
@@ -2010,129 +1798,111 @@ PrintFontPaths(
  *  resSpec = a buffer to hold string resource information until it is
  *            printed
  *  resSize = size of current resource buffer
- * 
+ *
  *  Outputs:
  *  -------
  *  resSize = buffer is enlarged if more room is need to hold this info
  *
  *  Comments:
  *  --------
- * 
+ *
  *************************************<->***********************************/
-static int 
-PrintKeyboardControl(
-        XrmDatabase *smBase)
-{
-    int		i,j;
-    char	bitTest;
-    Bool	firstRepeat = True;
-    char	tmpChar[20];
-    
-    strcpy(resSpec, SM_RESOURCE_CLASS);
-    strcat(resSpec, "*");
-    strcat(resSpec, SmCkeyClick);
-    strcat(resSpec, ":");
-    sprintf(tmpChar, "%d",smSettings.kbdState.key_click_percent);
-    strcat(resSpec, tmpChar);
-    XrmPutLineResource(smBase, resSpec);
+static int PrintKeyboardControl(XrmDatabase *smBase) {
+  int i, j;
+  char bitTest;
+  Bool firstRepeat = True;
+  char tmpChar[20];
 
-    strcpy(resSpec, SM_RESOURCE_CLASS);
-    strcat(resSpec, "*");
-    strcat(resSpec, SmCbellPercent);
-    strcat(resSpec, ":");
-    sprintf(tmpChar, "%d",smSettings.kbdState.bell_percent);
-    strcat(resSpec, tmpChar);
-    XrmPutLineResource(smBase, resSpec);
+  strcpy(resSpec, SM_RESOURCE_CLASS);
+  strcat(resSpec, "*");
+  strcat(resSpec, SmCkeyClick);
+  strcat(resSpec, ":");
+  sprintf(tmpChar, "%d", smSettings.kbdState.key_click_percent);
+  strcat(resSpec, tmpChar);
+  XrmPutLineResource(smBase, resSpec);
 
-    strcpy(resSpec, SM_RESOURCE_CLASS);
-    strcat(resSpec, "*");
-    strcat(resSpec, SmCbellPitch);
-    strcat(resSpec, ":");
-    sprintf(tmpChar, "%d",smSettings.kbdState.bell_pitch);
-    strcat(resSpec, tmpChar);
-    XrmPutLineResource(smBase, resSpec);
+  strcpy(resSpec, SM_RESOURCE_CLASS);
+  strcat(resSpec, "*");
+  strcat(resSpec, SmCbellPercent);
+  strcat(resSpec, ":");
+  sprintf(tmpChar, "%d", smSettings.kbdState.bell_percent);
+  strcat(resSpec, tmpChar);
+  XrmPutLineResource(smBase, resSpec);
 
-    strcpy(resSpec, SM_RESOURCE_CLASS);
-    strcat(resSpec, "*");
-    strcat(resSpec, SmCbellDuration);
-    strcat(resSpec, ":");
-    sprintf(tmpChar, "%d",smSettings.kbdState.bell_duration);
-    strcat(resSpec, tmpChar);
-    XrmPutLineResource(smBase, resSpec);
-    
-    strcpy(resSpec, SM_RESOURCE_CLASS);
-    strcat(resSpec, "*");
-    strcat(resSpec, SmCledMask);
-    strcat(resSpec, ":");
-    sprintf(tmpChar, "%ld",smSettings.kbdState.led_mask);
-    strcat(resSpec, tmpChar);
-    XrmPutLineResource(smBase, resSpec);
+  strcpy(resSpec, SM_RESOURCE_CLASS);
+  strcat(resSpec, "*");
+  strcat(resSpec, SmCbellPitch);
+  strcat(resSpec, ":");
+  sprintf(tmpChar, "%d", smSettings.kbdState.bell_pitch);
+  strcat(resSpec, tmpChar);
+  XrmPutLineResource(smBase, resSpec);
 
-    strcpy(resSpec, SM_RESOURCE_CLASS);
-    strcat(resSpec, "*");
-    strcat(resSpec, SmCglobalRepeats);
-    strcat(resSpec, ":");
-    sprintf(tmpChar, "%d",smSettings.kbdState.global_auto_repeat);
-    strcat(resSpec, tmpChar);
-    XrmPutLineResource(smBase, resSpec);
+  strcpy(resSpec, SM_RESOURCE_CLASS);
+  strcat(resSpec, "*");
+  strcat(resSpec, SmCbellDuration);
+  strcat(resSpec, ":");
+  sprintf(tmpChar, "%d", smSettings.kbdState.bell_duration);
+  strcat(resSpec, tmpChar);
+  XrmPutLineResource(smBase, resSpec);
 
-    strcpy(resSpec, SM_RESOURCE_CLASS);
-    strcat(resSpec, "*");
-    strcat(resSpec, SmCautoRepeats);
-    strcat(resSpec, ":");
+  strcpy(resSpec, SM_RESOURCE_CLASS);
+  strcat(resSpec, "*");
+  strcat(resSpec, SmCledMask);
+  strcat(resSpec, ":");
+  sprintf(tmpChar, "%ld", smSettings.kbdState.led_mask);
+  strcat(resSpec, tmpChar);
+  XrmPutLineResource(smBase, resSpec);
 
-    /*
-     * Now write out which keys need to be auto repeated one at a time
-     */
-    if(smSettings.kbdState.global_auto_repeat != AutoRepeatModeOn)
-    {
-	for(i = 0;i < 32;i++)
-	{
-	    bitTest = 0x01;
-	    for(j = 0;j < 8;j++)
-	    {
-		if((bitTest & smSettings.kbdState.auto_repeats[i]) != 0)
-		{
-		    if(firstRepeat == True)
-		    {
-			firstRepeat = False;
-		    }
-		    else
-		    {
-			strcat(resSpec, ",");
-		    }
-		    
-		    if((strlen(resSpec) + 5) >= resSize)
-		    {
-			resSize += 5000;
-			resSpec = (char *) SM_REALLOC(resSpec,
-						   resSize * sizeof(char));
-			if (resSpec==NULL)
-			{
-			    PrintErrnoError(DtError,
-					    smNLS.cantMallocErrorString);
-			    return(-1);
-			}
-		    }
-			
-		    sprintf(tmpChar, "%d", ((8 * i) + j));
-		    strcat(resSpec, tmpChar);
-		}
-		bitTest <<= 1;
-	    }
-	}
+  strcpy(resSpec, SM_RESOURCE_CLASS);
+  strcat(resSpec, "*");
+  strcat(resSpec, SmCglobalRepeats);
+  strcat(resSpec, ":");
+  sprintf(tmpChar, "%d", smSettings.kbdState.global_auto_repeat);
+  strcat(resSpec, tmpChar);
+  XrmPutLineResource(smBase, resSpec);
+
+  strcpy(resSpec, SM_RESOURCE_CLASS);
+  strcat(resSpec, "*");
+  strcat(resSpec, SmCautoRepeats);
+  strcat(resSpec, ":");
+
+  /*
+   * Now write out which keys need to be auto repeated one at a time
+   */
+  if (smSettings.kbdState.global_auto_repeat != AutoRepeatModeOn) {
+    for (i = 0; i < 32; i++) {
+      bitTest = 0x01;
+      for (j = 0; j < 8; j++) {
+        if ((bitTest & smSettings.kbdState.auto_repeats[i]) != 0) {
+          if (firstRepeat == True) {
+            firstRepeat = False;
+          } else {
+            strcat(resSpec, ",");
+          }
+
+          if ((strlen(resSpec) + 5) >= resSize) {
+            resSize += 5000;
+            resSpec = (char *)SM_REALLOC(resSpec, resSize * sizeof(char));
+            if (resSpec == NULL) {
+              PrintErrnoError(DtError, smNLS.cantMallocErrorString);
+              return (-1);
+            }
+          }
+
+          sprintf(tmpChar, "%d", ((8 * i) + j));
+          strcat(resSpec, tmpChar);
+        }
+        bitTest <<= 1;
+      }
     }
-    else
-    {
-	strcat(resSpec, "");
-    }
-    XrmPutLineResource(smBase, resSpec);
+  } else {
+    strcat(resSpec, "");
+  }
+  XrmPutLineResource(smBase, resSpec);
 
-    return(0);
+  return (0);
 }
 
-
-
 /*************************************<->*************************************
  *
  *  PrintPointerMapping (smBase, buttonRet,  numButton)
@@ -2152,7 +1922,7 @@ PrintKeyboardControl(
  *  resSize = size of resource buffer
  *  buttonRet = button mapping to be saved
  *  numButton = number of buttons in button mapping
- * 
+ *
  *  Outputs:
  *  -------
  *  resSize = size of buffer is change if it needs to be enlarged during
@@ -2160,44 +1930,36 @@ PrintKeyboardControl(
  *
  *  Comments:
  *  --------
- * 
+ *
  *************************************<->***********************************/
-static int 
-PrintPointerMapping(
-        XrmDatabase *smBase,
-        char *buttonRet,
-        int numButton )
-{
-    int		i, numLoops;
-    char	tmpChar[20];
-    
-    strcpy(resSpec, SM_RESOURCE_CLASS);
-    strcat(resSpec, "*");
-    strcat(resSpec, SmCbuttonMap);
-    strcat(resSpec, ":");
+static int PrintPointerMapping(XrmDatabase *smBase, char *buttonRet,
+                               int numButton) {
+  int i, numLoops;
+  char tmpChar[20];
 
-    numLoops = numButton - 1;
-    for(i = 0;i <= numLoops;i++)
-    {
-	if((strlen(resSpec) + 5) >= resSize)
-	{
-	    resSize += 5000;
-	    resSpec = (char *) SM_REALLOC(resSpec, resSize * sizeof(char));
-	    if (resSpec==NULL)
-	    {
-		PrintErrnoError(DtError, smNLS.cantMallocErrorString);
-		return(-1);
-	    }
-	}
-	    
-	sprintf(tmpChar, "%d",buttonRet[i]);
-	strcat(resSpec, tmpChar);
-	if(i != numLoops)
-	{
-	    strcat(resSpec, ",");
-	}
-	XrmPutLineResource(smBase, resSpec);
+  strcpy(resSpec, SM_RESOURCE_CLASS);
+  strcat(resSpec, "*");
+  strcat(resSpec, SmCbuttonMap);
+  strcat(resSpec, ":");
+
+  numLoops = numButton - 1;
+  for (i = 0; i <= numLoops; i++) {
+    if ((strlen(resSpec) + 5) >= resSize) {
+      resSize += 5000;
+      resSpec = (char *)SM_REALLOC(resSpec, resSize * sizeof(char));
+      if (resSpec == NULL) {
+        PrintErrnoError(DtError, smNLS.cantMallocErrorString);
+        return (-1);
+      }
     }
 
-    return(0);
+    sprintf(tmpChar, "%d", buttonRet[i]);
+    strcat(resSpec, tmpChar);
+    if (i != numLoops) {
+      strcat(resSpec, ",");
+    }
+    XrmPutLineResource(smBase, resSpec);
+  }
+
+  return (0);
 }

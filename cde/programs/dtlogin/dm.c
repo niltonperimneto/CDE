@@ -67,6 +67,7 @@
 #endif
 #include "dm.h"
 #include "vgmsg.h"
+#include <Dt/SafeStr.h>
 
 #ifdef HAVE_LIBSYSTEMD
 #include <systemd/sd-daemon.h>
@@ -973,11 +974,11 @@ int StartDisplay(struct display *d) {
 #ifdef sun
     if (d->displayType.location == Local) {
       if (d->authFile && strlen(d->authFile) > 0) {
-        strcpy(buff, "XAUTHORITY=");
-        strcat(buff, d->authFile);
+        snprintf(buff, sizeof(buff), "XAUTHORITY=%s", d->authFile);
         putenv(buff);
       }
-      sprintf(start_fbconsole, "%s -d %s &", FBCONSOLE, d->name);
+      snprintf(start_fbconsole, sizeof(start_fbconsole), "%s -d %s &",
+               FBCONSOLE, d->name);
 
       if (system(start_fbconsole) == -1)
         Debug("Failed to start the fallback console - %s\n", FBCONSOLE);

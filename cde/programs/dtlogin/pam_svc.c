@@ -45,6 +45,7 @@
 #include "pam_svc.h"
 #include "dm.h"
 #include "solaris.h"
+#include <Dt/SafeStr.h>
 #include <dirent.h>
 #include <errno.h>
 #include <grp.h>

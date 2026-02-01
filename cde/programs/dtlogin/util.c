@@ -53,13 +53,13 @@
  * various utility routines
  */
 
-#include <X11/Xlib.h>
-#include <X11/Intrinsic.h>
-#include <X11/StringDefs.h>
-#include <X11/Xutil.h>
-#include <X11/Xmu/SysUtil.h>
 #include <Dt/HourGlass.h>
 #include <Dt/MsgCatP.h>
+#include <X11/Intrinsic.h>
+#include <X11/StringDefs.h>
+#include <X11/Xlib.h>
+#include <X11/Xmu/SysUtil.h>
+#include <X11/Xutil.h>
 #include <dirent.h>
 #include <setjmp.h>
 #include <signal.h>
@@ -69,6 +69,7 @@
 
 #include "dm.h"
 #include "vgmsg.h"
+#include <Dt/SafeStr.h>
 nl_catd nl_fd = (nl_catd)-1; /* message catalog file descriptor */
 
 #if !defined(NL_CAT_LOCALE)

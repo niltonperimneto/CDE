@@ -43,23 +43,24 @@
 #include <sys/param.h>
 #include <sys/types.h>
 
-#include <fcntl.h>
-#include <sys/stat.h>
-#include <signal.h>
 #include <errno.h>
+#include <fcntl.h>
+#include <signal.h>
+#include <sys/stat.h>
 #include <sys/wait.h>
 
-#include <unistd.h>
 #include <limits.h>
+#include <unistd.h>
 
 #include <Xm/Xm.h>
+#include "Main.h"
 
-#include <Dt/EnvControlP.h>
-#include <Dt/DtNlUtils.h>
 #include "Encaps.h"
+#include <Dt/DtNlUtils.h>
+#include <Dt/EnvControlP.h>
 
-#include "FileMgr.h"
 #include "Desktop.h"
+#include "FileMgr.h"
 #include "Main.h"
 
 /************************************************************************
@@ -67,7 +68,7 @@
  *  RunFileCommand
  *    This function is called to fork a process and run a command in the
  *    event that PAM does not have the appropriate capabilities (i.e. PAM
- *    isn't superuser and superuser privilege is required).  PAM waits 
+ *    isn't superuser and superuser privilege is required).  PAM waits
  *    for completion of the forked command process.
  *
  *  PARAMETERS:
@@ -88,73 +89,65 @@
  *
  ************************************************************************/
 
-int
-RunFileCommand(
-        char *command_path,
-        char *argument1,
-        char *argument2,
-        char *argument3)
-{
-   static char *pname = "RunFileCommand";
-   int child;           /* process id of command process */
-   int wait_return;     /* return value from wait */
-            int exit_value;      /* command exit value */
-   char *command_name;  /* pointer to the command name */
-   int i;
-   void (*oldSig)();
-  
-   /* prepare to catch the command termination */
+int RunFileCommand(char *command_path, char *argument1, char *argument2,
+                   char *argument3) {
+  static char *pname = "RunFileCommand";
+  int child;          /* process id of command process */
+  int wait_return;    /* return value from wait */
+  int exit_value;     /* command exit value */
+  char *command_name; /* pointer to the command name */
+  int i;
+  void (*oldSig)(int);
 
-   oldSig = signal (SIGCHLD, SIG_DFL);
+  /* prepare to catch the command termination */
 
-   /* fork a process to run command */
+  oldSig = signal(SIGCHLD, SIG_DFL);
 
-   if ((child = fork ()) < 0)	/* fork failed */
-   {
-      (void) signal (SIGCHLD, oldSig);
-      return (-1);
-   }
+  /* fork a process to run command */
 
-   if (child != 0)		/* parend (PAM) process */
-   {
-      DBGFORK(("%s:  forked child<%d>\n", pname, child));
+  if ((child = fork()) < 0) /* fork failed */
+  {
+    (void)signal(SIGCHLD, oldSig);
+    return (-1);
+  }
 
-      do			/* wait for completion of command */
-      {
-         wait_return = wait (&exit_value);
-      } while (wait_return != child);
+  if (child != 0) /* parend (PAM) process */
+  {
+    DBGFORK(("%s:  forked child<%d>\n", pname, child));
 
-      (void) signal (SIGCHLD, oldSig); /* child stopped or terminated */
+    do /* wait for completion of command */
+    {
+      wait_return = wait(&exit_value);
+    } while (wait_return != child);
 
-      return (exit_value);      /* if exit_value == 0 then success */
-   }
-    
+    (void)signal(SIGCHLD, oldSig); /* child stopped or terminated */
 
-   DBGFORK(("%s:  child forked\n", pname));
+    return (exit_value); /* if exit_value == 0 then success */
+  }
 
-   /*  child (command) process  */
+  DBGFORK(("%s:  child forked\n", pname));
 
-   /*  redirect stdin, stdout, stderr to /dev/null  */
+  /*  child (command) process  */
 
-   for (i = 0; i < 3; i++)
-   {
-      (void) close (i);
-      (void) open ("/dev/null", O_RDWR);
-   }
+  /*  redirect stdin, stdout, stderr to /dev/null  */
 
+  for (i = 0; i < 3; i++) {
+    (void)close(i);
+    (void)open("/dev/null", O_RDWR);
+  }
 
-   /*  set pointer to simple command name  */
+  /*  set pointer to simple command name  */
 
-   if ((command_name = (char *)strrchr (command_path, '/')) == 0)
-      command_name = command_path;
-   else
-      command_name++;
+  if ((command_name = (char *)strrchr(command_path, '/')) == 0)
+    command_name = command_path;
+  else
+    command_name++;
 
-   _DtEnvControl(DT_ENV_RESTORE_PRE_DT);
-   (void) execl (command_path, command_name, argument1, argument2,
-                 argument3, (char *)NULL);
-    
-   DBGFORK(("%s:  child exiting\n", pname));
+  _DtEnvControl(DT_ENV_RESTORE_PRE_DT);
+  (void)execl(command_path, command_name, argument1, argument2, argument3,
+              (char *)NULL);
 
-   exit (-1);                     /* error exit */
+  DBGFORK(("%s:  child exiting\n", pname));
+
+  exit(-1); /* error exit */
 }

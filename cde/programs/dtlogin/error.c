@@ -55,6 +55,7 @@
 
 #include "dm.h"
 #include "vgmsg.h"
+#include <Dt/SafeStr.h>
 #include <sys/stat.h>
 #include <time.h>
 

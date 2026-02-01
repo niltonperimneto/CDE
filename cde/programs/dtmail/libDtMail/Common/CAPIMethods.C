@@ -44,21 +44,21 @@
 #include <DtMail/DtMail.hh>
 
 extern "C" DtMailSession
-DtMailCreateSession(CMEnv * error,
+DtMailCreateSession(DtMailEnv * error,
 		    const char * app_name)
 {
-  DtMailEnv		err(error);
+  DtMailEnv & err = *error;
   DtMail::Session	* session = new DtMail::Session(err, app_name);
 
   return((DtMailSession)session);
 }
 
 extern "C" void
-DtMailCloseSession(CMEnv * error,
+DtMailCloseSession(DtMailEnv * error,
 		   DtMailSession session,
 		   DtMailBoolean)
 {
-  DtMailEnv		err(error);
+  DtMailEnv & err = *error;
   DtMail::Session	* _session = (DtMail::Session *)session;
 
   err.clear();
@@ -67,23 +67,23 @@ DtMailCloseSession(CMEnv * error,
 }
 
 extern "C" int
-DtMailGetMinorCode(CMEnv * error)
+DtMailGetMinorCode(DtMailEnv * error)
 {
-  DtMailEnv		err(error);
+  DtMailEnv & err = *error;
   return(DtMail::getMinorCode(err));
 }
 
 extern "C" const char *
-DtMailGetErrorString(CMEnv * error)
+DtMailGetErrorString(DtMailEnv * error)
 {
-  DtMailEnv		err(error);
+  DtMailEnv & err = *error;
   return(DtMail::getErrorString(err));
 }
 
 extern "C" const char **
-DtMailEnumerateImpls(DtMailSession session, CMEnv * error)
+DtMailEnumerateImpls(DtMailSession session, DtMailEnv * error)
 {
-  DtMailEnv		err(error);
+  DtMailEnv & err = *error;
   DtMail::Session	* _session = (DtMail::Session *)session;
 
   return(_session->enumerateImpls(err));
@@ -91,10 +91,10 @@ DtMailEnumerateImpls(DtMailSession session, CMEnv * error)
 
 extern "C" void
 DtMailSetDefaultImpl(DtMailSession session,
-		     CMEnv * error,
+		     DtMailEnv * error,
 		     const char * impl)
 {
-  DtMailEnv		err(error);
+  DtMailEnv & err = *error;
   DtMail::Session	* _session = (DtMail::Session *)session;
 
   _session->setDefaultImpl(err, impl);
@@ -102,9 +102,9 @@ DtMailSetDefaultImpl(DtMailSession session,
 }
 
 extern "C" const char *
-DtMailGetDefaultImpl(DtMailSession session, CMEnv * error)
+DtMailGetDefaultImpl(DtMailSession session, DtMailEnv * error)
 {
-  DtMailEnv		err(error);
+  DtMailEnv & err = *error;
   DtMail::Session	* _session = (DtMail::Session *)session;
 
   return(_session->getDefaultImpl(err));
@@ -112,12 +112,12 @@ DtMailGetDefaultImpl(DtMailSession session, CMEnv * error)
 
 extern "C" void
 DtMailQueryImpl(DtMailSession session,
-		CMEnv * error,
+		DtMailEnv * error,
 		const char * impl,
 		const char * capability,
 		...)
 {
-  DtMailEnv		err(error);
+  DtMailEnv & err = *error;
   va_list		args;
   DtMail::Session	* _session = (DtMail::Session *)session;
 
@@ -128,13 +128,13 @@ DtMailQueryImpl(DtMailSession session,
 
 extern "C" DtMailMailBox
 DtMailMailBoxConstruct(DtMailSession session,
-		       CMEnv * error,
+		       DtMailEnv * error,
 		       DtMailObjectSpace space,
 		       void * path,
 		       DtMailCallback cb_func,
 		       void * client_data)
 {
-  DtMailEnv		err(error);
+  DtMailEnv & err = *error;
   DtMail::Session	* _session = (DtMail::Session *)session;
 
   return((DtMailMailBox)_session->mailBoxConstruct(err,
@@ -153,36 +153,36 @@ DtMailMailBoxDestruct(DtMailMailBox mbox)
 }
 
 extern "C" void
-DtMailMailBoxCreate(DtMailMailBox mbox, CMEnv * error)
+DtMailMailBoxCreate(DtMailMailBox mbox, DtMailEnv * error)
 {
-  DtMailEnv		err(error);
+  DtMailEnv & err = *error;
   DtMail::MailBox	*mb = (DtMail::MailBox *)mbox;
 
   mb->create(err);
 }
 
 extern "C" void
-DtMailMailBoxOpen(DtMailMailBox mbox, CMEnv * error, DtMailBoolean auto_create)
+DtMailMailBoxOpen(DtMailMailBox mbox, DtMailEnv * error, DtMailBoolean auto_create)
 {
-  DtMailEnv		err(error);
+  DtMailEnv & err = *error;
   DtMail::MailBox 	*mb = (DtMail::MailBox *)mbox;
 
   mb->open(err, auto_create);
 }
 
 extern "C" DtMailMessage
-DtMailMailBoxGetFirstMessage(DtMailMailBox mbox, CMEnv * error)
+DtMailMailBoxGetFirstMessage(DtMailMailBox mbox, DtMailEnv * error)
 {
-  DtMailEnv		err(error);
+  DtMailEnv & err = *error;
   DtMail::MailBox	*mb = (DtMail::MailBox *)mbox;
 
   return((DtMailMessage)mb->getFirstMessage(err));
 }
 
 extern "C" DtMailMessage
-DtMailMailBoxGetNextMessage(DtMailMailBox mbox, CMEnv * error, DtMailMessage last)
+DtMailMailBoxGetNextMessage(DtMailMailBox mbox, DtMailEnv * error, DtMailMessage last)
 {
-  DtMailEnv		err(error);
+  DtMailEnv & err = *error;
   DtMail::MailBox	*mb = (DtMail::MailBox *)mbox;
   DtMail::Message 	*ml = (DtMail::Message *)last;
 
@@ -190,9 +190,9 @@ DtMailMailBoxGetNextMessage(DtMailMailBox mbox, CMEnv * error, DtMailMessage las
 }
 
 extern "C" DtMailMessage
-DtMailMailBoxNewMessage(DtMailMailBox mbox, CMEnv * error)
+DtMailMailBoxNewMessage(DtMailMailBox mbox, DtMailEnv * error)
 {
-  DtMailEnv		err(error);
+  DtMailEnv & err = *error;
   DtMail::MailBox	*mb = (DtMail::MailBox *)mbox;
 
   return((DtMailMessage)mb->newMessage(err));
@@ -202,12 +202,12 @@ DtMailMailBoxNewMessage(DtMailMailBox mbox, CMEnv * error)
 
 extern "C" DtMailHeaderHandle
 DtMailEnvelopeGetFirstHeader(DtMailEnvelope ev,
-			     CMEnv * error,
+			     DtMailEnv * error,
 			     char ** name,
 			     DtMailValueSeq ** value,
-			     CMBoolean translate_name)
+			     DtMailBoolean translate_name)
 {
-  DtMailEnv		err(error);
+  DtMailEnv & err = *error;
   DtMail::Envelope 	*env = (DtMail::Envelope *)ev;
 
   return(env->getFirstHeader(*err, name, value, translate_name));
@@ -215,13 +215,13 @@ DtMailEnvelopeGetFirstHeader(DtMailEnvelope ev,
 
 extern "C" DtMailHeaderHandle
 DtMailEnvelopeGetNextHeader(DtMailEnvelope ev,
-			    CMEnv * error,
+			    DtMailEnv * error,
 			    DtMailHeaderHandle last,
 			    char ** name,
 			    DtMailValueSeq ** value,
-			    CMBoolean translate_name)
+			    DtMailBoolean translate_name)
 {
-  DtMailEnv		err(error);
+  DtMailEnv & err = *error;
   DtMail::Envelope	*env = (DtMail::Envelope *)ev;
 
   return(env->getNextHeader(*err, last, name, value, translate_name));
@@ -229,11 +229,11 @@ DtMailEnvelopeGetNextHeader(DtMailEnvelope ev,
 
 extern "C" void
 DtMailEnvelopeGetHeader(DtMailEnvelope ev,
-			    CMEnv * error,
-			    const CMGlobalName name,
+			    DtMailEnv * error,
+			    const const char * name,
 			    DtMailValueSeq ** value)
 {
-  DtMailEnv		err(error);
+  DtMailEnv & err = *error;
   DtMail::Envelope	*env = (DtMail::Envelope *)ev;
 
   env->getHeader(*err, name, value);
@@ -241,11 +241,11 @@ DtMailEnvelopeGetHeader(DtMailEnvelope ev,
 
 extern "C" void
 DtMailEnvelopeSetHeaderSeq(DtMailEnvelope ev,
-			   CMEnv * error,
-			   const CMGlobalName name,
+			   DtMailEnv * error,
+			   const const char * name,
 			   const DtMailValueSeq * value)
 {
-  DtMailEnv		err(error);
+  DtMailEnv & err = *error;
   DtMail::Envelope	*env = (DtMail::Envelope *)ev;
 
   env->setHeaderSeq(*err, name, value);
@@ -253,12 +253,12 @@ DtMailEnvelopeSetHeaderSeq(DtMailEnvelope ev,
 
 extern "C" void
 DtMailEnvelopeSetHeader(DtMailEnvelope ev,
-			CMEnv * error,
-			const CMGlobalName name,
+			DtMailEnv * error,
+			const const char * name,
 			const DtMailValue * value,
-			CMBoolean replace)
+			DtMailBoolean replace)
 {
-  DtMailEnv		err(error);
+  DtMailEnv & err = *error;
   DtMail::Envelope	*env = (DtMail::Envelope *)ev;
 
   env->setHeader(*err, name, value, replace);
@@ -266,20 +266,20 @@ DtMailEnvelopeSetHeader(DtMailEnvelope ev,
 
 extern "C" void
 DtMailEnvelopeTransportName(DtMailEnvelope ev,
-			    CMEnv * error,
-			    CMGlobalName name,
+			    DtMailEnv * error,
+			    const char * name,
 			    char ** trans_name)
 {
-  DtMailEnv		err(error);
+  DtMailEnv & err = *error;
   DtMail::Envelope 	*env = (DtMail::Envelope *)ev;
 
   env->transportName(*err, name, trans_name);
 }
 
-extern "C" CMObject
-DtMailEnvelopeObject(DtMailEnvelope ev, CMEnv * error)
+extern "C" void *
+DtMailEnvelopeObject(DtMailEnvelope ev, DtMailEnv * error)
 {
-  DtMailEnv		err(error);
+  DtMailEnv & err = *error;
   DtMail::Envelope 	*env = (DtMail::Envelope *)ev;
 
   return(env->object(err));
@@ -296,12 +296,12 @@ DtMailEnvelopeDestroy(DtMailEnvelope ev)
 
 extern "C" DtMailHeaderHandle
 DtMailBodyPartGetFirstHeader(DtMailBodyPart bp, 
-			     CMEnv * error, 
+			     DtMailEnv * error, 
 			     char ** name, 
 			     DtMailValueSeq ** value,
-			     CMBoolean trans)
+			     DtMailBoolean trans)
 {
-  DtMailEnv		err(error);
+  DtMailEnv & err = *error;
   DtMail::BodyPart 	*bpp = (DtMail::BodyPart *)bp;
 
   return(bpp->getFirstHeader(*err, name, value, trans));
@@ -309,13 +309,13 @@ DtMailBodyPartGetFirstHeader(DtMailBodyPart bp,
 
 extern "C" DtMailHeaderHandle
 DtMailBodyPartGetNextHeader(DtMailBodyPart bp, 
-			    CMEnv * error, 
+			    DtMailEnv * error, 
 			    DtMailHeaderHandle hd, 
 			    char ** name,
 			    DtMailValueSeq ** value, 
-			    CMBoolean trans)
+			    DtMailBoolean trans)
 {
-  DtMailEnv		err(error);
+  DtMailEnv & err = *error;
   DtMail::BodyPart 	*bpp = (DtMail::BodyPart *)bp;
 
   return(bpp->getNextHeader(*err, hd, name, value, trans));
@@ -323,11 +323,11 @@ DtMailBodyPartGetNextHeader(DtMailBodyPart bp,
 
 extern "C" void
 DtMailBodyPartGetHeader(DtMailBodyPart bp, 
-			CMEnv * error, 
-			const CMGlobalName name, 
+			DtMailEnv * error, 
+			const const char * name, 
 			DtMailValueSeq ** value)
 {
-  DtMailEnv		err(error);
+  DtMailEnv & err = *error;
   DtMail::BodyPart 	*bpp = (DtMail::BodyPart *)bp;
 
   bpp->getHeader(*err, name, value);
@@ -335,11 +335,11 @@ DtMailBodyPartGetHeader(DtMailBodyPart bp,
 
 extern "C" void
 DtMailBodyPartSetHeaderSeq(DtMailBodyPart bp, 
-			   CMEnv * error, 
-			   const CMGlobalName name, 
+			   DtMailEnv * error, 
+			   const const char * name, 
 			   const DtMailValueSeq * value)
 {
-  DtMailEnv		err(error);
+  DtMailEnv & err = *error;
   DtMail::BodyPart 	*bpp = (DtMail::BodyPart *)bp;
 
   bpp->setHeaderSeq(*err, name, value);
@@ -347,12 +347,12 @@ DtMailBodyPartSetHeaderSeq(DtMailBodyPart bp,
 
 extern "C" void
 DtMailBodyPartSetHeader(DtMailBodyPart bp, 
-			CMEnv * error, 
-			const CMGlobalName name, 
+			DtMailEnv * error, 
+			const const char * name, 
 			const DtMailValue * value,
-			CMBoolean replace)
+			DtMailBoolean replace)
 {
-  DtMailEnv		err(error);
+  DtMailEnv & err = *error;
   DtMail::BodyPart 	*bpp = (DtMail::BodyPart *)bp;
 
   bpp->setHeader(*err, name, value, replace);
@@ -360,58 +360,58 @@ DtMailBodyPartSetHeader(DtMailBodyPart bp,
 
 extern "C" void
 DtMailBodyPartTransportName(DtMailBodyPart bp, 
-			    CMEnv * error, 
-			    CMGlobalName name, 
+			    DtMailEnv * error, 
+			    const char * name, 
 			    char ** trans_name)
 {
-  DtMailEnv		err(error);
+  DtMailEnv & err = *error;
   DtMail::BodyPart *bpp = (DtMail::BodyPart *)bp;
 
   bpp->transportName(*err, name, trans_name);
 }
 
-extern "C" CMObject
-DtMailBodyPartObject(DtMailBodyPart bp, CMEnv * error)
+extern "C" void *
+DtMailBodyPartObject(DtMailBodyPart bp, DtMailEnv * error)
 {
-  DtMailEnv		err(error);
+  DtMailEnv & err = *error;
   DtMail::BodyPart *bpp = (DtMail::BodyPart *)bp;
 
   return(bpp->object(err));
 }
 
-extern "C" CMBoolean
-DtMailBodyPartIsContainer(DtMailBodyPart bp, CMEnv *error)
+extern "C" DtMailBoolean
+DtMailBodyPartIsContainer(DtMailBodyPart bp, DtMailEnv *error)
 {
-  DtMailEnv		err(error);
+  DtMailEnv & err = *error;
   DtMail::BodyPart *bpp = (DtMail::BodyPart *)bp;
 
   return(bpp->isContainer(err));
 }
 
 extern "C" DtMailMessage *
-DtMailBodyPartGetEmbeddedMessage(DtMailBodyPart bp, CMEnv *error)
+DtMailBodyPartGetEmbeddedMessage(DtMailBodyPart bp, DtMailEnv *error)
 {
-  DtMailEnv		err(error);
+  DtMailEnv & err = *error;
   DtMail::BodyPart *bpp = (DtMail::BodyPart *)bp;
 
   return((DtMailMessage *)bpp->getEmbeddedMessage(err));
 }
 
 extern "C" void
-DtMailBodyPartGetContents(DtMailBodyPart bp, CMEnv * error, void ** contents, unsigned long * length,
-		       CMGlobalName * type)
+DtMailBodyPartGetContents(DtMailBodyPart bp, DtMailEnv * error, void ** contents, unsigned long * length,
+		       const char * * type)
 {
-  DtMailEnv		err(error);
+  DtMailEnv & err = *error;
   DtMail::BodyPart *bpp = (DtMail::BodyPart *)bp;
 
   bpp->getContents(*err, contents, *length, type);
 }
 
 extern "C" void
-DtMailBodyPartSetContents(DtMailBodyPart bp, CMEnv * error, const void * contents, const unsigned long length,
-		       const CMGlobalName type)
+DtMailBodyPartSetContents(DtMailBodyPart bp, DtMailEnv * error, const void * contents, const unsigned long length,
+		       const const char * type)
 {
-  DtMailEnv		err(error);
+  DtMailEnv & err = *error;
   DtMail::BodyPart *bpp = (DtMail::BodyPart *)bp;
 
   bpp->setContents(*err, contents, length, type);
@@ -426,13 +426,13 @@ DtMailBodyPartDestroy(DtMailBodyPart bp)
 }
 
 extern "C" DtMailMessage
-DtMailFileMessageConstruct(CMEnv * error,
-			   CMSession session,
+DtMailFileMessageConstruct(DtMailEnv * error,
+			   DtMailSession session,
 			   const char * path,
 			   FileCallback cb_func,
 			   void * client_data)
 {
-  DtMailEnv		err(error);
+  DtMailEnv & err = *error;
 
   return((DtMailMessage)new DtMail::FileMessage(*err, 
 						session, 
@@ -449,64 +449,64 @@ DtMailFileMessageDestruct(DtMailMessage msg)
     delete fm;
 }
 
-extern "C" CMBoolean
-DtMailFileMessageIsModified(DtMailMessage msg, CMEnv * error)
+extern "C" DtMailBoolean
+DtMailFileMessageIsModified(DtMailMessage msg, DtMailEnv * error)
 {
-  DtMailEnv		err(error);
+  DtMailEnv & err = *error;
   DtMail::FileMessage * fm = (DtMail::FileMessage *)msg;
 
   return(fm->isModified(err));
 }
 
 extern "C" void
-DtMailFileMessageRequestSave(DtMailMessage msg, CMEnv * error)
+DtMailFileMessageRequestSave(DtMailMessage msg, DtMailEnv * error)
 {
-  DtMailEnv		err(error);
+  DtMailEnv & err = *error;
   DtMail::FileMessage * fm = (DtMail::FileMessage *)msg;
 
   fm->requestSave(err);
 }
 
 extern "C" void
-DtMailFileMessageRequestRevert(DtMailMessage msg, CMEnv * error)
+DtMailFileMessageRequestRevert(DtMailMessage msg, DtMailEnv * error)
 {
-  DtMailEnv		err(error);
+  DtMailEnv & err = *error;
   DtMail::FileMessage * fm = (DtMail::FileMessage *)msg;
 
   fm->requestRevert(err);
 }
 
 extern "C" void
-DtMailFileMessageRequestOpen(DtMailMessage msg, CMEnv * error)
+DtMailFileMessageRequestOpen(DtMailMessage msg, DtMailEnv * error)
 {
-  DtMailEnv		err(error);
+  DtMailEnv & err = *error;
   DtMail::FileMessage * fm = (DtMail::FileMessage *)msg;
 
   fm->requestOpen(err);
 }
 
 extern "C" void
-DtMailFileMessageCreate(DtMailMessage msg, CMEnv * error)
+DtMailFileMessageCreate(DtMailMessage msg, DtMailEnv * error)
 {
-  DtMailEnv		err(error);
+  DtMailEnv & err = *error;
   DtMail::FileMessage * fm = (DtMail::FileMessage *)msg;
 
   fm->create(err);
 }
 
 extern "C" void
-DtMailFileMessageOpen(DtMailMessage msg, CMEnv * error, CMBoolean auto_create)
+DtMailFileMessageOpen(DtMailMessage msg, DtMailEnv * error, DtMailBoolean auto_create)
 {
-  DtMailEnv		err(error);
+  DtMailEnv & err = *error;
   DtMail::FileMessage * fm = (DtMail::FileMessage *)msg;
 
   fm->open(*err, auto_create);
 }
 
 extern "C" DtMailMessage
-DtMailEmbeddedMessageCreate(CMEnv * error, DtMailMailBox owner)
+DtMailEmbeddedMessageCreate(DtMailEnv * error, DtMailMailBox owner)
 {
-  DtMailEnv		err(error);
+  DtMailEnv & err = *error;
   DtMail::MailBox * mb = (DtMail::MailBox *)owner;
 
   return((DtMailMessage)new DtMail::EmbeddedMessage(*err, *mb));
@@ -515,43 +515,43 @@ DtMailEmbeddedMessageCreate(CMEnv * error, DtMailMailBox owner)
 extern "C" void
 DtMailEmbeddedMessageDestroy(DtMailMessage msg)
 {
-  DtMailEnv		err(error);
+  DtMailEnv & err = *error;
   DtMail::EmbeddedMessage * em = (DtMail::EmbeddedMessage *)msg;
 
   delete em;
 }
 
 extern "C" DtMailEnvelope
-DtMailMessageGetEnvelope(DtMailMessage bmm, CMEnv * error)
+DtMailMessageGetEnvelope(DtMailMessage bmm, DtMailEnv * error)
 {
-  DtMailEnv		err(error);
+  DtMailEnv & err = *error;
   DtMail::Message * msg = (DtMail::Message *)bmm;
 
   return((DtMailEnvelope)msg->getEnvelope(err));
 }
 
 extern "C" int
-DtMailMessageGetBodyCount(DtMailMessage bmm, CMEnv * error)
+DtMailMessageGetBodyCount(DtMailMessage bmm, DtMailEnv * error)
 {
-  DtMailEnv		err(error);
+  DtMailEnv & err = *error;
   DtMail::Message * msg = (DtMail::Message *)bmm;
 
   return(msg->getBodyCount(err));
 }
 
 extern "C" DtMailBodyPart *
-DtMailMessageGetFirstBodyPart(DtMailMessage bmm, CMEnv * error)
+DtMailMessageGetFirstBodyPart(DtMailMessage bmm, DtMailEnv * error)
 {
-  DtMailEnv		err(error);
+  DtMailEnv & err = *error;
   DtMail::Message * msg = (DtMail::Message *)bmm;
 
   return((DtMailBodyPart *)msg->getFirstBodyPart(err));
 }
 
 extern "C" DtMailBodyPart *
-DtMailMessageGetNextBodyPart(DtMailMessage bmm, CMEnv * error, DtMailBodyPart * bml)
+DtMailMessageGetNextBodyPart(DtMailMessage bmm, DtMailEnv * error, DtMailBodyPart * bml)
 {
-  DtMailEnv		err(error);
+  DtMailEnv & err = *error;
   DtMail::Message * msg = (DtMail::Message *)bmm;
   DtMail::BodyPart * last = (DtMail::BodyPart *)bml;
 
@@ -559,18 +559,18 @@ DtMailMessageGetNextBodyPart(DtMailMessage bmm, CMEnv * error, DtMailBodyPart * 
 }
 
 extern "C" DtMailBodyPart *
-DtMailMessageNewBodyPart(DtMailMessage bmm, CMEnv * error)
+DtMailMessageNewBodyPart(DtMailMessage bmm, DtMailEnv * error)
 {
-  DtMailEnv		err(error);
+  DtMailEnv & err = *error;
   DtMail::Message * msg = (DtMail::Message *)bmm;
 
   return((DtMailBodyPart *)msg->newBodyPart(err));
 }
 
-extern "C" CMContainer
-DtMailMessageContainer(DtMailMessage bmm, CMEnv * error)
+extern "C" DtMailMessage
+DtMailMessageContainer(DtMailMessage bmm, DtMailEnv * error)
 {
-  DtMailEnv		err(error);
+  DtMailEnv & err = *error;
   DtMail::Message * msg = (DtMail::Message *)bmm;
 
   return(msg->message(err));

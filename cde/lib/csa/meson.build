@@ -20,7 +20,14 @@ sed = find_program('sed')
 reparser = custom_target('reparser',
   input : 'reparser.y',
   output : ['reparser.c', 'reparser.h'],
-  command : ['sh', '-c', '@0@ -y -d @INPUT@ && sed -e s/yyparse/_DtCm_rule_parser/g -e s/yy/_DtCm_yy/g y.tab.c > @OUTPUT0@ && sed s/yy/_DtCm_yy/g y.tab.h > @OUTPUT1@'.format(yacc.full_path())]
+  command : [
+    'sh', '-c', 
+    '@0@ -d @INPUT@ && '.format(yacc.full_path()) +
+    'sed -e s/yyparse/_DtCm_rule_parser/g -e s/yy/_DtCm_yy/g y.tab.c > $1 && ' +
+    'sed s/yy/_DtCm_yy/g y.tab.h > $2 && ' +
+    'rm y.tab.c y.tab.h',
+    'sh', '@OUTPUT0@', '@OUTPUT1@'
+  ]
 )
 
 csa_generated = [reparser]

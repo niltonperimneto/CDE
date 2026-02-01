@@ -20,10 +20,10 @@ libdtmail_common_src = [
 # "ls *.C" inside the dir.
 
 libdtmail_common = static_library('DtMailCommon',
-  sources : run_command('sh', '-c', 'ls *.C', check: true).stdout().strip().split('\n'),
-  include_directories : [inc, include_directories('../../include')],
-  dependencies : [dep_x11, dep_xt, libDtSvc_dep, libtt_dep],
-  cpp_args : common_c_args
+  sources : run_command('sh', '-c', 'ls *.C | grep -v MailRc.C', check: true).stdout().strip().split('\n'),
+  include_directories : [inc, include_directories('../../include'), include_directories('../../include/utils')],
+  dependencies : [dep_x11, dep_xt, libDtSvc_dep, libtt_dep, dep_tirpc],
+  cpp_args : [common_c_args, '-DDL_DYNAMIC_LIBS']
 )
 
 libdtmail_common_dep = declare_dependency(

@@ -33,9 +33,10 @@
 #define _AF_AUX_H_INCLUDED
 
 #include "UxXt.h"
+#include "dtcreate.h"
 
 #ifndef STORAGECLASS
-#ifdef  NOEXTERN
+#ifdef NOEXTERN
 #define STORAGECLASS
 #else
 #define STORAGECLASS extern
@@ -72,27 +73,25 @@
 /*                                                                           */
 /*****************************************************************************/
 
+void load_filetype_icons(Widget, XtPointer, XmFileSelectionBoxCallbackStruct *);
+void clear_filetype_icon(void);
+Widget get_selected_filetype_icon(void);
+void activateCB_filetype_icon(Widget, XtPointer, DtIconCallbackStruct *);
 
-void load_filetype_icons (Widget, XtPointer, XmFileSelectionBoxCallbackStruct *);
-void clear_filetype_icon (void);
-Widget get_selected_filetype_icon (void);
-void activateCB_filetype_icon (Widget, XtPointer, DtIconCallbackStruct *);
+void readAFFromGUI(FiletypeData *);
+void getAF_FiletypeName(FiletypeData *);
+void getAF_IDChars(FiletypeData *);
+void getAF_HelpText(FiletypeData *);
+void getAF_Icons(FiletypeData *);
+void getAF_OpenCmd(FiletypeData *);
+void getAF_PrintCmd(FiletypeData *);
 
-void readAFFromGUI (FiletypeData *);
-void getAF_FiletypeName (FiletypeData *);
-void getAF_IDChars (FiletypeData *);
-void getAF_HelpText (FiletypeData *);
-void getAF_Icons (FiletypeData *);
-void getAF_OpenCmd (FiletypeData *);
-void getAF_PrintCmd (FiletypeData *);
-
-void init_AddFiletype (FiletypeData *);
+void init_AddFiletype(FiletypeData *);
 void free_Filetypedata(FiletypeData *);
 void init_AddFiletype_dialog_fields(FiletypeData *pFtD);
 void clear_AddFiletype_dialog_fields(void);
-void AddFiletypeToList();
-void UpdateFiletypeDataArray();
+void AddFiletypeToList(void);
+void UpdateFiletypeDataArray(FiletypeData *);
 Boolean AddFiletypeCheckFields(void);
-
 
 #endif /* _AF_AUX_H_INCLUDED */

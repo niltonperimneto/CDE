@@ -41,9 +41,11 @@
 
 #ifndef _FileMgr_h
 #define _FileMgr_h
+#include <Xm/Xm.h>
 #include <stdio.h>
 #include <sys/stat.h>
 #include <sys/types.h>
+#include <Xm/Xm.h>
 
 /*  Resource names  */
 

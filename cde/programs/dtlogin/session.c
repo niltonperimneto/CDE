@@ -62,6 +62,7 @@
 
 #include "dm.h"
 #include "vgmsg.h"
+#include <Dt/SafeStr.h>
 #include <X11/Xatom.h>
 #include <X11/Xmu/Error.h>
 #include <ctype.h>
@@ -631,8 +632,14 @@ int LoadXloginResources(struct display *d) {
 
     LoadAltDtsResources(d);
 
-    strcpy(tmpname, "/var/dt/dtlogin_XXXXXX");
-    (void)mktemp(tmpname);
+    strlcpy(tmpname, "/var/dt/dtlogin_XXXXXX", sizeof(tmpname));
+    int fd = mkstemp(tmpname);
+    if (fd != -1) {
+      close(fd);
+    } else {
+      Debug("mkstemp failed on %s\n", tmpname);
+      return -1;
+    }
 
     XrmPutFileDatabase(XresourceDB, tmpname);
 
@@ -692,8 +699,10 @@ static void LoadAltDtsResources(struct display *d) {
     i = atoi(tempbuf);
   }
 
-  strcpy(dirname[0], CDE_INSTALLATION_TOP "/config/%L/Xresources.d/");
-  strcpy(dirname[1], CDE_CONFIGURATION_TOP "/config/%L/Xresources.d/");
+  strlcpy(dirname[0], CDE_INSTALLATION_TOP "/config/%L/Xresources.d/",
+          sizeof(dirname[0]));
+  strlcpy(dirname[1], CDE_CONFIGURATION_TOP "/config/%L/Xresources.d/",
+          sizeof(dirname[1]));
 
   for (j = 0; j < 2; ++j) {
     resources = _ExpandLang(dirname[j], d->language);
@@ -1384,8 +1393,8 @@ static int StartClient(struct verify_info *verify, struct display *d,
         }
         verify->userEnviron = setEnv(verify->userEnviron, "HOME", "/");
       } else if (!failsafe) {
-        strcpy(lastsessfile, home); /* save user's last session */
-        strcat(lastsessfile, LAST_SESSION_FILE);
+        snprintf(lastsessfile, sizeof(lastsessfile), "%s%s", home,
+                 LAST_SESSION_FILE);
         if ((lastsession = fopen(lastsessfile, "w")) == NULL)
           Debug("Unable to open file for writing: %s\n", lastsessfile);
         else {

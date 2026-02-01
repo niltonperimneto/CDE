@@ -7,10 +7,19 @@ cc = meson.get_compiler('c')
 # Global defines from configure.ac
 add_project_arguments('-DANSICPP', '-DMULTIBYTE', '-DNLS16', '-D_GNU_SOURCE', '-DTT_VERSION_STRING="2.5.3"', '-DHAVE_POLL_H', language : ['c', 'cpp'])
 
+# Strict C23 compliance flags
+add_project_arguments(
+  '-Wstrict-prototypes',
+  '-Wold-style-definition',
+  '-Wimplicit-int',
+  '-Werror=incompatible-pointer-types',
+  language : 'c'
+)
+
 common_c_args = []
 
 # Include directories (adjusted for root)
-inc = include_directories('cde/include', 'cde')
+inc = include_directories('cde/include', 'cde', '.')
 
 # Dependencies
 libm = cc.find_library('m', required : false)

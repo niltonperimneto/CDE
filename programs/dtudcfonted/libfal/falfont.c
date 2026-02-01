@@ -653,9 +653,9 @@ char *FalReadFont(FalFontID fid, int code, int width, int height) {
 }
 
 static int falGetGlyph(char *glyph, Oak_FontInf *finf, int code) {
-  int in_dwidth, out_dwidth, ix, i, j;
+  int in_dwidth, out_dwidth, i, j;
   char *glyph_p, *inp, p_mask;
-  CharInfoPtr CharInfP;
+
   int codeRow, codeCol;
   unsigned int inner_code; /* an inside code of a file */
 

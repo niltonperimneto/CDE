@@ -2471,8 +2471,8 @@ static void MoveToTrashProcess(int pipe_fd, char **file_list, int file_count,
 
     /* move file to the trash directory */
     success = FileManip((Widget)(intptr_t)pipe_fd, MOVE_FILE, path, to, TRUE,
-                        (void (*)(Widget, XtPointer, XtPointer))FileOpError,
-                        True, TRASH_DIRECTORY);
+                        (void (*)(Widget, char *, char *))FileOpError, True,
+                        TRASH_DIRECTORY);
     if (success) {
       pipe_msg = PIPEMSG_DONE;
       DPRINTF(("MoveToTrashProcess: sending DONE\n"));
@@ -3789,8 +3789,8 @@ static int RestoreObject(Widget w, int mode, char *source, char *target,
 
   free(localdir);
   return ((int)FileManip((Widget)w, MOVE_FILE, source, target, TRUE,
-                         (void (*)(Widget, XtPointer, XtPointer))FileOpError,
-                         False, NOT_DESKTOP));
+                         (void (*)(Widget, char *, char *))FileOpError, False,
+                         NOT_DESKTOP));
 }
 static void CreateRestoreDialog(char *source, char *target) {
   char *tmpbuf, *title;

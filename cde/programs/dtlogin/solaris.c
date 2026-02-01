@@ -58,6 +58,7 @@
 
 #include "solaris.h"
 #include "dm.h"
+#include <Dt/SafeStr.h>
 #include <dirent.h>
 #include <errno.h>
 #include <pwd.h>

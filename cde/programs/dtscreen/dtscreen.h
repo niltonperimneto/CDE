@@ -38,8 +38,8 @@
  */
 
 #include <X11/Xlib.h>
-#include <X11/Xutil.h>
 #include <X11/Xos.h>
+#include <X11/Xutil.h>
 
 #include <Dt/Dt.h>
 
@@ -47,17 +47,17 @@
 #define NUMCOLORS 64
 
 typedef struct {
-    Screen     *screen;
-    int         npixels;	/* number of valid entries in pixels */
-    u_long      pixels[NUMCOLORS];	/* pixel values in the colormap */
-}           perscreen;
+  Screen *screen;
+  int npixels;              /* number of valid entries in pixels */
+  u_long pixels[NUMCOLORS]; /* pixel values in the colormap */
+} perscreen;
 
 typedef struct {
-    Window      w; /* window id */
-    GC          gc; /* graphics context for animation */
-    perscreen  *perscreen; /* screen info for this window */
-    void       *data; /* mode data */
-}           perwindow;
+  Window w;             /* window id */
+  GC gc;                /* graphics context for animation */
+  perscreen *perscreen; /* screen info for this window */
+  void *data;           /* mode data */
+} perwindow;
 
 extern Display *dsp;
 
@@ -65,29 +65,30 @@ extern char *ProgramName;
 extern char *display;
 extern char *mode;
 extern float saturation;
-extern int  nicelevel;
-extern int  delay;
-extern int  batchcount;
-extern int  reinittime;
+extern int nicelevel;
+extern int delay;
+extern int batchcount;
+extern int reinittime;
 extern Bool usefirst;
 extern Bool mono;
 extern Bool create;
-extern void (*callback) ();
-extern void (*init) ();
+extern void (*callback)(perwindow *);
+extern void (*init)(perwindow *);
 
-extern void GetResources();
-extern void CheckResources();
-extern void hsbramp();
-extern void error();
-extern long seconds();
-extern void usage();
-extern void hide_hft_ring();
-extern void unhide_hft_ring();
-
+extern void GetResources(int argc, char **argv);
+extern void CheckResources(void);
+extern void hsbramp(double h1, double s1, double b1, double h2, double s2,
+                    double b2, int count, unsigned char *red,
+                    unsigned char *green, unsigned char *blue);
+extern void error(char *s1, char *s2);
+extern long seconds(void);
+extern void usage(void);
+extern void hide_hft_ring(void);
+extern void unhide_hft_ring(void);
 
 /* System V Release 4 redefinitions of BSD functions and structures */
 
-#if defined (SYSV) || defined (SVR4)
+#if defined(SYSV) || defined(SVR4)
 
 #include <sys/time.h>
 #define passwd spwd
@@ -98,13 +99,13 @@ extern void unhide_hft_ring();
 #include <sys/poll.h>
 
 struct passwd {
-        char    *pw_name;
-        char    *pw_passwd;
-        uid_t   pw_uid;
-        gid_t   pw_gid;
-        char    *pw_gecos;
-        char    *pw_dir;
-        char    *pw_shell;
+  char *pw_name;
+  char *pw_passwd;
+  uid_t pw_uid;
+  gid_t pw_gid;
+  char *pw_gecos;
+  char *pw_dir;
+  char *pw_shell;
 };
 #else
 #include <poll.h>
@@ -112,11 +113,11 @@ struct passwd {
 #define getpwnam getspnam
 #endif
 #if !(defined(_AIX) || defined(sun))
-# define srandom srand
-# define random rand
-# define MAXRAND (32767.0)
+#define srandom srand
+#define random rand
+#define MAXRAND (32767.0)
 #else
-# define MAXRAND (2147483648.0)
+#define MAXRAND (2147483648.0)
 #endif
 
 #else

@@ -20,13 +20,13 @@
  * to the Free Software Foundation, Inc., 51 Franklin Street, Fifth
  * Floor, Boston, MA 02110-1301 USA
  */
-/* 
- * (c) Copyright 1989, 1990, 1991, 1992, 1993, 1994 OPEN SOFTWARE FOUNDATION, INC. 
- * ALL RIGHTS RESERVED 
-*/ 
-/* 
+/*
+ * (c) Copyright 1989, 1990, 1991, 1992, 1993, 1994 OPEN SOFTWARE FOUNDATION,
+ * INC. ALL RIGHTS RESERVED
+ */
+/*
  * Motif Release 1.2.4
-*/ 
+ */
 /*
  * (c) Copyright 1987, 1988, 1989, 1990, 1993, 1994 Hewlett-Packard Company
  * (c) Copyright 1993, 1994 International Business Machines Corp.
@@ -43,277 +43,252 @@
  */
 
 #include "WmGlobal.h"
-#include "WmResNames.h"
-#include <Dt/UserMsg.h>
-#include <Dt/Connect.h>
-#include <Tt/tt_c.h>
+#include "WmPanelP.h"
 #include "WmParse.h"
 #include "WmParseP.h"
-#include "WmPanelP.h"
+#include "WmResNames.h"
 #include "WmResource.h"
+#include <Dt/Connect.h>
+#include <Dt/UserMsg.h>
+#include <Tt/tt_c.h>
 
-#include <codelibs/shellutils.h>    /* shellscan */
+#include <codelibs/shellutils.h> /* shellscan */
 
 #include <Xm/VirtKeysP.h>
-#include <Xm/XmPrivate.h>      /* _XmVirtKeysLoadFileBindings,
+#include <Xm/XmPrivate.h> /* _XmVirtKeysLoadFileBindings,
                                 * _XmVirtKeysLoadFallbackBindings */
 
-
+#include <X11/Xatom.h>
 #include <X11/cursorfont.h>
 #include <X11/keysym.h>
-#include <X11/Xatom.h>
 #include <ctype.h>
 
 #include <locale.h>
 
 #include <stdlib.h>
 
-#include <Xm/XmP.h>             /* for XmeGetHomeDirName */
+#include <Xm/XmP.h> /* for XmeGetHomeDirName */
 #include <signal.h>
 
 /* maximum string lengths */
 
-#define MAX_KEYSYM_STRLEN    100
-#define MAX_EVENTTYPE_STRLEN  20
-#define MAX_MODIFIER_STRLEN   20
-#define MAX_CONTEXT_STRLEN    20
-#define MAX_GROUP_STRLEN      20
+#define MAX_KEYSYM_STRLEN 100
+#define MAX_EVENTTYPE_STRLEN 20
+#define MAX_MODIFIER_STRLEN 20
+#define MAX_CONTEXT_STRLEN 20
+#define MAX_GROUP_STRLEN 20
 
-#define min(a,b)	((a)>(b) ? (b) : (a))
+#define min(a, b) ((a) > (b) ? (b) : (a))
 
-#define MAXLINE     (MAXWMPATH+1)
+#define MAXLINE (MAXWMPATH + 1)
 
-#define MBBSIZ	    4096
+#define MBBSIZ 4096
 
 #define PARSE_MENU_ITEMS(pSD, mSpec) ParseMenuItems(pSD)
 
 /*
  * include extern functions
  */
-#include "WmResParse.h"
-#include "WmWrkspace.h"
 #include "WmError.h"
 #include "WmFunction.h"
 #include "WmImage.h"
+#include "WmResParse.h"
+#include "WmWrkspace.h"
 #include "WmXSMP.h"
 
-# include <errno.h>
-# ifdef X_NOT_STDC_ENV
+#include <errno.h>
+#ifdef X_NOT_STDC_ENV
 extern int errno;
-# endif
-# define HOME_DT_WMRC    "/.dt/dtwmrc"
-# define LANG_DT_WMRC    "/dtwmrc"
-# define SYS_DT_WMRC     CDE_CONFIGURATION_TOP "/sys.dtwmrc"
+#endif
+#define HOME_DT_WMRC "/.dt/dtwmrc"
+#define LANG_DT_WMRC "/dtwmrc"
+#define SYS_DT_WMRC CDE_CONFIGURATION_TOP "/sys.dtwmrc"
 
 /*
  * missing button definitions in X.h
  */
-#define Button6	6
-#define Button7	7
-#define Button8	8
-#define Button9	9
+#define Button6 6
+#define Button7 7
+#define Button8 8
+#define Button9 9
 
 /*
  * Global Variables And Tables:
  */
-static char cfileName[MAXWMPATH+1];
+static char cfileName[MAXWMPATH + 1];
 #ifndef NO_MESSAGE_CATALOG
-char * pWarningStringFile;
-char * pWarningStringLine;
+char *pWarningStringFile;
+char *pWarningStringLine;
 #else
 char pWarningStringFile[] = "%s: %s on line %d of configuration file %s\n";
 char pWarningStringLine[] = "%s: %s on line %d of specification string\n";
 #endif
-#define cfileP 	(wmGD.pWmPB->pFile)
-#define parseP	(wmGD.pWmPB->pchNext)
-#define line	(wmGD.pWmPB->pchLine)
-#define linec	(wmGD.pWmPB->lineNumber)
-
+#define cfileP (wmGD.pWmPB->pFile)
+#define parseP (wmGD.pWmPB->pchNext)
+#define line (wmGD.pWmPB->pchLine)
+#define linec (wmGD.pWmPB->lineNumber)
 
 typedef struct {
-   char         *name;
-   unsigned int  mask;
+  char *name;
+  unsigned int mask;
 } MaskTableEntry;
 
 static MaskTableEntry modifierStrings[] = {
 
-    {"none",    None},
-    {"ctrl",	ControlMask},
-    {"shift",	ShiftMask},
-    {"alt",	Mod1Mask},
-    {"meta",	Mod1Mask},
-    {"lock",	LockMask},
-    {"mod1",	Mod1Mask},
-    {"mod2",	Mod2Mask},
-    {"mod3",	Mod3Mask},
-    {"mod4",	Mod4Mask},
-    {"mod5",	Mod5Mask},
-    {NULL,      0},
+    {"none", None},     {"ctrl", ControlMask}, {"shift", ShiftMask},
+    {"alt", Mod1Mask},  {"meta", Mod1Mask},    {"lock", LockMask},
+    {"mod1", Mod1Mask}, {"mod2", Mod2Mask},    {"mod3", Mod3Mask},
+    {"mod4", Mod4Mask}, {"mod5", Mod5Mask},    {NULL, 0},
 };
 
 #define ALT_INDEX 3
 #define META_INDEX 4
 
 typedef struct {
-   char         *event;
-   unsigned int  eventType;
-   Boolean       (*parseProc)();
-   unsigned int  closure;
-   Boolean       fClick;
+  char *event;
+  unsigned int eventType;
+  Boolean (*parseProc)(unsigned char **, unsigned int, unsigned int *);
+  unsigned int closure;
+  Boolean fClick;
 } EventTableEntry;
 
-static String GetNetworkFileName (char *pchFile);
-FILE *FopenConfigFile (void);
-void SaveMenuAccelerators (WmScreenData *pSD, MenuSpec *newMenuSpec);
-static void ParseMenuSet (WmScreenData *pSD, unsigned char *lineP);
-MenuItem *ParseMwmMenuStr (WmScreenData *pSD, unsigned char *menuStr);
-static MenuItem *ParseMenuItems (WmScreenData *pSD);
-static Boolean ParseWmLabel (WmScreenData *pSD, MenuItem *menuItem, 
-			     unsigned char *string);
-static void ParseWmMnemonic (unsigned char **linePP, MenuItem *menuItem);
-static Boolean ParseWmAccelerator (unsigned char **linePP, MenuItem *menuItem);
-int ParseWmFunction (unsigned char **linePP, unsigned int res_spec, 
-			    WmFunction *pWmFunction);
-static Boolean ParseWmFuncNoArg (unsigned char **linePP, WmFunction wmFunction,
-				 String *pArgs);
-void FreeMenuItem (MenuItem *menuItem);
-static Boolean ParseWmFuncGrpArg (unsigned char **linePP, 
-				  WmFunction wmFunction, GroupArg *pGroup);
-static Boolean ParseWmFuncNbrArg (unsigned char **linePP, 
-				  WmFunction wmFunction, 
-				  unsigned long *pNumber);
-void ParseButtonStr (WmScreenData *pSD, unsigned char *buttonStr);
-static void ParseButtonSet (WmScreenData *pSD, unsigned char *lineP);
-static Boolean ParseContext (unsigned char **linePP, Context *context, 
-			     Context *subContext);
-void
-ParseKeyStr (WmScreenData *pSD, unsigned char *keyStr);
-static void ParseKeySet (WmScreenData *pSD, unsigned char *lineP);
-Boolean ParseBtnEvent (unsigned char  **linePP,
-		       unsigned int *eventType,
-		       unsigned int *button,
-		       unsigned int *state,
-		       Boolean      *fClick);
-Boolean ParseKeyEvent (unsigned char **linePP, unsigned int *eventType,
-		       KeyCode *keyCode,  unsigned int *state);
-static Boolean ParseEvent (unsigned char **linePP, EventTableEntry *table,
-			   unsigned int *eventType, unsigned int *detail,
-			   unsigned int *state, Boolean *fClick);
+static String GetNetworkFileName(char *pchFile);
+FILE *FopenConfigFile(void);
+void SaveMenuAccelerators(WmScreenData *pSD, MenuSpec *newMenuSpec);
+static void ParseMenuSet(WmScreenData *pSD, unsigned char *lineP);
+MenuItem *ParseMwmMenuStr(WmScreenData *pSD, unsigned char *menuStr);
+static MenuItem *ParseMenuItems(WmScreenData *pSD);
+static Boolean ParseWmLabel(WmScreenData *pSD, MenuItem *menuItem,
+                            unsigned char *string);
+static void ParseWmMnemonic(unsigned char **linePP, MenuItem *menuItem);
+static Boolean ParseWmAccelerator(unsigned char **linePP, MenuItem *menuItem);
+int ParseWmFunction(unsigned char **linePP, unsigned int res_spec,
+                    WmFunction *pWmFunction);
+static Boolean ParseWmFuncNoArg(unsigned char **linePP, WmFunction wmFunction,
+                                void *pArgs);
+void FreeMenuItem(MenuItem *menuItem);
+static Boolean ParseWmFuncGrpArg(unsigned char **linePP, WmFunction wmFunction,
+                                 void *pGroup);
+static Boolean ParseWmFuncNbrArg(unsigned char **linePP, WmFunction wmFunction,
+                                 void *pNumber);
+void ParseButtonStr(WmScreenData *pSD, unsigned char *buttonStr);
+static void ParseButtonSet(WmScreenData *pSD, unsigned char *lineP);
+static Boolean ParseContext(unsigned char **linePP, Context *context,
+                            Context *subContext);
+void ParseKeyStr(WmScreenData *pSD, unsigned char *keyStr);
+static void ParseKeySet(WmScreenData *pSD, unsigned char *lineP);
+Boolean ParseBtnEvent(unsigned char **linePP, unsigned int *eventType,
+                      unsigned int *button, unsigned int *state,
+                      Boolean *fClick);
+Boolean ParseKeyEvent(unsigned char **linePP, unsigned int *eventType,
+                      KeyCode *keyCode, unsigned int *state);
+static Boolean ParseEvent(unsigned char **linePP, EventTableEntry *table,
+                          unsigned int *eventType, unsigned int *detail,
+                          unsigned int *state, Boolean *fClick);
 static Boolean ParseModifiers(unsigned char **linePP, unsigned int *state);
-static Boolean LookupModifier (unsigned char *name, unsigned int *valueP);
-static Boolean ParseEventType (unsigned char **linePP, EventTableEntry *table,
-			       unsigned int *eventType, Cardinal *ix);
-static Boolean ParseImmed (unsigned char **linePP, unsigned int closure,
-			   unsigned int  *detail);
-static Boolean ParseKeySym (unsigned char **linePP, unsigned int closure,
-			    unsigned int *detail);
+static Boolean LookupModifier(unsigned char *name, unsigned int *valueP);
+static Boolean ParseEventType(unsigned char **linePP, EventTableEntry *table,
+                              unsigned int *eventType, Cardinal *ix);
+static Boolean ParseImmed(unsigned char **linePP, unsigned int closure,
+                          unsigned int *detail);
+static Boolean ParseKeySym(unsigned char **linePP, unsigned int closure,
+                           unsigned int *detail);
 static unsigned int StrToNum(unsigned char *str);
 static unsigned int StrToHex(unsigned char *str);
 static unsigned int StrToOct(unsigned char *str);
-void ScanAlphanumeric (unsigned char **linePP);
-void ScanWhitespace(unsigned char  **linePP);
-void ToLower (char  *string);
-void
-PWarning (char *message);
-static void ProcessAccelText (unsigned char *startP, unsigned char *endP,
-			      unsigned char *destP);
-void ProcessCommandLine (int argc,  char *argv[]);
-static void ParseScreensArgument (int argc, char *argv[], int *pArgnum,
-				  unsigned char *lineP);
-void ProcessMotifBindings (void);
-static void ParseIncludeSet (WmScreenData *pSD, unsigned char *lineP);
-static void ConfigStackInit (char *pchFileName);
-static FILE *ConfigStackPush (unsigned char *pchFileName);
-static void ConfigStackPop (void);
-Boolean ParseWmFuncActionArg (unsigned char **linePP, 
-				  WmFunction wmFunction, String *pArgs);
-static void PreprocessConfigFile (void);
+void ScanAlphanumeric(unsigned char **linePP);
+void ScanWhitespace(unsigned char **linePP);
+void ToLower(char *string);
+void PWarning(char *message);
+static void ProcessAccelText(unsigned char *startP, unsigned char *endP,
+                             unsigned char *destP);
+void ProcessCommandLine(int argc, char *argv[]);
+static void ParseScreensArgument(int argc, char *argv[], int *pArgnum,
+                                 unsigned char *lineP);
+void ProcessMotifBindings(void);
+static void ParseIncludeSet(WmScreenData *pSD, unsigned char *lineP);
+static void ConfigStackInit(char *pchFileName);
+static FILE *ConfigStackPush(unsigned char *pchFileName);
+static void ConfigStackPop(void);
+
+static void PreprocessConfigFile(void);
 
 static EventTableEntry buttonEvents[] = {
 
-    {"btn1down",    ButtonPress,    ParseImmed,    SELECT_BUTTON,  FALSE},
-    {"btn1up",      ButtonRelease,  ParseImmed,    SELECT_BUTTON,  FALSE},
-    {"btn1click",   ButtonRelease,  ParseImmed,    SELECT_BUTTON,  TRUE},
-    {"btn1click2",  ButtonPress,    ParseImmed,    SELECT_BUTTON,  TRUE},
-    {"btn2down",    ButtonPress,    ParseImmed,    DMANIP_BUTTON,  FALSE},
-    {"btn2up",      ButtonRelease,  ParseImmed,    DMANIP_BUTTON,  FALSE},
-    {"btn2click",   ButtonRelease,  ParseImmed,    DMANIP_BUTTON,  TRUE},
-    {"btn2click2",  ButtonPress,    ParseImmed,    DMANIP_BUTTON,  TRUE},
-    {"btn3down",    ButtonPress,    ParseImmed,    BMENU_BUTTON,  FALSE},
-    {"btn3up",      ButtonRelease,  ParseImmed,    BMENU_BUTTON,  FALSE},
-    {"btn3click",   ButtonRelease,  ParseImmed,    BMENU_BUTTON,  TRUE},
-    {"btn3click2",  ButtonPress,    ParseImmed,    BMENU_BUTTON,  TRUE},
-    {"btn4down",    ButtonPress,    ParseImmed,    Button4,  FALSE},
-    {"btn4up",      ButtonRelease,  ParseImmed,    Button4,  FALSE},
-    {"btn4click",   ButtonRelease,  ParseImmed,    Button4,  TRUE},
-    {"btn4click2",  ButtonPress,    ParseImmed,    Button4,  TRUE},
-    {"btn5down",    ButtonPress,    ParseImmed,    Button5,  FALSE},
-    {"btn5up",      ButtonRelease,  ParseImmed,    Button5,  FALSE},
-    {"btn5click",   ButtonRelease,  ParseImmed,    Button5,  TRUE},
-    {"btn5click2",  ButtonPress,    ParseImmed,    Button5,  TRUE},
-    {"btn6down",    ButtonPress,    ParseImmed,    Button6,  FALSE},
-    {"btn6up",      ButtonRelease,  ParseImmed,    Button6,  FALSE},
-    {"btn6click",   ButtonRelease,  ParseImmed,    Button6,  TRUE},
-    {"btn6click2",  ButtonPress,    ParseImmed,    Button6,  TRUE},
-    {"btn7down",    ButtonPress,    ParseImmed,    Button7,  FALSE},
-    {"btn7up",      ButtonRelease,  ParseImmed,    Button7,  FALSE},
-    {"btn7click",   ButtonRelease,  ParseImmed,    Button7,  TRUE},
-    {"btn7click2",  ButtonPress,    ParseImmed,    Button7,  TRUE},
-    {"btn8down",    ButtonPress,    ParseImmed,    Button8,  FALSE},
-    {"btn8up",      ButtonRelease,  ParseImmed,    Button8,  FALSE},
-    {"btn8click",   ButtonRelease,  ParseImmed,    Button8,  TRUE},
-    {"btn8click2",  ButtonPress,    ParseImmed,    Button8,  TRUE},
-    {"btn9down",    ButtonPress,    ParseImmed,    Button9,  FALSE},
-    {"btn9up",      ButtonRelease,  ParseImmed,    Button9,  FALSE},
-    {"btn9click",   ButtonRelease,  ParseImmed,    Button9,  TRUE},
-    {"btn9click2",  ButtonPress,    ParseImmed,    Button9,  TRUE},
-    { NULL, 0, (Boolean(*)())NULL,  0, FALSE}
-};
-
+    {"btn1down", ButtonPress, ParseImmed, SELECT_BUTTON, FALSE},
+    {"btn1up", ButtonRelease, ParseImmed, SELECT_BUTTON, FALSE},
+    {"btn1click", ButtonRelease, ParseImmed, SELECT_BUTTON, TRUE},
+    {"btn1click2", ButtonPress, ParseImmed, SELECT_BUTTON, TRUE},
+    {"btn2down", ButtonPress, ParseImmed, DMANIP_BUTTON, FALSE},
+    {"btn2up", ButtonRelease, ParseImmed, DMANIP_BUTTON, FALSE},
+    {"btn2click", ButtonRelease, ParseImmed, DMANIP_BUTTON, TRUE},
+    {"btn2click2", ButtonPress, ParseImmed, DMANIP_BUTTON, TRUE},
+    {"btn3down", ButtonPress, ParseImmed, BMENU_BUTTON, FALSE},
+    {"btn3up", ButtonRelease, ParseImmed, BMENU_BUTTON, FALSE},
+    {"btn3click", ButtonRelease, ParseImmed, BMENU_BUTTON, TRUE},
+    {"btn3click2", ButtonPress, ParseImmed, BMENU_BUTTON, TRUE},
+    {"btn4down", ButtonPress, ParseImmed, Button4, FALSE},
+    {"btn4up", ButtonRelease, ParseImmed, Button4, FALSE},
+    {"btn4click", ButtonRelease, ParseImmed, Button4, TRUE},
+    {"btn4click2", ButtonPress, ParseImmed, Button4, TRUE},
+    {"btn5down", ButtonPress, ParseImmed, Button5, FALSE},
+    {"btn5up", ButtonRelease, ParseImmed, Button5, FALSE},
+    {"btn5click", ButtonRelease, ParseImmed, Button5, TRUE},
+    {"btn5click2", ButtonPress, ParseImmed, Button5, TRUE},
+    {"btn6down", ButtonPress, ParseImmed, Button6, FALSE},
+    {"btn6up", ButtonRelease, ParseImmed, Button6, FALSE},
+    {"btn6click", ButtonRelease, ParseImmed, Button6, TRUE},
+    {"btn6click2", ButtonPress, ParseImmed, Button6, TRUE},
+    {"btn7down", ButtonPress, ParseImmed, Button7, FALSE},
+    {"btn7up", ButtonRelease, ParseImmed, Button7, FALSE},
+    {"btn7click", ButtonRelease, ParseImmed, Button7, TRUE},
+    {"btn7click2", ButtonPress, ParseImmed, Button7, TRUE},
+    {"btn8down", ButtonPress, ParseImmed, Button8, FALSE},
+    {"btn8up", ButtonRelease, ParseImmed, Button8, FALSE},
+    {"btn8click", ButtonRelease, ParseImmed, Button8, TRUE},
+    {"btn8click2", ButtonPress, ParseImmed, Button8, TRUE},
+    {"btn9down", ButtonPress, ParseImmed, Button9, FALSE},
+    {"btn9up", ButtonRelease, ParseImmed, Button9, FALSE},
+    {"btn9click", ButtonRelease, ParseImmed, Button9, TRUE},
+    {"btn9click2", ButtonPress, ParseImmed, Button9, TRUE},
+    {NULL, 0, NULL, 0, FALSE}};
 
 static EventTableEntry keyEvents[] = {
 
-    {"key",         KeyPress,    ParseKeySym,    0,  FALSE},
-    { NULL,         0,    (Boolean(*)())NULL,    0,  FALSE}
-};
+    {"key", KeyPress, ParseKeySym, 0, FALSE}, {NULL, 0, NULL, 0, FALSE}};
 
 typedef struct _ConfigFileStackEntry {
-    char		*fileName;
-    char 		*tempName;
-    char 		*cppName;
-    char		*wmgdConfigFile;
-    long		offset;
-    DtWmpParseBuf	*pWmPB;
-    struct _ConfigFileStackEntry	*pIncluder;
-    
+  char *fileName;
+  char *tempName;
+  char *cppName;
+  char *wmgdConfigFile;
+  long offset;
+  DtWmpParseBuf *pWmPB;
+  struct _ConfigFileStackEntry *pIncluder;
+
 } ConfigFileStackEntry;
 
 static ConfigFileStackEntry *pConfigStack = NULL;
 static ConfigFileStackEntry *pConfigStackTop = NULL;
 
-
 unsigned int buttonModifierMasks[] = {
-    0,
-    SELECT_BUTTON_MASK,
-    DMANIP_BUTTON_MASK,
-    BMENU_BUTTON_MASK,
-    Button4Mask,
-    Button5Mask
-};
+    0,           SELECT_BUTTON_MASK, DMANIP_BUTTON_MASK, BMENU_BUTTON_MASK,
+    Button4Mask, Button5Mask};
 
 /*
  * FUNCTION PARSER TABLE (function names must be in alphabetic order)
  */
 
-typedef struct {
-   char         * funcName;
-   Context        greyedContext;
-   unsigned int   resource;
-   long           mgtMask;
-   WmFunction     wmFunction;
-   Boolean       (*parseProc)();
-} FunctionTableEntry;
+typedef Boolean (*WmParseProc)(unsigned char **, WmFunction, void *);
 
+typedef struct {
+  char *funcName;
+  Context greyedContext;
+  unsigned int resource;
+  long mgtMask;
+  WmFunction wmFunction;
+  WmParseProc parseProc;
+} FunctionTableEntry;
 
 /*
  * NOTE: New functions MUST be added in ALPHABETICAL order.  A binary search
@@ -321,295 +296,124 @@ typedef struct {
  */
 
 FunctionTableEntry functionTable[] = {
-    {"f.action",	0,
-			CRS_ANY,
-			0,
-			F_Action,
-			ParseWmFuncActionArg},
-    {"f.beep",		0,
-			CRS_ANY,
-			0,
-			F_Beep,
-			ParseWmFuncNoArg},
-    {"f.circle_down",	F_SUBCONTEXT_IB_IICON|F_SUBCONTEXT_IB_WICON,
-			CRS_ANY,
-			0,
-			F_Circle_Down,
-			ParseWmFuncGrpArg},
-    {"f.circle_up",	F_SUBCONTEXT_IB_IICON|F_SUBCONTEXT_IB_WICON,
-			CRS_ANY,
-			0,
-			F_Circle_Up,
-			ParseWmFuncGrpArg},
-    {"f.create_workspace", 0,
-			CRS_ANY,
-			0,
-			F_CreateWorkspace,
-			ParseWmFuncNoArg},
-    {"f.delete_workspace", 0,
-			CRS_ANY,
-			0,
-			F_DeleteWorkspace,
-			ParseWmFuncNoArg},
-    {"f.exec",		0,
-			CRS_ANY,
-			0,
-			F_Exec,
-			ParseWmFuncStrArg},
-    {"f.focus_color",	F_SUBCONTEXT_IB_IICON|F_SUBCONTEXT_IB_WICON,
-			CRS_ANY,
-			0,
-			F_Focus_Color,
-			ParseWmFuncNoArg},
-    {"f.focus_key",	F_SUBCONTEXT_IB_IICON|F_SUBCONTEXT_IB_WICON,
-			CRS_ANY,
-			0,
-			F_Focus_Key,
-			ParseWmFuncNoArg},
-    {"f.goto_workspace", 0,
-			CRS_ANY,
-			0,
-			F_Goto_Workspace,
-			ParseWmFuncStrArg},
-    {"f.help",          0,
-			CRS_ANY,
-			0,
-			F_Help,
-			ParseWmFuncStrArg},  /* [helpvolume && helptopic] */
-    {"f.help_mode",     0,
-			CRS_ANY,
-			0,
-			F_Help_Mode,
-			ParseWmFuncNoArg},  /* for now */
-    {"f.kill",		F_CONTEXT_ROOT,
-			CRS_ANY,
-			MWM_FUNC_CLOSE,
-			F_Kill,
-			ParseWmFuncNoArg},
-    {"f.lower",		F_SUBCONTEXT_IB_IICON|F_SUBCONTEXT_IB_WICON,
-			CRS_ANY,
-			0,
-			F_Lower,
-                        ParseWmFuncMaybeStrArg},
-    {"f.marquee_selection",	
-			F_CONTEXT_WINDOW|F_CONTEXT_ICON|F_SUBCONTEXT_IB_IICON,
-			CRS_ANY,
-			0,
-			F_Marquee_Selection,
-			ParseWmFuncNoArg},
-    {"f.maximize",	F_CONTEXT_ROOT|F_CONTEXT_MAXIMIZE|
-	                               F_SUBCONTEXT_IB_WICON,
-			CRS_ANY,
-			MWM_FUNC_MAXIMIZE,
-			F_Maximize,
-			ParseWmFuncNoArg},
-    {"f.menu",		0,
-			CRS_ANY,
-			0,
-			F_Menu,
-			ParseWmFuncStrArg},
-    {"f.minimize",	F_CONTEXT_ICON|F_CONTEXT_ROOT|F_SUBCONTEXT_IB_IICON,
-			CRS_ANY,
-			MWM_FUNC_MINIMIZE,
-			F_Minimize,
-			ParseWmFuncNoArg},
-    {"f.move",		F_CONTEXT_ROOT,
-			CRS_ANY,
-			MWM_FUNC_MOVE,
-			F_Move,
-			ParseWmFuncNoArg},
-    {"f.next_cmap",	0,
-			CRS_ANY,
-			0,
-			F_Next_Cmap,
-			ParseWmFuncNoArg},
-    {"f.next_key",	0,
-			CRS_ANY,
-			0,
-			F_Next_Key,
-			ParseWmFuncGrpArg},
-    {"f.next_workspace",	0,
-			CRS_ANY,
-			0,
-			F_Next_Workspace,
-			ParseWmFuncNoArg},
-    {"f.nop",	        F_CONTEXT_ROOT|F_CONTEXT_ICON|F_CONTEXT_WINDOW|
-	                    F_SUBCONTEXT_IB_WICON | F_SUBCONTEXT_IB_IICON,
-			CRS_ANY,
-			0,
-			F_Nop,
-			ParseWmFuncNoArg},
-    {"f.normalize",	F_CONTEXT_ROOT|F_CONTEXT_NORMAL|F_SUBCONTEXT_IB_WICON,
-			CRS_ANY,
-			0,
-			F_Normalize,
-			ParseWmFuncNoArg},
-    {"f.normalize_and_raise",
-	                F_CONTEXT_ROOT|F_CONTEXT_NORMAL,
-			CRS_ANY,
-			0,
-			F_Normalize_And_Raise,
-			ParseWmFuncMaybeStrArg},
-    {"f.occupy_all", F_CONTEXT_ICONBOX|F_CONTEXT_ROOT,
-			CRS_ANY,
-                        DtWM_FUNC_OCCUPY_WS,
- 			F_AddToAllWorkspaces,
-                        ParseWmFuncNoArg},
-    {"f.pack_icons",	0,
-			CRS_ANY,
-			0,
-			F_Pack_Icons,
-			ParseWmFuncNoArg},
-    {"f.pass_keys",	0,
-			CRS_ANY,
-			0,
-			F_Pass_Key,
-			ParseWmFuncNoArg},
-    {"f.post_wmenu",	0,
-			CRS_BUTTON|CRS_KEY,
-			0,
-			F_Post_SMenu,
-			ParseWmFuncNoArg},
-    {"f.prev_cmap",	0,
-			CRS_ANY,
-			0,
-			F_Prev_Cmap,
-			ParseWmFuncNoArg},
-    {"f.prev_key",	0,
-			CRS_ANY,
-			0,
-			F_Prev_Key,
-			ParseWmFuncGrpArg},
-    {"f.prev_workspace",	0,
-			CRS_ANY,
-			0,
-			F_Prev_Workspace,
-			ParseWmFuncNoArg},
-    {"f.quit_mwm",	F_CONTEXT_ICON|F_CONTEXT_WINDOW,
-			CRS_ANY,
-			0,
-			F_Quit_Mwm,
-			ParseWmFuncNoArg},
-    {"f.raise",		F_SUBCONTEXT_IB_IICON|F_SUBCONTEXT_IB_WICON,
-			CRS_ANY,
-			0,
-			F_Raise,
-                        ParseWmFuncMaybeStrArg},
-    {"f.raise_lower",	F_CONTEXT_ROOT |
-    				F_SUBCONTEXT_IB_IICON|F_SUBCONTEXT_IB_WICON,
-			CRS_ANY,
-			0,
-			F_Raise_Lower,
-			ParseWmFuncNoArg},
-    {"f.refresh",	0,
-			CRS_ANY,
-			0,
-			F_Refresh,
-			ParseWmFuncNoArg},
-    {"f.refresh_win",	F_CONTEXT_ICON|F_CONTEXT_ROOT,
-			CRS_ANY,
-			0,
-			F_Refresh_Win,
-			ParseWmFuncNoArg},
-    {"f.remove",	F_CONTEXT_ROOT,
-			CRS_ANY,
-			DtWM_FUNC_OCCUPY_WS,
-			F_Remove,
-			ParseWmFuncNoArg},
-    {"f.rename",	F_CONTEXT_ROOT|F_CONTEXT_ICONBOX|F_SUBCONTEXT_IB_WICON,
-			CRS_ANY,
-			DtWM_FUNC_OCCUPY_WS,
-			F_Rename,
-			ParseWmFuncNoArg},
-    {"f.resize",	F_CONTEXT_ICON|F_CONTEXT_ROOT|
-                                 F_SUBCONTEXT_IB_IICON|F_SUBCONTEXT_IB_WICON,
-			CRS_ANY,
-			MWM_FUNC_RESIZE,
-			F_Resize,
-			ParseWmFuncNoArg},
-    {"f.restart",	F_CONTEXT_ICON|F_CONTEXT_WINDOW,
-			CRS_ANY,
-			0,
-			F_Restart,
-			ParseWmFuncStrArg},
-    {"f.restore",	F_CONTEXT_ROOT|F_CONTEXT_NORMAL|F_SUBCONTEXT_IB_WICON,
-			CRS_ANY,
-			0,
-			F_Restore,
-			ParseWmFuncNoArg},
-    {"f.restore_and_raise",
-	                F_CONTEXT_ROOT|F_CONTEXT_NORMAL,
-			CRS_ANY,
-			0,
-			F_Restore_And_Raise,
-			ParseWmFuncNoArg},
-    {"f.screen",	0,
-			CRS_ANY,
-			0,
-			F_Screen,
-			ParseWmFuncStrArg},
-    {"f.send_msg",	F_CONTEXT_ROOT,
-			CRS_ANY,
-			0,
-			F_Send_Msg,
-			ParseWmFuncNbrArg},
-    {"f.separator",	0,
-			CRS_MENU,
-			0,
-			F_Separator,
-			ParseWmFuncNoArg},
-    {"f.set_behavior",	0,
-			CRS_ANY,
-			0,
-			F_Set_Behavior,
-			ParseWmFuncNoArg},
-    {"f.set_context",	0,
-			CRS_ANY,
-			0,
-			F_Set_Context,
-			ParseWmFuncNbrArg},
-    {"f.title",		0,
-			CRS_MENU,
-			0,
-			F_Title,
-			ParseWmFuncNoArg},
-    {"f.toggle_frontpanel", 0,
-			CRS_ANY,
-			0,
-			F_Toggle_Front_Panel,
-			ParseWmFuncNoArg},
+    {"f.action", 0, CRS_ANY, 0, F_Action, (WmParseProc)ParseWmFuncActionArg},
+    {"f.beep", 0, CRS_ANY, 0, F_Beep, (WmParseProc)ParseWmFuncNoArg},
+    {"f.circle_down", F_SUBCONTEXT_IB_IICON | F_SUBCONTEXT_IB_WICON, CRS_ANY, 0,
+     F_Circle_Down, (WmParseProc)ParseWmFuncGrpArg},
+    {"f.circle_up", F_SUBCONTEXT_IB_IICON | F_SUBCONTEXT_IB_WICON, CRS_ANY, 0,
+     F_Circle_Up, (WmParseProc)ParseWmFuncGrpArg},
+    {"f.create_workspace", 0, CRS_ANY, 0, F_CreateWorkspace,
+     (WmParseProc)ParseWmFuncNoArg},
+    {"f.delete_workspace", 0, CRS_ANY, 0, F_DeleteWorkspace,
+     (WmParseProc)ParseWmFuncNoArg},
+    {"f.exec", 0, CRS_ANY, 0, F_Exec, (WmParseProc)ParseWmFuncStrArg},
+    {"f.focus_color", F_SUBCONTEXT_IB_IICON | F_SUBCONTEXT_IB_WICON, CRS_ANY, 0,
+     F_Focus_Color, (WmParseProc)ParseWmFuncNoArg},
+    {"f.focus_key", F_SUBCONTEXT_IB_IICON | F_SUBCONTEXT_IB_WICON, CRS_ANY, 0,
+     F_Focus_Key, (WmParseProc)ParseWmFuncNoArg},
+    {"f.goto_workspace", 0, CRS_ANY, 0, F_Goto_Workspace,
+     (WmParseProc)ParseWmFuncStrArg},
+    {"f.help", 0, CRS_ANY, 0, F_Help,
+     (WmParseProc)ParseWmFuncStrArg}, /* [helpvolume && helptopic] */
+    {"f.help_mode", 0, CRS_ANY, 0, F_Help_Mode,
+     (WmParseProc)ParseWmFuncNoArg}, /* for now */
+    {"f.kill", F_CONTEXT_ROOT, CRS_ANY, MWM_FUNC_CLOSE, F_Kill,
+     (WmParseProc)ParseWmFuncNoArg},
+    {"f.lower", F_SUBCONTEXT_IB_IICON | F_SUBCONTEXT_IB_WICON, CRS_ANY, 0,
+     F_Lower, (WmParseProc)ParseWmFuncMaybeStrArg},
+    {"f.marquee_selection",
+     F_CONTEXT_WINDOW | F_CONTEXT_ICON | F_SUBCONTEXT_IB_IICON, CRS_ANY, 0,
+     F_Marquee_Selection, (WmParseProc)ParseWmFuncNoArg},
+    {"f.maximize", F_CONTEXT_ROOT | F_CONTEXT_MAXIMIZE | F_SUBCONTEXT_IB_WICON,
+     CRS_ANY, MWM_FUNC_MAXIMIZE, F_Maximize, (WmParseProc)ParseWmFuncNoArg},
+    {"f.menu", 0, CRS_ANY, 0, F_Menu, (WmParseProc)ParseWmFuncStrArg},
+    {"f.minimize", F_CONTEXT_ICON | F_CONTEXT_ROOT | F_SUBCONTEXT_IB_IICON,
+     CRS_ANY, MWM_FUNC_MINIMIZE, F_Minimize, (WmParseProc)ParseWmFuncNoArg},
+    {"f.move", F_CONTEXT_ROOT, CRS_ANY, MWM_FUNC_MOVE, F_Move,
+     (WmParseProc)ParseWmFuncNoArg},
+    {"f.next_cmap", 0, CRS_ANY, 0, F_Next_Cmap, (WmParseProc)ParseWmFuncNoArg},
+    {"f.next_key", 0, CRS_ANY, 0, F_Next_Key, (WmParseProc)ParseWmFuncGrpArg},
+    {"f.next_workspace", 0, CRS_ANY, 0, F_Next_Workspace,
+     (WmParseProc)ParseWmFuncNoArg},
+    {"f.nop",
+     F_CONTEXT_ROOT | F_CONTEXT_ICON | F_CONTEXT_WINDOW |
+         F_SUBCONTEXT_IB_WICON | F_SUBCONTEXT_IB_IICON,
+     CRS_ANY, 0, F_Nop, (WmParseProc)ParseWmFuncNoArg},
+    {"f.normalize", F_CONTEXT_ROOT | F_CONTEXT_NORMAL | F_SUBCONTEXT_IB_WICON,
+     CRS_ANY, 0, F_Normalize, (WmParseProc)ParseWmFuncNoArg},
+    {"f.normalize_and_raise", F_CONTEXT_ROOT | F_CONTEXT_NORMAL, CRS_ANY, 0,
+     F_Normalize_And_Raise, (WmParseProc)ParseWmFuncMaybeStrArg},
+    {"f.occupy_all", F_CONTEXT_ICONBOX | F_CONTEXT_ROOT, CRS_ANY,
+     DtWM_FUNC_OCCUPY_WS, F_AddToAllWorkspaces, (WmParseProc)ParseWmFuncNoArg},
+    {"f.pack_icons", 0, CRS_ANY, 0, F_Pack_Icons,
+     (WmParseProc)ParseWmFuncNoArg},
+    {"f.pass_keys", 0, CRS_ANY, 0, F_Pass_Key, (WmParseProc)ParseWmFuncNoArg},
+    {"f.post_wmenu", 0, CRS_BUTTON | CRS_KEY, 0, F_Post_SMenu,
+     (WmParseProc)ParseWmFuncNoArg},
+    {"f.prev_cmap", 0, CRS_ANY, 0, F_Prev_Cmap, (WmParseProc)ParseWmFuncNoArg},
+    {"f.prev_key", 0, CRS_ANY, 0, F_Prev_Key, (WmParseProc)ParseWmFuncGrpArg},
+    {"f.prev_workspace", 0, CRS_ANY, 0, F_Prev_Workspace,
+     (WmParseProc)ParseWmFuncNoArg},
+    {"f.quit_mwm", F_CONTEXT_ICON | F_CONTEXT_WINDOW, CRS_ANY, 0, F_Quit_Mwm,
+     (WmParseProc)ParseWmFuncNoArg},
+    {"f.raise", F_SUBCONTEXT_IB_IICON | F_SUBCONTEXT_IB_WICON, CRS_ANY, 0,
+     F_Raise, (WmParseProc)ParseWmFuncMaybeStrArg},
+    {"f.raise_lower",
+     F_CONTEXT_ROOT | F_SUBCONTEXT_IB_IICON | F_SUBCONTEXT_IB_WICON, CRS_ANY, 0,
+     F_Raise_Lower, (WmParseProc)ParseWmFuncNoArg},
+    {"f.refresh", 0, CRS_ANY, 0, F_Refresh, (WmParseProc)ParseWmFuncNoArg},
+    {"f.refresh_win", F_CONTEXT_ICON | F_CONTEXT_ROOT, CRS_ANY, 0,
+     F_Refresh_Win, (WmParseProc)ParseWmFuncNoArg},
+    {"f.remove", F_CONTEXT_ROOT, CRS_ANY, DtWM_FUNC_OCCUPY_WS, F_Remove,
+     (WmParseProc)ParseWmFuncNoArg},
+    {"f.rename", F_CONTEXT_ROOT | F_CONTEXT_ICONBOX | F_SUBCONTEXT_IB_WICON,
+     CRS_ANY, DtWM_FUNC_OCCUPY_WS, F_Rename, (WmParseProc)ParseWmFuncNoArg},
+    {"f.resize",
+     F_CONTEXT_ICON | F_CONTEXT_ROOT | F_SUBCONTEXT_IB_IICON |
+         F_SUBCONTEXT_IB_WICON,
+     CRS_ANY, MWM_FUNC_RESIZE, F_Resize, (WmParseProc)ParseWmFuncNoArg},
+    {"f.restart", F_CONTEXT_ICON | F_CONTEXT_WINDOW, CRS_ANY, 0, F_Restart,
+     (WmParseProc)ParseWmFuncStrArg},
+    {"f.restore", F_CONTEXT_ROOT | F_CONTEXT_NORMAL | F_SUBCONTEXT_IB_WICON,
+     CRS_ANY, 0, F_Restore, (WmParseProc)ParseWmFuncNoArg},
+    {"f.restore_and_raise", F_CONTEXT_ROOT | F_CONTEXT_NORMAL, CRS_ANY, 0,
+     F_Restore_And_Raise, (WmParseProc)ParseWmFuncNoArg},
+    {"f.screen", 0, CRS_ANY, 0, F_Screen, (WmParseProc)ParseWmFuncStrArg},
+    {"f.send_msg", F_CONTEXT_ROOT, CRS_ANY, 0, F_Send_Msg,
+     (WmParseProc)ParseWmFuncNbrArg},
+    {"f.separator", 0, CRS_MENU, 0, F_Separator, (WmParseProc)ParseWmFuncNoArg},
+    {"f.set_behavior", 0, CRS_ANY, 0, F_Set_Behavior,
+     (WmParseProc)ParseWmFuncNoArg},
+    {"f.set_context", 0, CRS_ANY, 0, F_Set_Context,
+     (WmParseProc)ParseWmFuncNbrArg},
+    {"f.title", 0, CRS_MENU, 0, F_Title, (WmParseProc)ParseWmFuncNoArg},
+    {"f.toggle_frontpanel", 0, CRS_ANY, 0, F_Toggle_Front_Panel,
+     (WmParseProc)ParseWmFuncNoArg},
 
-    {"f.version",       0,
-			CRS_ANY,
-			0,
-			F_Version,
-			ParseWmFuncNoArg},
+    {"f.version", 0, CRS_ANY, 0, F_Version, (WmParseProc)ParseWmFuncNoArg},
 
 #ifdef OLD
-    {"f.workspace_presence",F_CONTEXT_ICON|F_CONTEXT_ROOT|F_CONTEXT_ICONBOX|
-                            F_SUBCONTEXT_IB_IICON|F_SUBCONTEXT_IB_WICON,
+    {
+        "f.workspace_presence",
+        F_CONTEXT_ICON | F_CONTEXT_ROOT | F_CONTEXT_ICONBOX |
+            F_SUBCONTEXT_IB_IICON | F_SUBCONTEXT_IB_WICON,
 #endif /* OLD */
-    {"f.workspace_presence", F_CONTEXT_ROOT|F_CONTEXT_ICONBOX|
-                        F_SUBCONTEXT_IB_WICON,
- 			CRS_ANY,
-			DtWM_FUNC_OCCUPY_WS,
- 			F_Workspace_Presence,
-                 	ParseWmFuncNoArg},
+        {"f.workspace_presence",
+         F_CONTEXT_ROOT | F_CONTEXT_ICONBOX | F_SUBCONTEXT_IB_WICON, CRS_ANY,
+         DtWM_FUNC_OCCUPY_WS, F_Workspace_Presence,
+         (WmParseProc)ParseWmFuncNoArg},
 #if defined(DEBUG)
-    {"f.zz_debug",	0,
-			CRS_ANY,
-			0,
-			F_ZZ_Debug,
-                        ParseWmFuncStrArg},
+        {"f.zz_debug", 0, CRS_ANY, 0, F_ZZ_Debug,
+         (WmParseProc)ParseWmFuncStrArg},
 #endif /* DEBUG */
-};
+    };
 
 /*
  * NOTE: New functions MUST be added in ALPHABETICAL order.  A binary search
  *       is used to find the correct function name.
  */
 
-#define WMFUNCTIONTABLESIZE (sizeof(functionTable)/sizeof(functionTable[0]))
+#define WMFUNCTIONTABLESIZE (sizeof(functionTable) / sizeof(functionTable[0]))
 
 /*
  * Be sure to update these define, whenever adding/deleting a function.
@@ -620,7 +424,7 @@ int F_NOP_INDEX;
 
 /******************************<->*************************************
  *
- *  void GetFunctionTableValues (int *execIndex, int *nopIndex, 
+ *  void GetFunctionTableValues (int *execIndex, int *nopIndex,
  *                               int *actionIndex)
  *
  *  Description:
@@ -631,10 +435,10 @@ int F_NOP_INDEX;
  *
  *  Inputs:
  *  ------
- *  We are setting the values of F_EXEC_INDEX, F_ACTION_INDEX, 
+ *  We are setting the values of F_EXEC_INDEX, F_ACTION_INDEX,
  *  and F_NOP_INDEX on a global level.  The addresses
  *  for same are passed in.
- * 
+ *
  *  Outputs:
  *  -------
  *
@@ -643,21 +447,16 @@ int F_NOP_INDEX;
  *  This routine calls smaller routines for efficiency sake.
  *
  ******************************<->***********************************/
-void
-GetFunctionTableValues (int *execIndex, int *nopIndex,
-		    int *actionIndex)
-{
+void GetFunctionTableValues(int *execIndex, int *nopIndex, int *actionIndex) {
 
-	GetExecIndex (WMFUNCTIONTABLESIZE, execIndex);
+  GetExecIndex(WMFUNCTIONTABLESIZE, execIndex);
 
-	GetActionIndex (WMFUNCTIONTABLESIZE, actionIndex);
+  GetActionIndex(WMFUNCTIONTABLESIZE, actionIndex);
 
-	GetNopIndex (WMFUNCTIONTABLESIZE, nopIndex);
+  GetNopIndex(WMFUNCTIONTABLESIZE, nopIndex);
 
 } /* END OF FUNCTION GetFunctionTableValues */
 
-
-
 /******************************<->*************************************
  *
 
@@ -677,26 +476,19 @@ GetFunctionTableValues (int *execIndex, int *nopIndex,
  *
  ******************************<->***********************************/
 
-void
-GetExecIndex (int tableSize, int *execIndex)
-{
-	int i;
+void GetExecIndex(int tableSize, int *execIndex) {
+  int i;
 
-	for (i = 0; i < (tableSize); i++)
-	{
-		if (!(strcmp ("f.exec", functionTable[i].funcName)))
-		{
-			*execIndex = i;
-			return;
-		}
-		else
-		{
-			*execIndex = 0;
-		}
-	}
+  for (i = 0; i < (tableSize); i++) {
+    if (!(strcmp("f.exec", functionTable[i].funcName))) {
+      *execIndex = i;
+      return;
+    } else {
+      *execIndex = 0;
+    }
+  }
 } /* END OF FUNCTION GetExecIndex */
 
-
 /******************************<->*************************************
  *
 
@@ -716,32 +508,23 @@ GetExecIndex (int tableSize, int *execIndex)
  *
  ******************************<->***********************************/
 
+void GetActionIndex(int tableSize, int *actionIndex) {
+  int i;
 
-void
-GetActionIndex (int tableSize, int *actionIndex)
-{
-	int i;
-
-	for (i = 0; i < (tableSize); i++)
-	{
-		if (!(strcmp ("f.action", functionTable[i].funcName)))
-		{
-			*actionIndex = i;
-			return;
-		}
-		else
-		{
-			*actionIndex = 0;
-		}
-	}
+  for (i = 0; i < (tableSize); i++) {
+    if (!(strcmp("f.action", functionTable[i].funcName))) {
+      *actionIndex = i;
+      return;
+    } else {
+      *actionIndex = 0;
+    }
+  }
 } /* END OF FUNCTION GetActionIndex */
 
-
-
 /******************************<->*************************************
  *
 
- * 
+ *
  *  Description:
  *  -----------
 
@@ -756,28 +539,19 @@ GetActionIndex (int tableSize, int *actionIndex)
  *  --------
  *
  ******************************<->***********************************/
-void
-GetNopIndex (int tableSize, int *nopIndex)
-{
-	int i;
+void GetNopIndex(int tableSize, int *nopIndex) {
+  int i;
 
-	for (i = 0; i < (tableSize); i++)
-	{
-		if (!(strcmp ("f.nop", functionTable[i].funcName)))
-		{
-			*nopIndex = i;
-			return;
-		}
-		else
-		{
-			*nopIndex = 0;
-		}
-	}
+  for (i = 0; i < (tableSize); i++) {
+    if (!(strcmp("f.nop", functionTable[i].funcName))) {
+      *nopIndex = i;
+      return;
+    } else {
+      *nopIndex = 0;
+    }
+  }
 } /* END OF FUNCTION GetNopIndex */
 
-
-
-
 /*************************************<->*************************************
  *
  *  void
@@ -792,7 +566,7 @@ GetNopIndex (int tableSize, int *nopIndex)
  *  Inputs:
  *  ------
 
- * 
+ *
  *  Outputs:
  *  -------
  *
@@ -800,44 +574,33 @@ GetNopIndex (int tableSize, int *nopIndex)
  *  Comments:
  *  --------
  *  None.
- * 
+ *
  *************************************<->***********************************/
-void
-WmDtGetHelpArgs(char *args, 
-		 unsigned char* volume, 
-		 unsigned char* topic, 
-		 int *argsCount)
-{
-    unsigned char *string;
-    unsigned char *lineP;
+void WmDtGetHelpArgs(char *args, unsigned char *volume, unsigned char *topic,
+                     int *argsCount) {
+  unsigned char *string;
+  unsigned char *lineP;
 
-    cfileP = NULL;
-    linec = 0;
-    parseP = (unsigned char*) args;
+  cfileP = NULL;
+  linec = 0;
+  parseP = (unsigned char *)args;
 
-    if(GetNextLine () != NULL)
-    {
-	*argsCount = 0;
-	lineP = line;
-	if ((string = GetSmartSMString (&lineP)) != NULL)
-	{
-	    *argsCount = *argsCount + 1;
-	    strcpy ((char*)topic, (char*)string);
-	}
-
-	if ((string = GetSmartSMString (&lineP)) != NULL)
-	{
-	    *argsCount = *argsCount + 1;
-	    strcpy ((char*)volume, (char *)string);
-	}
+  if (GetNextLine() != NULL) {
+    *argsCount = 0;
+    lineP = line;
+    if ((string = GetSmartSMString(&lineP)) != NULL) {
+      *argsCount = *argsCount + 1;
+      strcpy((char *)topic, (char *)string);
     }
+
+    if ((string = GetSmartSMString(&lineP)) != NULL) {
+      *argsCount = *argsCount + 1;
+      strcpy((char *)volume, (char *)string);
+    }
+  }
 
 } /* END OF FUNCTION WmDtGetHelpArgs */
 
-
-
-
-
 /******************************<->*************************************
  *
  *  void
@@ -846,7 +609,7 @@ WmDtGetHelpArgs(char *args,
  *
  *  Description:
  *  -----------
- *  This function parses a DtSessionHints string and returns a list of 
+ *  This function parses a DtSessionHints string and returns a list of
  *  DtSessionItems array.  The string should have the syntax:
  *
 
@@ -857,31 +620,28 @@ WmDtGetHelpArgs(char *args,
  *  line = (global) line buffer
  *  pSD->rootWindow = default root window of display
  *
- * 
+ *
  *  Outputs:
  *  -------
- *  Return = 
+ *  Return =
  *
  *
  *  Comments:
  *  --------
  *  None.
- * 
+ *
  *************************************<->***********************************/
 
-void 
-ParseDtSessionHints (WmScreenData *pSD, unsigned char *property)
-{
+void ParseDtSessionHints(WmScreenData *pSD, unsigned char *property) {
 
-    cfileP = NULL;
-    linec = 0;
-    parseP = property;
+  cfileP = NULL;
+  linec = 0;
+  parseP = property;
 
-    ParseSessionItems (pSD);
+  ParseSessionItems(pSD);
 
 } /* END OF FUNCTION ParseDtSessionHints */
 
-
 /*************************************<->*************************************
  *
  *  FindDtSessionMatch(commandArgc, commandArgv, pCD, pSD, pWorkSpaceList,
@@ -907,7 +667,7 @@ ParseDtSessionHints (WmScreenData *pSD, unsigned char *property)
  *  *pCD            -  client data (may be modified)
  *  FindDtSessionMatch - returns True if a match for this client
  *                        was found in the session hints.
- *  *pWorkspaceList - list of workspaces this client should be put 
+ *  *pWorkspaceList - list of workspaces this client should be put
  *                    into.  (needs to be freed)
  *
  *
@@ -917,154 +677,128 @@ ParseDtSessionHints (WmScreenData *pSD, unsigned char *property)
  *     is found.
  *
  *  The caller must free *pWorkspaceList when done.
- * 
+ *
  *************************************<->***********************************/
-Boolean FindDtSessionMatch(int commandArgc, char **commandArgv,
-			    ClientData *pCD, WmScreenData *pSD,
-			    char **pWorkSpaceList, char *clientMachine)
+Boolean FindDtSessionMatch(int commandArgc, char **commandArgv, ClientData *pCD,
+                           WmScreenData *pSD, char **pWorkSpaceList,
+                           char *clientMachine)
 
 {
-    int count;
-    int relCount;
-    int argNum;
-    SessionGeom *sessionGeom;
+  int count;
+  int relCount;
+  int argNum;
+  SessionGeom *sessionGeom;
 
+  for (count = 0; count < pSD->totalSessionItems; count++) {
+    if (!pSD->pDtSessionItems[count].processed &&
+        pSD->pDtSessionItems[count].commandArgc == commandArgc) {
+      if ((clientMachine) && (pSD->pDtSessionItems[count].clientMachine) &&
+          (strcmp(clientMachine, pSD->pDtSessionItems[count].clientMachine))) {
+        /*
+         * This item has clientMachine string but the
+         * clientMachine does not match.
+         */
+        continue;
+      }
+      for (argNum = 0; argNum < commandArgc; argNum++) {
+        if (strcmp(commandArgv[argNum],
+                   pSD->pDtSessionItems[count].commandArgv[argNum]))
 
-    for (count = 0; count < pSD->totalSessionItems; count++)
-    {
-	if (!pSD->pDtSessionItems[count].processed &&
-            pSD->pDtSessionItems[count].commandArgc == commandArgc)
-	{
-	    if ((clientMachine) &&
-		(pSD->pDtSessionItems[count].clientMachine) &&
-		(strcmp(clientMachine, 
-			pSD->pDtSessionItems[count].clientMachine)))
-	    {
-		/*
-		 * This item has clientMachine string but the 
-		 * clientMachine does not match.
-		 */
-		continue;
-	    }
-            for (argNum = 0; argNum < commandArgc ; argNum++)
-            {
-                if(strcmp(commandArgv[argNum],
-                          pSD->pDtSessionItems[count].commandArgv[argNum]))
+        {
+          /*
+           * One mismatch and we quit looking at this item.
+           * Decrement argNum so a mismatch on the last item
+           * will not look like a match below when comparing
+           * argNum == commandArgc
+           */
+          argNum--;
+          break;
+        }
+      }
+      if (argNum == commandArgc) {
+        /*
+         * Made it through all strings so this is a match
+         */
 
-                {
-                    /*
-                     * One mismatch and we quit looking at this item.
-		     * Decrement argNum so a mismatch on the last item
-		     * will not look like a match below when comparing
-		     * argNum == commandArgc
-                     */
-		    argNum--;
-                    break;
-                }
-	    }		
-            if (argNum == commandArgc)
-            {
-                /*
-                 * Made it through all strings so this is a match
-                 */
-		
-                pSD->pDtSessionItems[count].processed = True;
-                pSD->remainingSessionItems --;
-                pCD->clientFlags |= SM_LAUNCHED;
-		
-		/*
-		 * Free strings malloc'd for commandArgv for this item 
-		 */
-		
-		for (relCount = 0; relCount < commandArgc; relCount++)
-		{
-		    XtFree(pSD->pDtSessionItems[count].commandArgv[relCount]);
-		}
-		XtFree((char *)pSD->pDtSessionItems[count].commandArgv);
+        pSD->pDtSessionItems[count].processed = True;
+        pSD->remainingSessionItems--;
+        pCD->clientFlags |= SM_LAUNCHED;
 
-                if(pSD->pDtSessionItems[count].clientState)
-                {
-                    pCD->clientState =
-                        pSD->pDtSessionItems[count].clientState;
-		    pCD->clientFlags |= SM_CLIENT_STATE;
-                }
-		
-                if(pSD->pDtSessionItems[count].sessionGeom)
-                {
-                    sessionGeom = pSD->pDtSessionItems[count].sessionGeom;
-                    if (sessionGeom->flags & XValue)
-                    {
-                        pCD->clientX = sessionGeom->clientX;
-			pCD->clientFlags |= SM_X;
-                    }
-                    if (sessionGeom->flags & YValue)
-                    {
-                        pCD->clientY = sessionGeom->clientY;
-			pCD->clientFlags |= SM_Y;
-                    }
-                    if (sessionGeom->flags & WidthValue)
-                    {
-                        pCD->clientWidth = sessionGeom->clientWidth;
-			pCD->clientFlags |= SM_WIDTH;
-                    }
-                    if (sessionGeom->flags & HeightValue)
-                    {
-                        pCD->clientHeight = sessionGeom->clientHeight;
-			pCD->clientFlags |= SM_HEIGHT;
-                    }
+        /*
+         * Free strings malloc'd for commandArgv for this item
+         */
 
-		    /*
-		     * Free SessionGeom malloc'd space for this item 
-		     */
-		    
-		    XtFree((char *)pSD->pDtSessionItems[count].sessionGeom); 
-                }
+        for (relCount = 0; relCount < commandArgc; relCount++) {
+          XtFree(pSD->pDtSessionItems[count].commandArgv[relCount]);
+        }
+        XtFree((char *)pSD->pDtSessionItems[count].commandArgv);
 
-                if(pSD->pDtSessionItems[count].clientMachine)
-                {
-		    /*
-		     * Free clientMachine malloc'd space for this item 
-		     */
-		    
-		    XtFree((char *)
-			   pSD->pDtSessionItems[count].clientMachine); 
-		    pSD->pDtSessionItems[count].clientMachine = NULL;
-                }
-		
-		
-                if(pSD->pDtSessionItems[count].workspaces)
-                {
-		    /*
-		     * The caller is responsible for freeing this
-		     * data.
-		     */
-		    *pWorkSpaceList = pSD->pDtSessionItems[count].workspaces;
-                }
+        if (pSD->pDtSessionItems[count].clientState) {
+          pCD->clientState = pSD->pDtSessionItems[count].clientState;
+          pCD->clientFlags |= SM_CLIENT_STATE;
+        }
 
+        if (pSD->pDtSessionItems[count].sessionGeom) {
+          sessionGeom = pSD->pDtSessionItems[count].sessionGeom;
+          if (sessionGeom->flags & XValue) {
+            pCD->clientX = sessionGeom->clientX;
+            pCD->clientFlags |= SM_X;
+          }
+          if (sessionGeom->flags & YValue) {
+            pCD->clientY = sessionGeom->clientY;
+            pCD->clientFlags |= SM_Y;
+          }
+          if (sessionGeom->flags & WidthValue) {
+            pCD->clientWidth = sessionGeom->clientWidth;
+            pCD->clientFlags |= SM_WIDTH;
+          }
+          if (sessionGeom->flags & HeightValue) {
+            pCD->clientHeight = sessionGeom->clientHeight;
+            pCD->clientFlags |= SM_HEIGHT;
+          }
 
-		if(pSD->remainingSessionItems == 0)
-		{
-		    /*
-		     * Free the whole pSD->pDtSessionHints structure 
-		     */
-		    XtFree((char *)pSD->pDtSessionItems);
-		}
-		
-		return (True);
-            }
+          /*
+           * Free SessionGeom malloc'd space for this item
+           */
 
-        } /* not processed and argc's are the same */
+          XtFree((char *)pSD->pDtSessionItems[count].sessionGeom);
+        }
 
-    } /* for */
-    
-    return (False);
-    
+        if (pSD->pDtSessionItems[count].clientMachine) {
+          /*
+           * Free clientMachine malloc'd space for this item
+           */
+
+          XtFree((char *)pSD->pDtSessionItems[count].clientMachine);
+          pSD->pDtSessionItems[count].clientMachine = NULL;
+        }
+
+        if (pSD->pDtSessionItems[count].workspaces) {
+          /*
+           * The caller is responsible for freeing this
+           * data.
+           */
+          *pWorkSpaceList = pSD->pDtSessionItems[count].workspaces;
+        }
+
+        if (pSD->remainingSessionItems == 0) {
+          /*
+           * Free the whole pSD->pDtSessionHints structure
+           */
+          XtFree((char *)pSD->pDtSessionItems);
+        }
+
+        return (True);
+      }
+
+    } /* not processed and argc's are the same */
+
+  } /* for */
+
+  return (False);
+
 } /* END OF FUNCTION FindDtSessionMatch */
 
-
-
-
-
 /*************************************<->*************************************
  *
  *  void
@@ -1085,7 +819,7 @@ Boolean FindDtSessionMatch(int commandArgc, char **commandArgv,
  *  parseP = (global) parse string pointer if cfileP == NULL
  *  pSD->rootWindow = default root window of display
 
- * 
+ *
  *  Outputs:
  *  -------
  *  linec  = (global) line count incremented
@@ -1095,104 +829,85 @@ Boolean FindDtSessionMatch(int commandArgc, char **commandArgv,
  *  Comments:
  *  --------
  *  None.
- * 
+ *
  *************************************<->***********************************/
 
-void
-ParseSessionItems (WmScreenData *pSD)
-{
-    unsigned char *string;
-    unsigned char *lineP;
-    int count;
+void ParseSessionItems(WmScreenData *pSD) {
+  unsigned char *string;
+  unsigned char *lineP;
+  int count;
 
-    
+  /*
+   * Parse property string
+   */
+
+  if (GetNextLine() != NULL) {
+    pSD->totalSessionItems = atoi((char *)line);
+    pSD->remainingSessionItems = pSD->totalSessionItems;
+  }
+
+  if ((pSD->totalSessionItems < 1) ||
+      !GetSessionHintsInfo(pSD, pSD->totalSessionItems)) {
     /*
-     * Parse property string
+     * No items or couldn't allocate space
      */
+    return;
+  }
 
-    
+  count = 0;
 
-    if(GetNextLine () != NULL)
-    {
-       	pSD->totalSessionItems = atoi((char *)line);
-	pSD->remainingSessionItems = pSD->totalSessionItems;
-    }
-    
+  while ((count < pSD->totalSessionItems) && (GetNextLine() != NULL)) {
 
-    if((pSD->totalSessionItems < 1) ||
-       !GetSessionHintsInfo(pSD, pSD->totalSessionItems))
-    {
-	/*
-	 * No items or couldn't allocate space
-	 */
-	return;
-    }
-    
-    count = 0;
+    lineP = line;
+    while ((string = GetSmartSMString(&lineP)) != NULL) {
+      if (!strcmp((char *)string, "-geometry")) {
+        /*
+         * Parse geometry if it is present
+         */
+        string = GetSmartSMString(&lineP);
+        ParseSessionGeometry(pSD, count, string);
+      }
 
-    while ((count < pSD->totalSessionItems) && (GetNextLine () != NULL))
-    {
+      else if (!strcmp((char *)string, "-state")) {
+        /*
+         * Parse the state if it is present
+         */
+        string = GetSmartSMString(&lineP);
+        ParseSessionClientState(pSD, count, string);
+      }
 
-	lineP = line;
-	while ((string = GetSmartSMString (&lineP)) != NULL)
-	{
-	    if (!strcmp((char *)string, "-geometry"))
-	    {
-		/*
-		 * Parse geometry if it is present
-		 */
-		string = GetSmartSMString(&lineP);
-		ParseSessionGeometry (pSD, count, string);
-	    }
-	    
-	    else if (!strcmp((char *)string, "-state"))
-	    {
-		/*
-		 * Parse the state if it is present
-		 */
-		string = GetSmartSMString(&lineP);
-		ParseSessionClientState (pSD, count, string);
-	    }
+      else if (!strcmp((char *)string, "-workspaces")) {
+        /*
+         * Parse the workspaces string if it is present
+         */
+        string = GetSmartSMString(&lineP);
+        ParseSessionWorkspaces(pSD, count, string);
+      }
 
-	    else if (!strcmp((char *)string, "-workspaces"))	    
-	    {
-		/*
-		 * Parse the workspaces string if it is present
-		 */
-		string = GetSmartSMString(&lineP);
-		ParseSessionWorkspaces (pSD, count, string);
-	    }	    
+      else if (!strcmp((char *)string, "-cmd")) {
+        /*
+         * Parse the command string if it is present
+         */
+        string = GetSmartSMString(&lineP);
+        ParseSessionCommand(pSD, count, &string);
+      }
 
-	    else if (!strcmp((char *)string, "-cmd"))	    
-	    {
-		/*
-		 * Parse the command string if it is present
-		 */
-		string = GetSmartSMString(&lineP);
-		ParseSessionCommand (pSD, count, &string);
-	    }
-	    
-	    else if (!strcmp((char *)string, "-host"))	    
-	    {
-		/*
-		 * Parse the host string if it is present
-		 */
-		string = GetSmartSMString(&lineP);
-		ParseSessionHost (pSD, count, string);
-	    }
-	    
-	} /* while GetSmartSMString */
-	
-	count++;
+      else if (!strcmp((char *)string, "-host")) {
+        /*
+         * Parse the host string if it is present
+         */
+        string = GetSmartSMString(&lineP);
+        ParseSessionHost(pSD, count, string);
+      }
 
-    } /* while GetNextLine */
-    
+    } /* while GetSmartSMString */
 
+    count++;
+
+  } /* while GetNextLine */
 
 } /* END OF FUNCTION ParseSessionItems */
 
-
-
 /*************************************<->*************************************
  *
  *  ParseSessionClientState (pSD, count, string);
@@ -1207,26 +922,19 @@ ParseSessionItems (WmScreenData *pSD)
  *  --------
  *
  *************************************<->***********************************/
-void ParseSessionClientState (WmScreenData *pSD, int count,
-			      unsigned char *string)
-
-
+void ParseSessionClientState(WmScreenData *pSD, int count,
+                             unsigned char *string)
 
 {
 
-    if(!strcmp((char *)string, "NormalState"))
-    {
-	pSD->pDtSessionItems[count].clientState = NORMAL_STATE;
-    }
-    else if(!strcmp((char *)string, "IconicState"))
-    {
-	pSD->pDtSessionItems[count].clientState = MINIMIZED_STATE;
-    }
-    
+  if (!strcmp((char *)string, "NormalState")) {
+    pSD->pDtSessionItems[count].clientState = NORMAL_STATE;
+  } else if (!strcmp((char *)string, "IconicState")) {
+    pSD->pDtSessionItems[count].clientState = MINIMIZED_STATE;
+  }
 
 } /* END OF FUNCTION ParseSessionClientState */
 
-
 /*************************************<->*************************************
  *
  *  ParseSessionGeometry (pSD, count, string)
@@ -1241,47 +949,43 @@ void ParseSessionClientState (WmScreenData *pSD, int count,
  *  --------
  *
  *************************************<->***********************************/
-void ParseSessionGeometry (WmScreenData *pSD, int count,
-			   unsigned char *string)
+void ParseSessionGeometry(WmScreenData *pSD, int count, unsigned char *string)
 
 {
-    SessionGeom *pTmpSessionGeom;
-    int mask /* = 0 */;
-    int X, Y, width, height;
-    X = Y = width = height = 0;
-    
+  SessionGeom *pTmpSessionGeom;
+  int mask /* = 0 */;
+  int X, Y, width, height;
+  X = Y = width = height = 0;
+
+  /*
+   *  XParseGeometry
+   */
+
+  mask = XParseGeometry((char *)string, &X, &Y, (unsigned int *)&width,
+                        (unsigned int *)&height);
+  if (mask) {
     /*
-     *  XParseGeometry
+     * Allocate space for the geometry structure
      */
 
-    mask = XParseGeometry((char *)string, &X, &Y, (unsigned int *)&width, 
-			  (unsigned int *)&height);
-    if (mask)
-    {
-	/*
-	 * Allocate space for the geometry structure
-	 */
-
-	if ((pTmpSessionGeom = 
-	     (SessionGeom *)XtMalloc (sizeof (SessionGeom))) == NULL)
-	{
-	    Warning (((char *)GETMESSAGE(60, 1, "Insufficient memory for session geometry item")));
-	    return;
-
-	}
-
-	pTmpSessionGeom->flags = mask;
-	pTmpSessionGeom->clientX = X;
-	pTmpSessionGeom->clientY = Y;
-	pTmpSessionGeom->clientWidth = width;
-	pTmpSessionGeom->clientHeight = height;
-
-	pSD->pDtSessionItems[count].sessionGeom = pTmpSessionGeom;
+    if ((pTmpSessionGeom = (SessionGeom *)XtMalloc(sizeof(SessionGeom))) ==
+        NULL) {
+      Warning(((char *)GETMESSAGE(
+          60, 1, "Insufficient memory for session geometry item")));
+      return;
     }
-    
+
+    pTmpSessionGeom->flags = mask;
+    pTmpSessionGeom->clientX = X;
+    pTmpSessionGeom->clientY = Y;
+    pTmpSessionGeom->clientWidth = width;
+    pTmpSessionGeom->clientHeight = height;
+
+    pSD->pDtSessionItems[count].sessionGeom = pTmpSessionGeom;
+  }
+
 } /* END OF FUNCTION  ParseSessionGeometry */
 
-
 /*************************************<->*************************************
  *
  * void
@@ -1297,29 +1001,25 @@ void ParseSessionGeometry (WmScreenData *pSD, int count,
  *  --------
  *
  *************************************<->***********************************/
-void ParseSessionWorkspaces (WmScreenData *pSD,  int count,
-			     unsigned char *string)
+void ParseSessionWorkspaces(WmScreenData *pSD, int count, unsigned char *string)
 
 {
 
-    /*
-     * Allocate space for the workspaces string
-     */
+  /*
+   * Allocate space for the workspaces string
+   */
 
-    if ((pSD->pDtSessionItems[count].workspaces =
-         (String)XtMalloc ((unsigned int) (strlen((char *)string) + 1))) == NULL)
-    {
-        Warning (((char *)GETMESSAGE(60, 2, "Insufficient memory for workspaces list in session item")));
-        return;
+  if ((pSD->pDtSessionItems[count].workspaces = (String)XtMalloc(
+           (unsigned int)(strlen((char *)string) + 1))) == NULL) {
+    Warning(((char *)GETMESSAGE(
+        60, 2, "Insufficient memory for workspaces list in session item")));
+    return;
+  }
 
-    }
+  strcpy(pSD->pDtSessionItems[count].workspaces, (char *)string);
 
-    strcpy(pSD->pDtSessionItems[count].workspaces, (char *)string);
-    
 } /* END OF FUNCTION ParseSessionWorkspaces */
 
-
-
 /*************************************<->*************************************
  *
  * void
@@ -1335,72 +1035,61 @@ void ParseSessionWorkspaces (WmScreenData *pSD,  int count,
  *  --------
  *
  *************************************<->***********************************/
-void ParseSessionCommand (WmScreenData *pSD,  int count,
-			  unsigned char **commandString)
-{
-#define ARG_AMT	100
-    int xindex;
-    unsigned char **argv;
-    int  argc = 0;
-    int  iSizeArgv;
-    
-    unsigned char *string;
-    
-    argv = (unsigned char **) XtMalloc (ARG_AMT * sizeof(char *));
-    iSizeArgv = ARG_AMT;
-    
-    while ((string = GetSmartSMString (commandString)) != NULL)
-    {
-        /*
-         * Get pointers to strings in command line and count them
-         */
-        argv[argc] = string;
-        argc ++;
+void ParseSessionCommand(WmScreenData *pSD, int count,
+                         unsigned char **commandString) {
+#define ARG_AMT 100
+  int xindex;
+  unsigned char **argv;
+  int argc = 0;
+  int iSizeArgv;
 
-	if (argc >= iSizeArgv)
-	{
-	    iSizeArgv += ARG_AMT;
-	    argv = (unsigned char **) 
-		   XtRealloc ((char *)argv, (iSizeArgv * sizeof(char *)));
-	}
-    }
-    if ((pSD->pDtSessionItems[count].commandArgv =
-         (char **)XtMalloc ((argc) * sizeof(char * ))) == NULL)
-    {
-        /*
-         * Allocate space for saved argv
-         */
-	
-        Warning (((char *)GETMESSAGE(60, 3, "Insufficient memory for commandArgv array")));
-    }
-    else
-    {
-        pSD->pDtSessionItems[count].commandArgc = argc;
-        for (xindex = 0; xindex < argc ; xindex++)
-        {
-            if ((pSD->pDtSessionItems[count].commandArgv[xindex] =
-                 (String) XtMalloc
-                 ((unsigned int) (strlen((char *)argv[xindex]) + 1))) == NULL)
-            {
-                /*
-                 * Allocate space for the next command segment.
-                 */
-                Warning (((char *)GETMESSAGE(60, 4, "Insufficient memory for commandArgv item")));
-            }
-            else
-            {
-                strcpy(pSD->pDtSessionItems[count].commandArgv[xindex],
-                       (char *)argv[xindex]);
-            }
-        }
-    }
+  unsigned char *string;
 
-    XtFree ((char *) argv);
-    
+  argv = (unsigned char **)XtMalloc(ARG_AMT * sizeof(char *));
+  iSizeArgv = ARG_AMT;
+
+  while ((string = GetSmartSMString(commandString)) != NULL) {
+    /*
+     * Get pointers to strings in command line and count them
+     */
+    argv[argc] = string;
+    argc++;
+
+    if (argc >= iSizeArgv) {
+      iSizeArgv += ARG_AMT;
+      argv = (unsigned char **)XtRealloc((char *)argv,
+                                         (iSizeArgv * sizeof(char *)));
+    }
+  }
+  if ((pSD->pDtSessionItems[count].commandArgv =
+           (char **)XtMalloc((argc) * sizeof(char *))) == NULL) {
+    /*
+     * Allocate space for saved argv
+     */
+
+    Warning(((char *)GETMESSAGE(60, 3,
+                                "Insufficient memory for commandArgv array")));
+  } else {
+    pSD->pDtSessionItems[count].commandArgc = argc;
+    for (xindex = 0; xindex < argc; xindex++) {
+      if ((pSD->pDtSessionItems[count].commandArgv[xindex] = (String)XtMalloc(
+               (unsigned int)(strlen((char *)argv[xindex]) + 1))) == NULL) {
+        /*
+         * Allocate space for the next command segment.
+         */
+        Warning(((char *)GETMESSAGE(
+            60, 4, "Insufficient memory for commandArgv item")));
+      } else {
+        strcpy(pSD->pDtSessionItems[count].commandArgv[xindex],
+               (char *)argv[xindex]);
+      }
+    }
+  }
+
+  XtFree((char *)argv);
+
 } /* END OF FUNCTION ParseSessionCommand */
 
-
-
 /*************************************<->*************************************
  *
  * void
@@ -1416,30 +1105,25 @@ void ParseSessionCommand (WmScreenData *pSD,  int count,
  *  --------
  *
  *************************************<->***********************************/
-void ParseSessionHost (WmScreenData *pSD,  int count,
-			     unsigned char *string)
+void ParseSessionHost(WmScreenData *pSD, int count, unsigned char *string)
 
 {
 
-    /*
-     * Allocate space for the workspaces string
-     */
+  /*
+   * Allocate space for the workspaces string
+   */
 
-    if ((pSD->pDtSessionItems[count].clientMachine =
-         (String)XtMalloc ((unsigned int) (strlen((char *)string) + 1))) == 
-	NULL)
-    {
-        Warning (((char *)GETMESSAGE(60, 38, 
-		"Insufficient memory for host name in session item")));
-        return;
-    }
+  if ((pSD->pDtSessionItems[count].clientMachine = (String)XtMalloc(
+           (unsigned int)(strlen((char *)string) + 1))) == NULL) {
+    Warning(((char *)GETMESSAGE(
+        60, 38, "Insufficient memory for host name in session item")));
+    return;
+  }
 
-    strcpy(pSD->pDtSessionItems[count].clientMachine, (char *)string);
-    
+  strcpy(pSD->pDtSessionItems[count].clientMachine, (char *)string);
+
 } /* END OF FUNCTION ParseSessionHost */
 
-
-
 /*************************************<->*************************************
  *
  *  GetSessionHintsInfo (pSD, numItems)
@@ -1454,29 +1138,23 @@ void ParseSessionHost (WmScreenData *pSD,  int count,
  *  --------
  *
  *************************************<->***********************************/
-Boolean GetSessionHintsInfo (WmScreenData *pSD, long numItems)
+Boolean GetSessionHintsInfo(WmScreenData *pSD, long numItems)
 
 {
-   
-    if ((pSD->pDtSessionItems =
-	 (DtSessionItem *)XtMalloc (numItems * sizeof (DtSessionItem)))
-        == NULL)
-    {
-        Warning (((char *)GETMESSAGE(60, 5, "Insufficient memory for Dt Session Hints")));
-        return(False);
-    }
-    
-    memset ((char *)pSD->pDtSessionItems, 0,
-	    numItems * sizeof (DtSessionItem));
 
-    return(True);
-    
-    
-} /* END OF FUNCTION  GetSessionHintsInfo  */ 
+  if ((pSD->pDtSessionItems = (DtSessionItem *)XtMalloc(
+           numItems * sizeof(DtSessionItem))) == NULL) {
+    Warning((
+        (char *)GETMESSAGE(60, 5, "Insufficient memory for Dt Session Hints")));
+    return (False);
+  }
 
+  memset((char *)pSD->pDtSessionItems, 0, numItems * sizeof(DtSessionItem));
 
+  return (True);
 
-
+} /* END OF FUNCTION  GetSessionHintsInfo  */
+
 /*************************************<->*************************************
  *
  *  PeekAhead (currentChar, currentLev)
@@ -1493,7 +1171,7 @@ Boolean GetSessionHintsInfo (WmScreenData *pSD, long numItems)
  *  currentChar = current position in the string
  *  currentLev = current level of nesting
  *
- * 
+ *
  *  Outputs:
  *  -------
  *  Returns either a new level of nesting or zero if the character is copied in
@@ -1501,53 +1179,42 @@ Boolean GetSessionHintsInfo (WmScreenData *pSD, long numItems)
  *
  *  Comments:
  *  --------
- * 
+ *
  *************************************<->***********************************/
-unsigned int PeekAhead(unsigned char *currentChar,
-		       unsigned int currentLev)
-
+unsigned int PeekAhead(unsigned char *currentChar, unsigned int currentLev)
 
 {
-    Boolean		done = False;
-    unsigned int 	tmpLev = 1;
-    unsigned int	chlen;
+  Boolean done = False;
+  unsigned int tmpLev = 1;
+  unsigned int chlen;
 
-    while (((chlen = mblen ((char *)currentChar, MB_CUR_MAX)) > 0) &&
-	   (chlen == 1) && ((*currentChar == '"') || (*currentChar == '\\'))
-	   && (done == False))
-    {
-	currentChar++;
+  while (((chlen = mblen((char *)currentChar, MB_CUR_MAX)) > 0) &&
+         (chlen == 1) && ((*currentChar == '"') || (*currentChar == '\\')) &&
+         (done == False)) {
+    currentChar++;
 
-	if(((chlen = mblen ((char *)currentChar, MB_CUR_MAX)) > 0) && (chlen == 1) &&
-	   ((*currentChar == '"') || (*currentChar == '\\')))
-	{
-	    tmpLev++;
-	    if(*currentChar == '"')
-	    {
-		done = True;
-	    }
-	    else
-	    {
-		currentChar++;
-	    }
-	}
+    if (((chlen = mblen((char *)currentChar, MB_CUR_MAX)) > 0) &&
+        (chlen == 1) && ((*currentChar == '"') || (*currentChar == '\\'))) {
+      tmpLev++;
+      if (*currentChar == '"') {
+        done = True;
+      } else {
+        currentChar++;
+      }
     }
+  }
 
-    /*
-     * Figure out if this is truly a new level of nesting - else ignore it
-     * This section probably could do some error checking and return -1
-	 * If so, change type of routine from unsigned int to int
-     */
-    if(done == True)
-    {
-	return(tmpLev);
-    }
-    else
-    {
-	return(0);
-    }
+  /*
+   * Figure out if this is truly a new level of nesting - else ignore it
+   * This section probably could do some error checking and return -1
+   * If so, change type of routine from unsigned int to int
+   */
+  if (done == True) {
+    return (tmpLev);
+  } else {
+    return (0);
+  }
 } /* END OF FUNCTION PeekAhead */
-
 
 /*************************************<->*************************************
  *
@@ -1560,7 +1227,7 @@ unsigned int PeekAhead(unsigned char *currentChar,
  *
  *  Inputs:
  *  ------
- *  fileName 
+ *  fileName
  *
  *  Outputs:
  *  -------
@@ -1568,43 +1235,34 @@ unsigned int PeekAhead(unsigned char *currentChar,
  *
  *  Comments:
  *  --------
- * 
+ *
  *************************************<->***********************************/
-void SyncModifierStrings(void)
-{
-    XModifierKeymap *map;
-    int i, j, k = 0;
+void SyncModifierStrings(void) {
+  XModifierKeymap *map;
+  int i, j, k = 0;
 
-    map = XGetModifierMapping (DISPLAY);
+  map = XGetModifierMapping(DISPLAY);
 
-    for (i = 0; i < 8; i++)
-    {
-	for (j = 0; j < map->max_keypermod; j++)
-	{
-	    if (map->modifiermap[k])
-	    {
-		KeySym ks = XKeycodeToKeysym(DISPLAY, map->modifiermap[k], 0);
-		char *nm = XKeysymToString(ks);
+  for (i = 0; i < 8; i++) {
+    for (j = 0; j < map->max_keypermod; j++) {
+      if (map->modifiermap[k]) {
+        KeySym ks = XkbKeycodeToKeysym(DISPLAY, map->modifiermap[k], 0, 0);
+        char *nm = XKeysymToString(ks);
 
-		/* Compare, ignoring the trailing '_L' or '_R' in keysym */
-		if (nm && !strncmp("Alt", nm, 3))
-		{
-		    modifierStrings[ALT_INDEX].mask = (1<<i);
-		}
-		else if (nm && !strncmp("Meta", nm, 4))
-		{
-		    modifierStrings[META_INDEX].mask = (1<<i);
-		}
-	    }
-	    k++;
-	}
+        /* Compare, ignoring the trailing '_L' or '_R' in keysym */
+        if (nm && !strncmp("Alt", nm, 3)) {
+          modifierStrings[ALT_INDEX].mask = (1 << i);
+        } else if (nm && !strncmp("Meta", nm, 4)) {
+          modifierStrings[META_INDEX].mask = (1 << i);
+        }
+      }
+      k++;
     }
+  }
 
-    XFreeModifiermap(map);
+  XFreeModifiermap(map);
 }
 
-
-
 /*************************************<->*************************************
  *
  *  ProcessWmFile ()
@@ -1626,7 +1284,7 @@ void SyncModifierStrings(void)
  *  HOME = environment variable for home directory
  *  functionTable = window manager function parse table
  *
- * 
+ *
  *  Outputs:
  *  -------
  *  wmGD.buttonSpecs = list of button binding specifications
@@ -1640,30 +1298,29 @@ void SyncModifierStrings(void)
  *  --------
  * If there are more than MAXLINE characters on a line the excess characters
  * are truncated.
- * 
+ *
  *************************************<->***********************************/
-#define MENU_SPEC	"menu"
-#define BUTTON_SPEC	"buttons"
-#define KEY_SPEC	"keys"
+#define MENU_SPEC "menu"
+#define BUTTON_SPEC "buttons"
+#define KEY_SPEC "keys"
 #define FRONT_PANEL_SPEC DTWM_FP_PANEL_OLD
-#define DROP_EFFECTS_SPEC   DTWM_FP_DROP_EFFECTS
-#define PANEL_SPEC	DTWM_FP_PANEL
-#define BOX_SPEC	DTWM_FP_BOX
-#define CONTROL_SPEC	DTWM_FP_CONTROL
-#define INCLUDE_SPEC	DTWM_FP_INCLUDE
-#define ANIMATION_SPEC	DTWM_FP_ANIMATION
-#define SWITCH_SPEC	DTWM_FP_SWITCH
+#define DROP_EFFECTS_SPEC DTWM_FP_DROP_EFFECTS
+#define PANEL_SPEC DTWM_FP_PANEL
+#define BOX_SPEC DTWM_FP_BOX
+#define CONTROL_SPEC DTWM_FP_CONTROL
+#define INCLUDE_SPEC DTWM_FP_INCLUDE
+#define ANIMATION_SPEC DTWM_FP_ANIMATION
+#define SWITCH_SPEC DTWM_FP_SWITCH
 
-void ProcessWmFile (WmScreenData *pSD, Boolean bNested)
+void ProcessWmFile(WmScreenData *pSD, Boolean bNested)
 
 {
-    unsigned char *lineP;
-    unsigned char *string;
-    unsigned int   n;
-    MenuSpec      *menuSpec;
+  unsigned char *lineP;
+  unsigned char *string;
+  unsigned int n;
+  MenuSpec *menuSpec;
 
-    if (!bNested)
-    {
+  if (!bNested) {
 
     /*
      * Initialize global data values that are set based on data in
@@ -1675,122 +1332,105 @@ void ProcessWmFile (WmScreenData *pSD, Boolean bNested)
     pSD->menuSpecs = NULL;
 
     /**** hhhhhhhhhhhh   ******/
-    GetFunctionTableValues (&F_EXEC_INDEX, &F_NOP_INDEX, &F_ACTION_INDEX);
+    GetFunctionTableValues(&F_EXEC_INDEX, &F_NOP_INDEX, &F_ACTION_INDEX);
     /*
      * Find and parse the default system menu string, if it exists.
      */
 
     cfileP = NULL;
     linec = 0;
-    if (((parseP = (unsigned char *) builtinSystemMenu) != NULL) && 
-	 (GetNextLine () != NULL))
-    {
-	lineP = line;
-        ParseMenuSet (pSD, lineP);
+    if (((parseP = (unsigned char *)builtinSystemMenu) != NULL) &&
+        (GetNextLine() != NULL)) {
+      lineP = line;
+      ParseMenuSet(pSD, lineP);
     }
 
     linec = 0;
-    if (((parseP = (unsigned char *) builtinRootMenu) != NULL) && 
-	 (GetNextLine () != NULL))
-    {
-	lineP = line;
-        ParseMenuSet (pSD, lineP);
+    if (((parseP = (unsigned char *)builtinRootMenu) != NULL) &&
+        (GetNextLine() != NULL)) {
+      lineP = line;
+      ParseMenuSet(pSD, lineP);
     }
-    if (wmGD.useFrontPanel &&  !wmGD.dtSD &&
-	(XDefaultScreen (wmGD.display) == pSD->screen))
-    {
-        wmGD.dtSD = pSD;  /* only one per display */
+    if (wmGD.useFrontPanel && !wmGD.dtSD &&
+        (XDefaultScreen(wmGD.display) == pSD->screen)) {
+      wmGD.dtSD = pSD; /* only one per display */
     }
 
     /*
-     * Find and associate a stream with the window manager resource 
+     * Find and associate a stream with the window manager resource
      *   description file.
      */
 
-    if ((cfileP = FopenConfigFile ()) == NULL)
-    {
-	if (!wmGD.useStandardBehavior)
-	  Warning (((char *)GETMESSAGE(60, 6, "Cannot open configuration file")));
-	return;
+    if ((cfileP = FopenConfigFile()) == NULL) {
+      if (!wmGD.useStandardBehavior)
+        Warning(((char *)GETMESSAGE(60, 6, "Cannot open configuration file")));
+      return;
     }
 
-    }  /* end if (!bNested) */
-    /*
-     * Parse the information in the configuration file.
-     * If there are more than MAXLINE characters on a line the excess are
-     *   truncated.
-     */
+  } /* end if (!bNested) */
+  /*
+   * Parse the information in the configuration file.
+   * If there are more than MAXLINE characters on a line the excess are
+   *   truncated.
+   */
 
-    linec = 0;
-    while ((GetNextLine () != NULL))  /* not EOF nor read error */
+  linec = 0;
+  while ((GetNextLine() != NULL)) /* not EOF nor read error */
+  {
+    lineP = line;
+    if ((*line == '!') || (string = GetString(&lineP)) == NULL)
+    /* empty or comment line */
     {
-	lineP = line;
-	if ((*line == '!') || (string = GetString (&lineP)) == NULL)
-	/* empty or comment line */
-	{
-	    continue;
-	}
-
-	ToLower ((char *)string);
-	if (!strcmp ((char *)string, MENU_SPEC))
-	{
-	    ParseMenuSet (pSD, lineP);
-	}
-	else if (!strcmp ((char *) string, BUTTON_SPEC))
-	{
-	    ParseButtonSet (pSD, lineP);
-	}
-	else if (!strcmp ((char *) string, KEY_SPEC))
-	{
-	    ParseKeySet (pSD, lineP);
-	}
-        else if (!strcmp ((char *)string, INCLUDE_SPEC))
-        {
-            ParseIncludeSet (pSD, lineP);
-        }
+      continue;
     }
 
-    fclose (cfileP);
-
-    /*
-     * Create and initialize the pSD->acceleratorMenuSpecs array.
-     * This assumes we create pointers to MenuSpecs within ProcessWmFile().
-     * Set pSD->acceleratorMenuCount to 0.
-     */
-
-    /* count the number of menu specifications */
-    n = 0;
-    menuSpec = pSD->menuSpecs;
-    while (menuSpec)
-    {
-	n++;
-	menuSpec = menuSpec->nextMenuSpec;
+    ToLower((char *)string);
+    if (!strcmp((char *)string, MENU_SPEC)) {
+      ParseMenuSet(pSD, lineP);
+    } else if (!strcmp((char *)string, BUTTON_SPEC)) {
+      ParseButtonSet(pSD, lineP);
+    } else if (!strcmp((char *)string, KEY_SPEC)) {
+      ParseKeySet(pSD, lineP);
+    } else if (!strcmp((char *)string, INCLUDE_SPEC)) {
+      ParseIncludeSet(pSD, lineP);
     }
+  }
 
-    /* allocate the array and initialize to zeros */
-    pSD->acceleratorMenuSpecs = NULL;
-    if (n)
-    {
-        pSD->acceleratorMenuSpecs = 
-	    (MenuSpec **) XtCalloc (n, sizeof (MenuSpec *));
-        if (pSD->acceleratorMenuSpecs == NULL)
-        {
-            Warning (((char *)GETMESSAGE(60, 7, "Insufficient memory for menu accelerators")));
-        }
+  fclose(cfileP);
+
+  /*
+   * Create and initialize the pSD->acceleratorMenuSpecs array.
+   * This assumes we create pointers to MenuSpecs within ProcessWmFile().
+   * Set pSD->acceleratorMenuCount to 0.
+   */
+
+  /* count the number of menu specifications */
+  n = 0;
+  menuSpec = pSD->menuSpecs;
+  while (menuSpec) {
+    n++;
+    menuSpec = menuSpec->nextMenuSpec;
+  }
+
+  /* allocate the array and initialize to zeros */
+  pSD->acceleratorMenuSpecs = NULL;
+  if (n) {
+    pSD->acceleratorMenuSpecs = (MenuSpec **)XtCalloc(n, sizeof(MenuSpec *));
+    if (pSD->acceleratorMenuSpecs == NULL) {
+      Warning(((char *)GETMESSAGE(
+          60, 7, "Insufficient memory for menu accelerators")));
     }
-    pSD->acceleratorMenuCount = 0;
+  }
+  pSD->acceleratorMenuCount = 0;
 } /* END OF FUNCTION ProcessWmFile */
 
 /**** This function stolen from Xt/Intrinsic.c ****/
 /* The implementation of this routine is operating system dependent */
 
-static char *ExtractLocaleName(String lang)
-{
-    return lang;
-}
+static char *ExtractLocaleName(String lang) { return lang; }
 
-#define RC_CONFIG_SUBDIR		"/config/"
-#define RC_DEFAULT_CONFIG_SUBDIR	"/config/C"
+#define RC_CONFIG_SUBDIR "/config/"
+#define RC_DEFAULT_CONFIG_SUBDIR "/config/C"
 
 /*************************************<->*************************************
  *
@@ -1799,7 +1439,7 @@ static char *ExtractLocaleName(String lang)
  *
  *  Description:
  *  -----------
- *  This function searches for, opens, and associates a stream with the mwm 
+ *  This function searches for, opens, and associates a stream with the mwm
  *  resource description file,
  *
  *
@@ -1811,139 +1451,120 @@ static char *ExtractLocaleName(String lang)
  *
  *  Outputs:
  *  -------
- *  Return = If successful, a pointer to the FILE structure associated with 
+ *  Return = If successful, a pointer to the FILE structure associated with
  *           the configuration file.  Otherwise, NULL.
  *
  *
  *  Comments:
  *  --------
  *  None.
- * 
+ *
  *************************************<->***********************************/
-FILE *FopenConfigFile (void)
-{
+FILE *FopenConfigFile(void) {
 
-    char    *LANG, *LANGp;
-    FILE    *fileP;
+  char *LANG, *LANGp;
+  FILE *fileP;
 
-    char *homeDir = XmeGetHomeDirName();
-    Boolean stackPushed;
+  char *homeDir = XmeGetHomeDirName();
+  Boolean stackPushed;
 
-    /*
-     * Get the LANG environment variable
-     * make copy since another call to getenv will blast the value.
-     */
-    LANGp = setlocale(LC_CTYPE, NULL);
+  /*
+   * Get the LANG environment variable
+   * make copy since another call to getenv will blast the value.
+   */
+  LANGp = setlocale(LC_CTYPE, NULL);
 
-    /*
-     * setlocale not guaranteed to return $LANG -- extract
-     * something usable.
-     */
-    LANGp = ExtractLocaleName (LANGp);
+  /*
+   * setlocale not guaranteed to return $LANG -- extract
+   * something usable.
+   */
+  LANGp = ExtractLocaleName(LANGp);
 
-    if ((LANGp == NULL) || (strlen(LANGp) == 0))
-      {
-	 LANG = NULL;
-      }
-    else
-      {
-	 if ((LANG = (char *) XtMalloc(strlen(LANGp) +1)) == NULL)
-	   {
-	      PWarning (((char *)GETMESSAGE(60, 41, "Insufficient memory to get LANG environment variable.")));
-	      return(NULL);
-	   }
-
-	 strcpy(LANG, LANGp);
-      }
-
-
-    /*
-     * To get a name for the file first look at the value of the configFile
-     * resource.  Interpret "~/.." as relative to the user's home directory.
-     * Use the LANG variable if set and .mwmrc is in $HOME/$LANG/.mwmrc  
-     */
-
-    if (pConfigStackTop && pConfigStackTop->tempName)
-    {
-	fileP = fopen (pConfigStackTop->tempName, "r");
-	return (fileP);
-    }
-    stackPushed = (pConfigStackTop && (pConfigStackTop != pConfigStack));
-    fileP = NULL;
-    cfileName[0] = '\0';
-
-    if ((wmGD.configFile != NULL) && (wmGD.configFile[0] != '\0'))
-    /* pointer to nonNULL string */
-    {
-        if ((wmGD.configFile[0] == '~') && (wmGD.configFile[1] == '/'))
-	/* handle "~/..." */
-	{
-	    strcpy (cfileName, homeDir);
-	    if (LANG != NULL)
-	    {
-		strncat(cfileName, "/", MAXWMPATH-strlen(cfileName));
-		strncat(cfileName, LANG, MAXWMPATH-strlen(cfileName));
-	    }
-	    strncat(cfileName, &(wmGD.configFile[1]), MAXWMPATH-strlen(cfileName));
-	    if ((fileP = fopen (cfileName, "r")) != NULL)
-	    {
-		if (LANG != NULL) { 
-		    XtFree(LANG); 
-		    LANG = NULL; 
-		}
-	    }
-	    else
-	    {
-		/* 
-		 * Just try $HOME/.mwmrc
-		 */
-		strcpy (cfileName, homeDir);
-		strncat(cfileName, &(wmGD.configFile[1]), 
-			MAXWMPATH-strlen(cfileName));
-		if ((fileP = fopen (cfileName, "r")) != NULL)
-		{
-		  if (LANG != NULL) {
-		      XtFree(LANG);
-		      LANG = NULL;
-		  }
-		}
-	    }
-
-	    
-	}
-	else
-	/* relative to current directory or absolute */
-	{
-	    char *pch;
-
-            pch = (char *) GetNetworkFileName (wmGD.configFile);
-
-	    if ((fileP = fopen (pch, "r")) != NULL)
-	    {
-	        strncpy (cfileName, pch, MAXWMPATH);
-	    }
-	    XtFree (pch);
-  
-  	  if ((fileP == NULL) && !stackPushed)
-	  {
-            if ((fileP = fopen (wmGD.configFile, "r")) != NULL)
-	      {
-		if (LANG != NULL) {
-		    XtFree(LANG);
-		    LANG = NULL;
-		}
-		return(fileP);
-	      }
-	  }
-	  else if ((fileP == NULL) && stackPushed)
-	  {
-		strcpy (cfileName, wmGD.configFile);
-	  }
-	}
+  if ((LANGp == NULL) || (strlen(LANGp) == 0)) {
+    LANG = NULL;
+  } else {
+    if ((LANG = (char *)XtMalloc(strlen(LANGp) + 1)) == NULL) {
+      PWarning(((char *)GETMESSAGE(
+          60, 41, "Insufficient memory to get LANG environment variable.")));
+      return (NULL);
     }
 
-  if ((fileP == NULL) && !stackPushed)
+    strcpy(LANG, LANGp);
+  }
+
+  /*
+   * To get a name for the file first look at the value of the configFile
+   * resource.  Interpret "~/.." as relative to the user's home directory.
+   * Use the LANG variable if set and .mwmrc is in $HOME/$LANG/.mwmrc
+   */
+
+  if (pConfigStackTop && pConfigStackTop->tempName) {
+    fileP = fopen(pConfigStackTop->tempName, "r");
+    return (fileP);
+  }
+  stackPushed = (pConfigStackTop && (pConfigStackTop != pConfigStack));
+  fileP = NULL;
+  cfileName[0] = '\0';
+
+  if ((wmGD.configFile != NULL) && (wmGD.configFile[0] != '\0'))
+  /* pointer to nonNULL string */
   {
+    if ((wmGD.configFile[0] == '~') && (wmGD.configFile[1] == '/'))
+    /* handle "~/..." */
+    {
+      strcpy(cfileName, homeDir);
+      if (LANG != NULL) {
+        strncat(cfileName, "/", MAXWMPATH - strlen(cfileName));
+        strncat(cfileName, LANG, MAXWMPATH - strlen(cfileName));
+      }
+      strncat(cfileName, &(wmGD.configFile[1]), MAXWMPATH - strlen(cfileName));
+      if ((fileP = fopen(cfileName, "r")) != NULL) {
+        if (LANG != NULL) {
+          XtFree(LANG);
+          LANG = NULL;
+        }
+      } else {
+        /*
+         * Just try $HOME/.mwmrc
+         */
+        strcpy(cfileName, homeDir);
+        strncat(cfileName, &(wmGD.configFile[1]),
+                MAXWMPATH - strlen(cfileName));
+        if ((fileP = fopen(cfileName, "r")) != NULL) {
+          if (LANG != NULL) {
+            XtFree(LANG);
+            LANG = NULL;
+          }
+        }
+      }
+
+    } else
+    /* relative to current directory or absolute */
+    {
+      char *pch;
+
+      pch = (char *)GetNetworkFileName(wmGD.configFile);
+
+      if ((fileP = fopen(pch, "r")) != NULL) {
+        strncpy(cfileName, pch, MAXWMPATH);
+      }
+      XtFree(pch);
+
+      if ((fileP == NULL) && !stackPushed) {
+        if ((fileP = fopen(wmGD.configFile, "r")) != NULL) {
+          if (LANG != NULL) {
+            XtFree(LANG);
+            LANG = NULL;
+          }
+          return (fileP);
+        }
+      } else if ((fileP == NULL) && stackPushed) {
+        strcpy(cfileName, wmGD.configFile);
+      }
+    }
+  }
+
+  if ((fileP == NULL) && !stackPushed) {
 
     /*
      * The configFile resource didn't do it for us.
@@ -1953,213 +1574,180 @@ FILE *FopenConfigFile (void)
 #define HOME_MWMRC "/.mwmrc"
 #define SLASH_MWMRC "/system.mwmrc"
 
-    strcpy (cfileName, homeDir);
+    strcpy(cfileName, homeDir);
 
-    if (MwmBehavior)
-    {
-	/*
-	 *
-	 *  Looking for $HOME/$LANG/.mwmrc
-	 *  --or--if $LANG is NULL
-	 *  Looking for $HOME/.mwmrc
-	 *
-	 */
-	if (LANG != NULL)
-	{
-	    strncat(cfileName, "/", MAXWMPATH-strlen(cfileName));
-	    strncat(cfileName, LANG, MAXWMPATH-strlen(cfileName));
-	}
-	strncat(cfileName, HOME_MWMRC, MAXWMPATH - strlen(cfileName));
-    }
-    else
-    {
-	/*
-	 *
-	 *  Looking for $HOME/.dt/$LANG/dtwmrc
-	 *
-	 *  --or--if $LANG is NULL--
-	 *
-	 *  Looking for $HOME/.dt/dtwmrc
-	 *
-	 */
-	strncat(cfileName, "/.dt/", MAXWMPATH-strlen(cfileName));
+    if (MwmBehavior) {
+      /*
+       *
+       *  Looking for $HOME/$LANG/.mwmrc
+       *  --or--if $LANG is NULL
+       *  Looking for $HOME/.mwmrc
+       *
+       */
+      if (LANG != NULL) {
+        strncat(cfileName, "/", MAXWMPATH - strlen(cfileName));
+        strncat(cfileName, LANG, MAXWMPATH - strlen(cfileName));
+      }
+      strncat(cfileName, HOME_MWMRC, MAXWMPATH - strlen(cfileName));
+    } else {
+      /*
+       *
+       *  Looking for $HOME/.dt/$LANG/dtwmrc
+       *
+       *  --or--if $LANG is NULL--
+       *
+       *  Looking for $HOME/.dt/dtwmrc
+       *
+       */
+      strncat(cfileName, "/.dt/", MAXWMPATH - strlen(cfileName));
 
-	if (LANG != NULL)
-	{
-	    strncat(cfileName, LANG, MAXWMPATH-strlen(cfileName));
-	}
-	strncat(cfileName, LANG_DT_WMRC, MAXWMPATH - strlen(cfileName));
+      if (LANG != NULL) {
+        strncat(cfileName, LANG, MAXWMPATH - strlen(cfileName));
+      }
+      strncat(cfileName, LANG_DT_WMRC, MAXWMPATH - strlen(cfileName));
     }
-    if ((fileP = fopen (cfileName, "r")) != NULL)
-    {
+    if ((fileP = fopen(cfileName, "r")) != NULL) {
+      if (LANG != NULL) {
+        XtFree(LANG);
+        LANG = NULL;
+      }
+    } else {
+      /*
+       * Just try $HOME/.mwmrc
+       */
+      strcpy(cfileName, homeDir);
+      if (MwmBehavior) {
+        /*
+         * Just try $HOME/.mwmrc
+         */
+        strncat(cfileName, HOME_MWMRC, MAXWMPATH - strlen(cfileName));
+      } else {
+        /*
+         * Just try $HOME/.dt/dtwmrc
+         */
+        strncat(cfileName, HOME_DT_WMRC, MAXWMPATH - strlen(cfileName));
+      }
+      if ((fileP = fopen(cfileName, "r")) != NULL) {
         if (LANG != NULL) {
-	    XtFree(LANG);
-	    LANG = NULL;
-	}
-    }
-    else
-    {
-	/* 
-	 * Just try $HOME/.mwmrc
-	 */
-	strcpy (cfileName, homeDir);
-	if (MwmBehavior)
-	{
-	    /* 
-	     * Just try $HOME/.mwmrc
-	     */
-	    strncat(cfileName, HOME_MWMRC, MAXWMPATH - strlen(cfileName));
-	}
-	else
-	{
-	    /* 
-	     * Just try $HOME/.dt/dtwmrc
-	     */
-	    strncat(cfileName, HOME_DT_WMRC, MAXWMPATH - strlen(cfileName));
-	}
-	if ((fileP = fopen (cfileName, "r")) != NULL)
-	{
-	  if (LANG != NULL) {
-	      XtFree(LANG);
-	      LANG = NULL;
-	  }
-	}
+          XtFree(LANG);
+          LANG = NULL;
+        }
+      }
     }
   }
 
-#define DTLIBDIR  CDE_INSTALLATION_TOP
-#define DTADMINDIR  CDE_CONFIGURATION_TOP
+#define DTLIBDIR CDE_INSTALLATION_TOP
+#define DTADMINDIR CDE_CONFIGURATION_TOP
 #define SLASH_DT_WMRC "/sys.dtwmrc"
 
-  if ((fileP == NULL) && !stackPushed)
-  {
-    /* 
+  if ((fileP == NULL) && !stackPushed) {
+    /*
      * No home-based config file. Try the admin directory.
      */
     strcpy(cfileName, DTADMINDIR);
-    strncat(cfileName, RC_CONFIG_SUBDIR, MAXWMPATH-strlen(cfileName));
-    strncat(cfileName, LANG, MAXWMPATH-strlen(cfileName));
+    strncat(cfileName, RC_CONFIG_SUBDIR, MAXWMPATH - strlen(cfileName));
+    strncat(cfileName, LANG, MAXWMPATH - strlen(cfileName));
     strncat(cfileName, SLASH_DT_WMRC, MAXWMPATH - strlen(cfileName));
 
-    if (((fileP = fopen (cfileName, "r")) == NULL) && LANG && *LANG)
-    {
-	/* Try it with no LANG */
-	strcpy(cfileName, DTADMINDIR);
-	strncat(cfileName, RC_CONFIG_SUBDIR, MAXWMPATH-strlen(cfileName));
-	strncat(cfileName, SLASH_DT_WMRC, MAXWMPATH - strlen(cfileName));
+    if (((fileP = fopen(cfileName, "r")) == NULL) && LANG && *LANG) {
+      /* Try it with no LANG */
+      strcpy(cfileName, DTADMINDIR);
+      strncat(cfileName, RC_CONFIG_SUBDIR, MAXWMPATH - strlen(cfileName));
+      strncat(cfileName, SLASH_DT_WMRC, MAXWMPATH - strlen(cfileName));
     }
 
-    if ((fileP = fopen (cfileName, "r")) != NULL)
-    {
+    if ((fileP = fopen(cfileName, "r")) != NULL) {
       XtFree(LANG);
       LANG = NULL;
     }
   }
 
-  if ((fileP == NULL) && !stackPushed)
-  {
+  if ((fileP == NULL) && !stackPushed) {
 
 #ifndef LIBDIR
 #define LIBDIR "/usr/lib/X11"
 #endif
-    if (LANG != NULL)
-    {
-	if (MwmBehavior)
-	{
-	    strcpy(cfileName, LIBDIR);
-	    strncat(cfileName, "/", MAXWMPATH-strlen(cfileName));
-	    strncat(cfileName, LANG, MAXWMPATH-strlen(cfileName));
-	    strncat(cfileName, SLASH_MWMRC, MAXWMPATH - strlen(cfileName));
-	}
-	else
-	{
-	    strcpy(cfileName, DTLIBDIR);
-	    strncat(cfileName, RC_CONFIG_SUBDIR, MAXWMPATH-strlen(cfileName));
-	    strncat(cfileName, LANG, MAXWMPATH-strlen(cfileName));
-	    strncat(cfileName, SLASH_DT_WMRC, MAXWMPATH - strlen(cfileName));
-	}
-	if ((fileP = fopen (cfileName, "r")) != NULL)
-	{
-	  XtFree(LANG);
-	  LANG = NULL;
-	}
+    if (LANG != NULL) {
+      if (MwmBehavior) {
+        strcpy(cfileName, LIBDIR);
+        strncat(cfileName, "/", MAXWMPATH - strlen(cfileName));
+        strncat(cfileName, LANG, MAXWMPATH - strlen(cfileName));
+        strncat(cfileName, SLASH_MWMRC, MAXWMPATH - strlen(cfileName));
+      } else {
+        strcpy(cfileName, DTLIBDIR);
+        strncat(cfileName, RC_CONFIG_SUBDIR, MAXWMPATH - strlen(cfileName));
+        strncat(cfileName, LANG, MAXWMPATH - strlen(cfileName));
+        strncat(cfileName, SLASH_DT_WMRC, MAXWMPATH - strlen(cfileName));
+      }
+      if ((fileP = fopen(cfileName, "r")) != NULL) {
+        XtFree(LANG);
+        LANG = NULL;
+      }
     }
 
-    if ((fileP == NULL) && !stackPushed)
-    {
-    if (MwmBehavior)
-    {
-	strcpy(cfileName, LIBDIR);
-	strncat(cfileName, SLASH_MWMRC, MAXWMPATH - strlen(cfileName));
-	fileP = fopen (cfileName, "r");
-    }
-    else
-    {
-	strcpy(cfileName, DTLIBDIR);
-	strncat(cfileName, RC_DEFAULT_CONFIG_SUBDIR, 
-					MAXWMPATH - strlen(cfileName));
-	strncat(cfileName, SLASH_DT_WMRC, MAXWMPATH - strlen(cfileName));
-	fileP = fopen (cfileName, "r");
-    }
+    if ((fileP == NULL) && !stackPushed) {
+      if (MwmBehavior) {
+        strcpy(cfileName, LIBDIR);
+        strncat(cfileName, SLASH_MWMRC, MAXWMPATH - strlen(cfileName));
+        fileP = fopen(cfileName, "r");
+      } else {
+        strcpy(cfileName, DTLIBDIR);
+        strncat(cfileName, RC_DEFAULT_CONFIG_SUBDIR,
+                MAXWMPATH - strlen(cfileName));
+        strncat(cfileName, SLASH_DT_WMRC, MAXWMPATH - strlen(cfileName));
+        fileP = fopen(cfileName, "r");
+      }
     }
   }
 
-    if (!fileP)
-    {
-	char *pch;
+  if (!fileP) {
+    char *pch;
 
-	/*
-	 * handle "<host>:<path>" form of file name
-	 */
-	pch = (char *) GetNetworkFileName (cfileName);
-	if ((fileP = fopen (cfileName, "r")) != NULL)
-	{
-	    strncpy (cfileName, pch, MAXWMPATH);
-	    XtFree (pch);
-	}
-
-	/*
-	 * Either not "<host>:<path>" form or there was a
-	 * problem up above. This is the last attempt to 
-	 * open something.
-	 */
-	if (!fileP)
-	{
-	    fileP = fopen (cfileName, "r");
-	}
+    /*
+     * handle "<host>:<path>" form of file name
+     */
+    pch = (char *)GetNetworkFileName(cfileName);
+    if ((fileP = fopen(cfileName, "r")) != NULL) {
+      strncpy(cfileName, pch, MAXWMPATH);
+      XtFree(pch);
     }
 
-    if (!pConfigStack)
-    {
-	ConfigStackInit (cfileName);
+    /*
+     * Either not "<host>:<path>" form or there was a
+     * problem up above. This is the last attempt to
+     * open something.
+     */
+    if (!fileP) {
+      fileP = fopen(cfileName, "r");
     }
+  }
 
-    if (wmGD.cppCommand && *wmGD.cppCommand)
-    {
-	/*
-	 *  Run the file through the C-preprocessor
-	 */
-	PreprocessConfigFile ();
-	if (pConfigStackTop && pConfigStackTop->cppName)
-	{
-	    if(fileP) {
-		fclose(fileP);
-	    }
-	    /* open the result */
-	    fileP = fopen (pConfigStackTop->cppName, "r");
-	}
-    }
+  if (!pConfigStack) {
+    ConfigStackInit(cfileName);
+  }
 
-    if (LANG != NULL) 
-    {
-	XtFree(LANG);
-	LANG = NULL;
+  if (wmGD.cppCommand && *wmGD.cppCommand) {
+    /*
+     *  Run the file through the C-preprocessor
+     */
+    PreprocessConfigFile();
+    if (pConfigStackTop && pConfigStackTop->cppName) {
+      if (fileP) {
+        fclose(fileP);
+      }
+      /* open the result */
+      fileP = fopen(pConfigStackTop->cppName, "r");
     }
-    return (fileP);
+  }
+
+  if (LANG != NULL) {
+    XtFree(LANG);
+    LANG = NULL;
+  }
+  return (fileP);
 
 } /* END OF FUNCTION FopenConfigFile */
 
-
 /*************************************<->*************************************
  *
  *  SaveMenuAccelerators (pSD, newMenuSpec)
@@ -2173,8 +1761,8 @@ FILE *FopenConfigFile (void)
  *  Inputs:
  *  ------
  *  newMenuSpec = pointer to MenuSpec to be saved.
- *  pSD->acceleratorMenuSpecs = 
- *  pSD->acceleratorMenuCount = 
+ *  pSD->acceleratorMenuSpecs =
+ *  pSD->acceleratorMenuCount =
  *
  *
  *  Outputs:
@@ -2187,32 +1775,28 @@ FILE *FopenConfigFile (void)
  *  --------
  *  We assume only MenuSpecs created within ProcessWmFile() are to be saved.
  *  Otherwise, we may cause override the limits of pSD->acceleratorMenuSpecs.
- * 
+ *
  *************************************<->***********************************/
 
-void SaveMenuAccelerators (WmScreenData *pSD, MenuSpec *newMenuSpec)
-{
-    MenuSpec  **pMenuSpec;
+void SaveMenuAccelerators(WmScreenData *pSD, MenuSpec *newMenuSpec) {
+  MenuSpec **pMenuSpec;
 
-    pMenuSpec = pSD->acceleratorMenuSpecs;
+  pMenuSpec = pSD->acceleratorMenuSpecs;
 
-    if (pMenuSpec == NULL) 
-	return;
+  if (pMenuSpec == NULL)
+    return;
 
-    while ((*pMenuSpec != NULL) && (*pMenuSpec != newMenuSpec))
-    {
-	pMenuSpec++;
-    }
+  while ((*pMenuSpec != NULL) && (*pMenuSpec != newMenuSpec)) {
+    pMenuSpec++;
+  }
 
-    if (*pMenuSpec == NULL)
-    {
-	*pMenuSpec = newMenuSpec;
-        pSD->acceleratorMenuCount++;
-    }
+  if (*pMenuSpec == NULL) {
+    *pMenuSpec = newMenuSpec;
+    pSD->acceleratorMenuCount++;
+  }
 
 } /* END OF FUNCTION SaveMenuAccelerators */
 
-
 /*************************************<->*************************************
  *
  *  ParseMenuSet (pSD, lineP)
@@ -2243,7 +1827,7 @@ void SaveMenuAccelerators (WmScreenData *pSD, MenuSpec *newMenuSpec)
  *  wmGD.bitmapDirectory = bitmapDirectory resource value
  *  HOME = environment variable for home directory
  *
- * 
+ *
  *  Outputs:
  *  -------
  *  linec  = (global) line count incremented
@@ -2255,97 +1839,92 @@ void SaveMenuAccelerators (WmScreenData *pSD, MenuSpec *newMenuSpec)
  *  --------
  *  Skips unnamed menu specifications.
  *  This means custom menu specifications can be distinguished by NULL name.
- * 
+ *
  *************************************<->***********************************/
 
-static void ParseMenuSet (WmScreenData *pSD, unsigned char *lineP)
-{
-    unsigned char     *string;
-    MenuSpec *menuSpec;
-    
-    /*
-     * If menu name is NULL then skip this pane specification.
-     */
+static void ParseMenuSet(WmScreenData *pSD, unsigned char *lineP) {
+  unsigned char *string;
+  MenuSpec *menuSpec;
 
-    if ((string = GetString (&lineP)) == NULL)
+  /*
+   * If menu name is NULL then skip this pane specification.
+   */
+
+  if ((string = GetString(&lineP)) == NULL) {
+    return;
+  }
+
+  /*
+   * Allocate space for the menu specification structure.
+   */
+
+  if ((menuSpec = (MenuSpec *)XtMalloc(sizeof(MenuSpec))) == NULL) {
+    PWarning(((char *)GETMESSAGE(60, 9, "Insufficient memory for menu")));
+    return;
+  }
+  menuSpec->currentContext = 0;
+  menuSpec->menuWidget = NULL;
+  menuSpec->whichButton = SELECT_BUTTON; /* Button1 selection default */
+  menuSpec->menuItems = NULL;
+  menuSpec->accelContext = 0;
+  menuSpec->accelKeySpecs = NULL;
+  menuSpec->nextMenuSpec = NULL;
+
+  /*
+   * Allocate and fill space for the menu name.
+   */
+
+  if ((menuSpec->name = (String)XtMalloc(
+           (unsigned int)(strlen((char *)string) + 1))) == NULL) {
+    PWarning(((char *)GETMESSAGE(60, 10, "Insufficient memory for menu")));
+    XtFree((char *)menuSpec);
+    return;
+  }
+  strcpy(menuSpec->name, (char *)string);
+
+  /*
+   * Add the empty structure to the head of the menu specification list.
+   */
+
+  menuSpec->nextMenuSpec = pSD->menuSpecs;
+  pSD->menuSpecs = menuSpec;
+
+  /*
+   * Require leading '{' on the next line.
+   */
+
+  while ((GetNextLine() != NULL)) /* not EOF nor read error */
+  {
+    lineP = line;
+    ScanWhitespace(&lineP);
+
+    if ((lineP == NULL) || (*line == '!') || (*lineP == '\0') ||
+        (*lineP == '#'))
+    /* ignore empty or comment line */
     {
-        return;
+      continue;
     }
 
-    /*
-     * Allocate space for the menu specification structure.
-     */
-
-    if ((menuSpec = (MenuSpec *)XtMalloc (sizeof (MenuSpec))) == NULL)
+    if (*lineP == '{')
+    /* found '{' */
     {
-        PWarning (((char *)GETMESSAGE(60, 9, "Insufficient memory for menu")));
-	return;
-    }
-    menuSpec->currentContext = 0;
-    menuSpec->menuWidget = NULL;
-    menuSpec->whichButton = SELECT_BUTTON;  /* Button1 selection default */
-    menuSpec->menuItems = NULL;
-    menuSpec->accelContext = 0;
-    menuSpec->accelKeySpecs = NULL;
-    menuSpec->nextMenuSpec = NULL;
-
-    /*
-     * Allocate and fill space for the menu name.
-     */
-
-    if ((menuSpec->name = 
-	 (String)XtMalloc ((unsigned int) (strlen ((char *)string) + 1))) 
-	 == NULL)
-    {
-        PWarning (((char *)GETMESSAGE(60, 10, "Insufficient memory for menu")));
-	XtFree ((char *)menuSpec);
-	return;
-    }
-    strcpy (menuSpec->name, (char *)string);
-
-    /* 
-     * Add the empty structure to the head of the menu specification list.
-     */
-
-    menuSpec->nextMenuSpec = pSD->menuSpecs;
-    pSD->menuSpecs = menuSpec;
-
-    /*
-     * Require leading '{' on the next line.
-     */
-
-    while ((GetNextLine () != NULL))  /* not EOF nor read error */
-    {
-        lineP = line;
-	ScanWhitespace(&lineP);
-
-	if ((lineP == NULL) || (*line == '!') || (*lineP == '\0') || (*lineP == '#'))
-	/* ignore empty or comment line */
-        {
-            continue;
-        }
-
-        if (*lineP == '{')
-	/* found '{' */
-        {
-            break;
-        }
-
-	/* not a '{' */
-	PWarning (((char *)GETMESSAGE(60, 11, "Expected '{' after menu name")));
-        return;
+      break;
     }
 
-    /*
-     * Found leading "{" or EOF.
-     * Parse menu item specifications until "}" or EOF found.
-     */
+    /* not a '{' */
+    PWarning(((char *)GETMESSAGE(60, 11, "Expected '{' after menu name")));
+    return;
+  }
 
-    menuSpec->menuItems = PARSE_MENU_ITEMS (pSD, menuSpec);
+  /*
+   * Found leading "{" or EOF.
+   * Parse menu item specifications until "}" or EOF found.
+   */
+
+  menuSpec->menuItems = PARSE_MENU_ITEMS(pSD, menuSpec);
 
 } /* END OF FUNCTION ParseMenuSet */
 
-
 /*************************************<->*************************************
  *
  *  MenuItem *
@@ -2354,7 +1933,7 @@ static void ParseMenuSet (WmScreenData *pSD, unsigned char *lineP)
  *
  *  Description:
  *  -----------
- *  This function parses a WMW_MENU string and returns a list of 
+ *  This function parses a WMW_MENU string and returns a list of
  *  MenuItems structures.  The string should have the syntax:
  *
  *       label  [mnemonic]  [accelerator]  function
@@ -2371,7 +1950,7 @@ static void ParseMenuSet (WmScreenData *pSD, unsigned char *lineP)
  *  HOME = environment variable for home directory
  *  functionTable = window manager function parse table
  *
- * 
+ *
  *  Outputs:
  *  -------
  *  Return = list of MenuItem structures or NULL
@@ -2380,21 +1959,19 @@ static void ParseMenuSet (WmScreenData *pSD, unsigned char *lineP)
  *  Comments:
  *  --------
  *  None.
- * 
+ *
  *************************************<->***********************************/
 
-MenuItem *ParseMwmMenuStr (WmScreenData *pSD, unsigned char *menuStr)
-{
+MenuItem *ParseMwmMenuStr(WmScreenData *pSD, unsigned char *menuStr) {
 
-    cfileP = NULL;
-    linec = 0;
-    parseP = menuStr;
+  cfileP = NULL;
+  linec = 0;
+  parseP = menuStr;
 
-    return (PARSE_MENU_ITEMS (pSD, NULL));
+  return (PARSE_MENU_ITEMS(pSD, NULL));
 
 } /* END OF FUNCTION ParseMwmMenuStr */
 
-
 /*************************************<->*************************************
  *
  *  static MenuItem *
@@ -2423,7 +2000,7 @@ MenuItem *ParseMwmMenuStr (WmScreenData *pSD, unsigned char *menuStr)
  *  wmGD.bitmapDirectory = bitmapDirectory resource value
  *  HOME = environment variable for home directory
  *
- * 
+ *
  *  Outputs:
  *  -------
  *  linec  = (global) line count incremented
@@ -2434,134 +2011,124 @@ MenuItem *ParseMwmMenuStr (WmScreenData *pSD, unsigned char *menuStr)
  *  Comments:
  *  --------
  *  None.
- * 
+ *
  *************************************<->***********************************/
 
-static MenuItem *ParseMenuItems (WmScreenData *pSD)
-{
-    unsigned char *string;
-    unsigned char *lineP;
-    MenuItem      *firstMenuItem;
-    MenuItem      *lastMenuItem;
-    MenuItem      *menuItem;
-    int   ix;
-    
-    /*
-     * Parse "label [mnemonic] [accelerator] function" or
-     *       "<client command>[.<client command>]*"
-     * lines until "}" or EOF found.
-     */
+static MenuItem *ParseMenuItems(WmScreenData *pSD) {
+  unsigned char *string;
+  unsigned char *lineP;
+  MenuItem *firstMenuItem;
+  MenuItem *lastMenuItem;
+  MenuItem *menuItem;
+  int ix;
 
-    firstMenuItem = lastMenuItem = NULL;
-    while ((GetNextLine () != NULL))
+  /*
+   * Parse "label [mnemonic] [accelerator] function" or
+   *       "<client command>[.<client command>]*"
+   * lines until "}" or EOF found.
+   */
+
+  firstMenuItem = lastMenuItem = NULL;
+  while ((GetNextLine() != NULL)) {
+    lineP = line;
+    if ((*line == '!') || (*line == '#') ||
+        (string = GetString(&lineP)) == NULL)
+    /* ignore empty or comment lines */
     {
-	lineP = line;
-	if ((*line == '!') || (*line == '#') || (string = GetString (&lineP)) == NULL)
-	/* ignore empty or comment lines */
-        {
-            continue;
-        }
-        if (*string == '}')  /* finished with menu set. */
-        {
-	    break;
-        }
-
-	/*
-	 * Allocate space for the menu item structure. 
-	 */
-
-        if ((menuItem = (MenuItem *)XtMalloc (sizeof (MenuItem))) == NULL)
-	{
-            PWarning (((char *)GETMESSAGE(60, 12, "Insufficient memory for menu item")));
-            continue;
-	}
-	menuItem->nextMenuItem = NULL;
-	menuItem->wmFunction = (WmFunction)NULL;
-	menuItem->wmFuncArgs = NULL;
-
-	{
-	    /*
-	     * Parse the menu item label.
-	     */
-	    if (!ParseWmLabel (pSD, menuItem, string))
-	    {
-		XtFree ((char *)menuItem);
-		continue;
-	    }
-	}
-
-        /*
-	 * Parse any menu function mnemonic.
-	 */
-
-	ParseWmMnemonic (&lineP, menuItem);
-
-        /*
-	 * Parse any menu function accelerator.
-	 */
-
-	if (!ParseWmAccelerator (&lineP, menuItem))
-	{
-	    XtFree ((char *)menuItem);
-	    continue;
-	}
-	/*
-	 * Parse the menu function name if this is not a client
-	 * command. If it is a client command, then the wmFunction
-	 * field should already be set, as well as the ix variable,
-	 * but we do want to search for a menu item name that occupies
-	 * the same place as the function does for normal menu items.
-	 */
-	ix = ParseWmFunction (&lineP, CRS_MENU, &menuItem->wmFunction);
-
-	/*
-	 * Determine context sensitivity and applicability mask.
-	 */
-
-	menuItem->greyedContext = functionTable[ix].greyedContext;
-	menuItem->mgtMask = functionTable[ix].mgtMask;
-        if ((menuItem->wmFunction == F_Toggle_Front_Panel) &&
-	    ((wmGD.useFrontPanel == False) ||
-	     (wmGD.dtSD != pSD)))
-	{
-	    /*
-	     * disallow this function if there's no front
-	     * panel on this screen.
-	     */
-	    menuItem->greyedContext |= (F_CONTEXT_ALL 		| 
-				       F_SUBCONTEXT_IB_WICON 	| 
-				       F_SUBCONTEXT_IB_IICON);
-	}
-
-        /* 
-	 * Apply the function argument parser.
-	 */
-        if (!(*(functionTable [ix].parseProc)) 
-		   (&lineP, menuItem->wmFunction, &menuItem->wmFuncArgs))
-        {
-	    FreeMenuItem (menuItem);
-	    continue;  /* skip this menu item */
-        }
-
-	/*
-	 * Add this item to the menu specification.
-	 */
-
-	if (lastMenuItem != NULL)  /* not first */
-	{
-	    lastMenuItem->nextMenuItem = menuItem;
-	}
-	else
-	{
-	    firstMenuItem = menuItem;
-	}
-	lastMenuItem = menuItem;
+      continue;
+    }
+    if (*string == '}') /* finished with menu set. */
+    {
+      break;
     }
 
-    return (firstMenuItem);
+    /*
+     * Allocate space for the menu item structure.
+     */
+
+    if ((menuItem = (MenuItem *)XtMalloc(sizeof(MenuItem))) == NULL) {
+      PWarning(
+          ((char *)GETMESSAGE(60, 12, "Insufficient memory for menu item")));
+      continue;
+    }
+    menuItem->nextMenuItem = NULL;
+    menuItem->wmFunction = (WmFunction)NULL;
+    menuItem->wmFuncArgs = NULL;
+
+    {
+      /*
+       * Parse the menu item label.
+       */
+      if (!ParseWmLabel(pSD, menuItem, string)) {
+        XtFree((char *)menuItem);
+        continue;
+      }
+    }
+
+    /*
+     * Parse any menu function mnemonic.
+     */
+
+    ParseWmMnemonic(&lineP, menuItem);
+
+    /*
+     * Parse any menu function accelerator.
+     */
+
+    if (!ParseWmAccelerator(&lineP, menuItem)) {
+      XtFree((char *)menuItem);
+      continue;
+    }
+    /*
+     * Parse the menu function name if this is not a client
+     * command. If it is a client command, then the wmFunction
+     * field should already be set, as well as the ix variable,
+     * but we do want to search for a menu item name that occupies
+     * the same place as the function does for normal menu items.
+     */
+    ix = ParseWmFunction(&lineP, CRS_MENU, &menuItem->wmFunction);
+
+    /*
+     * Determine context sensitivity and applicability mask.
+     */
+
+    menuItem->greyedContext = functionTable[ix].greyedContext;
+    menuItem->mgtMask = functionTable[ix].mgtMask;
+    if ((menuItem->wmFunction == F_Toggle_Front_Panel) &&
+        ((wmGD.useFrontPanel == False) || (wmGD.dtSD != pSD))) {
+      /*
+       * disallow this function if there's no front
+       * panel on this screen.
+       */
+      menuItem->greyedContext |=
+          (F_CONTEXT_ALL | F_SUBCONTEXT_IB_WICON | F_SUBCONTEXT_IB_IICON);
+    }
+
+    /*
+     * Apply the function argument parser.
+     */
+    if (!(*(functionTable[ix].parseProc))(&lineP, menuItem->wmFunction,
+                                          &menuItem->wmFuncArgs)) {
+      FreeMenuItem(menuItem);
+      continue; /* skip this menu item */
+    }
+
+    /*
+     * Add this item to the menu specification.
+     */
+
+    if (lastMenuItem != NULL) /* not first */
+    {
+      lastMenuItem->nextMenuItem = menuItem;
+    } else {
+      firstMenuItem = menuItem;
+    }
+    lastMenuItem = menuItem;
+  }
+
+  return (firstMenuItem);
 
 } /* END OF FUNCTION ParseMenuItems */
-
 
 /*************************************<->*************************************
  *
@@ -2579,7 +2146,7 @@ static MenuItem *ParseMenuItems (WmScreenData *pSD)
  *  menuItem = pointer to MenuItem structure
  *  string   = label string
  *
- * 
+ *
  *  Outputs:
  *  -------
  *  menuItem->label
@@ -2591,51 +2158,46 @@ static MenuItem *ParseMenuItems (WmScreenData *pSD)
  *  Comments:
  *  --------
  * We have two label types:  XmSTRING and XmPIXMAP
- * We allocate and fill the label field with string and set the type to 
+ * We allocate and fill the label field with string and set the type to
  * XmSTRING.  If string = "@<bitmap_file>", and <bitmap_file> contains a
- * with which to build a label image we save the bitmap in the MenuItem 
+ * with which to build a label image we save the bitmap in the MenuItem
  * structure and set the type to XmPIXMAP.
- * 
+ *
  *************************************<->***********************************/
 
-static Boolean ParseWmLabel (WmScreenData *pSD, MenuItem *menuItem, 
-			     unsigned char *string)
-{
+static Boolean ParseWmLabel(WmScreenData *pSD, MenuItem *menuItem,
+                            unsigned char *string) {
 
-    /*
-     * Allocate the label field and copy string.
-     */
+  /*
+   * Allocate the label field and copy string.
+   */
 
-    if ((menuItem->label = (String)
-        XtMalloc ((unsigned int)(strlen ((char *)string) + 1))) == NULL)
-    {
-        PWarning (((char *)GETMESSAGE(60, 13, "Insufficient memory for menu item")));
-        return (FALSE);
+  if ((menuItem->label = (String)XtMalloc(
+           (unsigned int)(strlen((char *)string) + 1))) == NULL) {
+    PWarning(((char *)GETMESSAGE(60, 13, "Insufficient memory for menu item")));
+    return (FALSE);
+  }
+
+  strcpy(menuItem->label, (char *)string);
+  menuItem->labelType = XmSTRING;
+
+  if (*string == '@')
+  /*
+   * Here:  string  = "@<bitmap file>"
+   * Try to find the label bitmap in the bitmap cache or read the label
+   * bitmap file.
+   */
+  {
+    string++; /* skip "@" */
+    if ((menuItem->labelBitmapIndex =
+             GetBitmapIndex(pSD, (char *)string, True)) >= 0) {
+      menuItem->labelType = XmPIXMAP;
     }
-
-    strcpy (menuItem->label, (char *)string);
-    menuItem->labelType = XmSTRING;
-
-    if (*string == '@')
-    /*
-     * Here:  string  = "@<bitmap file>"
-     * Try to find the label bitmap in the bitmap cache or read the label 
-     * bitmap file.
-     */
-    {
-        string++;  /* skip "@" */
-        if ((menuItem->labelBitmapIndex = GetBitmapIndex (pSD, 
-					   (char *)string, True)) >= 0)
-	{
-	    menuItem->labelType = XmPIXMAP;
-	}
-    }
-    return (TRUE);
+  }
+  return (TRUE);
 
 } /* END OF FUNCTION ParseWmLabel */
 
-
-
 /*************************************<->*************************************
  *
  *  ParseWmMnemonic (linePP, menuItem)
@@ -2651,7 +2213,7 @@ static Boolean ParseWmLabel (WmScreenData *pSD, MenuItem *menuItem,
  *  linePP   = pointer to current line buffer pointer.
  *  menuItem = pointer to MenuItem structure
  *
- * 
+ *
  *  Outputs:
  *  -------
  *  linePP   = pointer to revised line buffer pointer.
@@ -2661,51 +2223,45 @@ static Boolean ParseWmLabel (WmScreenData *pSD, MenuItem *menuItem,
  *  Comments:
  *  --------
  *  None.
- * 
+ *
  *************************************<->***********************************/
 
-static void ParseWmMnemonic (unsigned char **linePP, MenuItem *menuItem)
-{
-    unsigned char *lineP = *linePP;
-    unsigned char *mnemonic;
+static void ParseWmMnemonic(unsigned char **linePP, MenuItem *menuItem) {
+  unsigned char *lineP = *linePP;
+  unsigned char *mnemonic;
 
-    /*
-     * Skip leading white space.
-     */
-    ScanWhitespace (&lineP);
-    menuItem->mnemonic = (KeySym)NULL;
+  /*
+   * Skip leading white space.
+   */
+  ScanWhitespace(&lineP);
+  menuItem->mnemonic = (KeySym)NULL;
 
-    if (*lineP == '_')
-    /* 
-     * We have a mnemonic specification. 
-     * Get the next string (we only use the first character).
-     * If no string exists, the labelType is not XmSTRING, or does not contain 
-     * the first character, then skip the string and return.
-     * Otherwise, accept the first character as a mnemonic.
-     */
-    {
-	KeySym ks;
-        lineP++;
-        mnemonic = GetString(&lineP);
+  if (*lineP == '_')
+  /*
+   * We have a mnemonic specification.
+   * Get the next string (we only use the first character).
+   * If no string exists, the labelType is not XmSTRING, or does not contain
+   * the first character, then skip the string and return.
+   * Otherwise, accept the first character as a mnemonic.
+   */
+  {
+    KeySym ks;
+    lineP++;
+    mnemonic = GetString(&lineP);
 
-	if (menuItem->labelType == XmSTRING &&
-	    mnemonic != NULL &&
-	    (ks = XStringToKeysym((char *)mnemonic)) != NoSymbol &&
-	    strchr(menuItem->label, (char)(ks & 0xff)) != NULL)
-	{
-	    menuItem->mnemonic = ks;
-	}
-	else
-	{
-            PWarning (((char *)GETMESSAGE(60, 14, "Invalid mnemonic specification")));
-	}
+    if (menuItem->labelType == XmSTRING && mnemonic != NULL &&
+        (ks = XStringToKeysym((char *)mnemonic)) != NoSymbol &&
+        strchr(menuItem->label, (char)(ks & 0xff)) != NULL) {
+      menuItem->mnemonic = ks;
+    } else {
+      PWarning(((char *)GETMESSAGE(60, 14, "Invalid mnemonic specification")));
     }
+  }
 
-    *linePP = lineP;  /* consume any string */
+  *linePP = lineP; /* consume any string */
 
 } /* END OF FUNCTION ParseWmMnemonic */
 
-
 /*************************************<->*************************************
  *
  *  ParseWmAccelerator (linePP, menuItem)
@@ -2721,7 +2277,7 @@ static void ParseWmMnemonic (unsigned char **linePP, MenuItem *menuItem)
  *  linePP   = pointer to current line buffer pointer.
  *  menuItem = pointer to MenuItem structure
  *
- * 
+ *
  *  Outputs:
  *  -------
  *  linePP   = pointer to revised line buffer pointer.
@@ -2731,74 +2287,71 @@ static void ParseWmMnemonic (unsigned char **linePP, MenuItem *menuItem)
  *  Comments:
  *  --------
  *  None.
- * 
+ *
  *************************************<->***********************************/
 
-static Boolean ParseWmAccelerator (unsigned char **linePP, MenuItem *menuItem)
-{
-    unsigned char *lineP;
-    String        string;
-    unsigned int  eventType;
-    unsigned int  state;
-    KeyCode       keycode;
-    Boolean       status;
+static Boolean ParseWmAccelerator(unsigned char **linePP, MenuItem *menuItem) {
+  unsigned char *lineP;
+  String string;
+  unsigned int eventType;
+  unsigned int state;
+  KeyCode keycode;
+  Boolean status;
 
-    menuItem->accelState = 0;
-    menuItem->accelKeyCode = 0;
-    menuItem->accelText = NULL;
-    status = TRUE;
+  menuItem->accelState = 0;
+  menuItem->accelKeyCode = 0;
+  menuItem->accelText = NULL;
+  status = TRUE;
 
-    /*
-     * If linePP contains NULL, then abort.
-     */
-    if (*linePP == (unsigned char *) NULL) return(FALSE);
+  /*
+   * If linePP contains NULL, then abort.
+   */
+  if (*linePP == (unsigned char *)NULL)
+    return (FALSE);
 
-    /*
-     * Skip leading white space.
-     */
-    ScanWhitespace (linePP);
-    lineP = *linePP;
+  /*
+   * Skip leading white space.
+   */
+  ScanWhitespace(linePP);
+  lineP = *linePP;
 
-    /*
-     * If the second character is not ".", and an accelerator specification 
-     * exists, then process and save the specification string.
-     */
+  /*
+   * If the second character is not ".", and an accelerator specification
+   * exists, then process and save the specification string.
+   */
 
-    if ((*lineP != '\0') &&     /* something follows */
-	(*lineP != '!')  &&     /* skip if we have the ! WmFunction */
-	(*lineP != 'f')  &&
-	(*(lineP+1) != '.'))    /* skip if we have f.xxx WmFunction */
-    {
-        if (ParseKeyEvent(&lineP, &eventType, &keycode, &state))
-        {
-            if ((string = (String) XtMalloc 
-		 ((unsigned int) (lineP - *linePP + 1))) == NULL)
-            {
-	        PWarning (((char *)GETMESSAGE(60, 15, "Insufficient memory for accelerator specification")));
-                status = FALSE;
-            }
-	    else
-	    /*
-	     * Save the accelerator state and keycode.
-	     * Process and save the accelerator text.
-	     */
-            {
-	        ProcessAccelText (*linePP, lineP, (unsigned char *) string);
-                menuItem->accelState = state;
-                menuItem->accelKeyCode = keycode;
-                menuItem->accelText = string;
-            }
-        }
-	else
-	{
-	    PWarning (((char *)GETMESSAGE(60, 16, "Invalid accelerator specification")));
-            status = FALSE;
-	}
-
-        *linePP = lineP;  /* consume the specification */
+  if ((*lineP != '\0') && /* something follows */
+      (*lineP != '!') &&  /* skip if we have the ! WmFunction */
+      (*lineP != 'f') &&
+      (*(lineP + 1) != '.')) /* skip if we have f.xxx WmFunction */
+  {
+    if (ParseKeyEvent(&lineP, &eventType, &keycode, &state)) {
+      if ((string = (String)XtMalloc((unsigned int)(lineP - *linePP + 1))) ==
+          NULL) {
+        PWarning(((char *)GETMESSAGE(
+            60, 15, "Insufficient memory for accelerator specification")));
+        status = FALSE;
+      } else
+      /*
+       * Save the accelerator state and keycode.
+       * Process and save the accelerator text.
+       */
+      {
+        ProcessAccelText(*linePP, lineP, (unsigned char *)string);
+        menuItem->accelState = state;
+        menuItem->accelKeyCode = keycode;
+        menuItem->accelText = string;
+      }
+    } else {
+      PWarning(
+          ((char *)GETMESSAGE(60, 16, "Invalid accelerator specification")));
+      status = FALSE;
     }
 
-    return (status);
+    *linePP = lineP; /* consume the specification */
+  }
+
+  return (status);
 
 } /* END OF FUNCTION ParseWmAccelerator */
 
@@ -2821,7 +2374,7 @@ static Boolean ParseWmAccelerator (unsigned char **linePP, MenuItem *menuItem)
  *  pWmFunction = pointer to window manager function destination.
  *  functionTable = window manager function parse table
  *
- * 
+ *
  *  Outputs:
  *  -------
  *  linePP   = pointer to revised line buffer pointer.
@@ -2832,93 +2385,84 @@ static Boolean ParseWmAccelerator (unsigned char **linePP, MenuItem *menuItem)
  *  Comments:
  *  --------
  *  Uses F_Nop if the function name or resource type is invalid.
- * 
+ *
  *************************************<->***********************************/
 
-int ParseWmFunction (unsigned char **linePP, unsigned int res_spec, 
-			    WmFunction *pWmFunction)
-{
-    unsigned char *lineP = *linePP;
-    unsigned char *string;
-    int  low, mid, high, cmp;
+int ParseWmFunction(unsigned char **linePP, unsigned int res_spec,
+                    WmFunction *pWmFunction) {
+  unsigned char *lineP = *linePP;
+  unsigned char *string;
+  int low, mid, high, cmp;
 
-    /*
-     * Skip leading white space.
-     */
-    ScanWhitespace (&lineP);
+  /*
+   * Skip leading white space.
+   */
+  ScanWhitespace(&lineP);
 
-    /* 
-     * Have function string (may be NULL or a comment).
-     * Handle the special case of '!' 
-     */
+  /*
+   * Have function string (may be NULL or a comment).
+   * Handle the special case of '!'
+   */
 
-    if (*lineP == '!')
-    {
-	*linePP = ++lineP;
-	*pWmFunction = F_Exec;
-	return (F_EXEC_INDEX);
-    }
+  if (*lineP == '!') {
+    *linePP = ++lineP;
+    *pWmFunction = F_Exec;
+    return (F_EXEC_INDEX);
+  }
 
-    /*
-     * Identify the function corresponding to the specified name.
-     * Try binary search of the window manager function parse table.
-     * Assume f.nop if the function and resource type cannot be matched.
-     * This handles NULL and comment strings, bad function names, and functions
-     *   in inappropriate resource sets.
-     */
-    string = GetString (&lineP);
-    *linePP = lineP;
+  /*
+   * Identify the function corresponding to the specified name.
+   * Try binary search of the window manager function parse table.
+   * Assume f.nop if the function and resource type cannot be matched.
+   * This handles NULL and comment strings, bad function names, and functions
+   *   in inappropriate resource sets.
+   */
+  string = GetString(&lineP);
+  *linePP = lineP;
 
-    if (string != NULL)
-    {
-        ToLower ((char *)string);
-	low = 0;
-        high = WMFUNCTIONTABLESIZE - 1;
+  if (string != NULL) {
+    ToLower((char *)string);
+    low = 0;
+    high = WMFUNCTIONTABLESIZE - 1;
 
-        while (low <= high)
-        {
-	    mid = (low + high)/2;
-            cmp = strcmp (functionTable[mid].funcName, (char *)string);
+    while (low <= high) {
+      mid = (low + high) / 2;
+      cmp = strcmp(functionTable[mid].funcName, (char *)string);
 
-            if (!cmp)
-	    /*
-	     * Function name match 
-	     * Require proper resource type for the function.
-	     */
-	    {
-	        if (res_spec & functionTable[mid].resource)
-	        {
-		    *pWmFunction = functionTable[mid].wmFunction;
-	            return (mid);
-                }
-
-	        /* invalid resource:  use F_Nop */
-  	        break;
-            }
-
-	    /*
-	     * Function name mismatch 
-	     */
-            if (cmp > 0)
-	    {
-	        high = mid - 1;
-	    }
-	    else
-	    {
-	        low = mid + 1;
-	    }
+      if (!cmp)
+      /*
+       * Function name match
+       * Require proper resource type for the function.
+       */
+      {
+        if (res_spec & functionTable[mid].resource) {
+          *pWmFunction = functionTable[mid].wmFunction;
+          return (mid);
         }
-    }
 
-    /* 
-     * Not found:  assume f.nop
-     */
-    *pWmFunction = F_Nop;
-    return (F_NOP_INDEX);
+        /* invalid resource:  use F_Nop */
+        break;
+      }
+
+      /*
+       * Function name mismatch
+       */
+      if (cmp > 0) {
+        high = mid - 1;
+      } else {
+        low = mid + 1;
+      }
+    }
+  }
+
+  /*
+   * Not found:  assume f.nop
+   */
+  *pWmFunction = F_Nop;
+  return (F_NOP_INDEX);
 
 } /* END OF FUNCTION ParseWmFunction */
 
-
 /*************************************<->*************************************
  *
  *  ParseWmFuncMaybeStrArg (linePP, wmFunction, pArgs)
@@ -2935,7 +2479,7 @@ int ParseWmFunction (unsigned char **linePP, unsigned int res_spec,
  *  wmFunction = function (not used).
  *  pArgs = pointer to argument destination.
  *
- * 
+ *
  *  Outputs:
  *  -------
  *  linePP   = pointer to revised line buffer pointer.
@@ -2948,21 +2492,21 @@ int ParseWmFunction (unsigned char **linePP, unsigned int res_spec,
  *  Only used to parse arguments for F_Lower, F_Raise, and F_Raise_Lower.
  *  If it is used for any other function, be sure to change FreeMenuItem ()
  *  accordingly.
- * 
+ *
  *************************************<->***********************************/
 
-Boolean ParseWmFuncMaybeStrArg (unsigned char **linePP, 
-				       WmFunction wmFunction, String *pArgs)
-{
-    unsigned char *string = *linePP;
-    unsigned int  len;
+Boolean ParseWmFuncMaybeStrArg(unsigned char **linePP, WmFunction wmFunction,
+                               void *pArgsVoid) {
+  String *pArgs = (String *)pArgsVoid;
+  unsigned char *string = *linePP;
+  unsigned int len;
 
-    ScanWhitespace (&string);
+  ScanWhitespace(&string);
 /*
     if (*lineP == '-')
     {
-	*linePP = ++lineP;
-	return (ParseWmFuncStrArg (linePP, wmFunction, pArgs));
+        *linePP = ++lineP;
+        return (ParseWmFuncStrArg (linePP, wmFunction, pArgs));
     }
 */
 #if 0
@@ -2973,26 +2517,22 @@ Boolean ParseWmFuncMaybeStrArg (unsigned char **linePP,
 	return (ParseWmFuncStrArg (linePP, wmFunction, pArgs));
     }
 #endif
-    if ((len = strlen ((char *)string)) != 0)
-    {
-	if ((*pArgs = (String)XtMalloc (len + 1)) == NULL)
-	{
-            PWarning (((char *)GETMESSAGE(60, 17, "Insufficient memory")));
-	    return (FALSE);
-	}
-	strcpy (*pArgs, (char *)string);
-	return (TRUE);
+  if ((len = strlen((char *)string)) != 0) {
+    if ((*pArgs = (String)XtMalloc(len + 1)) == NULL) {
+      PWarning(((char *)GETMESSAGE(60, 17, "Insufficient memory")));
+      return (FALSE);
     }
-    else
-    /* Do ParseWmFuncNoArg () */
-    {
-        *pArgs = NULL;
-        return (TRUE);
-    }
+    strcpy(*pArgs, (char *)string);
+    return (TRUE);
+  } else
+  /* Do ParseWmFuncNoArg () */
+  {
+    *pArgs = NULL;
+    return (TRUE);
+  }
 
 } /* END OF FUNCTION ParseWmFuncMaybeStrArg */
 
-
 /*************************************<->*************************************
  *
  *  ParseWmFuncNoArg (linePP, wmFunction, pArgs)
@@ -3009,7 +2549,7 @@ Boolean ParseWmFuncMaybeStrArg (unsigned char **linePP,
  *  wmFunction = function (not used).
  *  pArgs = pointer to argument destination.
  *
- * 
+ *
  *  Outputs:
  *  -------
  *  linePP   = unchanged
@@ -3020,19 +2560,18 @@ Boolean ParseWmFuncMaybeStrArg (unsigned char **linePP,
  *  Comments:
  *  --------
  *  None.
- * 
+ *
  *************************************<->***********************************/
 
-static Boolean ParseWmFuncNoArg (unsigned char **linePP, WmFunction wmFunction,
-				 String *pArgs)
-{
+static Boolean ParseWmFuncNoArg(unsigned char **linePP, WmFunction wmFunction,
+                                void *pArgsVoid) {
+  String *pArgs = (String *)pArgsVoid;
 
-    *pArgs = NULL;
-    return (TRUE);
+  *pArgs = NULL;
+  return (TRUE);
 
 } /* END OF FUNCTION ParseWmFuncNoArg */
 
-
 /*************************************<->*************************************
  *
  *  ParseWmFuncStrArg (linePP, wmFunction, pArgs)
@@ -3049,7 +2588,7 @@ static Boolean ParseWmFuncNoArg (unsigned char **linePP, WmFunction wmFunction,
  *  wmFunction = function for which the argument string is intended.
  *  pArgs = pointer to argument string destination.
  *
- * 
+ *
  *  Outputs:
  *  -------
  *  linePP   = pointer to revised line buffer pointer.
@@ -3060,69 +2599,62 @@ static Boolean ParseWmFuncNoArg (unsigned char **linePP, WmFunction wmFunction,
  *  Comments:
  *  --------
  *  Insures that an argument for F_Exec() ends in '&' .
- *  Only used to parse arguments for F_Exec, F_Menu, F_Lower, F_Raise, 
+ *  Only used to parse arguments for F_Exec, F_Menu, F_Lower, F_Raise,
  *  F_Raise_Lower, and F_Screen.  If it is used for any other function, be
  *  sure to change FreeMenuItem () accordingly.
- * 
+ *
  *************************************<->***********************************/
 
-Boolean ParseWmFuncStrArg (unsigned char **linePP, 
-				  WmFunction wmFunction, String *pArgs)
-{
-    unsigned char *string;
-    unsigned int  len;
-    char *p;
-    wchar_t last;
-    char delim;
-    wchar_t wdelim;
-    int lastlen;
+Boolean ParseWmFuncStrArg(unsigned char **linePP, WmFunction wmFunction,
+                          void *pArgsVoid) {
+  String *pArgs = (String *)pArgsVoid;
+  unsigned char *string;
+  unsigned int len;
+  char *p;
+  wchar_t last;
+  char delim;
+  wchar_t wdelim;
+  int lastlen;
 
-    if ((string = GetString (linePP)) != NULL)
-    /* nonNULL string argument */
-    {
-        len = strlen ((char *)string);
-        if ((*pArgs = (String)XtMalloc (len + 2)) == NULL)
-        {
-            PWarning (((char *)GETMESSAGE(60, 17, "Insufficient memory")));
-	    return (FALSE);
-        }
-        strcpy (*pArgs, (char *)string);
-
-        /*
-         *  Insure that an argument for F_Exec ends in '&' .
-         */
-
-	if (wmFunction == F_Exec)
-	{
-	    lastlen = 0;
-	    p = *pArgs;
-	    while (*p &&
-		   ((len = mblen(p, MB_CUR_MAX)) > 0))
-	    {
-		mbtowc(&last, p, MB_CUR_MAX);
-		lastlen = len;
-		p += len;
-	    }
-	    delim = '&';
-	    mbtowc(&wdelim, &delim, MB_CUR_MAX);
-	    if (lastlen == 1 && last != wdelim)
-	    {
-		*p++ = '&';
-		*p   = '\0';
-	    }
-	}
+  if ((string = GetString(linePP)) != NULL)
+  /* nonNULL string argument */
+  {
+    len = strlen((char *)string);
+    if ((*pArgs = (String)XtMalloc(len + 2)) == NULL) {
+      PWarning(((char *)GETMESSAGE(60, 17, "Insufficient memory")));
+      return (FALSE);
     }
-    else
-    /* NULL string argument */
-    {
-        *pArgs = NULL;
-    }
+    strcpy(*pArgs, (char *)string);
 
-    return (TRUE);
+    /*
+     *  Insure that an argument for F_Exec ends in '&' .
+     */
+
+    if (wmFunction == F_Exec) {
+      lastlen = 0;
+      p = *pArgs;
+      while (*p && ((len = mblen(p, MB_CUR_MAX)) > 0)) {
+        mbtowc(&last, p, MB_CUR_MAX);
+        lastlen = len;
+        p += len;
+      }
+      delim = '&';
+      mbtowc(&wdelim, &delim, MB_CUR_MAX);
+      if (lastlen == 1 && last != wdelim) {
+        *p++ = '&';
+        *p = '\0';
+      }
+    }
+  } else
+  /* NULL string argument */
+  {
+    *pArgs = NULL;
+  }
+
+  return (TRUE);
 
 } /* END OF FUNCTION ParseWmFuncStrArg */
 
-
 /*************************************<->*************************************
  *
  *  FreeMenuItem (menuItem)
@@ -3137,7 +2669,7 @@ Boolean ParseWmFuncStrArg (unsigned char **linePP,
  *  ------
  *  menuItem = to be destroyed.
  *
- * 
+ *
  *  Outputs:
  *  -------
  *  None.
@@ -3148,42 +2680,34 @@ Boolean ParseWmFuncStrArg (unsigned char **linePP,
  *  Assumes that ParseWmFuncStrArg () has parsed a menu item's function
  *  argument only for F_Exec, F_Menu, F_Lower, F_Raise, F_Raise_Lower, and
  *  F_Screen. If it is used for other functions, be sure to include them here!
- * 
+ *
  *************************************<->***********************************/
 
-void FreeMenuItem (MenuItem *menuItem)
-{
-    if (menuItem->label != NULL)
-    {
-        XtFree ((char *)menuItem->label);
-    }
+void FreeMenuItem(MenuItem *menuItem) {
+  if (menuItem->label != NULL) {
+    XtFree((char *)menuItem->label);
+  }
 
-    if (menuItem->accelText != NULL)
-    {
-	XtFree ((char *)menuItem->accelText);
-    }
+  if (menuItem->accelText != NULL) {
+    XtFree((char *)menuItem->accelText);
+  }
 
-    /*
-     * If menuItem->wmFuncArgs is nonNULL, we assume that it is a string that
-     * was malloc'ed in ParseWmFuncStrArg () and we free it now.
-     */
-    if ((menuItem->wmFuncArgs != NULL) &&
-        ((menuItem->wmFunction == F_Exec)  || 
-         (menuItem->wmFunction == F_Menu)  || 
-         (menuItem->wmFunction == F_Lower) || 
-         (menuItem->wmFunction == F_Raise) || 
-	 (menuItem->wmFunction == F_Raise_Lower) ||
-	 (menuItem->wmFunction == F_Screen)))
-    {
-	XtFree ((char *)menuItem->wmFuncArgs);
-    }
+  /*
+   * If menuItem->wmFuncArgs is nonNULL, we assume that it is a string that
+   * was malloc'ed in ParseWmFuncStrArg () and we free it now.
+   */
+  if ((menuItem->wmFuncArgs != NULL) &&
+      ((menuItem->wmFunction == F_Exec) || (menuItem->wmFunction == F_Menu) ||
+       (menuItem->wmFunction == F_Lower) || (menuItem->wmFunction == F_Raise) ||
+       (menuItem->wmFunction == F_Raise_Lower) ||
+       (menuItem->wmFunction == F_Screen))) {
+    XtFree((char *)menuItem->wmFuncArgs);
+  }
 
-    XtFree ((char *)menuItem);
+  XtFree((char *)menuItem);
 
 } /* END OF FUNCTION FreeMenuItem */
 
-
-
 /*************************************<->*************************************
  *
  *  ParseWmFuncGrpArg (linePP, wmFunction, pGroup)
@@ -3200,7 +2724,7 @@ void FreeMenuItem (MenuItem *menuItem)
  *  wmFunction = function for which the group argument is intended.
  *  pGroup = pointer to group argument destination.
  *
- * 
+ *
  *  Outputs:
  *  -------
  *  linePP   = pointer to revised line buffer pointer.
@@ -3211,99 +2735,83 @@ void FreeMenuItem (MenuItem *menuItem)
  *  Comments:
  *  --------
  *  The only valid nonNULL arguments are "icon", "window", and "transient".
- * 
+ *
  *************************************<->***********************************/
 
-static Boolean ParseWmFuncGrpArg (unsigned char **linePP, 
-				  WmFunction wmFunction, GroupArg *pGroup)
-{
-    unsigned char  *lineP = *linePP;
-    unsigned char  *startP;
-    unsigned char   grpStr[MAX_GROUP_STRLEN+1];
-    int    len;
+static Boolean ParseWmFuncGrpArg(unsigned char **linePP, WmFunction wmFunction,
+                                 void *pGroupVoid) {
+  GroupArg *pGroup = (GroupArg *)pGroupVoid;
+  unsigned char *lineP = *linePP;
+  unsigned char *startP;
+  unsigned char grpStr[MAX_GROUP_STRLEN + 1];
+  int len;
 
+  /*
+   * Parse groups while each is followed by "|".
+   */
 
+  *pGroup = 0;
+  while (1) {
     /*
-     * Parse groups while each is followed by "|".
+     * Skip whitespace and find next group string.
      */
 
-    *pGroup = 0;
-    while (1)
+    ScanWhitespace(&lineP);
+    startP = lineP;
+    ScanAlphanumeric(&lineP);
+    if (startP == lineP)
+    /* Group missing => use default or complain */
     {
-        /* 
-	 * Skip whitespace and find next group string.
-	 */
-
-        ScanWhitespace (&lineP);
-	startP = lineP;
-        ScanAlphanumeric (&lineP);
-        if (startP == lineP)
-        /* Group missing => use default or complain */
-	{
-	    if (*pGroup)
-	    {
-                PWarning (((char *)GETMESSAGE(60, 18, "Missing group specification")));
-                return (FALSE);
-	    }
-	    else
-	    {
-                *pGroup = F_GROUP_DEFAULT;
-		break;
-	    }
-        }
-
-	/*
-	 * Found a group string; compare it with valid groups.
-	 */
-
-        len = min (lineP - startP, MAX_GROUP_STRLEN);
-        (void) strncpy ((char *)grpStr, (char *)startP, len);
-        grpStr[len] = '\0';
-        ToLower ((char *)grpStr);
-
-        if (!strcmp ("icon", (char *)grpStr))
-        {
-            *pGroup |= F_GROUP_ICON;
-        }
-        else if (!strcmp ("window", (char *)grpStr))
-        {
-            *pGroup |= F_GROUP_WINDOW;
-        }
-        else if (!strcmp ("transient", (char *)grpStr))
-        {
-            *pGroup |= F_GROUP_TRANSIENT;
-        }
-        else 
-        /* Unknown group name */
-        {
-            PWarning (((char *)GETMESSAGE(60, 19, "Invalid group specification")));
-            return (FALSE);
-        }
-
-        /*
-	 *  Continue processing until the line is exhausted.
-	 *  Skip any '|' .
-	 */
-
-        ScanWhitespace (&lineP);
-
-        if (lineP == NULL || *lineP == '\0')
-	{
-	    break; 
-        }
-        else if (*lineP == '|')
-	{
-            lineP++;
-        }
+      if (*pGroup) {
+        PWarning(((char *)GETMESSAGE(60, 18, "Missing group specification")));
+        return (FALSE);
+      } else {
+        *pGroup = F_GROUP_DEFAULT;
+        break;
+      }
     }
 
-    *linePP = lineP;
-    return (TRUE);
+    /*
+     * Found a group string; compare it with valid groups.
+     */
+
+    len = min(lineP - startP, MAX_GROUP_STRLEN);
+    (void)strncpy((char *)grpStr, (char *)startP, len);
+    grpStr[len] = '\0';
+    ToLower((char *)grpStr);
+
+    if (!strcmp("icon", (char *)grpStr)) {
+      *pGroup |= F_GROUP_ICON;
+    } else if (!strcmp("window", (char *)grpStr)) {
+      *pGroup |= F_GROUP_WINDOW;
+    } else if (!strcmp("transient", (char *)grpStr)) {
+      *pGroup |= F_GROUP_TRANSIENT;
+    } else
+    /* Unknown group name */
+    {
+      PWarning(((char *)GETMESSAGE(60, 19, "Invalid group specification")));
+      return (FALSE);
+    }
+
+    /*
+     *  Continue processing until the line is exhausted.
+     *  Skip any '|' .
+     */
+
+    ScanWhitespace(&lineP);
+
+    if (lineP == NULL || *lineP == '\0') {
+      break;
+    } else if (*lineP == '|') {
+      lineP++;
+    }
+  }
+
+  *linePP = lineP;
+  return (TRUE);
 
 } /* END OF FUNCTION ParseWmFuncGrpArg */
 
-
-
 /*************************************<->*************************************
  *
  *  ParseWmFuncNbrArg (linePP, wmFunction, pNumber)
@@ -3317,10 +2825,10 @@ static Boolean ParseWmFuncGrpArg (unsigned char **linePP,
  *  Inputs:
  *  ------
  *  linePP   = pointer to current line buffer pointer.
- *  wmFunction = function 
+ *  wmFunction = function
  *  pNumber = pointer to number argument destination.
  *
- * 
+ *
  *  Outputs:
  *  -------
  *  linePP   = pointer to revised line buffer pointer.
@@ -3331,25 +2839,23 @@ static Boolean ParseWmFuncGrpArg (unsigned char **linePP,
  *  Comments:
  *  --------
  *  None.
- * 
+ *
  *************************************<->***********************************/
 
-static Boolean ParseWmFuncNbrArg (unsigned char **linePP, 
-				  WmFunction wmFunction, 
-				  unsigned long *pNumber)
-{
-    int  val;
+static Boolean ParseWmFuncNbrArg(unsigned char **linePP, WmFunction wmFunction,
+                                 void *pNumberVoid) {
+  unsigned long *pNumber = (unsigned long *)pNumberVoid;
+  int val;
 
-    val = StrToNum (GetString (linePP));
-    if (val == -1)
-    {
-        PWarning (((char *)GETMESSAGE(60, 20, "Invalid number specification")));
-        *pNumber = 0;
-        return (FALSE);
-    }
+  val = StrToNum(GetString(linePP));
+  if (val == -1) {
+    PWarning(((char *)GETMESSAGE(60, 20, "Invalid number specification")));
+    *pNumber = 0;
+    return (FALSE);
+  }
 
-    *pNumber = val;
-    return (TRUE);
+  *pNumber = val;
+  return (TRUE);
 
 } /* END OF FUNCTION ParseWmFuncNbrArg */
 
@@ -3377,7 +2883,7 @@ static Boolean ParseWmFuncNbrArg (unsigned char **linePP,
  *  pSD->buttonBindings = buttonBindings resource value
  *  functionTable = window manager function parse table
  *
- * 
+ *
  *  Outputs:
  *  -------
  *  pSD->buttonSpecs = list of button binding specifications.
@@ -3386,24 +2892,21 @@ static Boolean ParseWmFuncNbrArg (unsigned char **linePP,
  *  Comments:
  *  --------
  *  The button set specification name must match pSD->buttonBindings.
- * 
+ *
  *************************************<->***********************************/
 
-void ParseButtonStr (WmScreenData *pSD, unsigned char *buttonStr)
-{
-    unsigned char *lineP;
+void ParseButtonStr(WmScreenData *pSD, unsigned char *buttonStr) {
+  unsigned char *lineP;
 
-    cfileP = NULL;
-    linec = 0;
-    if (((parseP = buttonStr) != NULL) && (GetNextLine () != NULL))
-    {
-	lineP = line;
-        ParseButtonSet (pSD, lineP);
-    }
+  cfileP = NULL;
+  linec = 0;
+  if (((parseP = buttonStr) != NULL) && (GetNextLine() != NULL)) {
+    lineP = line;
+    ParseButtonSet(pSD, lineP);
+  }
 
 } /* END OF FUNCTION ParseButtonStr */
 
-
 /*************************************<->*************************************
  *
  *  ParseButtonSet (pSD, lineP)
@@ -3430,7 +2933,7 @@ void ParseButtonStr (WmScreenData *pSD, unsigned char *buttonStr)
  *  lineP = pointer to current character in line buffer
  *  pSD->buttonBindings = buttonBindings resource value
  *
- * 
+ *
  *  Outputs:
  *  -------
  *  lineP = pointer to current character in line buffer
@@ -3442,189 +2945,173 @@ void ParseButtonStr (WmScreenData *pSD, unsigned char *buttonStr)
  *  Skips unnamed button binding set and sets with names that don't match
  *  the buttonBindings resource.
  *  Skips bad button binding specifications.
- * 
+ *
  *************************************<->***********************************/
 
-static void ParseButtonSet (WmScreenData *pSD, unsigned char *lineP)
-{
-    unsigned char *string;
-    ButtonSpec    *buttonSpec;
-    ButtonSpec    *lastButtonSpec;
-    int            ix;
-    
-    /*
-     * Parse the button set bindings from the configuration file.
-     * If either the button set name or buttonBindings resource is NULL or 
-     *   they don't match, then skip this button specification.
-     */
+static void ParseButtonSet(WmScreenData *pSD, unsigned char *lineP) {
+  unsigned char *string;
+  ButtonSpec *buttonSpec;
+  ButtonSpec *lastButtonSpec;
+  int ix;
 
-    if (((string = GetString (&lineP)) == NULL) ||
-        (pSD->buttonBindings == NULL) ||
-        strcmp ((char *)string, pSD->buttonBindings))
+  /*
+   * Parse the button set bindings from the configuration file.
+   * If either the button set name or buttonBindings resource is NULL or
+   *   they don't match, then skip this button specification.
+   */
+
+  if (((string = GetString(&lineP)) == NULL) || (pSD->buttonBindings == NULL) ||
+      strcmp((char *)string, pSD->buttonBindings)) {
+    return;
+  }
+
+  /*
+   * Require leading '{' on the next line.
+   */
+  while ((GetNextLine() != NULL)) /* not EOF nor read error */
+  {
+    lineP = line;
+    ScanWhitespace(&lineP);
+
+    if ((lineP == NULL) || (*line == '!') || (*lineP == '\0') ||
+        (*lineP == '#'))
+    /* ignore empty or comment line */
     {
-        return;
+      continue;
     }
 
-    /* 
-     * Require leading '{' on the next line.
-     */
-    while ((GetNextLine () != NULL))  /* not EOF nor read error */
+    if (*lineP == '{')
+    /* found '{' */
     {
-        lineP = line;
-	ScanWhitespace(&lineP);
+      break;
+    }
 
-	if ((lineP == NULL) || (*line == '!') || (*lineP == '\0') || (*lineP == '#'))
-	/* ignore empty or comment line */
-        {
-            continue;
-        }
+    /* not a '{' */
+    PWarning(
+        ((char *)GETMESSAGE(60, 21, "Expected '{' after button set name")));
+    return;
+  }
 
-        if (*lineP == '{')
-        /* found '{' */
-        {
-            break;
-        }
+  /*
+   * Found leading "{" or EOF.
+   * Prepare to accumulate button bindings by finding the end of
+   *   the button specification list.
+   * lastButtonSpec will be NULL only if no prior bindings exist.
+   */
 
-        /* not a '{' */
-	PWarning (((char *)GETMESSAGE(60, 21, "Expected '{' after button set name")));
-        return;
+  lastButtonSpec = pSD->buttonSpecs;
+  if (lastButtonSpec != NULL) {
+    while (lastButtonSpec->nextButtonSpec != NULL) {
+      lastButtonSpec = (lastButtonSpec->nextButtonSpec);
+    }
+  }
+
+  /*
+   * Parse "button context function"  until "}" or EOF found.
+   * Skips bad button binding specifications.
+   */
+
+  while ((GetNextLine() != NULL)) /* not EOF nor read error */
+  {
+    lineP = line;
+    ScanWhitespace(&lineP);
+    if ((lineP == NULL) || (*line == '!') || (*lineP == '\0') ||
+        (*lineP == '#'))
+    /* ignore empty or comment lines */
+    {
+      continue;
+    }
+    if (*lineP == '}') /* finished with button set */
+    {
+      break;
     }
 
     /*
-     * Found leading "{" or EOF.
-     * Prepare to accumulate button bindings by finding the end of
-     *   the button specification list.
-     * lastButtonSpec will be NULL only if no prior bindings exist.
+     * Allocate space for the button binding specification.
+     */
+    if ((buttonSpec = (ButtonSpec *)XtMalloc(sizeof(ButtonSpec))) == NULL) {
+      PWarning(((char *)GETMESSAGE(
+          60, 22, "Insufficient memory for button specification")));
+      continue;
+    }
+    buttonSpec->wmFunction = (WmFunction)NULL;
+    buttonSpec->wmFuncArgs = NULL;
+    buttonSpec->nextButtonSpec = NULL;
+
+    /*
+     * Parse the button specification "button".
+     */
+    lineP = line;
+    if (!ParseBtnEvent(&lineP, &buttonSpec->eventType, &buttonSpec->button,
+                       &buttonSpec->state, &buttonSpec->click)) {
+      PWarning(((char *)GETMESSAGE(60, 23, "Invalid button specification")));
+      XtFree((char *)buttonSpec);
+      continue; /* skip this button specification */
+    }
+
+    /*
+     * Parse the button context.
+     */
+    if (!ParseContext(&lineP, &buttonSpec->context, &buttonSpec->subContext)) {
+      PWarning(((char *)GETMESSAGE(60, 24, "Invalid button context")));
+      XtFree((char *)buttonSpec);
+      continue; /* skip this button specification */
+    }
+
+    /*
+     * Parse the button function and any arguments.
      */
 
-    lastButtonSpec = pSD->buttonSpecs;
+    ix = ParseWmFunction(&lineP, CRS_BUTTON, &buttonSpec->wmFunction);
+
+    /*
+     * remove any subContexts that don't apply to this function
+     */
+
+    if ((functionTable[ix].greyedContext & F_SUBCONTEXT_IB_IICON) &&
+        (buttonSpec->subContext & F_SUBCONTEXT_IB_IICON)) {
+      buttonSpec->subContext &= ~F_SUBCONTEXT_IB_IICON;
+    }
+
+    if ((functionTable[ix].greyedContext & F_SUBCONTEXT_IB_WICON) &&
+        (buttonSpec->subContext & F_SUBCONTEXT_IB_WICON)) {
+      buttonSpec->subContext &= ~F_SUBCONTEXT_IB_WICON;
+    }
+
+    /*
+     * Map Button3 menus to BMenu virtual button
+     */
+    if (buttonSpec->button == Button3 &&
+        (buttonSpec->wmFunction == F_Menu ||
+         buttonSpec->wmFunction == F_Post_SMenu)) {
+
+      buttonSpec->button = wmGD.bMenuButton;
+    }
+
+    /*
+     * Apply the function argument parser.
+     */
+    if (!(*(functionTable[ix].parseProc))(&lineP, buttonSpec->wmFunction,
+                                          &buttonSpec->wmFuncArgs)) {
+      XtFree((char *)buttonSpec);
+      continue; /* skip this button specification */
+    }
+
+    /*
+     * Add the button specification to the button specification list.
+     */
     if (lastButtonSpec != NULL)
+    /* a prior specification exists */
     {
-        while (lastButtonSpec->nextButtonSpec != NULL)
-        {
-            lastButtonSpec = (lastButtonSpec->nextButtonSpec);
-        }
+      lastButtonSpec->nextButtonSpec = buttonSpec;
+    } else {
+      pSD->buttonSpecs = buttonSpec;
     }
-
-    /*
-     * Parse "button context function"  until "}" or EOF found.
-     * Skips bad button binding specifications.
-     */
-
-    while ((GetNextLine () != NULL))  /* not EOF nor read error */
-    {
-	lineP = line;
-	ScanWhitespace(&lineP);
-	if ((lineP == NULL) || (*line == '!') || (*lineP == '\0') || (*lineP == '#'))
-	/* ignore empty or comment lines */
-        {
-            continue;
-        }
-        if (*lineP == '}')  /* finished with button set */
-        {
-	    break;
-        }
-
-	/*
-	 * Allocate space for the button binding specification. 
-	 */
-        if ((buttonSpec = (ButtonSpec *)XtMalloc (sizeof (ButtonSpec))) == NULL)
-	{
-            PWarning (((char *)GETMESSAGE(60, 22, "Insufficient memory for button specification")));
-            continue;
-	}
-	buttonSpec->wmFunction = (WmFunction)NULL;
-	buttonSpec->wmFuncArgs = NULL;
-	buttonSpec->nextButtonSpec = NULL;
-
-	/*
-	 * Parse the button specification "button".
-	 */
-	lineP = line;
-	if (!ParseBtnEvent(&lineP,
-			   &buttonSpec->eventType,
-			   &buttonSpec->button,
-	                   &buttonSpec->state,
-	                   &buttonSpec->click))
-	{
-            PWarning (((char *)GETMESSAGE(60, 23, "Invalid button specification")));
-	    XtFree ((char *)buttonSpec);
-	    continue;  /* skip this button specification */
-	}
-
-
-	/*
-	 * Parse the button context.
-	 */
-	if (!ParseContext(&lineP, &buttonSpec->context, 
-			  &buttonSpec->subContext))
-	{
-            PWarning (((char *)GETMESSAGE(60, 24, "Invalid button context")));
-	    XtFree ((char *)buttonSpec);
-	    continue;  /* skip this button specification */
-	}
-
-        /*
-	 * Parse the button function and any arguments.
-	 */
-
-	ix = ParseWmFunction (&lineP, CRS_BUTTON, &buttonSpec->wmFunction);
-
-	/*
-	 * remove any subContexts that don't apply to this function
-	 */
-
-	if ((functionTable[ix].greyedContext & F_SUBCONTEXT_IB_IICON) &&
-	    (buttonSpec->subContext & F_SUBCONTEXT_IB_IICON))
-	{
-	    buttonSpec->subContext &= ~F_SUBCONTEXT_IB_IICON;
-	}
-
-	if ((functionTable[ix].greyedContext & F_SUBCONTEXT_IB_WICON) &&
-	    (buttonSpec->subContext & F_SUBCONTEXT_IB_WICON))
-	{
-	    buttonSpec->subContext &= ~F_SUBCONTEXT_IB_WICON;
-	}
-
-	/*
-	 * Map Button3 menus to BMenu virtual button
-	 */
-        if (buttonSpec->button == Button3 && 
-	   (buttonSpec->wmFunction == F_Menu ||
-	    buttonSpec->wmFunction == F_Post_SMenu)) {
-
-	    buttonSpec->button = wmGD.bMenuButton;
-	}
-
-        /* 
-	 * Apply the function argument parser.
-	 */
-        if (!(*(functionTable [ix].parseProc)) 
-		   (&lineP, buttonSpec->wmFunction, &buttonSpec->wmFuncArgs))
-        {
-	    XtFree ((char *)buttonSpec);
-	    continue;  /* skip this button specification */
-	}
-
-        /* 
-	 * Add the button specification to the button specification list.
-	 */
-        if (lastButtonSpec != NULL)
-	/* a prior specification exists */
-        {
-            lastButtonSpec->nextButtonSpec = buttonSpec;
-        }
-	else
-        {
-            pSD->buttonSpecs = buttonSpec;
-        }
-        lastButtonSpec = buttonSpec;
-    }
+    lastButtonSpec = buttonSpec;
+  }
 
 } /* END OF FUNCTION ParseButtonSet */
 
-
-
 /*************************************<->*************************************
  *
  *  ParseContext (linePP, context, subContext)
@@ -3638,7 +3125,7 @@ static void ParseButtonSet (WmScreenData *pSD, unsigned char *lineP)
  *  Inputs:
  *  ------
  *  linePP =  pointer to current line buffer pointer.
- * 
+ *
  *  Outputs:
  *  -------
  *  linePP =  pointer to revised line buffer pointer.
@@ -3650,111 +3137,89 @@ static void ParseButtonSet (WmScreenData *pSD, unsigned char *lineP)
  *  Comments:
  *  --------
  *  None.
- * 
+ *
  *************************************<->***********************************/
 
-static Boolean ParseContext (unsigned char **linePP, Context *context, 
-			     Context *subContext)
-{
-    unsigned char   *lineP = *linePP;
-    unsigned char   *startP;
-    unsigned char    ctxStr[MAX_CONTEXT_STRLEN+1];
-    int     len;
+static Boolean ParseContext(unsigned char **linePP, Context *context,
+                            Context *subContext) {
+  unsigned char *lineP = *linePP;
+  unsigned char *startP;
+  unsigned char ctxStr[MAX_CONTEXT_STRLEN + 1];
+  int len;
+
+  /*
+   * Parse contexts while each is followed by "|".
+   */
+
+  *context = 0;
+  *subContext = 0;
+  while (1) {
 
     /*
-     * Parse contexts while each is followed by "|".
+     * Skip whitespace and find next context string.
      */
-
-    *context = 0;
-    *subContext = 0;
-    while (1) {
-
-        /* 
-	 * Skip whitespace and find next context string.
-	 */
-        ScanWhitespace (&lineP);
-	startP = lineP;
-        ScanAlphanumeric (&lineP);
-        if (startP == lineP)
-        /* ERROR: Context missing */
-	{
-           return (FALSE);
-        }
-
-	/*
-	 * Found nonNULL string; compare it with valid contexts.
-	 */
-
-        len = min(lineP - startP, MAX_CONTEXT_STRLEN);
-        (void) strncpy ((char *)ctxStr, (char *)startP, len);
-        ctxStr[len] = '\0';
-        ToLower ((char *)ctxStr);
-
-        if (!strcmp ("root", (char *)ctxStr))
-        {
-            *context |= F_CONTEXT_ROOT;
-	    *subContext |= F_SUBCONTEXT_R_ALL;
-        }
-        else if (!strcmp ("icon", (char *)ctxStr))
-        {
-            *context |= (F_CONTEXT_ICON        |
-			 F_CONTEXT_ICONBOX     |
-			 F_SUBCONTEXT_IB_IICON | 
-			 F_SUBCONTEXT_IB_WICON );
-	    *subContext |= (F_SUBCONTEXT_I_ALL    | 
-			    F_SUBCONTEXT_IB_IICON | 
-			    F_SUBCONTEXT_IB_WICON );
-        }
-        else if (!strcmp ("window", (char *)ctxStr))
-        {
-            *context |= F_CONTEXT_WINDOW;
-	    *subContext |= F_SUBCONTEXT_W_ALL;
-        }
-        else if (!strcmp ("frame", (char *)ctxStr))
-        {
-            *context |= F_CONTEXT_WINDOW;
-	    *subContext |= F_SUBCONTEXT_W_FRAME;
-        }
-        else if (!strcmp ("title", (char *)ctxStr))
-        {
-            *context |= F_CONTEXT_WINDOW;
-	    *subContext |= F_SUBCONTEXT_W_TITLE;
-        }
-        else if (!strcmp ("border", (char *)ctxStr))
-        {
-            *context |= F_CONTEXT_WINDOW;
-	    *subContext |= F_SUBCONTEXT_W_BORDER;
-        }
-        else if (!strcmp ("app", (char *)ctxStr))
-        {
-            *context |= F_CONTEXT_WINDOW;
-	    *subContext |= F_SUBCONTEXT_W_APP;
-        }
-        else if (!strcmp ("ifkey", (char *)ctxStr))
-        {
-            *context |= F_CONTEXT_IFKEY;
-        }
-        else 
-        /* Unknown context name */
-        {
-           return (FALSE);
-        }
-
-        /* continue only if followed by '|' */
-        ScanWhitespace (&lineP);
-        if (*lineP != '|')
-	{
-	    break; 
-        }
-        lineP++;
+    ScanWhitespace(&lineP);
+    startP = lineP;
+    ScanAlphanumeric(&lineP);
+    if (startP == lineP)
+    /* ERROR: Context missing */
+    {
+      return (FALSE);
     }
 
-    *linePP = lineP;
-    return (TRUE);
+    /*
+     * Found nonNULL string; compare it with valid contexts.
+     */
+
+    len = min(lineP - startP, MAX_CONTEXT_STRLEN);
+    (void)strncpy((char *)ctxStr, (char *)startP, len);
+    ctxStr[len] = '\0';
+    ToLower((char *)ctxStr);
+
+    if (!strcmp("root", (char *)ctxStr)) {
+      *context |= F_CONTEXT_ROOT;
+      *subContext |= F_SUBCONTEXT_R_ALL;
+    } else if (!strcmp("icon", (char *)ctxStr)) {
+      *context |= (F_CONTEXT_ICON | F_CONTEXT_ICONBOX | F_SUBCONTEXT_IB_IICON |
+                   F_SUBCONTEXT_IB_WICON);
+      *subContext |=
+          (F_SUBCONTEXT_I_ALL | F_SUBCONTEXT_IB_IICON | F_SUBCONTEXT_IB_WICON);
+    } else if (!strcmp("window", (char *)ctxStr)) {
+      *context |= F_CONTEXT_WINDOW;
+      *subContext |= F_SUBCONTEXT_W_ALL;
+    } else if (!strcmp("frame", (char *)ctxStr)) {
+      *context |= F_CONTEXT_WINDOW;
+      *subContext |= F_SUBCONTEXT_W_FRAME;
+    } else if (!strcmp("title", (char *)ctxStr)) {
+      *context |= F_CONTEXT_WINDOW;
+      *subContext |= F_SUBCONTEXT_W_TITLE;
+    } else if (!strcmp("border", (char *)ctxStr)) {
+      *context |= F_CONTEXT_WINDOW;
+      *subContext |= F_SUBCONTEXT_W_BORDER;
+    } else if (!strcmp("app", (char *)ctxStr)) {
+      *context |= F_CONTEXT_WINDOW;
+      *subContext |= F_SUBCONTEXT_W_APP;
+    } else if (!strcmp("ifkey", (char *)ctxStr)) {
+      *context |= F_CONTEXT_IFKEY;
+    } else
+    /* Unknown context name */
+    {
+      return (FALSE);
+    }
+
+    /* continue only if followed by '|' */
+    ScanWhitespace(&lineP);
+    if (*lineP != '|') {
+      break;
+    }
+    lineP++;
+  }
+
+  *linePP = lineP;
+  return (TRUE);
 
 } /* END OF FUNCTION ParseContext */
 
-
 /*************************************<->*************************************
  *
  *  ParseKeyStr ()
@@ -3778,7 +3243,7 @@ static Boolean ParseContext (unsigned char **linePP, Context *context,
  *  pSD->keyBindings = keyBindings resource value
  *  functionTable = window manager function parse table
  *
- * 
+ *
  *  Outputs:
  *  -------
  *  pSD->keySpecs = list of key binding specification
@@ -3787,26 +3252,21 @@ static Boolean ParseContext (unsigned char **linePP, Context *context,
  *  Comments:
  *  --------
  *  The key set specification name must match pSD->keyBindings.
- * 
+ *
  *************************************<->***********************************/
 
-void
-ParseKeyStr (WmScreenData *pSD, unsigned char *keyStr)
-{
-    unsigned char *lineP;
+void ParseKeyStr(WmScreenData *pSD, unsigned char *keyStr) {
+  unsigned char *lineP;
 
-    cfileP = NULL;
-    linec = 0;
-    if (((parseP = keyStr) != NULL) && (GetNextLine () != NULL))
-    {
-	lineP = line;
-        ParseKeySet (pSD, lineP);
-    }
+  cfileP = NULL;
+  linec = 0;
+  if (((parseP = keyStr) != NULL) && (GetNextLine() != NULL)) {
+    lineP = line;
+    ParseKeySet(pSD, lineP);
+  }
 
 } /* END OF FUNCTION ParseKeyStr */
 
-
-
 /*************************************<->*************************************
  *
  *  ParseKeySet (pSD, lineP)
@@ -3833,7 +3293,7 @@ ParseKeyStr (WmScreenData *pSD, unsigned char *keyStr)
  *  lineP = pointer to current character in line buffer
  *  pSD->keyBindings = keyBindings resource value
  *
- * 
+ *
  *  Outputs:
  *  -------
  *  lineP = pointer to current character in line buffer
@@ -3842,200 +3302,184 @@ ParseKeyStr (WmScreenData *pSD, unsigned char *keyStr)
  *
  *  Comments:
  *  --------
- *  Skips unnamed key binding set and sets with names that don't match the 
+ *  Skips unnamed key binding set and sets with names that don't match the
  *  keyBindings resource.
  *  Skips bad key binding specifications.
- * 
+ *
  *************************************<->***********************************/
 
-static void ParseKeySet (WmScreenData *pSD, unsigned char *lineP)
-{
-    unsigned char         *string;
-    KeySpec      *keySpec;
-    KeySpec      *lastKeySpec;
-    unsigned int  eventType;
-    int           ix;
-    Boolean 	bBadKey;
-    
-    /*
-     * Parse the key set bindings from the configuration file.
-     * If either the key set name or keyBindings resource is NULL or they
-     *   don't match then skip this key specification.
-     */
+static void ParseKeySet(WmScreenData *pSD, unsigned char *lineP) {
+  unsigned char *string;
+  KeySpec *keySpec;
+  KeySpec *lastKeySpec;
+  unsigned int eventType;
+  int ix;
+  Boolean bBadKey;
 
-    if (((string = GetString (&lineP)) == NULL) ||
-        (pSD->keyBindings == NULL) ||
-        strcmp ((char *)string, pSD->keyBindings))
+  /*
+   * Parse the key set bindings from the configuration file.
+   * If either the key set name or keyBindings resource is NULL or they
+   *   don't match then skip this key specification.
+   */
+
+  if (((string = GetString(&lineP)) == NULL) || (pSD->keyBindings == NULL) ||
+      strcmp((char *)string, pSD->keyBindings)) {
+    return;
+  }
+
+  /*
+   * Require leading '{' on next line.
+   */
+  while ((GetNextLine() != NULL)) /* not EOF nor read error */
+  {
+    lineP = line;
+    ScanWhitespace(&lineP);
+
+    if ((lineP == NULL) || (*line == '!') || (*lineP == '\0') ||
+        (*lineP == '#'))
+    /* ignore empty or comment line */
     {
-        return;
+      continue;
+    }
+
+    if (*lineP == '{')
+    /* found '{' */
+    {
+      break;
+    }
+
+    /* not a '{' */
+    PWarning(((char *)GETMESSAGE(60, 25, "Expected '{' after key set name")));
+    return;
+  }
+
+  /*
+   * Found leading "{" or EOF.
+   * Prepare to accumulate key bindings by finding the end of
+   *   the key specification list.
+   * lastKeySpec will be NULL only if no prior bindings exist.
+   */
+
+  lastKeySpec = pSD->keySpecs;
+  if (lastKeySpec != NULL) {
+    while (lastKeySpec->nextKeySpec != NULL) {
+      lastKeySpec = (lastKeySpec->nextKeySpec);
+    }
+  }
+
+  /*
+   * Parse "key context function"  until "}" or EOF found.
+   * Skip bad key bindings.
+   */
+
+  while ((GetNextLine() != NULL)) /* not EOF nor read error */
+  {
+    lineP = line;
+    ScanWhitespace(&lineP);
+    if ((lineP == NULL) || (*line == '!') || (*lineP == '\0') ||
+        (*lineP == '#'))
+    /* ignore empty or comment lines */
+    {
+      continue;
+    }
+    if (*lineP == '}') /* finished with key set */
+    {
+      break;
     }
 
     /*
-     * Require leading '{' on next line.
+     * Allocate space for the key specification.
      */
-    while ((GetNextLine () != NULL))  /* not EOF nor read error */
-    {
-        lineP = line;
-	ScanWhitespace(&lineP);
+    if ((keySpec = (KeySpec *)XtMalloc(sizeof(KeySpec))) == NULL) {
+      PWarning(((char *)GETMESSAGE(
+          60, 26, "Insufficient memory for key specification")));
+      continue;
+    }
 
-	if ((lineP == NULL) || (*line == '!') || (*lineP == '\0') || (*lineP == '#'))
-	/* ignore empty or comment line */
-        {
-            continue;
-        }
+    keySpec->wmFunction = (WmFunction)NULL;
+    keySpec->wmFuncArgs = NULL;
+    keySpec->nextKeySpec = NULL;
 
-        if (*lineP == '{')
-	/* found '{' */
-        {
-            break;
-        }
-
-	/* not a '{' */
-	PWarning (((char *)GETMESSAGE(60, 25, "Expected '{' after key set name")));
-        return;
+    /*
+     * Parse the key specification.
+     */
+    bBadKey = False;
+    if (!ParseKeyEvent(&lineP, &eventType, &keySpec->keycode,
+                       &keySpec->state)) {
+      bBadKey = True;
     }
 
     /*
-     * Found leading "{" or EOF.
-     * Prepare to accumulate key bindings by finding the end of
-     *   the key specification list.
-     * lastKeySpec will be NULL only if no prior bindings exist.
+     * Parse the key context.
+     *   Here lineP points to the candidate context string.
      */
 
-    lastKeySpec = pSD->keySpecs;
+    if (!ParseContext(&lineP, &keySpec->context, &keySpec->subContext)) {
+      if (bBadKey)
+        PWarning(((char *)GETMESSAGE(60, 27, "Invalid key specification")));
+      PWarning(((char *)GETMESSAGE(60, 28, "Invalid key context")));
+      XtFree((char *)keySpec);
+      continue; /* skip this key specification */
+    }
+    if (bBadKey) {
+      /*
+       * Don't print an error message if this is a "hardware
+       * available" binding.
+       */
+      if (!(keySpec->context & F_CONTEXT_IFKEY))
+        PWarning(((char *)GETMESSAGE(60, 27, "Invalid key specification")));
+      XtFree((char *)keySpec);
+      continue; /* skip this key specification */
+    }
+
+    /*
+     * This flag is only used for parsing, clear it so the
+     * rest of the program doesn't see it.
+     */
+    keySpec->context &= ~F_CONTEXT_IFKEY;
+
+    /*
+     * Parse the key function and any arguments.
+     */
+
+    ix = ParseWmFunction(&lineP, CRS_KEY, &keySpec->wmFunction);
+
+    /*
+     * remove any subContexts that don't apply to this function
+     */
+    if ((functionTable[ix].greyedContext & F_SUBCONTEXT_IB_IICON) &&
+        (keySpec->subContext & F_SUBCONTEXT_IB_IICON)) {
+      keySpec->subContext &= ~F_SUBCONTEXT_IB_IICON;
+    }
+
+    if ((functionTable[ix].greyedContext & F_SUBCONTEXT_IB_WICON) &&
+        (keySpec->subContext & F_SUBCONTEXT_IB_WICON)) {
+      keySpec->subContext &= ~F_SUBCONTEXT_IB_WICON;
+    }
+
+    /*
+     * Apply the function argument parser.
+     */
+    if (!(*(functionTable[ix].parseProc))(&lineP, keySpec->wmFunction,
+                                          &keySpec->wmFuncArgs)) {
+      XtFree((char *)keySpec);
+      continue; /* skip this key specification */
+    }
+
+    /*
+     * Add the key specification to the key specification list.
+     */
     if (lastKeySpec != NULL)
+    /* a prior specification exists */
     {
-        while (lastKeySpec->nextKeySpec != NULL)
-        {
-            lastKeySpec = (lastKeySpec->nextKeySpec);
-        }
+      lastKeySpec->nextKeySpec = keySpec;
+    } else {
+      pSD->keySpecs = keySpec;
     }
-
-    /*
-     * Parse "key context function"  until "}" or EOF found.
-     * Skip bad key bindings.
-     */
-
-    while ((GetNextLine () != NULL))  /* not EOF nor read error */
-    {
-	lineP = line;
-	ScanWhitespace (&lineP);
-	if ((lineP == NULL) || (*line == '!') || (*lineP == '\0') || (*lineP == '#'))
-	/* ignore empty or comment lines */
-        {
-            continue;
-        }
-        if (*lineP == '}')  /* finished with key set */
-        {
-	    break;
-        }
-
-	/*
-	 * Allocate space for the key specification.
-	 */
-        if ((keySpec = (KeySpec *)XtMalloc (sizeof (KeySpec))) == NULL)
-	{
-            PWarning (((char *)GETMESSAGE(60, 26, "Insufficient memory for key specification")));
-            continue;
-	}
-
-	keySpec->wmFunction = (WmFunction)NULL;
-	keySpec->wmFuncArgs = NULL;
-	keySpec->nextKeySpec = NULL;
-
-	/*
-	 * Parse the key specification.
-	 */
-	bBadKey = False;
-	if (!ParseKeyEvent(&lineP,
-			   &eventType,
-			   &keySpec->keycode,
-	                   &keySpec->state))
-	{
-	    bBadKey = True;
-	}
-
-	/*
-	 * Parse the key context.
-	 *   Here lineP points to the candidate context string.
-	 */
-
-	if (!ParseContext(&lineP, &keySpec->context, 
-			  &keySpec->subContext))
-	{
-	    if (bBadKey)
-		PWarning (((char *)GETMESSAGE(60, 27, "Invalid key specification")));
-            PWarning (((char *)GETMESSAGE(60, 28, "Invalid key context")));
-	    XtFree ((char *)keySpec);
-	    continue;  /* skip this key specification */
-	}
-	if (bBadKey)
-	{
-	    /*
-	     * Don't print an error message if this is a "hardware
-	     * available" binding.
-	     */
-	    if (!(keySpec->context & F_CONTEXT_IFKEY))
-		PWarning (((char *)GETMESSAGE(60, 27, "Invalid key specification")));
-	    XtFree ((char *)keySpec);
-	    continue;  /* skip this key specification */
-	}
-
-	/*
-	 * This flag is only used for parsing, clear it so the
-	 * rest of the program doesn't see it.
-	 */
-	keySpec->context &= ~F_CONTEXT_IFKEY;
-
-
-        /*
-	 * Parse the key function and any arguments.
-	 */
-
-	ix = ParseWmFunction (&lineP, CRS_KEY, &keySpec->wmFunction);
-	
-	/*
-	 * remove any subContexts that don't apply to this function
-	 */
-	if ((functionTable[ix].greyedContext & F_SUBCONTEXT_IB_IICON) &&
-	    (keySpec->subContext & F_SUBCONTEXT_IB_IICON))
-	{
-	    keySpec->subContext &= ~F_SUBCONTEXT_IB_IICON;
-	}
-
-	if ((functionTable[ix].greyedContext & F_SUBCONTEXT_IB_WICON) &&
-	    (keySpec->subContext & F_SUBCONTEXT_IB_WICON))
-	{
-	    keySpec->subContext &= ~F_SUBCONTEXT_IB_WICON;
-	}
-
-        /* 
-	 * Apply the function argument parser.
-	 */
-        if (!(*(functionTable [ix].parseProc)) 
-		   (&lineP, keySpec->wmFunction, &keySpec->wmFuncArgs))
-        {
-	    XtFree ((char *)keySpec);
-	    continue;  /* skip this key specification */
-	}
-
-        /* 
-	 * Add the key specification to the key specification list. 
-	 */
-        if (lastKeySpec != NULL)
-	/* a prior specification exists */
-        {
-            lastKeySpec->nextKeySpec = keySpec;
-        }
-	else
-        {
-            pSD->keySpecs = keySpec;
-        }
-        lastKeySpec = keySpec;
-    }
+    lastKeySpec = keySpec;
+  }
 
 } /* END OF FUNCTION ParseKeySet */
-
 
 /*************************************<->*************************************
  *
@@ -4053,7 +3497,7 @@ static void ParseKeySet (WmScreenData *pSD, unsigned char *lineP)
  *  buttonEvents =    (global) button event parse table
  *  modifierStrings = (global) modifier string/mask table
  *
- * 
+ *
  *  Outputs:
  *  -------
  *  linePP =    pointer to revised line buffer pointer.
@@ -4063,41 +3507,34 @@ static void ParseKeySet (WmScreenData *pSD, unsigned char *lineP)
  *  fClick =    is click?
  *
  *  Return = (Boolean) true iff valid button event specification
- * 
+ *
  *
  *  Comments:
  *  --------
  *  None.
- * 
+ *
  *************************************<->***********************************/
 
-Boolean ParseBtnEvent (unsigned char  **linePP,
-		       unsigned int *eventType,
-		       unsigned int *button,
-		       unsigned int *state,
-		       Boolean      *fClick)
-{
-    if (!ParseEvent (linePP, buttonEvents, eventType, button, state, fClick))
-    {
-       return (FALSE);
-    }
+Boolean ParseBtnEvent(unsigned char **linePP, unsigned int *eventType,
+                      unsigned int *button, unsigned int *state,
+                      Boolean *fClick) {
+  if (!ParseEvent(linePP, buttonEvents, eventType, button, state, fClick)) {
+    return (FALSE);
+  }
 
-    /* 
-     * The following is a fix for an X11 deficiency in regards to 
-     * modifiers in grabs.
-     */
-    if (*eventType == ButtonRelease)
-    {
-	/* the button that is going up will always be in the modifiers... */
-	*state |= buttonModifierMasks[*button];
-    }
+  /*
+   * The following is a fix for an X11 deficiency in regards to
+   * modifiers in grabs.
+   */
+  if (*eventType == ButtonRelease) {
+    /* the button that is going up will always be in the modifiers... */
+    *state |= buttonModifierMasks[*button];
+  }
 
-    return (TRUE);
+  return (TRUE);
 
 } /* END OF FUNCTION ParseBtnEvent */
 
-
-
 /*************************************<->*************************************
  *
  *  ParseKeyEvent (linePP, eventType, keyCode, state)
@@ -4114,7 +3551,7 @@ Boolean ParseBtnEvent (unsigned char  **linePP,
  *  keyEvents =       (global) key event parse table
  *  modifierStrings = (global) modifier string/mask table
  *
- * 
+ *
  *  Outputs:
  *  -------
  *  linePP =    pointer to revised line buffer pointer.
@@ -4123,61 +3560,50 @@ Boolean ParseBtnEvent (unsigned char  **linePP,
  *  state =     composite modifier mask
  *
  *  Return = (Boolean) true iff valid key event specification
- * 
+ *
  *
  *  Comments:
  *  --------
  *  None.
- * 
+ *
  *************************************<->***********************************/
 
-Boolean ParseKeyEvent (unsigned char **linePP, unsigned int *eventType,
-		       KeyCode *keyCode,  unsigned int *state)
-
+Boolean ParseKeyEvent(unsigned char **linePP, unsigned int *eventType,
+                      KeyCode *keyCode, unsigned int *state)
 
 {
-    Boolean      fClick;
-    unsigned int keySym = 0;
+  Boolean fClick;
+  unsigned int keySym = 0;
 
-    if (!ParseEvent (linePP, keyEvents, eventType, &keySym, state, &fClick))
-    {
-       return (FALSE);
+  if (!ParseEvent(linePP, keyEvents, eventType, &keySym, state, &fClick)) {
+    return (FALSE);
+  }
+
+  /*
+   * Here keySym is a KeySym.  Convert it to a KeyCode.
+   * KeyCode will be set to 0 if keySym is not defined for any KeyCode
+   *  (e.g. 0x001).
+   */
+
+  *keyCode = XKeysymToKeycode(DISPLAY, (KeySym)keySym);
+
+  if (*keyCode == 0) {
+    if (keySym == XK_F9) {
+      keySym = XK_KP_F1;
+    } else if (keySym == XK_F10) {
+      keySym = XK_KP_F2;
+    } else if (keySym == XK_F11) {
+      keySym = XK_KP_F3;
+    } else if (keySym == XK_F12) {
+      keySym = XK_KP_F4;
     }
+    *keyCode = XKeysymToKeycode(DISPLAY, (KeySym)keySym);
+  }
 
-    /* 
-     * Here keySym is a KeySym.  Convert it to a KeyCode.
-     * KeyCode will be set to 0 if keySym is not defined for any KeyCode
-     *  (e.g. 0x001).
-     */
-
-    *keyCode = XKeysymToKeycode(DISPLAY, (KeySym) keySym);
-
-    if (*keyCode == 0)
-    {
-        if (keySym == XK_F9)
-        {
-	    keySym = XK_KP_F1;
-        }
-        else if (keySym == XK_F10)
-        {
-	    keySym = XK_KP_F2;
-        }
-        else if (keySym == XK_F11)
-        {
-	    keySym = XK_KP_F3;
-        }
-        else if (keySym == XK_F12)
-        {
-	    keySym = XK_KP_F4;
-        }
-        *keyCode = XKeysymToKeycode(DISPLAY, (KeySym) keySym);
-    }
-
-    return (*keyCode != 0);
+  return (*keyCode != 0);
 
 } /* END OF FUNCTION ParseKeyEvent */
 
-
 /*************************************<->*************************************
  *
  *  ParseEvent (linePP, table, eventType, detail, state, fClick)
@@ -4194,7 +3620,7 @@ Boolean ParseKeyEvent (unsigned char **linePP, unsigned int *eventType,
  *  table =           event parse table
  *  modifierStrings = (global) modifier string/mask table
  *
- * 
+ *
  *  Outputs:
  *  -------
  *  linePP =    pointer to revised line buffer pointer.
@@ -4208,48 +3634,42 @@ Boolean ParseKeyEvent (unsigned char **linePP, unsigned int *eventType,
  *  Comments:
  *  --------
  *  None.
- * 
+ *
  *************************************<->***********************************/
 
-static Boolean ParseEvent (unsigned char **linePP, EventTableEntry *table,
-			   unsigned int *eventType, unsigned int *detail,
-			   unsigned int *state, Boolean *fClick)
-{
-    unsigned char    *lineP = *linePP;
-    Cardinal ix;
-    Boolean  status;
- 
-    /* Parse the modifiers */
-    if (!ParseModifiers (&lineP, state) || *lineP != '<')
-    {
-       return (FALSE);
-    }
-    lineP++;  /* skip '<' */
+static Boolean ParseEvent(unsigned char **linePP, EventTableEntry *table,
+                          unsigned int *eventType, unsigned int *detail,
+                          unsigned int *state, Boolean *fClick) {
+  unsigned char *lineP = *linePP;
+  Cardinal ix;
+  Boolean status;
 
-    /* Parse the event type */
-    if (!ParseEventType (&lineP, table, eventType, &ix) || *lineP != '>') 
-    {
-       return (FALSE);
-    }
-    lineP++;  /* skip '>' */
+  /* Parse the modifiers */
+  if (!ParseModifiers(&lineP, state) || *lineP != '<') {
+    return (FALSE);
+  }
+  lineP++; /* skip '<' */
 
-    /*
-     *  Compute detail and fClick.
-     *  Status will be False for a invalid KeySym name.
-     */
-    status = (*(table[ix].parseProc))(&lineP, table[ix].closure, detail);
-    *fClick = table[ix].fClick;
+  /* Parse the event type */
+  if (!ParseEventType(&lineP, table, eventType, &ix) || *lineP != '>') {
+    return (FALSE);
+  }
+  lineP++; /* skip '>' */
 
-    if (status)
-    {
-        *linePP = lineP;
-    }
-    return (status);
+  /*
+   *  Compute detail and fClick.
+   *  Status will be False for a invalid KeySym name.
+   */
+  status = (*(table[ix].parseProc))(&lineP, table[ix].closure, detail);
+  *fClick = table[ix].fClick;
+
+  if (status) {
+    *linePP = lineP;
+  }
+  return (status);
 
 } /* END OF FUNCTION ParseEvent */
 
-
-
 /*************************************<->*************************************
  *
  *  ParseModifiers(linePP, state)
@@ -4265,7 +3685,7 @@ static Boolean ParseEvent (unsigned char **linePP, EventTableEntry *table,
  *  linePP = pointer to current line buffer pointer.
  *  modifierStrings = (global) modifier string/mask table
  *
- * 
+ *
  *  Outputs:
  *  -------
  *  linePP =    pointer to revised line buffer pointer.
@@ -4276,71 +3696,62 @@ static Boolean ParseEvent (unsigned char **linePP, EventTableEntry *table,
  *  Comments:
  *  --------
  *  If successful, will be followed by NULL or '<'.
- * 
+ *
  *************************************<->***********************************/
 
-static Boolean ParseModifiers(unsigned char **linePP, unsigned int *state)
-{
-    unsigned char         *lineP = *linePP;
-    unsigned char         *startP;
-    unsigned char          modStr[MAX_MODIFIER_STRLEN+1];
-    Boolean       fNot;
-    unsigned int  maskBit;
-    int           len;
+static Boolean ParseModifiers(unsigned char **linePP, unsigned int *state) {
+  unsigned char *lineP = *linePP;
+  unsigned char *startP;
+  unsigned char modStr[MAX_MODIFIER_STRLEN + 1];
+  Boolean fNot;
+  unsigned int maskBit;
+  int len;
 
-    *state = 0;
- 
-    /*
-     * Parse modifiers until the event specifier is encountered.
-     */
+  *state = 0;
 
-    ScanWhitespace (&lineP);
-    while ((*lineP != '\0') && (*lineP != '<'))
-    {
-        if (*lineP == '~') 
-	{
-            fNot = TRUE;
-            lineP++;
-        }
-	else 
-	{
-            fNot = FALSE;
-	}
+  /*
+   * Parse modifiers until the event specifier is encountered.
+   */
 
-	startP = lineP;
-        ScanAlphanumeric (&lineP);
-        if (startP == lineP)
-        /* ERROR: Modifier or '<' missing */
-	{
-            return (FALSE);
-        }
-        len = min(lineP - startP, MAX_MODIFIER_STRLEN);
-        (void) strncpy ((char *)modStr, (char *)startP, len);
-        modStr[len] = '\0';
-
-        if (!LookupModifier (modStr, &maskBit))
-        /* Unknown modifier name */
-        {
-            return (FALSE);
-        }
-
-	if (fNot) 
-	{
-            *state &= ~maskBit;
-        }
-	else 
-	{
-            *state |= maskBit;
-        }
-        ScanWhitespace(&lineP);
+  ScanWhitespace(&lineP);
+  while ((*lineP != '\0') && (*lineP != '<')) {
+    if (*lineP == '~') {
+      fNot = TRUE;
+      lineP++;
+    } else {
+      fNot = FALSE;
     }
 
-    *linePP = lineP;
-    return (TRUE);  /* must have '<' or NULL following */
+    startP = lineP;
+    ScanAlphanumeric(&lineP);
+    if (startP == lineP)
+    /* ERROR: Modifier or '<' missing */
+    {
+      return (FALSE);
+    }
+    len = min(lineP - startP, MAX_MODIFIER_STRLEN);
+    (void)strncpy((char *)modStr, (char *)startP, len);
+    modStr[len] = '\0';
+
+    if (!LookupModifier(modStr, &maskBit))
+    /* Unknown modifier name */
+    {
+      return (FALSE);
+    }
+
+    if (fNot) {
+      *state &= ~maskBit;
+    } else {
+      *state |= maskBit;
+    }
+    ScanWhitespace(&lineP);
+  }
+
+  *linePP = lineP;
+  return (TRUE); /* must have '<' or NULL following */
 
 } /* END OF FUNCTION ParseModifiers */
 
-
 /*************************************<->*************************************
  *
  *  LookupModifier (name, valueP)
@@ -4356,7 +3767,7 @@ static Boolean ParseModifiers(unsigned char **linePP, unsigned int *state)
  *  name = modifier string
  *  modifierStrings = modifier string/mask table
  *
- * 
+ *
  *  Outputs:
  *  -------
  *  valueP = modifier mask
@@ -4366,27 +3777,23 @@ static Boolean ParseModifiers(unsigned char **linePP, unsigned int *state)
  *  Comments:
  *  --------
  *  None.
- * 
+ *
  *************************************<->***********************************/
 
-static Boolean LookupModifier (unsigned char *name, unsigned int *valueP)
-{
-    int i;
+static Boolean LookupModifier(unsigned char *name, unsigned int *valueP) {
+  int i;
 
-    if (name != NULL)
-    {
-        ToLower ((char *)name);
-        for (i=0; modifierStrings[i].name != NULL; i++)
-	{
-	    if (!strcmp (modifierStrings[i].name, (char *)name))
-            {
-	        *valueP = modifierStrings[i].mask;
-	        return (TRUE);
-            }
-        }
+  if (name != NULL) {
+    ToLower((char *)name);
+    for (i = 0; modifierStrings[i].name != NULL; i++) {
+      if (!strcmp(modifierStrings[i].name, (char *)name)) {
+        *valueP = modifierStrings[i].mask;
+        return (TRUE);
+      }
     }
+  }
 
-    return (FALSE);
+  return (FALSE);
 
 } /* END OF FUNCTION LookupModifier */
 
@@ -4405,7 +3812,7 @@ static Boolean LookupModifier (unsigned char *name, unsigned int *valueP)
  *  linePP = pointer to current line buffer pointer.
  *  table =  event parse table
  *
- * 
+ *
  *  Outputs:
  *  -------
  *  linePP = pointer to revised line buffer pointer.
@@ -4418,47 +3825,43 @@ static Boolean LookupModifier (unsigned char *name, unsigned int *valueP)
  *  Comments:
  *  --------
  *  None.
- * 
+ *
  *************************************<->***********************************/
 
-static Boolean ParseEventType (unsigned char **linePP, EventTableEntry *table,
-			       unsigned int *eventType, Cardinal *ix)
-{
-    unsigned char *lineP = *linePP;
-    unsigned char *startP = *linePP;
-    unsigned char eventTypeStr[MAX_EVENTTYPE_STRLEN+1];
-    int  len;
+static Boolean ParseEventType(unsigned char **linePP, EventTableEntry *table,
+                              unsigned int *eventType, Cardinal *ix) {
+  unsigned char *lineP = *linePP;
+  unsigned char *startP = *linePP;
+  unsigned char eventTypeStr[MAX_EVENTTYPE_STRLEN + 1];
+  int len;
 
-    /* Parse out the event string */
-    ScanAlphanumeric (&lineP);
+  /* Parse out the event string */
+  ScanAlphanumeric(&lineP);
 
-    /*
-     * Attempt to match the parsed event against our supported event set.
-     */
+  /*
+   * Attempt to match the parsed event against our supported event set.
+   */
 
-    if (startP != lineP)
-    {
-        len = min (lineP - startP, MAX_EVENTTYPE_STRLEN);
-        (void) strncpy ((char *)eventTypeStr, (char *)startP, len);
-        eventTypeStr[len] = '\0';
-        ToLower ((char *)eventTypeStr);
+  if (startP != lineP) {
+    len = min(lineP - startP, MAX_EVENTTYPE_STRLEN);
+    (void)strncpy((char *)eventTypeStr, (char *)startP, len);
+    eventTypeStr[len] = '\0';
+    ToLower((char *)eventTypeStr);
 
-        for (len = 0; table[len].event != NULL; len++)
-            if (!strcmp (table[len].event, (char *)eventTypeStr))
-            {
-               *ix = len;
-               *eventType = table[*ix].eventType;
-               *linePP = lineP;
-               return (TRUE); 
-            }
-    }
+    for (len = 0; table[len].event != NULL; len++)
+      if (!strcmp(table[len].event, (char *)eventTypeStr)) {
+        *ix = len;
+        *eventType = table[*ix].eventType;
+        *linePP = lineP;
+        return (TRUE);
+      }
+  }
 
-    /* Unknown event specified */
-    return (FALSE);
+  /* Unknown event specified */
+  return (FALSE);
 
 } /* END OF FUNCTION ParseEventType */
 
-
 /*************************************<->*************************************
  *
  *  ParseImmed (linePP, closure, detail)
@@ -4474,7 +3877,7 @@ static Boolean ParseEventType (unsigned char **linePP, EventTableEntry *table,
  *  linePP =  not used
  *  closure = table entry
  *
- * 
+ *
  *  Outputs:
  *  -------
  *  detail = pointer to closure
@@ -4485,18 +3888,16 @@ static Boolean ParseEventType (unsigned char **linePP, EventTableEntry *table,
  *  Comments:
  *  --------
  *  None.
- * 
+ *
  *************************************<->***********************************/
 
-static Boolean ParseImmed (unsigned char **linePP, unsigned int closure,
-			   unsigned int  *detail)
-{
-    *detail = closure;
-    return (TRUE);
+static Boolean ParseImmed(unsigned char **linePP, unsigned int closure,
+                          unsigned int *detail) {
+  *detail = closure;
+  return (TRUE);
 
 } /* END OF FUNCTION ParseImmed */
 
-
 /*************************************<->*************************************
  *
  *  ParseKeySym (linePP, closure, detail)
@@ -4513,7 +3914,7 @@ static Boolean ParseImmed (unsigned char **linePP, unsigned int closure,
  *
  *  closure = not used.
  *
- * 
+ *
  *  Outputs:
  *  -------
  *  linePP = pointer to revised line buffer pointer
@@ -4525,51 +3926,44 @@ static Boolean ParseImmed (unsigned char **linePP, unsigned int closure,
  *  Comments:
  *  --------
  *  None.
- * 
+ *
  *************************************<->***********************************/
 
-static Boolean ParseKeySym (unsigned char **linePP, unsigned int closure,
-			    unsigned int *detail)
-{
-    unsigned char *lineP = *linePP;
-    unsigned char *startP;
-    char           keySymName[MAX_KEYSYM_STRLEN+1];
-    int            len;
-    int            chlen;
+static Boolean ParseKeySym(unsigned char **linePP, unsigned int closure,
+                           unsigned int *detail) {
+  unsigned char *lineP = *linePP;
+  unsigned char *startP;
+  char keySymName[MAX_KEYSYM_STRLEN + 1];
+  int len;
+  int chlen;
 
-    ScanWhitespace (&lineP);
-    startP = lineP;
+  ScanWhitespace(&lineP);
+  startP = lineP;
 
-    while (*lineP &&
-	   ((chlen = mblen ((char *)lineP, MB_CUR_MAX)) > 0) &&
-           ((chlen > 1) ||
-	   (!isspace (*lineP) && *lineP != ',' && *lineP != ':')))
-    {
-	/* Skip next character */
-        lineP += chlen;
+  while (
+      *lineP && ((chlen = mblen((char *)lineP, MB_CUR_MAX)) > 0) &&
+      ((chlen > 1) || (!isspace(*lineP) && *lineP != ',' && *lineP != ':'))) {
+    /* Skip next character */
+    lineP += chlen;
+  }
+
+  len = min(lineP - startP, MAX_KEYSYM_STRLEN);
+  (void)strncpy(keySymName, (char *)startP, len);
+  keySymName[len] = '\0';
+
+  if ((*detail = XStringToKeysym(keySymName)) == NoSymbol &&
+      (mblen(keySymName, MB_CUR_MAX) == 1)) {
+    if (!isdigit(keySymName[0]) ||
+        ((*detail = StrToNum((unsigned char *)&keySymName[0])) == -1)) {
+      *detail = NoSymbol;
+      return (FALSE);
     }
-
-    len = min (lineP - startP, MAX_KEYSYM_STRLEN);
-    (void) strncpy (keySymName, (char *)startP, len);
-    keySymName[len] = '\0';
-
-    if ((*detail = XStringToKeysym(keySymName)) == NoSymbol &&
-	 (mblen (keySymName, MB_CUR_MAX) == 1))
-    {
-        if (!isdigit (keySymName[0]) ||
-            ((*detail = StrToNum ((unsigned char *)&keySymName[0])) == -1))
-        {
-            *detail = NoSymbol;
-            return (FALSE);
-        }
-    }
-    *linePP = lineP;
-    return (TRUE);
+  }
+  *linePP = lineP;
+  return (TRUE);
 
 } /* END OF FUNCTION ParseKeySym */
 
-
-
 /*************************************<->*************************************
  *
  *  StrToNum(str)
@@ -4584,52 +3978,43 @@ static Boolean ParseKeySym (unsigned char **linePP, unsigned int closure,
  *  ------
  *  str = character string
  *
- * 
+ *
  *  Outputs:
  *  -------
- *  Return = unsigned integer 
+ *  Return = unsigned integer
  *
  *
  *  Comments:
  *  --------
  *  None.
- * 
+ *
  *************************************<->***********************************/
 
-static unsigned int StrToNum(unsigned char *str)
-{
-    unsigned char c;
-    unsigned int  val = 0;
+static unsigned int StrToNum(unsigned char *str) {
+  unsigned char c;
+  unsigned int val = 0;
 
-    if (*str == '0')
-    {
-	str++;
-	if (*str == 'x' || *str == 'X')
-	{
-	    return (StrToHex(++str));
-	}
-	return (StrToOct(str));
+  if (*str == '0') {
+    str++;
+    if (*str == 'x' || *str == 'X') {
+      return (StrToHex(++str));
     }
+    return (StrToOct(str));
+  }
 
-    while ((c = *str) != '\0')
-    {
-	if ('0' <= c && c <= '9')
-	{
-	    val = val*10+c-'0';
-	}
-	else
-	{
-	    return (-1);
-	}
-	str++;
+  while ((c = *str) != '\0') {
+    if ('0' <= c && c <= '9') {
+      val = val * 10 + c - '0';
+    } else {
+      return (-1);
     }
+    str++;
+  }
 
-    return (val);
+  return (val);
 
 } /* END OF FUNCTION StrToNum */
 
-
-
 /*************************************<->*************************************
  *
 
@@ -4641,48 +4026,37 @@ static unsigned int StrToNum(unsigned char *str)
  *  Inputs:
  *  ------
  *
- * 
+ *
  *  Outputs:
  *  -------
  *
  *  Comments:
  *  --------
  *  None.
- * 
+ *
  *************************************<->***********************************/
 
-static unsigned int StrToHex(unsigned char *str)
-{
-    unsigned char c;
-    unsigned int  val = 0;
+static unsigned int StrToHex(unsigned char *str) {
+  unsigned char c;
+  unsigned int val = 0;
 
-    while ((c = *str) != '\0')
-    {
-	if ('0' <= c && c <= '9')
-	{
-	    val = val*16+c-'0';
-	}
-	else if ('a' <= c && c <= 'f')
-	{
-	    val = val*16+c-'a'+10;
-	}
-	else if ('A' <= c && c <= 'F')
-	{
-	    val = val*16+c-'A'+10;
-	}
-	else
-	{
-	    return (-1);
-	}
-	str++;
+  while ((c = *str) != '\0') {
+    if ('0' <= c && c <= '9') {
+      val = val * 16 + c - '0';
+    } else if ('a' <= c && c <= 'f') {
+      val = val * 16 + c - 'a' + 10;
+    } else if ('A' <= c && c <= 'F') {
+      val = val * 16 + c - 'A' + 10;
+    } else {
+      return (-1);
     }
+    str++;
+  }
 
-    return (val);
+  return (val);
 
 } /* END OF FUNCTION StrToHex */
 
-
-
 /*************************************<->*************************************
  *
 
@@ -4694,40 +4068,33 @@ static unsigned int StrToHex(unsigned char *str)
  *  Inputs:
  *  ------
  *
- * 
+ *
  *  Outputs:
  *  -------
  *
  *  Comments:
  *  --------
  *  None.
- * 
+ *
  *************************************<->***********************************/
 
-static unsigned int StrToOct(unsigned char *str)
-{
-    unsigned char c;
-    unsigned int  val = 0;
+static unsigned int StrToOct(unsigned char *str) {
+  unsigned char c;
+  unsigned int val = 0;
 
-    while ((c = *str) != '\0')
-    {
-	if ('0' <= c && c <= '7')
-	{
-	    val = val*8+c-'0';
-	}
-	else
-	{
-	    return (-1);
-	}
-	str++;
+  while ((c = *str) != '\0') {
+    if ('0' <= c && c <= '7') {
+      val = val * 8 + c - '0';
+    } else {
+      return (-1);
     }
+    str++;
+  }
 
-    return (val);
+  return (val);
 
 } /* END OF FUNCTION StrToOct */
 
-
-
 /*************************************<->*************************************
  *
  *  ScanAlphanumeric (linePP)
@@ -4742,7 +4109,7 @@ static unsigned int StrToOct(unsigned char *str)
  *  ------
  *  linePP = nonNULL pointer to current line buffer pointer
  *
- * 
+ *
  *  Outputs:
  *  -------
  *  linePP = nonNULL pointer to revised line buffer pointer
@@ -4751,25 +4118,18 @@ static unsigned int StrToOct(unsigned char *str)
  *  Comments:
  *  --------
  *  Assumes linePP is nonNULL
- * 
+ *
  *************************************<->***********************************/
 
-void ScanAlphanumeric (unsigned char **linePP)
-{
-    int            chlen;
+void ScanAlphanumeric(unsigned char **linePP) {
+  int chlen;
 
-    while (*linePP &&
-	   ((chlen = mblen ((char *) *linePP, MB_CUR_MAX)) > 0) &&
-           ((chlen > 1) || isalnum (**linePP)))
-    {
-        (*linePP) += chlen;
-    }
+  while (*linePP && ((chlen = mblen((char *)*linePP, MB_CUR_MAX)) > 0) &&
+         ((chlen > 1) || isalnum(**linePP))) {
+    (*linePP) += chlen;
+  }
 } /* END OF FUNCTION ScanAlphanumeric */
 
-
-
-
-
 /*************************************<->*************************************
  *
  *  PWarning (message)
@@ -4785,42 +4145,31 @@ void ScanAlphanumeric (unsigned char **linePP)
  *  message = pointer to a message string
  *  cfileP  = (global) file pointer to fopened configuration file or NULL
  *  linec   = (global) line counter
- * 
+ *
  *************************************<->***********************************/
 
-void
-PWarning (char *message)
-{
+void PWarning(char *message) {
 
-    char pch[MAXWMPATH+1];
-    String sMessage;
-    char *pchFile;
+  char pch[MAXWMPATH + 1];
+  String sMessage;
+  char *pchFile;
 
-    sMessage = XtNewString ((String) message);
-    if (cfileP != NULL)
-    {
-	if (pConfigStackTop->fileName)
-	{
-	    pchFile = pConfigStackTop->fileName;
-	}
-	else 
-	{
-	    pchFile = wmGD.configFile;
-	}
-
-        sprintf (pch, pWarningStringFile,
-                     GETMESSAGE(20,1,"Workspace Manager"), 
-		     sMessage, linec, pchFile);
+  sMessage = XtNewString((String)message);
+  if (cfileP != NULL) {
+    if (pConfigStackTop->fileName) {
+      pchFile = pConfigStackTop->fileName;
+    } else {
+      pchFile = wmGD.configFile;
     }
-    else
-    {
-        sprintf (pch, pWarningStringLine,
-                     GETMESSAGE(20,1,"Workspace Manager"), 
-		     sMessage, linec);
-    }
-    _DtSimpleError (wmGD.mwmName, DtIgnore, NULL, pch, NULL);
-    XtFree (sMessage);
 
+    sprintf(pch, pWarningStringFile, GETMESSAGE(20, 1, "Workspace Manager"),
+            sMessage, linec, pchFile);
+  } else {
+    sprintf(pch, pWarningStringLine, GETMESSAGE(20, 1, "Workspace Manager"),
+            sMessage, linec);
+  }
+  _DtSimpleError(wmGD.mwmName, DtIgnore, NULL, pch, NULL);
+  XtFree(sMessage);
 
 } /* END OF FUNCTION PWarning */
 
@@ -4828,14 +4177,12 @@ PWarning (char *message)
  * Key substitution table entry
  */
 
-typedef struct _keySubs
-{
-    unsigned char *	pchFrom;
-    int   		lenFrom;
-    unsigned char *	pchTo;
+typedef struct _keySubs {
+  unsigned char *pchFrom;
+  int lenFrom;
+  unsigned char *pchTo;
 } KeySub;
 
-
 /*************************************<->*************************************
  *
  *  InitKeySubs (ppKeySubs, pNumKeySubs)
@@ -4851,10 +4198,10 @@ typedef struct _keySubs
  *  ppKeySubs	= ptr to key substitution table ptr
  *  pNumKeySubs	= ptr to number of key substitutions
  *
- * 
+ *
  *  Outputs:
  *  -------
- *  *ppKeySubs		= ptr to key substitution table 
+ *  *ppKeySubs		= ptr to key substitution table
  *  *pNumKeySubs	= number of substitutions found
  *
  *  Comments:
@@ -4862,110 +4209,96 @@ typedef struct _keySubs
  *  *ppKeySubs is allocated with XtMalloc in a complicated way.
  *  If this ever needs to be freed, a function to free it needs to
  *  be written.
- * 
+ *
  *************************************<->***********************************/
 
-static void InitKeySubs (
-    KeySub	**ppKeySubs,
-    int		*pNumKeySubs)
-{
-    int numKS;
-    KeySub *pKS;
-    KeySub *pKSret;
-    unsigned char *pch0;
-    unsigned char *pch1;
-    int len;
-    int		chlen;
+static void InitKeySubs(KeySub **ppKeySubs, int *pNumKeySubs) {
+  int numKS;
+  KeySub *pKS;
+  KeySub *pKSret;
+  unsigned char *pch0;
+  unsigned char *pch1;
+  int len;
+  int chlen;
 
-    pch0 = (unsigned char *)GETMESSAGE(60, 40, "");
+  pch0 = (unsigned char *)GETMESSAGE(60, 40, "");
 
-    if ((pch0 == NULL) || (*pch0 == '\0'))
-    {
-	*ppKeySubs = NULL;
-	*pNumKeySubs = 0;
-	return;
+  if ((pch0 == NULL) || (*pch0 == '\0')) {
+    *ppKeySubs = NULL;
+    *pNumKeySubs = 0;
+    return;
+  }
+
+  pKSret = NULL;
+  numKS = 0;
+
+  while (*pch0 != '\0') {
+    ScanWhitespace(&pch0);
+    if (*pch0 == '\0')
+      break;
+
+    /*
+     * allocate space for next key sub
+     */
+    if (pKSret == NULL) {
+      pKSret = (KeySub *)XtMalloc(1 * sizeof(KeySub));
+    } else {
+      pKSret =
+          (KeySub *)XtRealloc((char *)pKSret, (numKS + 1) * sizeof(KeySub));
+    }
+    pKS = &pKSret[numKS];
+
+    /* get "from" string */
+    pch1 = pch0;
+    while (*pch1 && ((chlen = mblen((char *)pch1, MB_CUR_MAX)) > 0)) {
+      if ((chlen == 1) && (*pch1 == ' ')) {
+        break;
+      }
+      pch1 += chlen;
+    }
+    pKS->lenFrom = pch1 - pch0;
+    if (pKS->lenFrom < 1) {
+      /*
+       * no "from" string
+       */
+      break;
+    }
+    pKS->pchFrom = (unsigned char *)XtMalloc(1 + pKS->lenFrom);
+    memcpy(pKS->pchFrom, pch0, pKS->lenFrom);
+    pKS->pchFrom[pKS->lenFrom] = '\0';
+
+    /* get "to" string */
+    ScanWhitespace(&pch1);
+    pch0 = pch1;
+
+    while (*pch1 && ((chlen = mblen((char *)pch1, MB_CUR_MAX)) > 0)) {
+      if ((chlen == 1) && (*pch1 == ' ')) {
+        break;
+      }
+      pch1 += chlen;
     }
 
-    pKSret = NULL;
-    numKS = 0;
-
-    while (*pch0 != '\0')
-    {
-	ScanWhitespace (&pch0);
-	if (*pch0 == '\0') break;
-
-	/* 
-	 * allocate space for next key sub 
-	 */
-	if (pKSret == NULL)
-	{
-	    pKSret = (KeySub *) XtMalloc (1*sizeof(KeySub));
-	}
-	else
-	{
-	    pKSret = (KeySub *) XtRealloc ((char *)pKSret, 
-					   (numKS+1)*sizeof(KeySub));
-	}
-	pKS = &pKSret[numKS];
-
-	/* get "from" string */
-	pch1 = pch0;
-        while (*pch1 && ((chlen = mblen ((char *)pch1, MB_CUR_MAX)) > 0))
-	{
-	    if ((chlen == 1) && (*pch1 == ' '))
-	    {
-		break;
-	    }
-	    pch1 += chlen;
-	}
-	pKS->lenFrom = pch1 - pch0;
-	if (pKS->lenFrom < 1) 
-	{
-	    /*
-	     * no "from" string
-	     */
-	    break;
-	}
-	pKS->pchFrom = (unsigned char *) XtMalloc (1+pKS->lenFrom);
-	memcpy (pKS->pchFrom, pch0, pKS->lenFrom);
-	pKS->pchFrom[pKS->lenFrom] = '\0';
-
-	/* get "to" string */
-	ScanWhitespace (&pch1);
-	pch0 = pch1;
-
-        while (*pch1 && ((chlen = mblen ((char *)pch1, MB_CUR_MAX)) > 0))
-	{
-	    if ((chlen == 1) && (*pch1 == ' '))
-	    {
-		break;
-	    }
-	    pch1 += chlen;
-	}
-
-	len = pch1 - pch0;
-	if (len < 1)
-	{
-	    /*
-	     * Invalid format, "from" string with no "to" string.
-	     */
-	    break;
-	}
-	pKS->pchTo = (unsigned char *) XtMalloc (1+len);
-	memcpy (pKS->pchTo, pch0, len);
-	pKS->pchTo[len] = '\0';
-
-	/* advance cursor */
-	pch0 = pch1;
-
-	/* got one, bump the counter */
-	numKS++; 
+    len = pch1 - pch0;
+    if (len < 1) {
+      /*
+       * Invalid format, "from" string with no "to" string.
+       */
+      break;
     }
+    pKS->pchTo = (unsigned char *)XtMalloc(1 + len);
+    memcpy(pKS->pchTo, pch0, len);
+    pKS->pchTo[len] = '\0';
 
-    *ppKeySubs = pKSret;
-    *pNumKeySubs = numKS;
+    /* advance cursor */
+    pch0 = pch1;
+
+    /* got one, bump the counter */
+    numKS++;
+  }
+
+  *ppKeySubs = pKSret;
+  *pNumKeySubs = numKS;
 }
-
 
 /*************************************<->*************************************
  *
@@ -4983,7 +4316,7 @@ static void InitKeySubs (
  *  endP =   pointer past end of accelerator specification
  *  destP =  pointer to destination buffer
  *
- * 
+ *
  *  Outputs:
  *  -------
  *  Destination buffer has processed accelerator text.
@@ -4991,108 +4324,91 @@ static void InitKeySubs (
  *  Comments:
  *  --------
  *  None.
- * 
+ *
  *************************************<->***********************************/
 
-static void ProcessAccelText (unsigned char *startP, unsigned char *endP,
-			      unsigned char *destP)
-{
-    int   chlen;
-    static Boolean	bAccelInit = False;
-    static KeySub	*pKeySub;
-    static int		numKeySubs;
-    unsigned char *	pchFirst;
-    unsigned char *	pchSub;
-    int			lenSub;
-    int			i;
+static void ProcessAccelText(unsigned char *startP, unsigned char *endP,
+                             unsigned char *destP) {
+  int chlen;
+  static Boolean bAccelInit = False;
+  static KeySub *pKeySub;
+  static int numKeySubs;
+  unsigned char *pchFirst;
+  unsigned char *pchSub;
+  int lenSub;
+  int i;
 
-    if (!bAccelInit)
-    {
-	InitKeySubs (&pKeySub, &numKeySubs);
-	bAccelInit = True;
+  if (!bAccelInit) {
+    InitKeySubs(&pKeySub, &numKeySubs);
+    bAccelInit = True;
+  }
+
+  /*
+   * Copy modifiers
+   */
+
+  ScanWhitespace(&startP);
+
+  while (*startP != '<') {
+    if (*startP == '~') {
+      *destP++ = *startP++;
+    }
+    pchFirst = startP;
+
+    while (*startP && (((chlen = mblen((char *)startP, MB_CUR_MAX)) > 1) ||
+                       isalnum(*startP))) {
+      while (chlen--) {
+        startP++;
+      }
     }
 
-    /*
-     * Copy modifiers
-     */
+    /* find substitution */
+    pchSub = NULL;
+    lenSub = 0;
 
-    ScanWhitespace (&startP);
-
-    while (*startP != '<')
-    {
-        if (*startP == '~') 
-	{
-            *destP++ = *startP++;
-        }
-	pchFirst = startP;
-
-        while (*startP &&
-	       (((chlen = mblen ((char *)startP, MB_CUR_MAX)) > 1)
-		|| isalnum (*startP)))
-        {
-	    while (chlen--)
-	    {
-	        startP++;
-	    }
-	}
-
-	/* find substitution */
-	pchSub = NULL;
-	lenSub = 0;
-
-	for (i=0; i<numKeySubs; i++)
-	{
-	    if ((pKeySub[i].lenFrom == startP-pchFirst) &&
-		(!strncasecmp ((char *)pKeySub[i].pchFrom, (char *)pchFirst, 
-				pKeySub[i].lenFrom)))
-	    {
-		pchSub = pKeySub[i].pchTo;
-		lenSub = strlen((char *)pchSub);
-		break;
-	    }
-
-	}
-
-        if ((pchSub != NULL) && (lenSub > 0))
-	{
-	    memcpy (destP, pchSub, lenSub);
-	    destP += lenSub;
-	}
-	else
-	{
-	    memcpy (destP, pchFirst, startP-pchFirst);
-	    destP += startP-pchFirst;
-	}
-	*destP++ = '+';
-
-        ScanWhitespace (&startP);
+    for (i = 0; i < numKeySubs; i++) {
+      if ((pKeySub[i].lenFrom == startP - pchFirst) &&
+          (!strncasecmp((char *)pKeySub[i].pchFrom, (char *)pchFirst,
+                        pKeySub[i].lenFrom))) {
+        pchSub = pKeySub[i].pchTo;
+        lenSub = strlen((char *)pchSub);
+        break;
+      }
     }
 
-    /*
-     * Skip the key event type.
-     */
-    startP++;  /* skip '<' */
-    while (*startP != '>')
-    {
-        startP += mblen ((char *)startP, MB_CUR_MAX);
+    if ((pchSub != NULL) && (lenSub > 0)) {
+      memcpy(destP, pchSub, lenSub);
+      destP += lenSub;
+    } else {
+      memcpy(destP, pchFirst, startP - pchFirst);
+      destP += startP - pchFirst;
     }
-    startP++;  /* skip '>' */
+    *destP++ = '+';
 
-    /*
-     * Copy the KeySym string.
-     */
+    ScanWhitespace(&startP);
+  }
 
-    ScanWhitespace (&startP);
-    while (startP != endP)
-    {
-        *destP++ = *startP++;
-    }
-    *destP = '\0';
+  /*
+   * Skip the key event type.
+   */
+  startP++; /* skip '<' */
+  while (*startP != '>') {
+    startP += mblen((char *)startP, MB_CUR_MAX);
+  }
+  startP++; /* skip '>' */
+
+  /*
+   * Copy the KeySym string.
+   */
+
+  ScanWhitespace(&startP);
+  while (startP != endP) {
+    *destP++ = *startP++;
+  }
+  *destP = '\0';
 
 } /* END OF FUNCTION ProcessAccelText */
 
-
-
 /*************************************<->*************************************
  *
  *  ProcessCommandLine (argc, argv)
@@ -5107,45 +4423,39 @@ static void ProcessAccelText (unsigned char *startP, unsigned char *endP,
  *  argc =   argument count.
  *  argv =   argument vector.
  *
- * 
+ *
  *  Outputs:
  *  -------
  *  Changes global data to based on command line options recognized
  *
  *
  *************************************<->***********************************/
-#define SCREENS_OPT		"-screens"
-#define MULTI_SCREEN_OPT	"-multiscreen"
+#define SCREENS_OPT "-screens"
+#define MULTI_SCREEN_OPT "-multiscreen"
 
-void ProcessCommandLine (int argc,  char *argv[])
-{
-    unsigned char *string;
-    int argnum;
-    unsigned char *lineP;
+void ProcessCommandLine(int argc, char *argv[]) {
+  unsigned char *string;
+  int argnum;
+  unsigned char *lineP;
 
-    for (argnum = 1; argnum < argc; argnum++)
+  for (argnum = 1; argnum < argc; argnum++) {
+    lineP = (unsigned char *)argv[argnum];
+    if ((string = GetString(&lineP)) == NULL)
+    /* empty or comment line */
     {
-        lineP = (unsigned char *) argv[argnum];
-        if ((string = GetString (&lineP)) == NULL) 
-        /* empty or comment line */
-	{
-            continue;
-        }
-	if (!strcmp((char *)string, MULTI_SCREEN_OPT))
-	{
-	    wmGD.multiScreen = True;
-	    wmGD.numScreens = ScreenCount (DISPLAY);
-        }
-	else if (!strcmp((char *)string, SCREENS_OPT))
-	{
-	    argnum++;		/* skip to next arg */
-            ParseScreensArgument (argc, argv, &argnum, lineP);
-        }
+      continue;
     }
+    if (!strcmp((char *)string, MULTI_SCREEN_OPT)) {
+      wmGD.multiScreen = True;
+      wmGD.numScreens = ScreenCount(DISPLAY);
+    } else if (!strcmp((char *)string, SCREENS_OPT)) {
+      argnum++; /* skip to next arg */
+      ParseScreensArgument(argc, argv, &argnum, lineP);
+    }
+  }
 
 } /* END OF FUNCTION ProcessCommandLine */
 
-
 /*************************************<->*************************************
  *
  *  ParseScreensArgument (argc, argv, pArgnum, lineP)
@@ -5162,7 +4472,7 @@ void ProcessCommandLine (int argc,  char *argv[])
  *  pArgnum = pointer to argument number where processing left off
  *  lineP  = pointer into argv[*pArgnum] where processing left off
  *
- * 
+ *
  *  Outputs:
  *  -------
  *  Changes global data to based on command line options recognized
@@ -5172,80 +4482,65 @@ void ProcessCommandLine (int argc,  char *argv[])
  *
  *************************************<->***********************************/
 
-static void ParseScreensArgument (int argc, char *argv[], int *pArgnum,
-				  unsigned char *lineP)
-{
-    unsigned char *string;
-    int sNum = 0;
-    int lastLen;
-    int nameCount = 0;
+static void ParseScreensArgument(int argc, char *argv[], int *pArgnum,
+                                 unsigned char *lineP) {
+  unsigned char *string;
+  int sNum = 0;
+  int lastLen;
+  int nameCount = 0;
 
-    for (; (*pArgnum < argc) && (sNum < ScreenCount(DISPLAY)); 
-					    (*pArgnum)++, sNum++)
-    {
-	lineP = (unsigned char *)argv[*pArgnum];
-	if (*argv[*pArgnum] == '"')
-	{
-	    /*
-	     * if Quote, use GetString to strip it
-	     */
-	    if ((string = GetString (&lineP)) == NULL) 
-		/* empty or comment line */
-	    {
-		continue;
-	    }
-	}
-	else 
-	{
-	    string = (unsigned char *)argv[*pArgnum];
-	    if (*string == '-')
-	    {
-		/* another option, end of screens names */
-		break;
-	    }
-	}
-	
-	if (!(wmGD.screenNames[sNum] = (unsigned char *) 
-	      XtRealloc ((char*)wmGD.screenNames[sNum], 
-		         1 + strlen((char *)string))))
-	{
-	    Warning (((char *)GETMESSAGE(60, 31, "Insufficient memory for screen names")));
-	    ExitWM(WM_ERROR_EXIT_VALUE);
-	}
-	else 
-	{
-	    strcpy((char *)wmGD.screenNames[sNum], (char *)string);
-	    nameCount++;
-	}
+  for (; (*pArgnum < argc) && (sNum < ScreenCount(DISPLAY));
+       (*pArgnum)++, sNum++) {
+    lineP = (unsigned char *)argv[*pArgnum];
+    if (*argv[*pArgnum] == '"') {
+      /*
+       * if Quote, use GetString to strip it
+       */
+      if ((string = GetString(&lineP)) == NULL)
+      /* empty or comment line */
+      {
+        continue;
+      }
+    } else {
+      string = (unsigned char *)argv[*pArgnum];
+      if (*string == '-') {
+        /* another option, end of screens names */
+        break;
+      }
     }
 
-    (*pArgnum)--;
-
-    /*
-     * remaining screens (if any) get first name specified 
-     */
-    if (nameCount > 0)
-    {
-	lastLen = 1 + strlen((char *)wmGD.screenNames[0]);
-	for (; sNum < ScreenCount(DISPLAY); sNum++)
-	{
-	    if (!(wmGD.screenNames[sNum] = (unsigned char *) 
-		XtRealloc ((char*)wmGD.screenNames[sNum], lastLen)))
-	    {
-		Warning (((char *)GETMESSAGE(60, 32, "Insufficient memory for screen names")));
-		ExitWM(WM_ERROR_EXIT_VALUE);
-	    }
-	    else 
-	    {
-		strcpy((char *)wmGD.screenNames[sNum], 
-		       (char *)wmGD.screenNames[0]);
-	    }
-	}
+    if (!(wmGD.screenNames[sNum] = (unsigned char *)XtRealloc(
+              (char *)wmGD.screenNames[sNum], 1 + strlen((char *)string)))) {
+      Warning(
+          ((char *)GETMESSAGE(60, 31, "Insufficient memory for screen names")));
+      ExitWM(WM_ERROR_EXIT_VALUE);
+    } else {
+      strcpy((char *)wmGD.screenNames[sNum], (char *)string);
+      nameCount++;
     }
+  }
+
+  (*pArgnum)--;
+
+  /*
+   * remaining screens (if any) get first name specified
+   */
+  if (nameCount > 0) {
+    lastLen = 1 + strlen((char *)wmGD.screenNames[0]);
+    for (; sNum < ScreenCount(DISPLAY); sNum++) {
+      if (!(wmGD.screenNames[sNum] = (unsigned char *)XtRealloc(
+                (char *)wmGD.screenNames[sNum], lastLen))) {
+        Warning(((char *)GETMESSAGE(60, 32,
+                                    "Insufficient memory for screen names")));
+        ExitWM(WM_ERROR_EXIT_VALUE);
+      } else {
+        strcpy((char *)wmGD.screenNames[sNum], (char *)wmGD.screenNames[0]);
+      }
+    }
+  }
 
 } /* END OF FUNCTION ParseScreensArgument */
 
-
 /*************************************<->*************************************
  *
  *  ProcessMotifBindings ()
@@ -5258,37 +4553,34 @@ static void ParseScreensArgument (int argc, char *argv[], int *pArgnum,
  *
  *
  *************************************<->***********************************/
-void ProcessMotifBindings (void)
-{
-    char           fileName[MAXWMPATH+1];
-    char	  *bindings = NULL;
-    char	  *homeDir = XmeGetHomeDirName();
+void ProcessMotifBindings(void) {
+  char fileName[MAXWMPATH + 1];
+  char *bindings = NULL;
+  char *homeDir = XmeGetHomeDirName();
 
-    /*
-     *  Look in the user's home directory for .motifbind
-     */
+  /*
+   *  Look in the user's home directory for .motifbind
+   */
 
-    strcpy (fileName, homeDir);
-    strncat(fileName, "/", MAXWMPATH-strlen(fileName));
-    strncat(fileName, MOTIF_BINDINGS_FILE, MAXWMPATH-strlen(fileName));
+  strcpy(fileName, homeDir);
+  strncat(fileName, "/", MAXWMPATH - strlen(fileName));
+  strncat(fileName, MOTIF_BINDINGS_FILE, MAXWMPATH - strlen(fileName));
 
-    XDeleteProperty (DISPLAY, RootWindow (DISPLAY, 0),
-		XInternAtom (DISPLAY, "_MOTIF_BINDINGS", False));
-    XDeleteProperty (DISPLAY, RootWindow (DISPLAY, 0),
-		XInternAtom (DISPLAY, "_MOTIF_DEFAULT_BINDINGS", False));
+  XDeleteProperty(DISPLAY, RootWindow(DISPLAY, 0),
+                  XInternAtom(DISPLAY, "_MOTIF_BINDINGS", False));
+  XDeleteProperty(DISPLAY, RootWindow(DISPLAY, 0),
+                  XInternAtom(DISPLAY, "_MOTIF_DEFAULT_BINDINGS", False));
 
-    if (_XmVirtKeysLoadFileBindings (fileName, &bindings) == True) {
-	XChangeProperty (DISPLAY, RootWindow(DISPLAY, 0),
-		XInternAtom (DISPLAY, "_MOTIF_BINDINGS", False),
-		XA_STRING, 8, PropModeReplace,
-		(unsigned char *)bindings, strlen(bindings));
-    }
-    else {
-	_XmVirtKeysLoadFallbackBindings (DISPLAY, &bindings);
-    }
-    XtFree (bindings);
+  if (_XmVirtKeysLoadFileBindings(fileName, &bindings) == True) {
+    XChangeProperty(DISPLAY, RootWindow(DISPLAY, 0),
+                    XInternAtom(DISPLAY, "_MOTIF_BINDINGS", False), XA_STRING,
+                    8, PropModeReplace, (unsigned char *)bindings,
+                    strlen(bindings));
+  } else {
+    _XmVirtKeysLoadFallbackBindings(DISPLAY, &bindings);
+  }
+  XtFree(bindings);
 } /* END OF FUNCTION ProcessMotifBindings */
-
 
 /*************************************<->*************************************
  *
@@ -5307,7 +4599,7 @@ void ProcessMotifBindings (void)
  *  ix = window manager function index (returned by ParseWmFunction)
  *  pWmFunction = pointer to window manager function destination.
  *  ppArg = ptr to argument pointer.
- *  sClientName = string name of client 
+ *  sClientName = string name of client
  *
  *
  *  Outputs:
@@ -5326,108 +4618,88 @@ void ProcessMotifBindings (void)
  *  The sClientName is needed for starting some hpterm-based push_recall
  *  clients. It needs to be passed into the action so the hpterm gets
  *  named appropriately.
- * 
+ *
  *************************************<->***********************************/
 
-Boolean
-ParseWmFunctionArg (
-		unsigned char **linePP,
-		int ix, 
-		WmFunction wmFunc, 
-		void **ppArg,
-		String sClientName,
-		String sTitle)
-{
-    unsigned char *lineP = *linePP;
-    Boolean bValidArg = True;
-    unsigned char *str = NULL;
+Boolean ParseWmFunctionArg(unsigned char **linePP, int ix, WmFunction wmFunc,
+                           void **ppArg, String sClientName, String sTitle) {
+  unsigned char *lineP = *linePP;
+  Boolean bValidArg = True;
+  unsigned char *str = NULL;
+
+  /*
+   * If this is (possibly) a string argument, put it
+   * in quotes so that it will be parsed properly.
+   */
+  if ((functionTable[ix].parseProc == ParseWmFuncStrArg) ||
+      (functionTable[ix].parseProc == ParseWmFuncMaybeStrArg)) {
+    if (lineP && *lineP != '"') {
+      /*
+       * not in quotes, repackage it, escaping the appropriate
+       * characters.
+       */
+      str = _DtWmParseMakeQuotedString(lineP);
+      if (str) {
+        lineP = str;
+      }
+    }
+  }
+
+  /*
+   * Apply the function argument parser.
+   */
+  if ((functionTable[ix].wmFunction != wmFunc) ||
+      !(*(functionTable[ix].parseProc))(&lineP, wmFunc, ppArg)) {
+    bValidArg = False;
+  }
+
+  /*
+   * Add the exec parms if this is an f.action
+   */
+  if ((wmFunc == F_Action) && ppArg && *ppArg) {
+    WmActionArg *pAP = (WmActionArg *)*ppArg;
+    int totLen = 0;
 
     /*
-     * If this is (possibly) a string argument, put it 
-     * in quotes so that it will be parsed properly.
+     * allocate more than enough string space to copy
+     * strings and intervening spaces.
      */
-    if ((functionTable[ix].parseProc == ParseWmFuncStrArg) ||
-        (functionTable[ix].parseProc == ParseWmFuncMaybeStrArg))
-    {
-	if (lineP && *lineP != '"')
-	{
-	    /*
-	     * not in quotes, repackage it, escaping the appropriate
-	     * characters.
-	     */
-	    str = _DtWmParseMakeQuotedString (lineP);
-	    if (str)
-	    {
-		lineP = str;
-	    }
-	}
+    if (sClientName && *sClientName) {
+      /* length of: "name=" + sClientName + NULL */
+      totLen += 5 + strlen(sClientName) + 1;
+    }
+    if (sTitle && *sTitle) {
+      /* length of: "," + "title=" + sTitle + NULL */
+      totLen += 1 + 6 + strlen(sTitle) + 1;
     }
 
-    /* 
-     * Apply the function argument parser.
-     */
-    if ((functionTable[ix].wmFunction != wmFunc) ||
-	!(*(functionTable [ix].parseProc)) (&lineP, wmFunc, ppArg))
-    {
-	bValidArg = False;
+    if (totLen > 0) {
+      pAP->szExecParms = (String)XtMalloc(totLen);
+      /* start with empty string */
+      pAP->szExecParms[0] = '\0';
+
+      if (sClientName && *sClientName) {
+        strcat(pAP->szExecParms, "name=");
+        strcat(pAP->szExecParms, sClientName);
+      }
+      if (sTitle && *sTitle) {
+        if (pAP->szExecParms[0] != '\0') {
+          strcat(pAP->szExecParms, ",");
+        }
+        strcat(pAP->szExecParms, "title=");
+        strcat(pAP->szExecParms, sTitle);
+      }
     }
+  }
 
-    /*
-     * Add the exec parms if this is an f.action
-     */
-    if ((wmFunc == F_Action) && ppArg && *ppArg)
-    {
-	WmActionArg *pAP = (WmActionArg *) *ppArg;
-	int totLen = 0;
+  if (str) {
+    XtFree((char *)str);
+  }
 
-	/*
-	 * allocate more than enough string space to copy 
-	 * strings and intervening spaces.
-	 */
-	if (sClientName && *sClientName)
-	{
-	    /* length of: "name=" + sClientName + NULL */
-	    totLen += 5 + strlen(sClientName) + 1;
-	}
-	if (sTitle && *sTitle)
-	{
-	    /* length of: "," + "title=" + sTitle + NULL */
-	    totLen += 1 + 6 + strlen(sTitle) + 1;
-	}
-
-	if (totLen > 0)
-	{
-	    pAP->szExecParms = (String) XtMalloc (totLen);
-	    /* start with empty string */
-	    pAP->szExecParms[0] = '\0'; 
-
-	    if (sClientName && *sClientName)
-	    {
-		strcat (pAP->szExecParms, "name=");
-		strcat (pAP->szExecParms, sClientName);
-	    }
-	    if (sTitle && *sTitle)
-	    {
-		if (pAP->szExecParms[0] != '\0')
-		{
-		    strcat (pAP->szExecParms, ",");
-		}
-		strcat (pAP->szExecParms, "title=");
-		strcat (pAP->szExecParms, sTitle);
-	    }
-	}
-    }
-
-    if (str)
-    {
-	XtFree ((char *) str);
-    }
-
-    return (bValidArg);
+  return (bValidArg);
 
 } /* END OF FUNCTION ParseWmFunctionArg */
 
-
 /*************************************<->*************************************
  *
  *  SystemCmd (pchCmd)
@@ -5451,28 +4723,24 @@ ParseWmFunctionArg (
  *  --------
  *  The system() command is touchy about the SIGCLD behavior. Restore
  *  the default SIGCLD handler during the time we run system().
- * 
+ *
  *************************************<->***********************************/
 
-void
-SystemCmd (char *pchCmd)
-{
-    struct sigaction sa;
-    struct sigaction osa;
+void SystemCmd(char *pchCmd) {
+  struct sigaction sa;
+  struct sigaction osa;
 
-    (void) sigemptyset(&sa.sa_mask);
-    sa.sa_flags = 0;
-    sa.sa_handler = SIG_DFL;
+  (void)sigemptyset(&sa.sa_mask);
+  sa.sa_flags = 0;
+  sa.sa_handler = SIG_DFL;
 
-    (void) sigaction (SIGCHLD, &sa, &osa);
+  (void)sigaction(SIGCHLD, &sa, &osa);
 
-    system (pchCmd);
+  system(pchCmd);
 
-    (void) sigaction (SIGCHLD, &osa, (struct sigaction *) 0);
+  (void)sigaction(SIGCHLD, &osa, (struct sigaction *)0);
 }
 
-
-
 /*************************************<->*************************************
  *
  *  DeleteTempConfigFileIfAny ()
@@ -5480,7 +4748,7 @@ SystemCmd (char *pchCmd)
  *
  *  Description:
  *  -----------
- *  This function deletes the temporary config file used to process 
+ *  This function deletes the temporary config file used to process
  *  old dtwmrc syntax.
  *
  *
@@ -5494,33 +4762,28 @@ SystemCmd (char *pchCmd)
  *
  *  Comments:
  *  --------
- * 
+ *
  *************************************<->***********************************/
 
-void
-DeleteTempConfigFileIfAny (void)
-{
-    char pchCmd[MAXWMPATH+1];
+void DeleteTempConfigFileIfAny(void) {
+  char pchCmd[MAXWMPATH + 1];
 
-    if (pConfigStackTop->tempName)
-    {
-	strcpy (pchCmd, "/bin/rm ");
-	strcat (pchCmd, pConfigStackTop->tempName);
-	SystemCmd (pchCmd);
-	XtFree ((char *) pConfigStackTop->tempName);
-	pConfigStackTop->tempName = NULL;
-    }
-    if (pConfigStackTop->cppName)
-    {
-	strcpy (pchCmd, "/bin/rm ");
-	strcat (pchCmd, pConfigStackTop->cppName);
-	SystemCmd (pchCmd);
-	XtFree ((char *) pConfigStackTop->cppName);
-	pConfigStackTop->cppName = NULL;
-    }
+  if (pConfigStackTop->tempName) {
+    strcpy(pchCmd, "/bin/rm ");
+    strcat(pchCmd, pConfigStackTop->tempName);
+    SystemCmd(pchCmd);
+    XtFree((char *)pConfigStackTop->tempName);
+    pConfigStackTop->tempName = NULL;
+  }
+  if (pConfigStackTop->cppName) {
+    strcpy(pchCmd, "/bin/rm ");
+    strcat(pchCmd, pConfigStackTop->cppName);
+    SystemCmd(pchCmd);
+    XtFree((char *)pConfigStackTop->cppName);
+    pConfigStackTop->cppName = NULL;
+  }
 }
 
-
 /*************************************<->*************************************
  *
  *  ParseIncludeSet (pSD, lineP)
@@ -5538,7 +4801,7 @@ DeleteTempConfigFileIfAny (void)
  *  linec  = (global) line count
  *  parseP = (global) parse string pointer if cfileP == NULL
  *  pSD->rootWindow = default root window of display
- * 
+ *
  *  Outputs:
  *  -------
  *  linec  = (global) line count incremented
@@ -5547,70 +4810,64 @@ DeleteTempConfigFileIfAny (void)
  *
  *  Comments:
  *  --------
- * 
+ *
  *************************************<->***********************************/
 
-static void ParseIncludeSet (WmScreenData *pSD, unsigned char *lineP) 
-{
-    unsigned char     *string;
-    unsigned char     *pchName;
+static void ParseIncludeSet(WmScreenData *pSD, unsigned char *lineP) {
+  unsigned char *string;
+  unsigned char *pchName;
 
-    /*
-     * Require leading '{' on the next line.
-     */
+  /*
+   * Require leading '{' on the next line.
+   */
 
-    while ((GetNextLine () != NULL))  /* not EOF nor read error */
+  while ((GetNextLine() != NULL)) /* not EOF nor read error */
+  {
+    lineP = line;
+    ScanWhitespace(&lineP);
+
+    if ((lineP == NULL) || (*line == '!') || (*lineP == '\0') ||
+        (*lineP == '#'))
+    /* ignore empty or comment line */
     {
-        lineP = line;
-	ScanWhitespace(&lineP);
-
-	if ((lineP == NULL) || (*line == '!') || (*lineP == '\0') || (*lineP == '#'))
-	/* ignore empty or comment line */
-        {
-            continue;
-        }
-
-        if (*lineP == '{')
-	/* found '{' */
-        {
-            break;
-        }
-
-	/* not a '{' */
-	PWarning (((char *)GETMESSAGE(60, 37, "Expected '{'")));
-        return;
+      continue;
     }
 
-    /*
-     * Found leading "{" or EOF.
-     * Parse include files until "}" or EOF found.
-     */
-    while ((GetNextLine () != NULL))
+    if (*lineP == '{')
+    /* found '{' */
     {
-	lineP = line;
-	if ((*line == '!') || (string = GetString (&lineP)) == NULL)
-	/* ignore empty or comment lines */
-        {
-            continue;
-        }
-        if (*string == '}')  /* finished with set. */
-        {
-	    break;
-        }
-	pchName = _DtWmParseFilenameExpand (string);
-	if (pchName && ConfigStackPush (pchName))
-	{
-	    ProcessWmFile (pSD, True /* nested */);
-	    ConfigStackPop ();
-	    XtFree ((char *) pchName);
-	}
-
+      break;
     }
 
+    /* not a '{' */
+    PWarning(((char *)GETMESSAGE(60, 37, "Expected '{'")));
+    return;
+  }
+
+  /*
+   * Found leading "{" or EOF.
+   * Parse include files until "}" or EOF found.
+   */
+  while ((GetNextLine() != NULL)) {
+    lineP = line;
+    if ((*line == '!') || (string = GetString(&lineP)) == NULL)
+    /* ignore empty or comment lines */
+    {
+      continue;
+    }
+    if (*string == '}') /* finished with set. */
+    {
+      break;
+    }
+    pchName = _DtWmParseFilenameExpand(string);
+    if (pchName && ConfigStackPush(pchName)) {
+      ProcessWmFile(pSD, True /* nested */);
+      ConfigStackPop();
+      XtFree((char *)pchName);
+    }
+  }
 }
 
-
-
 /*************************************<->*************************************
  *
  *  ConfigStackInit (pchFileName)
@@ -5623,43 +4880,39 @@ static void ParseIncludeSet (WmScreenData *pSD, unsigned char *lineP)
  *  Inputs:
  *  ------
  *  pchFileName = name of new file to start parsing
- * 
+ *
  *  Outputs:
  *  -------
  *
  *
  *  Comments:
  *  --------
- * 
+ *
  *************************************<->***********************************/
 
-static void ConfigStackInit (char *pchFileName)
-{
+static void ConfigStackInit(char *pchFileName) {
 
-    pConfigStack  = XtNew (ConfigFileStackEntry);
+  pConfigStack = XtNew(ConfigFileStackEntry);
 
-    if (pConfigStack)
-    {
-	pConfigStackTop = pConfigStack;
-	pConfigStackTop->fileName = XtNewString (pchFileName);
-	pConfigStackTop->tempName = NULL;
-	pConfigStackTop->cppName = NULL;
-	pConfigStackTop->offset = 0;
-	pConfigStackTop->pWmPB = wmGD.pWmPB;
-	pConfigStackTop->wmgdConfigFile = wmGD.configFile;
-	pConfigStackTop->pIncluder = NULL;
+  if (pConfigStack) {
+    pConfigStackTop = pConfigStack;
+    pConfigStackTop->fileName = XtNewString(pchFileName);
+    pConfigStackTop->tempName = NULL;
+    pConfigStackTop->cppName = NULL;
+    pConfigStackTop->offset = 0;
+    pConfigStackTop->pWmPB = wmGD.pWmPB;
+    pConfigStackTop->wmgdConfigFile = wmGD.configFile;
+    pConfigStackTop->pIncluder = NULL;
 
-    }
-    else
-    {
-	sprintf ((char *)wmGD.tmpBuffer,
-	    (char *)GETMESSAGE(60,36,"Insufficient memory to process included file: %s"), 
-	    pchFileName);
-	Warning ((char *)wmGD.tmpBuffer);
-    }
+  } else {
+    sprintf((char *)wmGD.tmpBuffer,
+            (char *)GETMESSAGE(
+                60, 36, "Insufficient memory to process included file: %s"),
+            pchFileName);
+    Warning((char *)wmGD.tmpBuffer);
+  }
 }
 
-
 /*************************************<->*************************************
  *
  *  ConfigStackPush (pchFileName)
@@ -5673,7 +4926,7 @@ static void ConfigStackInit (char *pchFileName)
  *  ------
  *  pchFileName = name of new file to start parsing
  *  wmGD.pWmPB = global parse buffer (pickle this)
- * 
+ *
  *  Outputs:
  *  -------
  *  wmGD.pWmPB = global parse buffer (new one for new file)
@@ -5682,59 +4935,52 @@ static void ConfigStackInit (char *pchFileName)
  *
  *  Comments:
  *  --------
- * 
+ *
  *************************************<->***********************************/
 
-static FILE *
-ConfigStackPush (unsigned char *pchFileName)
-{
-    ConfigFileStackEntry *pEntry;
-    FILE *pNewFile = NULL;
+static FILE *ConfigStackPush(unsigned char *pchFileName) {
+  ConfigFileStackEntry *pEntry;
+  FILE *pNewFile = NULL;
 
-    pEntry = XtNew (ConfigFileStackEntry);
-    if (pEntry)
-    {
-	/* save off state of current config file */
-	pConfigStackTop->offset = ftell (cfileP);
-	pConfigStackTop->pWmPB = wmGD.pWmPB;
-	fclose (cfileP);
+  pEntry = XtNew(ConfigFileStackEntry);
+  if (pEntry) {
+    /* save off state of current config file */
+    pConfigStackTop->offset = ftell(cfileP);
+    pConfigStackTop->pWmPB = wmGD.pWmPB;
+    fclose(cfileP);
 
-	/* set up state of new config file */
-	pEntry->fileName = XtNewString ((char *)pchFileName);
-	pEntry->tempName = NULL;
-	pEntry->cppName = NULL;
-	pEntry->wmgdConfigFile = (String) pEntry->fileName;
+    /* set up state of new config file */
+    pEntry->fileName = XtNewString((char *)pchFileName);
+    pEntry->tempName = NULL;
+    pEntry->cppName = NULL;
+    pEntry->wmgdConfigFile = (String)pEntry->fileName;
 
-	/* set globals for new config file */
-	wmGD.pWmPB = _DtWmParseNewBuf ();
-	wmGD.configFile = pEntry->wmgdConfigFile;
+    /* set globals for new config file */
+    wmGD.pWmPB = _DtWmParseNewBuf();
+    wmGD.configFile = pEntry->wmgdConfigFile;
 
-	/* put new entry onto stack */
-	pEntry->pIncluder = pConfigStackTop;
-	pConfigStackTop = pEntry;
+    /* put new entry onto stack */
+    pEntry->pIncluder = pConfigStackTop;
+    pConfigStackTop = pEntry;
 
-	/* open the file */
-	pNewFile = cfileP = FopenConfigFile();
+    /* open the file */
+    pNewFile = cfileP = FopenConfigFile();
 
-	if (!pNewFile)
-	{
-	    /* file open failed! back out */
-	    ConfigStackPop ();
-	}
+    if (!pNewFile) {
+      /* file open failed! back out */
+      ConfigStackPop();
     }
-    else
-    {
-	sprintf ((char *)wmGD.tmpBuffer,
-	    (char *)GETMESSAGE(60,36,"Insufficient memory to process included file: %s"), 
-	    pchFileName);
-	Warning ((char *)wmGD.tmpBuffer);
-    }
+  } else {
+    sprintf((char *)wmGD.tmpBuffer,
+            (char *)GETMESSAGE(
+                60, 36, "Insufficient memory to process included file: %s"),
+            pchFileName);
+    Warning((char *)wmGD.tmpBuffer);
+  }
 
-    return (pNewFile);
+  return (pNewFile);
 }
 
-
-
 /*************************************<->*************************************
  *
  *  ConfigStackPop ()
@@ -5748,7 +4994,7 @@ ConfigStackPush (unsigned char *pchFileName)
  *  ------
  *  pchFileName = name of new file to start parsing
  *  wmGD.pWmPB = global parse buffer (pickle this)
- * 
+ *
  *  Outputs:
  *  -------
  *  wmGD.pWmPB = global parse buffer (new one for new file)
@@ -5757,70 +5003,57 @@ ConfigStackPush (unsigned char *pchFileName)
  *  Comments:
  *  --------
  *  assumes cfileP is closed already
- * 
+ *
  *************************************<->***********************************/
 
-static void ConfigStackPop (void)
-{
-    ConfigFileStackEntry *pPrev;
-    char pchCmd[MAXWMPATH+1];
+static void ConfigStackPop(void) {
+  ConfigFileStackEntry *pPrev;
+  char pchCmd[MAXWMPATH + 1];
 
-    if (pConfigStackTop != pConfigStack)
-    {
-	pPrev = pConfigStackTop->pIncluder;
+  if (pConfigStackTop != pConfigStack) {
+    pPrev = pConfigStackTop->pIncluder;
 
-	_DtWmParseDestroyBuf (wmGD.pWmPB);
-	if (pConfigStackTop->tempName)
-	{
-	    XtFree (pConfigStackTop->tempName);
-	}
-	if (pConfigStackTop->cppName)
-	{
-	    strcpy (pchCmd, "/bin/rm "); 
-	    strcat (pchCmd, pConfigStackTop->cppName); 
-	    SystemCmd (pchCmd);
-	    XtFree ((char *) pConfigStackTop->cppName);
-	    pConfigStackTop->cppName = NULL;
-	}
-	if (pConfigStackTop->fileName)
-	{
-	    XtFree (pConfigStackTop->fileName);
-	}
-
-	wmGD.pWmPB = pPrev->pWmPB;
-	wmGD.configFile = pPrev->wmgdConfigFile;
-	if (pPrev->tempName)
-	{
-	    cfileP = fopen (pPrev->tempName, "r");
-	}
-	else if (pPrev->cppName)
-	{
-	    cfileP = fopen (pPrev->cppName, "r");
-	}
-	else
-	{
-	    cfileP = fopen (pPrev->fileName, "r");
-	}
-	if (cfileP) 
-	{
-	    fseek (cfileP, pPrev->offset, 0);
-	}
-	else
-	{
-	    char msg[MAXWMPATH+1];
-
-	    sprintf(msg, ((char *)GETMESSAGE(60, 39, 
-			    "Could not reopen configuration file %s")),
-		pPrev->fileName);
-	    Warning (msg);
-	}
-
-	XtFree ((char *)pConfigStackTop);
-	pConfigStackTop = pPrev;
+    _DtWmParseDestroyBuf(wmGD.pWmPB);
+    if (pConfigStackTop->tempName) {
+      XtFree(pConfigStackTop->tempName);
     }
+    if (pConfigStackTop->cppName) {
+      strcpy(pchCmd, "/bin/rm ");
+      strcat(pchCmd, pConfigStackTop->cppName);
+      SystemCmd(pchCmd);
+      XtFree((char *)pConfigStackTop->cppName);
+      pConfigStackTop->cppName = NULL;
+    }
+    if (pConfigStackTop->fileName) {
+      XtFree(pConfigStackTop->fileName);
+    }
+
+    wmGD.pWmPB = pPrev->pWmPB;
+    wmGD.configFile = pPrev->wmgdConfigFile;
+    if (pPrev->tempName) {
+      cfileP = fopen(pPrev->tempName, "r");
+    } else if (pPrev->cppName) {
+      cfileP = fopen(pPrev->cppName, "r");
+    } else {
+      cfileP = fopen(pPrev->fileName, "r");
+    }
+    if (cfileP) {
+      fseek(cfileP, pPrev->offset, 0);
+    } else {
+      char msg[MAXWMPATH + 1];
+
+      sprintf(msg,
+              ((char *)GETMESSAGE(60, 39,
+                                  "Could not reopen configuration file %s")),
+              pPrev->fileName);
+      Warning(msg);
+    }
+
+    XtFree((char *)pConfigStackTop);
+    pConfigStackTop = pPrev;
+  }
 }
 
-
 /*************************************<->*************************************
  *
  *  ParseWmFuncActionArg (linePP, wmFunction, pArgs)
@@ -5837,7 +5070,7 @@ static void ConfigStackPop (void)
  *  wmFunction = function for which the argument string is intended.
  *  pArgs = pointer to argument destination.
  *
- * 
+ *
  *  Outputs:
  *  -------
  *  linePP   = pointer to revised line buffer pointer.
@@ -5847,102 +5080,85 @@ static void ConfigStackPop (void)
  *
  *  Comments:
  *  --------
- * 
+ *
  *************************************<->***********************************/
 
-Boolean ParseWmFuncActionArg (unsigned char **linePP, 
-				  WmFunction wmFunction, String *pArgs)
-{
+Boolean ParseWmFuncActionArg(unsigned char **linePP, WmFunction wmFunction,
+                             void *pArgsVoid) {
+  String *pArgs = (String *)pArgsVoid;
 #define WM_ACTION_ARG_INCREMENT 5
-#define WM_ACTION_ARG_PAD	256
-    unsigned char *string;
-    char *pch;
-    WmActionArg *pAP;
-    int iArgSz;
+#define WM_ACTION_ARG_PAD 256
+  unsigned char *string;
+  char *pch;
+  WmActionArg *pAP;
+  int iArgSz;
 
-    pAP = XtNew (WmActionArg);
-    if (pAP && (string = GetString (linePP)) != NULL)
-    {
-	/* Got action name */
-	pAP->actionName = XtNewString ((char *) string);
+  pAP = XtNew(WmActionArg);
+  if (pAP && (string = GetString(linePP)) != NULL) {
+    /* Got action name */
+    pAP->actionName = XtNewString((char *)string);
 
-	/* Get action arguments, if any */
-	if ((pAP->aap = (DtActionArg *)
-		XtMalloc (WM_ACTION_ARG_INCREMENT * sizeof (DtActionArg))))
-	{
-	    iArgSz = WM_ACTION_ARG_INCREMENT;
-	    pAP->numArgs = 0;
+    /* Get action arguments, if any */
+    if ((pAP->aap = (DtActionArg *)XtMalloc(WM_ACTION_ARG_INCREMENT *
+                                            sizeof(DtActionArg)))) {
+      iArgSz = WM_ACTION_ARG_INCREMENT;
+      pAP->numArgs = 0;
 
-	    while ((string = GetString (linePP)) != NULL)
-	    {
-	       if ((pAP->aap[pAP->numArgs].u.file.name = (char *)
-		       XtMalloc(1 + strlen((char *)string))))
-	       {
-		   pAP->aap[pAP->numArgs].argClass = DtACTION_FILE;
+      while ((string = GetString(linePP)) != NULL) {
+        if ((pAP->aap[pAP->numArgs].u.file.name =
+                 (char *)XtMalloc(1 + strlen((char *)string)))) {
+          pAP->aap[pAP->numArgs].argClass = DtACTION_FILE;
 
-		   /* format the action argument */
-		   pch = pAP->aap[pAP->numArgs].u.file.name;
+          /* format the action argument */
+          pch = pAP->aap[pAP->numArgs].u.file.name;
 
-		   /* 
-		    * Expand environment variable
-		    */
-		   if (string[0] == '$')
-		   {
-		       string = (unsigned char *) getenv ((char *)&string[1]);
-		       if (!string)
-		       {
-			   break;
-		       }
-		       else
-		       {
-			   /*
-			    * Make sure there's room for the new
-			    * string.
-			    */
-			   pch = (char *) 
-			     XtRealloc (pch, (1+strlen((char *)string)));
-			   pAP->aap[pAP->numArgs].u.file.name = pch;
-		       }
-		   }
+          /*
+           * Expand environment variable
+           */
+          if (string[0] == '$') {
+            string = (unsigned char *)getenv((char *)&string[1]);
+            if (!string) {
+              break;
+            } else {
+              /*
+               * Make sure there's room for the new
+               * string.
+               */
+              pch = (char *)XtRealloc(pch, (1 + strlen((char *)string)));
+              pAP->aap[pAP->numArgs].u.file.name = pch;
+            }
+          }
 
-		   /* !!! No host name processing is done!!! */
+          /* !!! No host name processing is done!!! */
 
-		   strcpy (pch, (char *)string);
+          strcpy(pch, (char *)string);
 
-		   pAP->numArgs++;
-		   if (pAP->numArgs == iArgSz)
-		   {
-		       /* need to increase our array space */
-		       iArgSz += WM_ACTION_ARG_INCREMENT;
-		       pAP->aap = (DtActionArg *) 
-			   XtRealloc((char *)pAP->aap,
-			             (iArgSz * sizeof (DtActionArg)));
-		       if (!pAP->aap)
-		       {
-			   break; /* out of memory */
-		       }
-		   }
-	       }
-	       else
-	       {
-		   break; /* out of memory */
-	       }
-	    }
-
-	}
-	pAP->szExecParms = NULL;
-        *pArgs = (String) pAP;
+          pAP->numArgs++;
+          if (pAP->numArgs == iArgSz) {
+            /* need to increase our array space */
+            iArgSz += WM_ACTION_ARG_INCREMENT;
+            pAP->aap = (DtActionArg *)XtRealloc((char *)pAP->aap,
+                                                (iArgSz * sizeof(DtActionArg)));
+            if (!pAP->aap) {
+              break; /* out of memory */
+            }
+          }
+        } else {
+          break; /* out of memory */
+        }
+      }
     }
-    else
-    /* NULL string argument */
-    {
-        *pArgs = NULL;
-    }
+    pAP->szExecParms = NULL;
+    *pArgs = (String)pAP;
+  } else
+  /* NULL string argument */
+  {
+    *pArgs = NULL;
+  }
 
-    return (TRUE);
+  return (TRUE);
 
 } /* END OF FUNCTION ParseWmFuncActionArg */
-
 
 /*************************************<->*************************************
  *
@@ -5965,44 +5181,39 @@ Boolean ParseWmFuncActionArg (unsigned char **linePP,
  *
  *  Comments:
  *  --------
- * 
+ *
  *************************************<->***********************************/
 
-static void
-PreprocessConfigFile (void)
-{
-#define CPP_NAME_SIZE	((L_tmpnam)+1)
-    char pchCmd[MAXWMPATH+1];
+static void PreprocessConfigFile(void) {
+#define CPP_NAME_SIZE ((L_tmpnam) + 1)
+  char pchCmd[MAXWMPATH + 1];
 
-    if (wmGD.cppCommand && *wmGD.cppCommand)
-    {
-	/*
-	 * Generate a temp file name.
-	 */
-	pConfigStackTop->cppName = XtMalloc (CPP_NAME_SIZE * sizeof(char));
-	if (pConfigStackTop->cppName)
-	{
-	    (void) tmpnam (pConfigStackTop->cppName);
+  if (wmGD.cppCommand && *wmGD.cppCommand) {
+    /*
+     * Generate a temp file name.
+     */
+    pConfigStackTop->cppName = XtMalloc(CPP_NAME_SIZE * sizeof(char));
+    if (pConfigStackTop->cppName) {
+      (void)tmpnam(pConfigStackTop->cppName);
 
-	    /*
-	     * Build up the command line.
-	     */
-	    strcpy (pchCmd, wmGD.cppCommand);
-	    strcat (pchCmd, " ");
-	    strcat (pchCmd, pConfigStackTop->fileName);
-	    strcat (pchCmd, " ");
-	    strcat (pchCmd, pConfigStackTop->cppName);
+      /*
+       * Build up the command line.
+       */
+      strcpy(pchCmd, wmGD.cppCommand);
+      strcat(pchCmd, " ");
+      strcat(pchCmd, pConfigStackTop->fileName);
+      strcat(pchCmd, " ");
+      strcat(pchCmd, pConfigStackTop->cppName);
 
-	    /*
-	     * Run the config file through the converter program
-	     * and send the output to a temp file. 
-	     */
-	    SystemCmd (pchCmd);
-	}
+      /*
+       * Run the config file through the converter program
+       * and send the output to a temp file.
+       */
+      SystemCmd(pchCmd);
     }
+  }
 }
 
-
 /*************************************<->*************************************
  *
  *  GetNetworkFileName (char *pchFile)
@@ -6011,7 +5222,7 @@ PreprocessConfigFile (void)
  *  Description:
  *  -----------
  *  This function returns a local representation for a network
- *  file. 
+ *  file.
  *
  *
  *  Inputs:
@@ -6027,158 +5238,130 @@ PreprocessConfigFile (void)
  *  Comments:
  *  --------
  *  returned file name should be freed with XtFree().
- * 
+ *
  *************************************<->***********************************/
 
-static String
-GetNetworkFileName (char *pchFile)
-{
-    char *pch;
-    char *host_part; 
-    char *file_part; 
-    char *netfile;
-    char *sName = NULL;
-    char *pchName = NULL;
-    int count;
-    char **pchTok;
-    String sReturn = NULL;
-    char *homeDir;
-    int len;
+static String GetNetworkFileName(char *pchFile) {
+  char *pch;
+  char *host_part;
+  char *file_part;
+  char *netfile;
+  char *sName = NULL;
+  char *pchName = NULL;
+  int count;
+  char **pchTok;
+  String sReturn = NULL;
+  char *homeDir;
+  int len;
 
+  pch = strchr(pchFile, ':');
 
-    pch = strchr (pchFile, ':');
+  if (pch) {
+    /*
+     * Expand special chars and find matching file.
+     */
+    pchTok = (char **)shellscan(pchFile, &count, 0);
 
-    if (pch)
-    {
-	/*
-	 * Expand special chars and find matching file.
-	 */
-	pchTok = (char **)shellscan (pchFile, &count, 0);
-
-	if ((count == 1) || (count == 2))
-	{
-	    /* one match found */
-	    host_part = pchTok[0];
-	}
-	else if (count > 2)
-	{
-	    /* several matches found, pick one */
-	    host_part = pchTok[1];
-	}
-	else
-	{
-	    host_part = NULL;
-	}
-
-	if (host_part != NULL)
-	{
-	    pch = strchr (host_part, ':');
-	    if (pch)
-	    {
-		/* 
-		 * copy the string so we don't munge data
-		 * inside shellscan 
-		 */
-		host_part = sName = XtNewString ((String) host_part);
-		pch = strchr (sName, ':');
-
-		/*
-		 * separate the host and file parts of the
-		 * file name
-		 */
-		*pch = '\0';
-		file_part = pch+1;
-	    }
-	    else
-	    {
-		/*
-		 * The colon went away. Hmm...
-		 */
-		file_part = host_part;
-		host_part = NULL;
-	    }
-
-	    if ((mblen(file_part, MB_CUR_MAX) == 1) && 
-		(mblen(file_part+1, MB_CUR_MAX) == 1) &&
-		(*file_part == '~') &&
-		(*(file_part+1) == '/'))
-	    {
-		/*
-		 * Replace '~' with $HOME
-		 */
-		homeDir = XmeGetHomeDirName();
-		len = strlen (host_part) + 1 +
-		      strlen (homeDir) + strlen (file_part) + 1;
-		pch = (char *) XtMalloc (len);
-		strcpy (pch, sName);
-		host_part = pch;
-		pch += strlen (pch) + 1;
-		strcpy (pch, homeDir);
-		strcat (pch, file_part+1);
-		file_part = pch;
-		XtFree (sName);
-		sName = host_part;
-	    }
-	}
-	else
-	{
-	    /*
-	     * shellscan had a problem with the file name.
-	     * just operate on the name as-is.
-	     * temporarily replace ':' with a NULL 
-	     */
-	    host_part = sName = XtNewString ((String) pchFile);
-	    pch = strchr (sName, ':');
-	    *pch = '\0';
-	    host_part = pchFile;
-	    file_part = pch+1;
-	}
-
-	/* convert to canonical host/file name */
-	netfile = (char *) 
-		    tt_host_file_netfile (host_part, file_part);
-	if (tt_pointer_error (netfile) == TT_OK)
-	{
-	    /* convert to local file name equivalent */
-	    pchName = tt_netfile_file (netfile);
-
-	    if (tt_pointer_error (pchName) == TT_OK)
-	    {
-		sReturn = XtNewString ((String) pchName);
-		tt_free ((char *)pchName);
-	    }
-	    tt_free (netfile);
-	}
-
-	if (sName)
-	{
-	    XtFree ((char *)sName);
-	}
+    if ((count == 1) || (count == 2)) {
+      /* one match found */
+      host_part = pchTok[0];
+    } else if (count > 2) {
+      /* several matches found, pick one */
+      host_part = pchTok[1];
+    } else {
+      host_part = NULL;
     }
 
-    if (sReturn == NULL)
-    {
-	if ((mblen(pchFile, MB_CUR_MAX) == 1) && 
-	    (mblen(pchFile+1, MB_CUR_MAX) == 1) &&
-	    (*pchFile == '~') &&
-	    (*(pchFile+1) == '/'))
-	{
-	    /*
-	     * Replace '~' with $HOME
-	     */
-	    homeDir = XmeGetHomeDirName();
-	    len = strlen (homeDir) + strlen (pchFile) + 1;
-	    sReturn = (char *) XtMalloc (len);
-	    strcpy (sReturn, homeDir);
-	    strcat (sReturn, pchFile+1);
-	}
-	else
-	{
-	    sReturn = XtNewString ((String) pchFile);
-	}
+    if (host_part != NULL) {
+      pch = strchr(host_part, ':');
+      if (pch) {
+        /*
+         * copy the string so we don't munge data
+         * inside shellscan
+         */
+        host_part = sName = XtNewString((String)host_part);
+        pch = strchr(sName, ':');
+
+        /*
+         * separate the host and file parts of the
+         * file name
+         */
+        *pch = '\0';
+        file_part = pch + 1;
+      } else {
+        /*
+         * The colon went away. Hmm...
+         */
+        file_part = host_part;
+        host_part = NULL;
+      }
+
+      if ((mblen(file_part, MB_CUR_MAX) == 1) &&
+          (mblen(file_part + 1, MB_CUR_MAX) == 1) && (*file_part == '~') &&
+          (*(file_part + 1) == '/')) {
+        /*
+         * Replace '~' with $HOME
+         */
+        homeDir = XmeGetHomeDirName();
+        len = strlen(host_part) + 1 + strlen(homeDir) + strlen(file_part) + 1;
+        pch = (char *)XtMalloc(len);
+        strcpy(pch, sName);
+        host_part = pch;
+        pch += strlen(pch) + 1;
+        strcpy(pch, homeDir);
+        strcat(pch, file_part + 1);
+        file_part = pch;
+        XtFree(sName);
+        sName = host_part;
+      }
+    } else {
+      /*
+       * shellscan had a problem with the file name.
+       * just operate on the name as-is.
+       * temporarily replace ':' with a NULL
+       */
+      host_part = sName = XtNewString((String)pchFile);
+      pch = strchr(sName, ':');
+      *pch = '\0';
+      host_part = pchFile;
+      file_part = pch + 1;
     }
 
-    return (sReturn);
+    /* convert to canonical host/file name */
+    netfile = (char *)tt_host_file_netfile(host_part, file_part);
+    if (tt_pointer_error(netfile) == TT_OK) {
+      /* convert to local file name equivalent */
+      pchName = tt_netfile_file(netfile);
+
+      if (tt_pointer_error(pchName) == TT_OK) {
+        sReturn = XtNewString((String)pchName);
+        tt_free((char *)pchName);
+      }
+      tt_free(netfile);
+    }
+
+    if (sName) {
+      XtFree((char *)sName);
+    }
+  }
+
+  if (sReturn == NULL) {
+    if ((mblen(pchFile, MB_CUR_MAX) == 1) &&
+        (mblen(pchFile + 1, MB_CUR_MAX) == 1) && (*pchFile == '~') &&
+        (*(pchFile + 1) == '/')) {
+      /*
+       * Replace '~' with $HOME
+       */
+      homeDir = XmeGetHomeDirName();
+      len = strlen(homeDir) + strlen(pchFile) + 1;
+      sReturn = (char *)XtMalloc(len);
+      strcpy(sReturn, homeDir);
+      strcat(sReturn, pchFile + 1);
+    } else {
+      sReturn = XtNewString((String)pchFile);
+    }
+  }
+
+  return (sReturn);
 }
 /****************************   eof    ***************************/
-

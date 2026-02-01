@@ -17,7 +17,7 @@ motifapp_inc = include_directories('.', '../include', '../include/MotifApp', '..
 libMotifApp = static_library('MotifApp',
   motifapp_src,
   include_directories : [inc, motifapp_inc],
-  dependencies : [dep_x11, dep_xt, dep_xm, libDtSvc_dep],
+  dependencies : [dep_x11, dep_xt, dep_xm, libDtSvc_dep, dep_tirpc],
   cpp_args : common_c_args
 )
 

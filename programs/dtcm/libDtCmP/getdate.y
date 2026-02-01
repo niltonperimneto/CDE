@@ -175,7 +175,7 @@ static int mdays[12] =
 	{31, 0, 31,  30, 31, 30,  31, 31, 30,  31, 30, 31};
 #define epoch BOT_YEAR
 
-extern struct tm *localtime();
+
 time_t dateconv(int mm, 
     int dd, 
     int yy, 

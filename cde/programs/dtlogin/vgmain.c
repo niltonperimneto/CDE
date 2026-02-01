@@ -67,6 +67,7 @@
 #include "vgmsg.h"
 #include <Dt/EnvControlP.h>
 #include <Dt/MenuButton.h>
+#include <Dt/SafeStr.h>
 #include <X11/Shell.h>
 #include <X11/Xfuncs.h>
 #include <X11/cursorfont.h>

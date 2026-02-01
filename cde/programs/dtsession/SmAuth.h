@@ -60,18 +60,14 @@ in this Software without prior written authorization from the X Consortium.
 #ifndef _smauth_h
 #define _smauth_h
 
+#include <X11/ICE/ICElib.h>
 #include <X11/ICE/ICEutil.h>
 
-Bool HostBasedAuthProc (
-	char			*hostname);
+Bool HostBasedAuthProc(char *hostname);
 
-Status SetAuthentication (
-	int			count,
-	IceListenObj		*listenObjs,
-	IceAuthDataEntry	**authDataEntries);
+Status SetAuthentication(int count, IceListenObj *listenObjs,
+                         IceAuthDataEntry **authDataEntries);
 
-void FreeAuthenticationData (
-	int			count,
-	IceAuthDataEntry 	*authDataEntries);
+void FreeAuthenticationData(int count, IceAuthDataEntry *authDataEntries);
 
 #endif /* _smauth_h */

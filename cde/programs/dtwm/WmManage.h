@@ -20,44 +20,40 @@
  * to the Free Software Foundation, Inc., 51 Franklin Street, Fifth
  * Floor, Boston, MA 02110-1301 USA
  */
-/* 
- * (c) Copyright 1989, 1990, 1991, 1992 OPEN SOFTWARE FOUNDATION, INC. 
- * ALL RIGHTS RESERVED 
-*/ 
-/* 
+/*
+ * (c) Copyright 1989, 1990, 1991, 1992 OPEN SOFTWARE FOUNDATION, INC.
+ * ALL RIGHTS RESERVED
+ */
+/*
  * Motif Release 1.2
-*/ 
+ */
 /*
  * (c) Copyright 1987, 1988, 1989, 1990 HEWLETT-PACKARD COMPANY */
 
-extern void AdoptInitialClients (WmScreenData *pSD);
-extern void DeleteClientContext (ClientData *pCD);
-extern void ManageWindow (WmScreenData *pSD, Window clientWindow, long manageFlags);
-extern void UnManageWindow (ClientData *pCD);
-extern void WithdrawTransientChildren (ClientData *pCD);
-extern void WithdrawWindow (ClientData *pCD);
-extern void ResetWithdrawnFocii (ClientData *pCD);
-extern void FreeClientFrame (ClientData *pCD);
-extern void FreeIcon (ClientData *pCD);
-extern void WithdrawDialog (Widget dialogboxW);
-extern void ReManageDialog (WmScreenData *pSD, Widget dialogboxW);
-extern void RegisterEmbeddedClients (
-	Widget wPanelist, 
-	WmFpEmbeddedClientList pECD, 
-	int count);
-extern void RegisterPushRecallClients (
-	Widget wPanelist, 
-	WmFpPushRecallClientList pPRCD, 
-	int count);
+#include "WmPanelP.h"
+
+extern void AdoptInitialClients(WmScreenData *pSD);
+extern void DeleteClientContext(ClientData *pCD);
+extern void ManageWindow(WmScreenData *pSD, Window clientWindow,
+                         long manageFlags);
+extern void UnManageWindow(ClientData *pCD);
+extern void WithdrawTransientChildren(ClientData *pCD);
+extern void WithdrawWindow(ClientData *pCD);
+extern void ResetWithdrawnFocii(ClientData *pCD);
+extern void FreeClientFrame(ClientData *pCD);
+extern void FreeIcon(ClientData *pCD);
+extern void WithdrawDialog(Widget dialogboxW);
+extern void ReManageDialog(WmScreenData *pSD, Widget dialogboxW);
+extern void RegisterEmbeddedClients(Widget wPanelist,
+                                    WmFpEmbeddedClientList pECD, int count);
+extern void RegisterPushRecallClients(Widget wPanelist,
+                                      WmFpPushRecallClientList pPRCD,
+                                      int count);
 extern void UnParentControls(WmScreenData *pSD, Boolean unmap);
-extern void RegisterIconBoxControl (Widget wPanelist);
-extern Boolean ReparentEmbeddedClient (
-	WmFpEmbeddedClientData *pECD,
-	Widget newControl,
-	Window newWin,
-	int x, 
-	int y,
-	unsigned int width, 
-	unsigned int height);
-extern void ScanForEmbeddedClients (WmScreenData *pSD);
-extern void ScanForPushRecallClients (WmScreenData *pSD);
+extern void RegisterIconBoxControl(Widget wPanelist);
+extern Boolean ReparentEmbeddedClient(WmFpEmbeddedClientData *pECD,
+                                      Widget newControl, Window newWin, int x,
+                                      int y, unsigned int width,
+                                      unsigned int height);
+extern void ScanForEmbeddedClients(WmScreenData *pSD);
+extern void ScanForPushRecallClients(WmScreenData *pSD);

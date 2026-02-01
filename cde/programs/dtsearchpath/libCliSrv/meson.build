@@ -9,7 +9,7 @@ libCliSrv = static_library('CliSrv',
   include_directories : [inc],
   cpp_args : common_c_args, # Use common args, maybe need specific C++ ones?
   # dependencies might be needed if it uses Dt includes
-  dependencies : [dep_x11, dep_xt, dep_xm, libDtSvc_dep],
+  dependencies : [dep_x11, dep_xt, dep_xm, libDtSvc_dep, dep_tirpc],
 )
 
 libCliSrv_dep = declare_dependency(

@@ -67,7 +67,11 @@ fn handle_client(mut stream: TcpStream, root: &str) {
         return;
     }
 
-    let file_path = Path::new(root).join(path.trim_start_matches('/'));
+    let file_path = if path.starts_with("/help/") {
+        Path::new("/usr/dt/appconfig/help").join(path.trim_start_matches("/help/"))
+    } else {
+        Path::new(root).join(path.trim_start_matches('/'))
+    };
 
     // Default to index.html if dir
     let final_path = if file_path.is_dir() {

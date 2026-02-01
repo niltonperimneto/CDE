@@ -48,7 +48,7 @@
  **	AUDIT       HP C2 security enhancements; checks for existence of
  **                 SECUREPASSWD file and authenticates user against
  **                 password contained in that file. Also performs
- **                 self-auditing of login actions.  Incompatible with 
+ **                 self-auditing of login actions.  Incompatible with
  **                 #ifdef SecureWare
  **
  **     __AFS        AFS 3 authentication mechanism
@@ -65,60 +65,62 @@
  ****************************************************************************
  ************************************<+>*************************************/
 
-
 /***************************************************************************
  *
  *  Includes & Defines
  *
  ***************************************************************************/
 
-#include	<stdio.h>
-#include	<fcntl.h>
-#include	<stdlib.h>
-#include	<pwd.h>
+#include <fcntl.h>
+#include <pwd.h>
+#include <stdio.h>
+#include <stdlib.h>
+#ifdef __linux__
+#include <crypt.h>
+#endif
 
 #if defined(PAM) || defined(HAS_PAM_LIBRARY)
-#include	<security/pam_appl.h>
+#include <security/pam_appl.h>
 #ifdef PAM
-#include        "pam_svc.h"
+#include "pam_svc.h"
 #else
-#include	<Dt/SvcPam.h>
+#include <Dt/SvcPam.h>
 #endif
 #endif
 
 #ifdef _AIX
-#include	<usersec.h>
-#include	<login.h>
-#include	<sys/access.h>
-#include 	<sys/sem.h>
-#include 	<sys/stat.h>
-#include	<sys/ipc.h>
-#include	<sys/audit.h>
+#include <login.h>
+#include <sys/access.h>
+#include <sys/audit.h>
+#include <sys/ipc.h>
+#include <sys/sem.h>
+#include <sys/stat.h>
+#include <usersec.h>
 #endif
 
 /* necessary for bzero */
 #ifdef SVR4
-#include        <X11/Xfuncs.h>
+#include <X11/Xfuncs.h>
 #if defined(sun)
-#include        <shadow.h>
+#include <shadow.h>
 #endif
 #endif
 
-#include	"dm.h"
-#include	"vg.h" 
-#include	"vgmsg.h"
-#include	"sysauth.h"
+#include "dm.h"
+#include "sysauth.h"
+#include "vg.h"
+#include "vgmsg.h"
+#include <Dt/SafeStr.h>
 
 /*
  * Define as generic those without platform specific code.
  */
-#if !(defined(_AIX) || defined(sun) || \
-        defined(HAS_PAM_LIBRARY))
+#if !(defined(_AIX) || defined(sun) || defined(HAS_PAM_LIBRARY))
 #define generic
 #endif
 
 #if defined(__linux__)
-#    include <shadow.h>
+#include <shadow.h>
 #endif
 
 #if defined(sun) || defined(HAS_PAM_LIBRARY)
@@ -134,16 +136,13 @@
 #include <security/ia_appl.h>
 #endif
 
-
 /***************************************************************************
  *
  *  Procedure declarations (SUN)
  *
  ***************************************************************************/
 
-static void Audit( struct passwd *p, char *msg, int errnum) ;
-
-
+static void Audit(struct passwd *p, char *msg, int errnum);
 
 /***************************************************************************
  *
@@ -151,21 +150,18 @@ static void Audit( struct passwd *p, char *msg, int errnum) ;
  *
  ***************************************************************************/
 
-static void 
-Audit( struct passwd *p, char *msg, int errnum )
-{
+static void Audit(struct passwd *p, char *msg, int errnum) {
 
-    /*
-     * make sure program is back to super-user...
-     */
+  /*
+   * make sure program is back to super-user...
+   */
 
-    seteuid(0);
+  seteuid(0);
 
-    Debug("Audit: %s\n", msg);
+  Debug("Audit: %s\n", msg);
 
-    return;
+  return;
 }
-
 
 /***************************************************************************
  *
@@ -176,77 +172,73 @@ Audit( struct passwd *p, char *msg, int errnum )
  *  return codes indicate authentication results.
  ***************************************************************************/
 
-int 
-Authenticate( struct display *d, char *name, char *passwd, char **msg )
-{
-   extern char *progName;
+int Authenticate(struct display *d, char *name, char *passwd, char **msg) {
+  extern char *progName;
 
-   int	status;
-   char* ttyLine = d->gettyLine;
+  int status;
+  char *ttyLine = d->gettyLine;
 
-   /*
-    * Nothing to do if no name provided.
-    */
-    if (!name) {
-      return(VF_INVALID);
-    }
+  /*
+   * Nothing to do if no name provided.
+   */
+  if (!name) {
+    return (VF_INVALID);
+  }
 
-   /*
-    * Construct device line
-    */
+  /*
+   * Construct device line
+   */
 #ifdef DEF_NETWORK_DEV
-            /*
-             * If location is not local (remote XDMCP dtlogin) and
-             * remote accouting is enabled (networkDev start with /dev/...)
-             * Set tty line name to match network device for accouting.
-             * Unless the resource was specifically set, default is value
-             * of DEF_NETWORK_DEV define (/dev/dtremote)
-             */
+  /*
+   * If location is not local (remote XDMCP dtlogin) and
+   * remote accouting is enabled (networkDev start with /dev/...)
+   * Set tty line name to match network device for accouting.
+   * Unless the resource was specifically set, default is value
+   * of DEF_NETWORK_DEV define (/dev/dtremote)
+   */
 
-            if ( d->displayType.location != Local &&
-                 networkDev && !strncmp(networkDev,"/dev/",5)) {
-                ttyLine = networkDev+5;
-            }
+  if (d->displayType.location != Local && networkDev &&
+      !strncmp(networkDev, "/dev/", 5)) {
+    ttyLine = networkDev + 5;
+  }
 #endif
 
-   /*
-    * Authenticate user and return status
-    */
+  /*
+   * Authenticate user and return status
+   */
 
 #if defined(PAM) || defined(HAS_PAM_LIBRARY)
 #ifdef PAM
-    status = PamAuthenticate("dtlogin", d->name, passwd, name, ttyLine);
+  status = PamAuthenticate("dtlogin", d->name, passwd, name, ttyLine);
 #else
-    status = _DtSvcPamAuthenticate(progName, name, d->name, passwd);
+  status = _DtSvcPamAuthenticate(progName, name, d->name, passwd);
 #endif
 
-    switch(status) {
-        case PAM_SUCCESS:
-            return(VF_OK);
+  switch (status) {
+  case PAM_SUCCESS:
+    return (VF_OK);
 
-        case PAM_NEW_AUTHTOK_REQD:
-	    return(VF_PASSWD_AGED);
+  case PAM_NEW_AUTHTOK_REQD:
+    return (VF_PASSWD_AGED);
 
-	default:
-	    return(passwd ? VF_INVALID : VF_CHALLENGE);
-    }
+  default:
+    return (passwd ? VF_INVALID : VF_CHALLENGE);
+  }
 #else
-    status = solaris_authenticate("dtlogin", d->name, passwd, name, ttyLine);
+  status = solaris_authenticate("dtlogin", d->name, passwd, name, ttyLine);
 
-    switch(status) {
-        case IA_SUCCESS:
-            return(VF_OK);
+  switch (status) {
+  case IA_SUCCESS:
+    return (VF_OK);
 
-        case IA_NEWTOK_REQD:
-	    return(VF_PASSWD_AGED);
+  case IA_NEWTOK_REQD:
+    return (VF_PASSWD_AGED);
 
-	default:
-	    return(passwd ? VF_INVALID : VF_CHALLENGE);
-    }
+  default:
+    return (passwd ? VF_INVALID : VF_CHALLENGE);
+  }
 #endif /* !PAM */
 }
-
-
 
 /***************************************************************************
  *
@@ -260,7 +252,7 @@ Authenticate( struct display *d, char *name, char *passwd, char **msg )
  ***************************************************************************
  ***************************************************************************
  ***************************************************************************/
-#ifdef _AIX 
+#ifdef _AIX
 /***************************************************************************
  *
  *  GetLoginInfo
@@ -269,9 +261,8 @@ Authenticate( struct display *d, char *name, char *passwd, char **msg )
  *  create a dummy tty name for loginrestrictions.
  *
  ***************************************************************************/
-void
-GetLoginInfo(struct display *d, int *loginType, char *ttyName, char **hostname)
-{
+void GetLoginInfo(struct display *d, int *loginType, char *ttyName,
+                  char **hostname) {
   char workarea[128];
 
   CleanUpName(d->name, workarea, 128);
@@ -296,8 +287,7 @@ GetLoginInfo(struct display *d, int *loginType, char *ttyName, char **hostname)
  *
  *  return codes indicate authentication results.
  ***************************************************************************/
-Authenticate( struct display *d, char *name, char *passwd, char **msg )
-{
+Authenticate(struct display *d, char *name, char *passwd, char **msg) {
   int arc;
   int rc;
   int reenter;
@@ -309,88 +299,79 @@ Authenticate( struct display *d, char *name, char *passwd, char **msg )
 
   GetLoginInfo(d, &loginType, tty, &hostname);
 
-  if (name == NULL)
-  {
+  if (name == NULL) {
     unknown = 0;
   }
 
-  if (unknown)
-  {
- /*
-    * No more challenges. User failed login.
-    */
+  if (unknown) {
+    /*
+     * No more challenges. User failed login.
+     */
     unknown = 0;
     loginfailed(name, hostname, tty);
-    return(VF_INVALID);
+    return (VF_INVALID);
   }
 
- /*
-  * Authenticate with response to last challenge.
-  */
+  /*
+   * Authenticate with response to last challenge.
+   */
   rc = authenticate(name, passwd, &reenter, msg);
 
-  if (reenter)
-  {
-   /*
-    * System has presented user with new challenge.
-    */
-    return(VF_CHALLENGE);
+  if (reenter) {
+    /*
+     * System has presented user with new challenge.
+     */
+    return (VF_CHALLENGE);
   }
 
-  if (rc && errno == ENOENT)
-  { 
-   /*
-    * User is unknown to the system. Simulate a password
-    * challenge, but save message for display for next call.
-    */
+  if (rc && errno == ENOENT) {
+    /*
+     * User is unknown to the system. Simulate a password
+     * challenge, but save message for display for next call.
+     */
     unknown = 1;
-    return(VF_CHALLENGE);
+    return (VF_CHALLENGE);
   }
 
-  if (rc)
-  {
-   /*
-    * No more challenges. User failed login.
-    */
+  if (rc) {
+    /*
+     * No more challenges. User failed login.
+     */
     loginfailed(name, hostname, tty);
-    return(VF_INVALID);
+    return (VF_INVALID);
   }
 
- /*
-  * User authenticated. Check login restrictions.
-  */
+  /*
+   * User authenticated. Check login restrictions.
+   */
   rc = loginrestrictions(name, loginType, tty, msg);
 
-  if (rc)
-  {
-   /* 
-    * Login restrictions disallow login.
-    */
+  if (rc) {
+    /*
+     * Login restrictions disallow login.
+     */
     loginfailed(name, hostname, tty);
-    return(VF_MESSAGE);
+    return (VF_MESSAGE);
   }
 
- /*
-  * Check password expiration.
-  */
+  /*
+   * Check password expiration.
+   */
   rc = passwdexpired(name, msg);
 
-  if (rc)
-  {
-   /*
-    * Login succeeded, but password expired.
-    */
-    return(VF_PASSWD_AGED);
+  if (rc) {
+    /*
+     * Login succeeded, but password expired.
+     */
+    return (VF_PASSWD_AGED);
   }
 
- /*
-  * Login succeeded.
-  */
+  /*
+   * Login succeeded.
+   */
   loginsuccess(name, hostname, tty, msg);
-  return(VF_OK);
+  return (VF_OK);
 }
-
-
 
 #else /* !_POWER */
 /***************************************************************************
@@ -399,14 +380,13 @@ Authenticate( struct display *d, char *name, char *passwd, char **msg )
  *
  ***************************************************************************/
 
-#include	<time.h>
-#include	<sys/types.h>
-#include	<sys/errno.h>
-#include	<usersec.h>
-#include	<userpw.h>
-#include	<userconf.h>
-#include	<utmp.h>
-#include	<time.h>
+#include <sys/errno.h>
+#include <sys/types.h>
+#include <time.h>
+#include <userconf.h>
+#include <userpw.h>
+#include <usersec.h>
+#include <utmp.h>
 
 /***************************************************************************
  *
@@ -414,21 +394,15 @@ Authenticate( struct display *d, char *name, char *passwd, char **msg )
  *
  ***************************************************************************/
 
-
-
-
 /***************************************************************************
  *
  *  Procedure declarations (AIX)
  *
  ***************************************************************************/
 
-static void Audit( struct passwd *p, char *msg, int errnum) ;
-static int  PasswordAged(char *name, struct passwd *pw) ;
-static void WriteBtmp( char *name) ;
-
-
-
+static void Audit(struct passwd *p, char *msg, int errnum);
+static int PasswordAged(char *name, struct passwd *pw);
+static void WriteBtmp(char *name);
 
 /***************************************************************************
  *
@@ -436,63 +410,48 @@ static void WriteBtmp( char *name) ;
  *
  ***************************************************************************/
 
-
-
-
 /***************************************************************************
  *
  *  Audit (AIX)
  *
  ***************************************************************************/
 
-static void 
-Audit( struct passwd *p, char *msg, int errnum )
-{
+static void Audit(struct passwd *p, char *msg, int errnum) {
 
-    /*
-     * make sure program is back to super-user...
-     */
+  /*
+   * make sure program is back to super-user...
+   */
 
-    seteuid(0);
-    if ( (auditwrite ("USER_Login", AUDIT_OK,
-            p->pw_name, strlen (p->pw_name) + 1,
-            msg, strlen (msg) + 1, NULL))  == -1 )
-          Debug(" Could not do Auditing\n");
-
+  seteuid(0);
+  if ((auditwrite("USER_Login", AUDIT_OK, p->pw_name, strlen(p->pw_name) + 1,
+                  msg, strlen(msg) + 1, NULL)) == -1)
+    Debug(" Could not do Auditing\n");
 }
-
-
-
 
 /***************************************************************************
  *
  *  WriteBtmp (AIX)
  *
  *  log bad login attempts to /etc/security/failedlogin file
- *  
+ *
  *  RK	09.13.93
  ***************************************************************************/
 
-static void 
-WriteBtmp( char *name )
-{
-	int	fd;
-	struct  utmp	ut;
+static void WriteBtmp(char *name) {
+  int fd;
+  struct utmp ut;
 
-	if( (fd = open("/etc/security/failedlogin",O_CREAT|O_RDWR,0644)) != -1) {
-		bzero(&ut,sizeof(struct utmp));
-		if(name)
-			strncpy(ut.ut_user, name, sizeof ut.ut_user);
-		ut.ut_type = USER_PROCESS;
-		ut.ut_pid = getpid();
-		ut.ut_time = time((time_t *)0);
-		write(fd, (char *)&ut, sizeof(struct utmp));
-		close(fd);
-	}
+  if ((fd = open("/etc/security/failedlogin", O_CREAT | O_RDWR, 0644)) != -1) {
+    bzero(&ut, sizeof(struct utmp));
+    if (name)
+      strncpy(ut.ut_user, name, sizeof ut.ut_user);
+    ut.ut_type = USER_PROCESS;
+    ut.ut_pid = getpid();
+    ut.ut_time = time((time_t *)0);
+    write(fd, (char *)&ut, sizeof(struct utmp));
+    close(fd);
+  }
 }
-
-
-
 
 /***************************************************************************
  *
@@ -500,76 +459,68 @@ WriteBtmp( char *name )
  *
  *  see if password has aged
  ***************************************************************************/
-#define SECONDS_IN_WEEK		604800L
+#define SECONDS_IN_WEEK 604800L
 
-static int 
-PasswordAged(char *name, struct passwd *pw )
-{
+static int PasswordAged(char *name, struct passwd *pw) {
   struct userpw *pupw; /* authentication information from getuserpw() */
-  struct userpw  upw;  /* working authentication information */
+  struct userpw upw;   /* working authentication information */
   int err;             /* return code from getconfattr() */
   ulong maxage;        /* maximun age from getconfattr() */
   ulong now;           /* time now */
 
-#ifdef	_POWER
-  return(FALSE);
-#else	/* _POWER */
- /*
-  * Determine user password aging criteria. Note that only
-  * the 'lastupdate' and 'flags' fields are set by this operation.
-  */
+#ifdef _POWER
+  return (FALSE);
+#else  /* _POWER */
+  /*
+   * Determine user password aging criteria. Note that only
+   * the 'lastupdate' and 'flags' fields are set by this operation.
+   */
   setpwdb(S_READ);
-  if ((pupw = getuserpw(name)) != NULL)
-  {
+  if ((pupw = getuserpw(name)) != NULL) {
     upw.upw_lastupdate = pupw->upw_lastupdate;
     upw.upw_flags = pupw->upw_flags;
-  }
-  else
-  {
+  } else {
     upw.upw_lastupdate = 0;
     upw.upw_flags = 0;
   }
   endpwdb();
 
- /*
-  * Consider password as having not expired if nocheck set.
-  */
-  if (upw.upw_flags & PW_NOCHECK) return(FALSE);
+  /*
+   * Consider password as having not expired if nocheck set.
+   */
+  if (upw.upw_flags & PW_NOCHECK)
+    return (FALSE);
 
- /*
-  * Get system password aging criteria.
-  */
-  err = getconfattr (SC_SYS_PASSWD, SC_MAXAGE, (void *)&maxage, SEC_INT);
-  if (!err && maxage)
-  {
-   /*
-    * Change from weeks to seconds
-    */
+  /*
+   * Get system password aging criteria.
+   */
+  err = getconfattr(SC_SYS_PASSWD, SC_MAXAGE, (void *)&maxage, SEC_INT);
+  if (!err && maxage) {
+    /*
+     * Change from weeks to seconds
+     */
     maxage = maxage * SECONDS_IN_WEEK;
-    now = time ((long *) 0);
+    now = time((long *)0);
 
-    if ((upw.upw_lastupdate + maxage) >= now)
-    {
-     /*
-      * Password has not expired.
-      */
-      return(FALSE);
+    if ((upw.upw_lastupdate + maxage) >= now) {
+      /*
+       * Password has not expired.
+       */
+      return (FALSE);
     }
-  }
-  else
-  {
-   /*
-    * Could not retrieve system password aging info or maxage set to
-    * zero. In either case, consider password has having not expired.
-    */
-    return(FALSE);
+  } else {
+    /*
+     * Could not retrieve system password aging info or maxage set to
+     * zero. In either case, consider password has having not expired.
+     */
+    return (FALSE);
   }
 
- /* 
-  * We haven't returned by now, so indicate password has expired.
-  */
-  return(TRUE);
-#endif	/* _POWER */
+  /*
+   * We haven't returned by now, so indicate password has expired.
+   */
+  return (TRUE);
+#endif /* _POWER */
 }
 
 /***************************************************************************
@@ -577,44 +528,39 @@ PasswordAged(char *name, struct passwd *pw )
  *
  * log failed login in /etc/security/lastlog
  ***************************************************************************/
-struct  lastlogin {
-        time_t  ftime;
-        time_t  stime;
-        int     fcount;
-        char    user[32];
-        char    *stty;
-        char    *ftty;
-        char    *shost;
-        char    *fhost;
+struct lastlogin {
+  time_t ftime;
+  time_t stime;
+  int fcount;
+  char user[32];
+  char *stty;
+  char *ftty;
+  char *shost;
+  char *fhost;
 };
-extern void 
-	dt_lastlogin ( char * user, struct lastlogin * llogin);
+extern void dt_lastlogin(char *user, struct lastlogin *llogin);
 
-void 
-dt_failedlogin(char *name, char *ttyName, char *hostName)
-{
-	struct lastlogin last_login;
+void dt_failedlogin(char *name, char *ttyName, char *hostName) {
+  struct lastlogin last_login;
 
-	last_login.stime = 0;
+  last_login.stime = 0;
 
-        time(&last_login.ftime);
+  time(&last_login.ftime);
 
-        last_login.ftty = ttyName;
+  last_login.ftty = ttyName;
 
-        last_login.fhost = (char *) malloc (MAXHOSTNAMELEN);
-        if (hostName == NULL) {
-            gethostname (last_login.fhost , MAXHOSTNAMELEN);
-        } else {
-            strncpy(last_login.fhost, hostName, MAXHOSTNAMELEN);
-            last_login.fhost[MAXHOSTNAMELEN -1] = '\0';
-        }
+  last_login.fhost = (char *)malloc(MAXHOSTNAMELEN);
+  if (hostName == NULL) {
+    gethostname(last_login.fhost, MAXHOSTNAMELEN);
+  } else {
+    strncpy(last_login.fhost, hostName, MAXHOSTNAMELEN);
+    last_login.fhost[MAXHOSTNAMELEN - 1] = '\0';
+  }
 
-        Debug("logging failed lastlogin entry (user=%s)\n",name);
-        dt_lastlogin(name, &last_login);
-        free(last_login.fhost);
+  Debug("logging failed lastlogin entry (user=%s)\n", name);
+  dt_lastlogin(name, &last_login);
+  free(last_login.fhost);
 }
-
-    
 
 /***************************************************************************
  *
@@ -625,223 +571,214 @@ dt_failedlogin(char *name, char *ttyName, char *hostName)
  *  return codes indicate authentication results.
  ***************************************************************************/
 
-#define MAXATTEMPTS	3
+#define MAXATTEMPTS 3
 
-struct  passwd nouser = {"", "nope"};	/* invalid user password struct	   */
+struct passwd nouser = {"", "nope"}; /* invalid user password struct	   */
 
-int 
-Authenticate( struct display *d, char *name, char *passwd, char **msg )
-{
+int Authenticate(struct display *d, char *name, char *passwd, char **msg) {
 
-    static int		login_attempts = 0; /* # failed authentications	   */
-    struct passwd	*p;		/* password structure */
-    char 		*crypt();
-    char               *origpw;
-    int loginType;
-    char tty[128];
-    char *hostname;
+  static int login_attempts = 0; /* # failed authentications	   */
+  struct passwd *p;              /* password structure */
+  /* crypt() from crypt.h on Linux */
+  char *origpw;
+  int loginType;
+  char tty[128];
+  char *hostname;
 
-   /*
-    * Nothing to do if no name provided.
-    */
-    if (!name)
-      return(VF_INVALID);
+  /*
+   * Nothing to do if no name provided.
+   */
+  if (!name)
+    return (VF_INVALID);
 
-   /*
-    * Save provided password.
-    */
-    origpw = passwd;
-    if (!passwd) passwd = "";
+  /*
+   * Save provided password.
+   */
+  origpw = passwd;
+  if (!passwd)
+    passwd = "";
 
-    if(strlen(name) > S_NAMELEN)
-         return(VF_INVALID);
+  if (strlen(name) > S_NAMELEN)
+    return (VF_INVALID);
 
-    GetLoginInfo(d, &loginType, tty, &hostname);
+  GetLoginInfo(d, &loginType, tty, &hostname);
 
-    p = getpwnam(name);
-     
-    if (!p  || strcmp (crypt (passwd, p->pw_passwd), p->pw_passwd)) {
+  p = getpwnam(name);
 
-	WriteBtmp(name);  
+  if (!p || strcmp(crypt(passwd, p->pw_passwd), p->pw_passwd)) {
 
-	if ((++login_attempts % MAXATTEMPTS) == 0 ) {
+    WriteBtmp(name);
 
-	    if (p == NULL )
-		p = &nouser;
+    if ((++login_attempts % MAXATTEMPTS) == 0) {
 
-	    Audit(p, " Failed login (bailout)", 1);
-	}
+      if (p == NULL)
+        p = &nouser;
 
-	if (origpw) {
-	    dt_failedlogin(name, tty, hostname);
-	    return (VF_INVALID);
-	} else
-	    return(VF_CHALLENGE);
+      Audit(p, " Failed login (bailout)", 1);
     }
 
-    /* Note: The password should be checked if it is the first time
-             the user is logging in or whether the sysadm has changed
-             the password for the user. Code should be added here if
-             this functionality should be supported. The "upw_flags"
-             of the password structure gets set to PW_ADMCHG in this
-             case.				RK 09.13.93.
-    */
+    if (origpw) {
+      dt_failedlogin(name, tty, hostname);
+      return (VF_INVALID);
+    } else
+      return (VF_CHALLENGE);
+  }
 
-    /*
-     *  check password aging...
-     */
+  /* Note: The password should be checked if it is the first time
+           the user is logging in or whether the sysadm has changed
+           the password for the user. Code should be added here if
+           this functionality should be supported. The "upw_flags"
+           of the password structure gets set to PW_ADMCHG in this
+           case.				RK 09.13.93.
+  */
 
-    if ( PasswordAged(name,p) ) return(VF_PASSWD_AGED);
+  /*
+   *  check password aging...
+   */
 
+  if (PasswordAged(name, p))
+    return (VF_PASSWD_AGED);
 
-    /* Validate for User Account  RK 09.13.93 */
-    if(ckuseracct(name, loginType, tty) == -1)  {
-	dt_failedlogin(name, tty, hostname);
-	return(VF_INVALID);
-    }
+  /* Validate for User Account  RK 09.13.93 */
+  if (ckuseracct(name, loginType, tty) == -1) {
+    dt_failedlogin(name, tty, hostname);
+    return (VF_INVALID);
+  }
 
+  /*
+   *  validate uid and gid...
+   */
 
-    /*
-     *  validate uid and gid...
-     */
+  if ((p->pw_gid < 0) || (setgid(p->pw_gid) == -1)) {
 
+    Audit(p, " attempted to login - bad group id", 1);
+    return (VF_BAD_GID);
+  }
 
-    if ((p->pw_gid < 0)      || 
- 	(setgid(p->pw_gid) == -1)) {
+  if ((p->pw_uid < 0)) {
+    Audit(p, " attempted to login - bad user id", 1);
+    return (VF_BAD_UID);
+  }
 
-	Audit(p, " attempted to login - bad group id", 1);
-	return(VF_BAD_GID);
-    }
+  /* Check for max number of logins  RK 09.13.93 */
+  if (tsm_check_login(p->pw_uid) == -1) {
+    dt_failedlogin(name, tty, hostname);
+    return (VF_INVALID);
+  }
 
-    if ((p->pw_uid < 0)) {
-	Audit(p, " attempted to login - bad user id", 1);
-	return(VF_BAD_UID);
-    }
+  /* Check for /etc/nologin file   RK 09.13.93 */
+  if ((access("/etc/nologin", R_OK) == 0) && (p->pw_uid != 0)) {
+    dt_failedlogin(name, tty, hostname);
+    return (VF_INVALID);
+  }
 
-    /* Check for max number of logins  RK 09.13.93 */
-    if (tsm_check_login(p->pw_uid) == -1) {
-	dt_failedlogin(name, tty, hostname);
-        return(VF_INVALID);
-    }
+  /*
+   *  verify home directory exists...
+   */
 
-    /* Check for /etc/nologin file   RK 09.13.93 */
-    if ( (access("/etc/nologin",R_OK) == 0) && (p->pw_uid != 0) ) {
-	dt_failedlogin(name, tty, hostname);
-	return(VF_INVALID);
-    }
+  if (chdir(p->pw_dir) < 0) {
+    Audit(p, " attempted to login - no home directory", 1);
+    return (VF_HOME);
+  }
 
-    /*
-     *  verify home directory exists...
-     */
+  /*
+   * verify ok...
+   */
 
-    if(chdir(p->pw_dir) < 0) {
-	Audit(p, " attempted to login - no home directory", 1);
-        return(VF_HOME);
-    }
-
-    /*
-     * verify ok...
-     */
-
-    Audit(p, " Successful login", 0);
-    return(VF_OK);
+  Audit(p, " Successful login", 0);
+  return (VF_OK);
 }
 
 /**************************************************************************
-* 
-* tsm_check_login() 
-*
-* Checks for max number of logins on the system. If the new user trying to
-* login exceeds the max limit then the user is not allowed to login.
-*
-* RK 09.13.93
-**************************************************************************/
+ *
+ * tsm_check_login()
+ *
+ * Checks for max number of logins on the system. If the new user trying to
+ * login exceeds the max limit then the user is not allowed to login.
+ *
+ * RK 09.13.93
+ **************************************************************************/
 
 /**************************************************************************
-* 
-* tsm_check_login() 
-*
-* Checks for max number of logins on the system. If the new user trying to
-* login exceeds the max limit then the user is not allowed to login.
-*
-* RK 09.13.93
-**************************************************************************/
+ *
+ * tsm_check_login()
+ *
+ * Checks for max number of logins on the system. If the new user trying to
+ * login exceeds the max limit then the user is not allowed to login.
+ *
+ * RK 09.13.93
+ **************************************************************************/
 
-int
-tsm_check_login(uid_t uid)
-{
+int tsm_check_login(uid_t uid) {
 
-	key_t	key;
-	char    *buffer;
-	int	semid;
-	int 	fd;
-	struct  stat stat_buf;
-	static	struct	sembuf	sop = { 0, -1, (SEM_UNDO|IPC_NOWAIT) };
-	static	struct	sembuf	initsop = { 0, 0, (IPC_NOWAIT) };
+  key_t key;
+  char *buffer;
+  int semid;
+  int fd;
+  struct stat stat_buf;
+  static struct sembuf sop = {0, -1, (SEM_UNDO | IPC_NOWAIT)};
+  static struct sembuf initsop = {0, 0, (IPC_NOWAIT)};
 
-	/*
-	 * The login counter semaphore may not be set yet.  See if it exists
-	 * and try creating it with the correct count if it doesn't.  An
-	 * attempt is made to create the semaphore.  Only if that attempt fails
-	 * is the semaphore set to maxlogins from login.cfg.
-	 */
+  /*
+   * The login counter semaphore may not be set yet.  See if it exists
+   * and try creating it with the correct count if it doesn't.  An
+   * attempt is made to create the semaphore.  Only if that attempt fails
+   * is the semaphore set to maxlogins from login.cfg.
+   */
 
+  /*
+   * Don't Check if the user is already logged. ie running login
+   * from a shell
+   */
+  /*
+   * Generate the semaphore key from the init program.
+   */
+  Debug("Start of maxlogin check\n");
+  if ((key = ftok(CDE_INSTALLATION_TOP "/bin/dtlogin", 1)) != (key_t)-1) {
+    Debug("key created\n");
+    if ((semid = semget(key, 1, IPC_CREAT | IPC_EXCL | 0600)) != -1) {
+      int i;
+      Debug("Completed IPCkey\n");
+      if (!getconfattr("usw", "maxlogins", &i, SEC_INT)) {
+        Debug("Max logins from login.cfg is :%d\n", i);
+        if (i <= 0)
+          i = 10000; /* a very large number */
 
-	/*
-	 * Don't Check if the user is already logged. ie running login
-	 * from a shell
-	 */
-		/*
-		 * Generate the semaphore key from the init program.
-		 */
-		Debug("Start of maxlogin check\n");
-		if ((key = ftok (CDE_INSTALLATION_TOP "/bin/dtlogin", 1)) != (key_t) -1) {
-			Debug("key created\n");
-			if ((semid = semget (key, 1, IPC_CREAT|IPC_EXCL|0600)) != -1) {
-				int	i;
-				Debug("Completed IPCkey\n");
-				if (! getconfattr ("usw", "maxlogins", &i, SEC_INT)) {
-                                        Debug("Max logins from login.cfg is :%d\n",i);
-					if (i <= 0)
-						i = 10000; /* a very large number */
+        initsop.sem_op = i;
+        if (semop(semid, &initsop, 1)) {
+          Debug("failed while decrementing\n");
+          return (-1);
+        }
+      } else {
+        semctl(semid, 1, IPC_RMID, 0);
+      }
+    }
 
-					initsop.sem_op = i;
-					if (semop (semid, &initsop, 1))
-						{
-                                                    Debug("failed while decrementing\n");
-						return(-1);	
-						}
-				} else {
-					semctl (semid, 1, IPC_RMID, 0);
-				}
-			}
+    /*
+     * Only 'n' login sessions are allowed on the system.
+     * This code block decrements a semaphore.
+     * The semundo value will be set to adjust the
+     * semaphore when tsm exits.
+     *
+     * This code will be ignored if the appropriate
+     * semaphore set does not exist.
+     */
 
-			/*
-			 * Only 'n' login sessions are allowed on the system. 
-			 * This code block decrements a semaphore.
-			 * The semundo value will be set to adjust the
-			 * semaphore when tsm exits.
-			 *
-			 * This code will be ignored if the appropriate
-			 * semaphore set does not exist.
-			 */
-
-			if ((semid = semget (key, 1, 0)) != -1) {
-                                  Debug("getting key for maxlogins\n");
-				/*
-				 * If the semaphore is zero and we are not
-				 * root, then we fail as there are already the
-				 * allotted number of login sessions on the
-				 * system.
-				 */
-				if ((semop (semid, &sop, 1)  == -1) && uid) {
-                                                    Debug("reached MAXLOGINS limit\n");
-					errno = EAGAIN;
-					return(-1);
-				}
-			}
-		}
-
+    if ((semid = semget(key, 1, 0)) != -1) {
+      Debug("getting key for maxlogins\n");
+      /*
+       * If the semaphore is zero and we are not
+       * root, then we fail as there are already the
+       * allotted number of login sessions on the
+       * system.
+       */
+      if ((semop(semid, &sop, 1) == -1) && uid) {
+        Debug("reached MAXLOGINS limit\n");
+        errno = EAGAIN;
+        return (-1);
+      }
+    }
+  }
 }
 #endif /* !_POWER */
 #endif /* _AIX */
@@ -860,14 +797,12 @@ tsm_check_login(uid_t uid)
  ***************************************************************************
  ***************************************************************************/
 
-
 #ifdef generic
 /***************************************************************************
  *
  *  Start authentication routines (generic)
  *
  ***************************************************************************/
-
 
 /***************************************************************************
  *
@@ -880,17 +815,11 @@ tsm_check_login(uid_t uid)
  *
  ***************************************************************************/
 
-
-
-
 /***************************************************************************
  *
  *  External declarations (generic)
  *
  ***************************************************************************/
-
-
-
 
 /***************************************************************************
  *
@@ -898,12 +827,9 @@ tsm_check_login(uid_t uid)
  *
  ***************************************************************************/
 
-static void Audit( struct passwd *p, char *msg, int errnum) ;
-static int  PasswordAged( struct passwd *pw) ;
-static void WriteBtmp( char *name) ;
-
-
-
+static void Audit(struct passwd *p, char *msg, int errnum);
+static int PasswordAged(struct passwd *pw);
+static void WriteBtmp(char *name);
 
 /***************************************************************************
  *
@@ -911,48 +837,33 @@ static void WriteBtmp( char *name) ;
  *
  ***************************************************************************/
 
-
-
-
 /***************************************************************************
  *
  *  Audit (generic)
  *
  ***************************************************************************/
 
-static void 
-Audit( struct passwd *p, char *msg, int errnum )
-{
+static void Audit(struct passwd *p, char *msg, int errnum) {
 
-    /*
-     * make sure program is back to super-user...
-     */
-    if(-1 == seteuid(0)) {
-        perror(strerror(errno));
-    }
+  /*
+   * make sure program is back to super-user...
+   */
+  if (-1 == seteuid(0)) {
+    perror(strerror(errno));
+  }
 
-    return;
+  return;
 }
-
-
-
 
 /***************************************************************************
  *
  *  WriteBtmp (generic)
  *
  *  log bad login attempts
- *  
+ *
  ***************************************************************************/
 
-static void 
-WriteBtmp( char *name )
-{
-    return;
-}
-
-
-
+static void WriteBtmp(char *name) { return; }
 
 /***************************************************************************
  *
@@ -960,15 +871,9 @@ WriteBtmp( char *name )
  *
  *  see if password has aged
  ***************************************************************************/
-#define SECONDS_IN_WEEK		604800L
+#define SECONDS_IN_WEEK 604800L
 
-static int 
-PasswordAged( struct passwd *pw )
-{
-  return(FALSE);
-}
-
-    
+static int PasswordAged(struct passwd *pw) { return (FALSE); }
 
 /***************************************************************************
  *
@@ -979,120 +884,110 @@ PasswordAged( struct passwd *pw )
  *  return codes indicate authentication results.
  ***************************************************************************/
 
-#define MAXATTEMPTS	3
+#define MAXATTEMPTS 3
 
-struct  passwd nouser = {"", "nope"};	/* invalid user password struct	   */
+struct passwd nouser = {"", "nope"}; /* invalid user password struct	   */
 
-int 
-Authenticate( struct display *d, char *name, char *passwd, char **msg )
-{
+int Authenticate(struct display *d, char *name, char *passwd, char **msg) {
 
-    static int		login_attempts = 0; /* # failed authentications	   */
-    
-    struct passwd	*p;		/* password structure */
-    char 		*crypt();
+  static int login_attempts = 0; /* # failed authentications	   */
 
-    int			n;
+  struct passwd *p; /* password structure */
+  /* crypt() from crypt.h on Linux */
 
-    char               *origpw;
+  int n;
 
-   /*
-    * Nothing to do if no name provided.
-    */
-    if (!name)
-      return(VF_INVALID);
+  char *origpw;
 
-   /*
-    * Save provided password.
-    */
-    origpw = passwd;
-    if (!passwd) passwd = "";
+  /*
+   * Nothing to do if no name provided.
+   */
+  if (!name)
+    return (VF_INVALID);
 
-    p = getpwnam(name);
-    
+  /*
+   * Save provided password.
+   */
+  origpw = passwd;
+  if (!passwd)
+    passwd = "";
+
+  p = getpwnam(name);
+
 #if defined(__linux__)
-    /*
-     * Use the Linux Shadow Password system to get the crypt()ed password
-     */
-    if(p) {
-        struct spwd *s = getspnam(name);
-	if(s) {
-            p->pw_passwd = s->sp_pwdp;
-        }
+  /*
+   * Use the Linux Shadow Password system to get the crypt()ed password
+   */
+  if (p) {
+    struct spwd *s = getspnam(name);
+    if (s) {
+      p->pw_passwd = s->sp_pwdp;
     }
+  }
 #endif
 
 #if defined(__OpenBSD__)
-    /*
-     * Use the OpenBSD getpwnam_shadow function to get the crypt()ed password
-     */
-     p = getpwnam_shadow(name);
+  /*
+   * Use the OpenBSD getpwnam_shadow function to get the crypt()ed password
+   */
+  p = getpwnam_shadow(name);
 #endif
 
-    if (!p || strlen(name) == 0 ||
-        strcmp (crypt (passwd, p->pw_passwd), p->pw_passwd)) {
+  if (!p || strlen(name) == 0 ||
+      strcmp(crypt(passwd, p->pw_passwd), p->pw_passwd)) {
 
-	    WriteBtmp(name);
+    WriteBtmp(name);
 
-	    if ((++login_attempts % MAXATTEMPTS) == 0 ) {
+    if ((++login_attempts % MAXATTEMPTS) == 0) {
 
-		if (p == NULL )
-		    p = &nouser;
+      if (p == NULL)
+        p = &nouser;
 
-		Audit(p, " Failed login (bailout)", 1);
-
-	    }
-	
-	return(origpw ? VF_INVALID : VF_CHALLENGE);
+      Audit(p, " Failed login (bailout)", 1);
     }
 
+    return (origpw ? VF_INVALID : VF_CHALLENGE);
+  }
 
-    /*
-     *  check password aging...
-     */
+  /*
+   *  check password aging...
+   */
 
-     if ( PasswordAged(p) ) return(VF_PASSWD_AGED);
-         
+  if (PasswordAged(p))
+    return (VF_PASSWD_AGED);
 
-    /*
-     *  verify home directory exists...
-     */
+  /*
+   *  verify home directory exists...
+   */
 
-    if(chdir(p->pw_dir) < 0) {
-	Audit(p, " attempted to login - no home directory", 1);
-        return(VF_HOME);
-    }
+  if (chdir(p->pw_dir) < 0) {
+    Audit(p, " attempted to login - no home directory", 1);
+    return (VF_HOME);
+  }
 
+  /*
+   *  validate uid and gid...
+   */
 
-    /*
-     *  validate uid and gid...
-     */
+  if (setgid(p->pw_gid) == -1) {
 
+    Audit(p, " attempted to login - bad group id", 1);
+    return (VF_BAD_GID);
+  }
 
-    if (setgid(p->pw_gid) == -1) {
+  if (seteuid(p->pw_uid) == -1) {
 
-	Audit(p, " attempted to login - bad group id", 1);
-	return(VF_BAD_GID);
-    }
+    Audit(p, " attempted to login - bad user id", 1);
+    return (VF_BAD_UID);
+  }
 
-    if (seteuid(p->pw_uid) == -1) {
+  /*
+   * verify ok...
+   */
 
-	Audit(p, " attempted to login - bad user id", 1);
-	return(VF_BAD_UID);
-    }
-
-
-
-    /*
-     * verify ok...
-     */
-
-    Audit(p, " Successful login", 0);
-    return(VF_OK);
+  Audit(p, " Successful login", 0);
+  return (VF_OK);
 }
-
-
-
 
 /***************************************************************************
  *
@@ -1100,8 +995,6 @@ Authenticate( struct display *d, char *name, char *passwd, char **msg )
  *
  ***************************************************************************/
 #endif /* generic */
-
-
 
 /***************************************************************************
  ***************************************************************************

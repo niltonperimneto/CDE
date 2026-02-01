@@ -47,6 +47,9 @@
 #ifndef _hourglass_h
 #define _hourglass_h
 
+#include <X11/Intrinsic.h>
+#include <X11/Xlib.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -56,8 +59,7 @@ extern "C" {
  *   Builds and returns the appropriate HourGlass cursor.
  */
 
-extern Cursor _DtGetHourGlassCursor( 
-                        Display *dpy) ;
+extern Cursor _DtGetHourGlassCursor(Display *dpy);
 
 /* _DtTurnOnHourGlass -
  *
@@ -65,15 +67,13 @@ extern Cursor _DtGetHourGlassCursor(
  *   which is passed in to the funciton.
  */
 
-extern void _DtTurnOnHourGlass( 
-                        Widget w) ;
- 
- /*  Widget widget;
-  *
-  * widget is the toplevel shell of the window you want
-  * the hourglass cursor to appear in.
-  */
+extern void _DtTurnOnHourGlass(Widget w);
 
+/*  Widget widget;
+ *
+ * widget is the toplevel shell of the window you want
+ * the hourglass cursor to appear in.
+ */
 
 /* _DtTurnOffHourGlass -
  *
@@ -81,14 +81,13 @@ extern void _DtTurnOnHourGlass(
  *   which is passed in to the funciton.
  */
 
-extern void _DtTurnOffHourGlass( 
-                        Widget w) ;
-  
- /* Widget widget;
-  *
-  *  widget is the toplevel shell of the window you want
-  *  to remove hourglass cursor from.
-  */
+extern void _DtTurnOffHourGlass(Widget w);
+
+/* Widget widget;
+ *
+ *  widget is the toplevel shell of the window you want
+ *  to remove hourglass cursor from.
+ */
 
 #ifdef __cplusplus
 }

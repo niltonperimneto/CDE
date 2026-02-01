@@ -211,9 +211,9 @@ struct greet_info {
 
 struct verify_info {
   int uid;
-  int gid;
+  gid_t gid;
 #ifdef NGROUPS
-  int groups[NGROUPS];
+  gid_t groups[NGROUPS];
   int ngroups;
 #endif
   char **argv;

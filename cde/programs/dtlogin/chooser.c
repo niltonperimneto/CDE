@@ -89,6 +89,7 @@ in this Software without prior written authorization from the X Consortium.
 #define CHOOSER
 
 #include "dm.h"
+#include <Dt/SafeStr.h>
 
 #include "vg.h"
 #include "vgmsg.h"
@@ -136,11 +137,12 @@ Widget chooser_list; /* Global list widget for chooser - defined here */
 extern int orig_argc;
 extern char **orig_argv;
 extern int amChooser;
-extern void MakeOptionsProc();
+extern void MakeOptionsProc(XtPointer, XtIntervalId *);
 
 static Arg chooserArgs[25]; /** Hopefully enough args **/
 
-static void CvtStringToARRAY8();
+static void CvtStringToARRAY8(XrmValuePtr args, Cardinal *num_args,
+                              XrmValuePtr fromVal, XrmValuePtr toVal);
 
 static struct _app_resources {
   ARRAY8Ptr xdmAddress;

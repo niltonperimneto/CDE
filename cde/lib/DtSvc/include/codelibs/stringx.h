@@ -32,60 +32,42 @@
 #ifndef __STRINGX_H_
 #define __STRINGX_H_
 
+#include <codelibs/boolean.h>
 #include <stddef.h>
 #include <string.h>
-#include <codelibs/boolean.h>
 
-#define streq(a,b) (strcmp(a,b) == 0)
+#define streq(a, b) (strcmp(a, b) == 0)
 
 /* private buffer variables */
 extern void *_strsep_privbuf;
 extern void *_strcmbn_privbuf;
 
 #if defined(__cplusplus)
-extern "C"
-{
+extern "C" {
 #endif
-#if defined(__cplusplus) || defined(__STDC__)
 #if !defined(sun)
-    char *strnew(size_t len);
-    void strfree(const char *s);
+char *strnew(size_t len);
+void strfree(const char *s);
 #endif
-    char *strstrx(char *s1, const char *s2);
-    char *strrstrx(char *s1, const char *s2);
-    int strwcmp(const char *pattern, const char *str);
-    int strwcmpi(const char *pattern, const char *str);
-    char *strwpat(const char *pattern);
-    char *strend(const char *str);
+char *strstrx(char *s1, const char *s2);
+char *strrstrx(char *s1, const char *s2);
+int strwcmp(const char *pattern, const char *str);
+int strwcmpi(const char *pattern, const char *str);
+char *strwpat(const char *pattern);
+char *strend(const char *str);
 
-    unsigned strhash(const char *key);
-    unsigned strhashi(const char *key);
+unsigned strhash(const char *key);
+unsigned strhashi(const char *key);
 
-    char *strupper(char *str);
-    char *strlower(char *str);
+char *strupper(char *str);
+char *strlower(char *str);
 
 #ifdef __cplusplus
-    char *strtokx(char *&ptr, const char *sep);
-#else /* __STDC__ */
-    char *strtokx(char **ptr, const char *sep);
-    const char *strcmbn(const char **vec, const char *sep);
+char *strtokx(char *&ptr, const char *sep);
+#else  /* __STDC__ */
+char *strtokx(char **ptr, const char *sep);
+const char *strcmbn(const char **vec, const char *sep);
 #endif /* __STDC__ */
-
-#else /* C */
-
-extern void   strfree();
-extern char  *strstrx(), strrstrx();
-extern int    strwcmp(), strwcmpi();
-extern char  *strwpat();
-extern char  *strend();
-extern char  *strtokx();
-
-extern unsigned   strhash();
-extern unsigned   strhashi();
-
-extern char      *strupper(), *strlower();
-
-#endif /* C */
 #if defined(__cplusplus)
 }
 
@@ -95,28 +77,37 @@ extern char      *strupper(), *strlower();
 #include <malloc.h>
 #endif /* aix linux CSRG_BASED */
 
-inline char *strnew(size_t len) { return (char*)malloc(len + 1); }
+inline char *strnew(size_t len) { return (char *)malloc(len + 1); }
 #if defined(sun) || defined(__sun)
-inline void  strfree(const char *s)
-	{ if (s != NULL) free((char *)s); }
+inline void strfree(const char *s) {
+  if (s != NULL)
+    free((char *)s);
+}
 #else
-inline void  strfree(const char *s)
+inline void strfree(const char *s)
 #if defined(CSRG_BASED)
-	{ if (s != NULL) free((void *)s); }
+{
+  if (s != NULL)
+    free((void *)s);
+}
 #else
-	{ if (s != NULL) free((void *)s); }
+{
+  if (s != NULL)
+    free((void *)s);
+}
 #endif /* bsd */
 #endif
 #if defined(bsd)
-inline char *strdup(const char *s)
-	{ return strcpy((char*)malloc(strlen(s) + 1), s); }
+inline char *strdup(const char *s) {
+  return strcpy((char *)malloc(strlen(s) + 1), s);
+}
 #endif
 
 /* private buffer funcs - we use inlines to handle default args properly */
 
 #else /* C || __STDC__ */
 
-#define strnew(len) ((char*)malloc((len) + 1))
+#define strnew(len) ((char *)malloc((len) + 1))
 
 #define strbld strblds
 
