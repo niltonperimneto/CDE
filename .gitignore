@@ -4,6 +4,7 @@ meson-logs/
 meson-private/
 *.log
 log.txt
+*.txt
 
 # CDE Build Artifacts
 .cache/

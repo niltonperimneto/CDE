@@ -1,6 +1,0 @@
-MAINTAINERCLEANFILES = Makefile.in
-
-if SOLARIS
-SUBDIRS = sun
-endif
-
