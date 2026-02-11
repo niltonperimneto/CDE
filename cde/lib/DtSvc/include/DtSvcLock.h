@@ -36,11 +36,10 @@
 
 /********    Conditionally defined macros for thread_safe DtSvc ******/
 #include <Dt/SafeStr.h>
+#include <Dt/SafeStr.h>
 #ifdef XTHREADS
-#define _DtSvcWidgetToAppContext(w)                                            \
-  XtAppContext app = XtWidgetToApplicationContext(w)
-#define _DtSvcDisplayToAppContext(d)                                           \
-  XtAppContext app = XtDisplayToApplicationContext(d)
+#define _DtSvcWidgetToAppContext(w) XtAppContext app = XtWidgetToApplicationContext(w)
+#define _DtSvcDisplayToAppContext(d) XtAppContext app = XtDisplayToApplicationContext(d)
 #define _DtSvcAppLock(app) XtAppLock(app)
 #define _DtSvcAppUnlock(app) XtAppUnlock(app)
 
@@ -49,11 +48,11 @@
  * must either include <Dt/DtP.h> or declare _DtAppContext
  * as an external variable, i.e. "extern XtAppContext _DtAppContext;"
  */
-#define _DtSvcAppLockDefault()                                                 \
-  if (_DtAppContext != (XtAppContext)NULL)                                     \
+#define _DtSvcAppLockDefault()             \
+  if (_DtAppContext != (XtAppContext)NULL) \
   XtAppLock(_DtAppContext)
-#define _DtSvcAppUnlockDefault()                                               \
-  if (_DtAppContext != (XtAppContext)NULL)                                     \
+#define _DtSvcAppUnlockDefault()           \
+  if (_DtAppContext != (XtAppContext)NULL) \
   XtAppUnlock(_DtAppContext)
 
 #define _DtSvcProcessLock() XtProcessLock()

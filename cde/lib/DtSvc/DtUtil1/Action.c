@@ -104,41 +104,37 @@
 #define CDE_INSTALLATION_TOP "/opt/dt"
 #endif
 
-extern char *_DtStripSpaces(char *string);
-extern char *_DtDbPathIdToString(DtDbPathId pathId);
+extern char* _DtStripSpaces(char* string);
+extern char* _DtDbPathIdToString(DtDbPathId pathId);
 
-extern int _DtActDeleteChildRec(_DtActInvRecT *invp, _DtActChildRecT *childp);
-extern int _DtActionCommandInvoke(long wintype, char *cwdHost, char *cwdDir,
-                                  char *execString, char *termOpts,
-                                  char *execHost, char *procId, char *tmpFiles,
-                                  void (*success_proc)(char *, void *),
-                                  void *success_data,
-                                  void (*failure_proc)(char *, void *),
-                                  void *failure_data);
+extern int _DtActDeleteChildRec(_DtActInvRecT* invp, _DtActChildRecT* childp);
+extern int _DtActionCommandInvoke(long wintype, char* cwdHost, char* cwdDir, char* execString,
+                                  char* termOpts, char* execHost, char* procId, char* tmpFiles,
+                                  void (*success_proc)(char*, void*), void* success_data,
+                                  void (*failure_proc)(char*, void*), void* failure_data);
 
-#define _MAX_MAP_ATTEMPTS                                                      \
-  100 /* Maximum nuber of "MAPS" that will                                     \
+#define _MAX_MAP_ATTEMPTS                  \
+  100 /* Maximum nuber of "MAPS" that will \
          be done. */
 #define _DT_ACTION_MAX_CLOSE_TRIES 5
 
 /********    Public Function Declarations    ********/
 
-void _DtCreateErrorDialog(Widget w, char *actionName, XmString msg);
-Boolean _DtCompileMessagePiece(Widget w, ActionRequest *request,
-                               char *relPathHost, char *relPathDir,
-                               parsedMsg *piece, Boolean initialize,
-                               unsigned long processingMask,
-                               Boolean **paramUsed, int *promptDataIndex);
-ActionRequest *_DtCloneRequest(ActionRequest *request);
-void _DtFreeRequest(ActionRequest *request);
+void _DtCreateErrorDialog(Widget w, char* actionName, XmString msg);
+Boolean _DtCompileMessagePiece(Widget w, ActionRequest* request, char* relPathHost,
+                               char* relPathDir, parsedMsg* piece, Boolean initialize,
+                               unsigned long processingMask, Boolean** paramUsed,
+                               int* promptDataIndex);
+ActionRequest* _DtCloneRequest(ActionRequest* request);
+void _DtFreeRequest(ActionRequest* request);
 
-char *_DtFindCwd(void);
+char* _DtFindCwd(void);
 
-char *_DtActMapFileName(const char *curHost, const char *dir, const char *file,
-                        const char *newHost);
+char* _DtActMapFileName(const char* curHost, const char* dir, const char* file,
+                        const char* newHost);
 
-extern void _DtProcessTtRequest(Widget w, ActionRequest *request,
-                                char *relPathHost, char *relPathDir);
+extern void _DtProcessTtRequest(Widget w, ActionRequest* request, char* relPathHost,
+                                char* relPathDir);
 extern Tt_status _DtInitializeToolTalk(Widget w);
 
 extern Boolean _DtEmptyString(String str);
@@ -148,94 +144,73 @@ extern Boolean _DtEmptyString(String str);
 /********    Static Function Declarations    ********/
 
 static void FreeErrorDialog(Widget w, XtPointer user_data, XtPointer call_data);
-static void InvalidFilename(Widget w, char *actionName, char *filename);
-static void HostAccessError(Widget w, char *actionName, char *hostName);
-static void MultiHostAccessError(Widget w, char *actionName, char *hostList);
-static void NoActionError(Widget w, DtShmBoson origNameQuark, char *actionName,
-                          char *type, char *host, char *dir, char *file);
-static void MapError(Widget w, char *actionName);
-static void CommandInvokerError(Widget w, char *actionName, char *errorString);
-static void NoToolTalkConnectionError(Widget w, String actionName,
-                                      Tt_status status);
-static void TmpFileCreateError(Widget w, char *actionName, char *dirName);
-static void TmpFileWriteError(Widget w, char *actionName, char *fileName);
-static void UnSupportedObject(Widget w, char *actionName, int objClass);
-static void SetExecHost(ActionRequest *request);
-static void ParseHostList(char *hostString, char ***hostListPtr,
-                          int *hostListSizePtr, int *hostCountPtr);
-static void RemoveDuplicateHostNames(char **hostList, int *hostCountPtr);
-static void AddFailedHostToList(ActionRequest *request, char *badHost);
-static int _DtAddEntry(char *string, char ***arrayPtr, int *sizePtr);
-static void TryToTypeFile(ObjectData *obj, char *host, char *dir, char *file,
-                          char **resolvedPath);
-static ActionRequest *CreateActionRequest(Widget w, char *actionName,
-                                          DtActionArg *aap, int numArgs,
-                                          char *termOpts, char *execHost,
-                                          char *cwdHost, char *cwdDir,
-                                          _DtActInvRecT *invp);
-static _DtActInvRecT *CreateInvocationRecord(char *actionName, Widget w,
-                                             DtActionArg *aap, int numArgs);
-static Boolean ParseFileArgument(Widget w, ActionRequest *request,
-                                 ObjectData *objectData, char *hostname,
-                                 char *filename, char *filetype,
-                                 Boolean typeFile);
-static void AddPrompt(int argNum, char *prompt, int *numPrompts,
-                      PromptEntry **prompts);
-static int MatchParamsToAction(ActionRequest *request, int *numPrompts,
-                               PromptEntry **prompts);
-static void ProcessOneSegment(ActionRequest *request, parsedMsg *msg,
-                              PromptEntry **prompts, int *numPrompts,
-                              Boolean *argsOptionFound, int *lastArgReferenced,
-                              int *unused, Boolean *paramUsed);
+static void InvalidFilename(Widget w, char* actionName, char* filename);
+static void HostAccessError(Widget w, char* actionName, char* hostName);
+static void MultiHostAccessError(Widget w, char* actionName, char* hostList);
+static void NoActionError(Widget w, DtShmBoson origNameQuark, char* actionName, char* type,
+                          char* host, char* dir, char* file);
+static void MapError(Widget w, char* actionName);
+static void CommandInvokerError(Widget w, char* actionName, char* errorString);
+static void NoToolTalkConnectionError(Widget w, String actionName, Tt_status status);
+static void TmpFileCreateError(Widget w, char* actionName, char* dirName);
+static void TmpFileWriteError(Widget w, char* actionName, char* fileName);
+static void UnSupportedObject(Widget w, char* actionName, int objClass);
+static void SetExecHost(ActionRequest* request);
+static void ParseHostList(char* hostString, char*** hostListPtr, int* hostListSizePtr,
+                          int* hostCountPtr);
+static void RemoveDuplicateHostNames(char** hostList, int* hostCountPtr);
+static void AddFailedHostToList(ActionRequest* request, char* badHost);
+static int _DtAddEntry(char* string, char*** arrayPtr, int* sizePtr);
+static void TryToTypeFile(ObjectData* obj, char* host, char* dir, char* file, char** resolvedPath);
+static ActionRequest* CreateActionRequest(Widget w, char* actionName, DtActionArg* aap, int numArgs,
+                                          char* termOpts, char* execHost, char* cwdHost,
+                                          char* cwdDir, _DtActInvRecT* invp);
+static _DtActInvRecT* CreateInvocationRecord(char* actionName, Widget w, DtActionArg* aap,
+                                             int numArgs);
+static Boolean ParseFileArgument(Widget w, ActionRequest* request, ObjectData* objectData,
+                                 char* hostname, char* filename, char* filetype, Boolean typeFile);
+static void AddPrompt(int argNum, char* prompt, int* numPrompts, PromptEntry** prompts);
+static int MatchParamsToAction(ActionRequest* request, int* numPrompts, PromptEntry** prompts);
+static void ProcessOneSegment(ActionRequest* request, parsedMsg* msg, PromptEntry** prompts,
+                              int* numPrompts, Boolean* argsOptionFound, int* lastArgReferenced,
+                              int* unused, Boolean* paramUsed);
 static ActionPtr CloneActionDBEntry(ActionPtr action);
-static void CloneParsedMessage(parsedMsg *old_pmsg, parsedMsg *new_pmsg);
-static void FreeParsedMessage(parsedMsg *parsedMessage);
-static parsedMsg *CloneParsedMessageArray(parsedMsg *pmsgArray, int count);
-static void FreeParsedMessageArray(parsedMsg *parsedMessageArray, int count);
-static Boolean InsertArgumentString(Widget w, char **bufPtr, int *bufSizePtr,
-                                    ActionRequest *request, ObjectData *object,
-                                    unsigned long mask, char *relPathHost,
-                                    char *relPathDir, Boolean addLeadingSpace,
+static void CloneParsedMessage(parsedMsg* old_pmsg, parsedMsg* new_pmsg);
+static void FreeParsedMessage(parsedMsg* parsedMessage);
+static parsedMsg* CloneParsedMessageArray(parsedMsg* pmsgArray, int count);
+static void FreeParsedMessageArray(parsedMsg* parsedMessageArray, int count);
+static Boolean InsertArgumentString(Widget w, char** bufPtr, int* bufSizePtr,
+                                    ActionRequest* request, ObjectData* object, unsigned long mask,
+                                    char* relPathHost, char* relPathDir, Boolean addLeadingSpace,
                                     unsigned long processingMask);
-static void InsertUnmappedArgumentString(char **bufPtr, int *bufSizePtr,
-                                         ObjectData *object,
+static void InsertUnmappedArgumentString(char** bufPtr, int* bufSizePtr, ObjectData* object,
                                          Boolean addLeadingSpace);
-static char *GrowMsgBuffer(char *buffer, int *size, int count);
-static void CmdInvSuccessfulRequest(char *message, void *data2);
-static void CmdInvFailedRequest(char *message, void *data2);
+static char* GrowMsgBuffer(char* buffer, int* size, int count);
+static void CmdInvSuccessfulRequest(char* message, void* data2);
+static void CmdInvFailedRequest(char* message, void* data2);
 
-static void PrepareAndExecuteAction(Widget w, ActionRequest *request);
-static void __ExtractCWD(ActionRequest *request, char **hostPtr, char **dirPtr,
+static void PrepareAndExecuteAction(Widget w, ActionRequest* request);
+static void __ExtractCWD(ActionRequest* request, char** hostPtr, char** dirPtr,
                          Boolean useObjectInfo);
-static void ContinueRequest(Widget widget, XtPointer user_data,
-                            XtPointer call_data);
-static void CancelRequest(Widget widget, XtPointer user_data,
-                          XtPointer call_data);
-static void CreateContinueDialog(Widget w, ActionRequest *request,
-                                 int numPrompts, PromptEntry *prompts);
-static void CancelPromptDialog(Widget widget, PromptDialog *dialog,
-                               XtPointer call_data);
-static void ProcessPromptDialog(Widget widget, PromptDialog *dialog,
-                                XtPointer call_data);
-static void ChangePromptTraversal(Widget widget, PromptDialog *dialog,
-                                  XtPointer call_data);
-static void CreatePromptDialog(Widget w, ActionRequest *request, int numPrompts,
-                               PromptEntry *prompts);
-static Boolean MoreArgumentsToProcess(ActionRequest *request);
-static Boolean ProcessRequest(Widget w, ActionRequest *request);
+static void ContinueRequest(Widget widget, XtPointer user_data, XtPointer call_data);
+static void CancelRequest(Widget widget, XtPointer user_data, XtPointer call_data);
+static void CreateContinueDialog(Widget w, ActionRequest* request, int numPrompts,
+                                 PromptEntry* prompts);
+static void CancelPromptDialog(Widget widget, PromptDialog* dialog, XtPointer call_data);
+static void ProcessPromptDialog(Widget widget, PromptDialog* dialog, XtPointer call_data);
+static void ChangePromptTraversal(Widget widget, PromptDialog* dialog, XtPointer call_data);
+static void CreatePromptDialog(Widget w, ActionRequest* request, int numPrompts,
+                               PromptEntry* prompts);
+static Boolean MoreArgumentsToProcess(ActionRequest* request);
+static Boolean ProcessRequest(Widget w, ActionRequest* request);
 static void InitLocalizedStrings(void);
-static int LinkToTypeQuark(char *host, char *dir, char *file,
-                           char **resolvedPath);
-static void CancelOut(Widget w, XEvent *event, XtPointer params,
-                      XtPointer num_params);
-static void InitiateCommandInvokerRequest(Widget w, ActionRequest *request,
-                                          char *host, char *dir);
-static void ProcessCommandInvokerRequest(Widget w, ActionRequest *request,
-                                         char *relPathHost, char *relPathDir);
-static Boolean ResolveCommandInvokerMessagePieces(Widget w,
-                                                  ActionRequest *request,
-                                                  char *relPathHost,
-                                                  char *relPathDir);
+static int LinkToTypeQuark(char* host, char* dir, char* file, char** resolvedPath);
+static void CancelOut(Widget w, XEvent* event, XtPointer params, XtPointer num_params);
+static void InitiateCommandInvokerRequest(Widget w, ActionRequest* request, char* host, char* dir);
+static void ProcessCommandInvokerRequest(Widget w, ActionRequest* request, char* relPathHost,
+                                         char* relPathDir);
+static Boolean ResolveCommandInvokerMessagePieces(Widget w, ActionRequest* request,
+                                                  char* relPathHost, char* relPathDir);
 static Tt_callback_action _DbReloadCB(Tt_message m, Tt_pattern p);
 static void _DtActTimerCB(XtPointer clientData, XtIntervalId timerId);
 static void _DtActIndicatorCB(XtPointer clientData, XtIntervalId timerId);
@@ -309,18 +284,15 @@ static char translations_escape[] = "<Key>osfCancel:Escape()";
  *      DtActionCallbackProc statusUpdateCb;  (user supplied fcn)
  *      XtPointer       client_data     (user supplied client data)
  *****************************************************************************/
-DtActionInvocationID DtActionInvoke(Widget w, char *action, DtActionArg *aap,
-                                    int aac, char *termOpts, char *execHost,
-                                    char *cwd, int useIndicator,
-                                    DtActionCallbackProc statusUpdateCb,
-                                    XtPointer client_data) {
-
-  ActionRequest *request;
-  char *contextHost = NULL; /* dummy to replace old parameter */
-  _DtActInvRecT *invp;      /* pointer to invocation record */
+DtActionInvocationID DtActionInvoke(Widget w, char* action, DtActionArg* aap, int aac,
+                                    char* termOpts, char* execHost, char* cwd, int useIndicator,
+                                    DtActionCallbackProc statusUpdateCb, XtPointer client_data) {
+  ActionRequest* request;
+  char* contextHost = NULL; /* dummy to replace old parameter */
+  _DtActInvRecT* invp;      /* pointer to invocation record */
   Tt_status status = TT_OK;
   static Boolean initialized = False;
-  extern XtAppContext *_DtInitAppContextp;
+  extern XtAppContext* _DtInitAppContextp;
   _DtSvcWidgetToAppContext(w);
 
   _DtSvcAppLock(app);
@@ -333,7 +305,7 @@ DtActionInvocationID DtActionInvoke(Widget w, char *action, DtActionArg *aap,
   _DtSvcProcessLock();
   if (!initialized) {
     mode_t mode;
-    char *tmpDir;
+    char* tmpDir;
 
     InitLocalizedStrings();
 
@@ -352,8 +324,7 @@ DtActionInvocationID DtActionInvoke(Widget w, char *action, DtActionArg *aap,
      */
     tmpDir = _DtGetDtTmpDir();
     /* mode == 0755 */
-    mode =
-        (S_IRUSR | S_IWUSR | S_IXUSR | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH);
+    mode = (S_IRUSR | S_IWUSR | S_IXUSR | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH);
     if (mkdir(tmpDir, mode)) {
       /*
        * Tmp directory creation failure.
@@ -363,7 +334,7 @@ DtActionInvocationID DtActionInvoke(Widget w, char *action, DtActionArg *aap,
        * the "$HOME/.dt" directory hasn't yet been created.
        */
       if (errno == ENOENT) {
-        char *parentDir = _DtDirname(tmpDir);
+        char* parentDir = _DtDirname(tmpDir);
         if (parentDir && 0 == mkdir(parentDir, mode))
           mkdir(tmpDir, mode);
         if (parentDir)
@@ -376,8 +347,7 @@ DtActionInvocationID DtActionInvoke(Widget w, char *action, DtActionArg *aap,
         XtDisplay(w), NULL,    /* bms tool class -- ignored */
         NULL,                  /* application class -- ignored */
         (DtSvcMsgContext)NULL, /* reloadDBHandler -- none here */
-        (_DtInitAppContextp ? *_DtInitAppContextp
-                            : XtWidgetToApplicationContext(w)));
+        (_DtInitAppContextp ? *_DtInitAppContextp : XtWidgetToApplicationContext(w)));
   }
   initialized = True;
   _DtSvcProcessUnlock();
@@ -403,8 +373,7 @@ DtActionInvocationID DtActionInvoke(Widget w, char *action, DtActionArg *aap,
   if (useIndicator) {
     /* Start timer for minimum blink time */
     XtAppAddTimeOut(XtWidgetToApplicationContext(w), MIN_INDICATOR_TIME,
-                    (XtTimerCallbackProc)_DtActIndicatorCB,
-                    (XtPointer)invp->id);
+                    (XtTimerCallbackProc)_DtActIndicatorCB, (XtPointer)invp->id);
   }
 
   /*
@@ -415,8 +384,8 @@ DtActionInvocationID DtActionInvoke(Widget w, char *action, DtActionArg *aap,
 
   /* Create and fill in the request structure */
   if (!IS_INV_FINISHED(invp->state) &&
-      (request = CreateActionRequest(w, action, aap, aac, termOpts, execHost,
-                                     contextHost, cwd, invp)) != NULL) {
+      (request = CreateActionRequest(w, action, aap, aac, termOpts, execHost, contextHost, cwd,
+                                     invp)) != NULL) {
     if (ProcessRequest(w, request)) {
       /* all done invoking ? */
       RESET_INV_PENDING(invp->state);
@@ -440,8 +409,7 @@ DtActionInvocationID DtActionInvoke(Widget w, char *action, DtActionArg *aap,
    * caller has gotten the invocation Id.
    */
   SET_INV_ID_RETURNED(invp->state);
-  XtAppAddTimeOut(XtWidgetToApplicationContext(w),
-                  0 /* call back immediately */,
+  XtAppAddTimeOut(XtWidgetToApplicationContext(w), 0 /* call back immediately */,
                   (XtTimerCallbackProc)_DtActTimerCB, (XtPointer)invp->id);
 
   _DtSvcAppUnlock(*_DtInitAppContextp);
@@ -452,8 +420,8 @@ DtActionInvocationID DtActionInvoke(Widget w, char *action, DtActionArg *aap,
 void DtDbReloadNotify(DtDbReloadCallbackProc proc, XtPointer client_data) {
   Tt_status status;
   Tt_pattern pattern;
-  char *sessId;
-  extern XtAppContext *_DtInitAppContextp;
+  char* sessId;
+  extern XtAppContext* _DtInitAppContextp;
 
   if (NULL == proc)
     return;
@@ -510,12 +478,12 @@ void DtDbReloadNotify(DtDbReloadCallbackProc proc, XtPointer client_data) {
    * Store information needed by the callback in the user data
    * fields of the pattern.
    */
-  status = tt_pattern_user_set(pattern, 0, (void *)proc);
+  status = tt_pattern_user_set(pattern, 0, (void*)proc);
   if (status != TT_OK) {
     _DtSvcAppUnlock(*_DtInitAppContextp);
     return;
   }
-  status = tt_pattern_user_set(pattern, 1, (void *)client_data);
+  status = tt_pattern_user_set(pattern, 1, (void*)client_data);
   if (status != TT_OK) {
     _DtSvcAppUnlock(*_DtInitAppContextp);
     return;
@@ -552,7 +520,7 @@ static void _DtActTimerCB(XtPointer clientData, XtIntervalId IntId) {
 
 static void _DtActIndicatorCB(XtPointer clientData, XtIntervalId IntId) {
   unsigned long invocId = (unsigned long)clientData;
-  _DtActInvRecT *invRecP = _DtActFindInvRec(invocId);
+  _DtActInvRecT* invRecP = _DtActFindInvRec(invocId);
 
   if (!invRecP || IS_INV_FINISHED(invRecP->state)) {
     /* Turn off the activity indicator */
@@ -633,16 +601,15 @@ void _DtCreateErrorDialog(Widget w, String actionName, XmString msg)
   XWindowAttributes xwa;
   Status status;
   Boolean is_mapped = False;
-  char *fmt;
+  char* fmt;
 
-  fmt = XtNewString((char *)Dt11GETMESSAGE(2, 1, "%1$s%2$s%3$s"));
+  fmt = XtNewString((char*)Dt11GETMESSAGE(2, 1, "%1$s%2$s%3$s"));
 
-  size_t titleLen = strlen(PromptDialogTitle) + strlen(actionName) +
-                    strlen(ErrorPostfix) + strlen(fmt) + 1;
-  title = (char *)XtMalloc((Cardinal)titleLen);
+  size_t titleLen =
+      strlen(PromptDialogTitle) + strlen(actionName) + strlen(ErrorPostfix) + strlen(fmt) + 1;
+  title = (char*)XtMalloc((Cardinal)titleLen);
 
-  (void)snprintf(title, titleLen, fmt, PromptDialogTitle, actionName,
-                 ErrorPostfix);
+  (void)snprintf(title, titleLen, fmt, PromptDialogTitle, actionName, ErrorPostfix);
 
   XtFree(fmt);
 
@@ -765,7 +732,7 @@ static void MultiHostAccessError(Widget w, String actionName, String hostList)
 {
   XmString msg;
   size_t bufLen = strlen(MultiHostErrorMsg) + strlen(hostList) + 10;
-  char *buf = XtMalloc(bufLen);
+  char* buf = XtMalloc(bufLen);
 
   snprintf(buf, bufLen, MultiHostErrorMsg, hostList);
   msg = XmStringCreateLocalized(buf);
@@ -791,7 +758,6 @@ static void MultiHostAccessError(Widget w, String actionName, String hostList)
  ****************************************************************************/
 
 static void MapError(Widget w, String actionName) {
-
   XmString msg = XmStringCreateLocalized(MapErrorMsg);
   _DtCreateErrorDialog(w, actionName, msg);
   XmStringFree(msg);
@@ -811,45 +777,45 @@ static void MapError(Widget w, String actionName) {
  */
 /* fdt: Will need to also handle a string or a buffer ... eventually */
 
-static void NoActionError(Widget w, DtShmBoson origNameQuark, char *actionName,
-                          char *type, char *host, char *dir, char *file)
+static void NoActionError(Widget w, DtShmBoson origNameQuark, char* actionName, char* type,
+                          char* host, char* dir, char* file)
 
 {
-  char *msgbuf = XtMalloc(2 * MAXPATHLEN);
+  char* msgbuf = XtMalloc(2 * MAXPATHLEN);
   XmString msg;
-  char *name = NULL;
+  char* name = NULL;
 
   /* Construct the error message */
   if ((host == NULL) && (dir == NULL) && (file == NULL) && (type == NULL)) {
-    (void)sprintf(msgbuf, NoActionMsg2, actionName);
+    (void)snprintf(msgbuf, 2 * MAXPATHLEN, NoActionMsg2, actionName);
   } else if ((type != NULL) && (file == NULL) && (dir == NULL)) {
     /*
      * We are dealing with a buffer object for which an action couldn't
      * be located.
      */
-    (void)sprintf(msgbuf, NoActionMsg3, actionName, type);
+    (void)snprintf(msgbuf, 2 * MAXPATHLEN, NoActionMsg3, actionName, type);
   } else {
-    name = (char *)XtMalloc((Cardinal)((host ? strlen(host) : 0) +
-                                       (dir ? strlen(dir) : 0) +
-                                       (file ? strlen(file) : 0) + 10));
+    Cardinal nameLen = (Cardinal)((host ? strlen(host) : 0) + (dir ? strlen(dir) : 0) +
+                                  (file ? strlen(file) : 0) + 10);
+    name = (char*)XtMalloc(nameLen);
     name[0] = '\0';
 
     /* Construct the file name */
     if (host) {
-      (void)strcat(name, host);
-      (void)strcat(name, ":");
+      (void)strlcat(name, host, nameLen);
+      (void)strlcat(name, ":", nameLen);
     }
 
     if (dir) {
-      (void)strcat(name, dir);
+      (void)strlcat(name, dir, nameLen);
       if (strcmp(dir, "/") != 0)
-        (void)strcat(name, "/");
+        (void)strlcat(name, "/", nameLen);
     }
 
     if (file)
-      (void)strcat(name, file);
+      (void)strlcat(name, file, nameLen);
 
-    (void)sprintf(msgbuf, NoActionMsg, actionName, name, type);
+    (void)snprintf(msgbuf, 2 * MAXPATHLEN, NoActionMsg, actionName, name, type);
   }
   msg = XmStringCreateLocalized(msgbuf);
 
@@ -880,8 +846,7 @@ static void CommandInvokerError(Widget w, String actionName, String errorString)
  * one, then we will fail and post an error dialog.
  */
 
-static void NoToolTalkConnectionError(Widget w, String actionName,
-                                      Tt_status status)
+static void NoToolTalkConnectionError(Widget w, String actionName, Tt_status status)
 
 {
   XmString msg;
@@ -891,8 +856,9 @@ static void NoToolTalkConnectionError(Widget w, String actionName,
     statmsg = "";
   else
     statmsg = tt_status_message(status);
-  errmsg = XtMalloc(strlen(NoToolTalkConnMsg) + strlen(statmsg) + 2);
-  sprintf(errmsg, NoToolTalkConnMsg, statmsg);
+  size_t errmsg_len = strlen(NoToolTalkConnMsg) + strlen(statmsg) + 2;
+  errmsg = XtMalloc(errmsg_len);
+  snprintf(errmsg, errmsg_len, NoToolTalkConnMsg, statmsg);
 
   msg = XmStringCreateLocalized(errmsg);
   _DtCreateErrorDialog(w, actionName, msg);
@@ -901,11 +867,12 @@ static void NoToolTalkConnectionError(Widget w, String actionName,
   XmStringFree(msg);
 }
 
-static void TmpFileCreateError(Widget w, char *actionName, char *dirName) {
+static void TmpFileCreateError(Widget w, char* actionName, char* dirName) {
   XmString msg;
-  char *msgbuf = XtMalloc(_DtAct_MAX_BUF_SIZE);
+  char* msgbuf = XtMalloc(_DtAct_MAX_BUF_SIZE);
 
-  sprintf(msgbuf, TmpFileCreateErrorMsg, _DtActNULL_GUARD(dirName), actionName);
+  snprintf(msgbuf, _DtAct_MAX_BUF_SIZE, TmpFileCreateErrorMsg, _DtActNULL_GUARD(dirName),
+           actionName);
 
   msg = XmStringCreateLocalized(msgbuf);
   _DtCreateErrorDialog(w, actionName, msg);
@@ -913,11 +880,12 @@ static void TmpFileCreateError(Widget w, char *actionName, char *dirName) {
   XtFree(msgbuf);
 }
 
-static void TmpFileWriteError(Widget w, char *actionName, char *fileName) {
+static void TmpFileWriteError(Widget w, char* actionName, char* fileName) {
   XmString msg;
-  char *msgbuf = XtMalloc(_DtAct_MAX_BUF_SIZE);
+  char* msgbuf = XtMalloc(_DtAct_MAX_BUF_SIZE);
 
-  sprintf(msgbuf, TmpFileWriteErrorMsg, _DtActNULL_GUARD(fileName), actionName);
+  snprintf(msgbuf, _DtAct_MAX_BUF_SIZE, TmpFileWriteErrorMsg, _DtActNULL_GUARD(fileName),
+           actionName);
 
   msg = XmStringCreateLocalized(msgbuf);
   _DtCreateErrorDialog(w, actionName, msg);
@@ -925,11 +893,11 @@ static void TmpFileWriteError(Widget w, char *actionName, char *fileName) {
   XtFree(msgbuf);
 }
 
-static void UnSupportedObject(Widget w, char *actionName, int objClass) {
+static void UnSupportedObject(Widget w, char* actionName, int objClass) {
   XmString msg;
-  char *msgbuf = XtMalloc(_DtAct_MAX_BUF_SIZE);
+  char* msgbuf = XtMalloc(_DtAct_MAX_BUF_SIZE);
 
-  sprintf(msgbuf, UnSupportedObjMsg, objClass, actionName);
+  snprintf(msgbuf, _DtAct_MAX_BUF_SIZE, UnSupportedObjMsg, objClass, actionName);
 
   msg = XmStringCreateLocalized(msgbuf);
   _DtCreateErrorDialog(w, actionName, msg);
@@ -950,82 +918,79 @@ static void UnSupportedObject(Widget w, char *actionName, int objClass) {
 static void InitLocalizedStrings(void)
 
 {
-  PromptDialogTitle = XtNewString(((char *)Dt11GETMESSAGE(2, 3, "Action:  ")));
-  ErrorPostfix = XtNewString(((char *)Dt11GETMESSAGE(2, 4, "   [Error]")));
-  PromptDialogLabel = XtNewString((
-      (char *)Dt11GETMESSAGE(2, 5, "Please enter the following information:")));
-  ContinueMessage = XtNewString(((char *)Dt11GETMESSAGE(
+  PromptDialogTitle = XtNewString(((char*)Dt11GETMESSAGE(2, 3, "Action:  ")));
+  ErrorPostfix = XtNewString(((char*)Dt11GETMESSAGE(2, 4, "   [Error]")));
+  PromptDialogLabel =
+      XtNewString(((char*)Dt11GETMESSAGE(2, 5, "Please enter the following information:")));
+  ContinueMessage = XtNewString(((char*)Dt11GETMESSAGE(
       2, 6,
       "You have supplied more parameters than the selected action "
       "requires.\n\nSelect 'Ok' to ignore extra parameters.\n\nSelect 'Cancel' "
       "to terminate the action.")));
-  HostErrorMsg = XtNewString(((char *)Dt11GETMESSAGE(
-      2, 7, "The following host was not accessible:\n\n        ")));
+  HostErrorMsg = XtNewString(
+      ((char*)Dt11GETMESSAGE(2, 7, "The following host was not accessible:\n\n        ")));
 
 #ifdef _SUN_OS
-  HostErrorMsg2 = XtNewString(
-      ((char *)Dt11GETMESSAGE(2, 8,
-                              "\n\nThis may be because the remote host's "
-                              "file\nsystem is not properly mounted.\n\n")));
+  HostErrorMsg2 = XtNewString(((char*)Dt11GETMESSAGE(2, 8,
+                                                     "\n\nThis may be because the remote host's "
+                                                     "file\nsystem is not properly mounted.\n\n")));
 #else
-  HostErrorMsg2 = XtNewString(((char *)Dt11GETMESSAGE(
+  HostErrorMsg2 = XtNewString(((char*)Dt11GETMESSAGE(
       2, 8,
       "\n\nCheck that the appropriate remote data access connection\nhas been "
       "made.\n\n(See \"The Common Desktop Environment User's Guide\"\nfor more "
       "information.)\n")));
 #endif
-  NoActionMsg = XtNewString(((char *)Dt11GETMESSAGE(
-      2, 9,
-      "Either action \"%s\" was not found\n         or\nthis action does not "
-      "apply to the file:\n    \"%s\"\nwith data attribute:  \"%s%\"\n\n")));
-  NoActionMsg2 = XtNewString(
-      ((char *)Dt11GETMESSAGE(2, 10, "Action \"%s\" was not found.\n")));
-  InvalidFileMsg = XtNewString(((char *)Dt11GETMESSAGE(
-      2, 11, "The following file was not found:\n\n       ")));
-  MapErrorMsg = XtNewString(((char *)Dt11GETMESSAGE(
+  NoActionMsg = XtNewString((
+      (char*)Dt11GETMESSAGE(2, 9,
+                            "Either action \"%s\" was not found\n         or\nthis action does not "
+                            "apply to the file:\n    \"%s\"\nwith data attribute:  \"%s%\"\n\n")));
+  NoActionMsg2 = XtNewString(((char*)Dt11GETMESSAGE(2, 10, "Action \"%s\" was not found.\n")));
+  InvalidFileMsg =
+      XtNewString(((char*)Dt11GETMESSAGE(2, 11, "The following file was not found:\n\n       ")));
+  MapErrorMsg = XtNewString(((char*)Dt11GETMESSAGE(
       2, 12,
       "This action cannot be executed because it contains too\nmany levels of "
       "MAPs, or the mapping is \"circular\".")));
-  MultiHostErrorMsg = XtNewString(((char *)Dt11GETMESSAGE(
+  MultiHostErrorMsg = XtNewString(((char*)Dt11GETMESSAGE(
       2, 13,
       "Unable to invoke the requested action.\n\nAre the following hosts "
       "accessible?\n     (%s)\nDoes the corresponding program "
       "exist?\n(Run " CDE_INSTALLATION_TOP
       "/bin/dttypes to match actions and programs.)\n\nHas your system run out "
       "of room to execute new processes?")));
-  IcccmReqErrorMsg = XtNewString(((char *)Dt11GETMESSAGE(
-      2, 14, "The request to service this action has failed")));
-  NoToolTalkConnMsg = XtNewString(((char *)Dt11GETMESSAGE(
-      2, 15,
-      "The request to service this action has failed.\nA ToolTalk connection "
-      "could not be established:\n\n%s")));
-  ToolTalkErrorMsg = XtNewString(((char *)Dt11GETMESSAGE(
-      2, 16, "The request to service this action has failed")));
-  ToolTalkErrorMsg2 = XtNewString(
-      ((char *)Dt11GETMESSAGE(2, 17,
-                              "The request to service this action has failed "
-                              "for the following reason:\n\n    %s")));
-  TtFileArgMapErr = XtNewString((char *)Dt11GETMESSAGE(
-      2, 18,
-      "An error occurred while attempting to map one of\nthe file arguments."));
-  NoActionMsg3 = XtNewString(((char *)Dt11GETMESSAGE(
-      2, 19,
-      "Either action \"%s\" was not found\n         or\nthis action does not "
-      "apply to buffers of type:\n  \"%s\"\n\n")));
-  UnSupportedObjMsg = XtNewString(((char *)Dt11GETMESSAGE(
-      2, 21, "Unsupported input object class: \"%d\"\nfor action: \"%s\".")));
-  TmpFileCreateErrorMsg = XtNewString(
-      ((char *)Dt11GETMESSAGE(2, 22,
-                              "Unable to create a temporary file in directory: "
-                              "\"%s\"\nfor the action named: \"%s\"")));
-  TmpFileOpenErrorMsg = XtNewString(
-      ((char *)Dt11GETMESSAGE(2, 23,
-                              "Unable to open a temporary file: \"%s\"\nfor "
-                              "the action named: \"%s\"")));
-  TmpFileWriteErrorMsg = XtNewString(
-      ((char *)Dt11GETMESSAGE(2, 24,
-                              "Unable to write a temporary file: \"%s\"\nfor "
-                              "the action named: \"%s\"")));
+  IcccmReqErrorMsg =
+      XtNewString(((char*)Dt11GETMESSAGE(2, 14, "The request to service this action has failed")));
+  NoToolTalkConnMsg = XtNewString((
+      (char*)Dt11GETMESSAGE(2, 15,
+                            "The request to service this action has failed.\nA ToolTalk connection "
+                            "could not be established:\n\n%s")));
+  ToolTalkErrorMsg =
+      XtNewString(((char*)Dt11GETMESSAGE(2, 16, "The request to service this action has failed")));
+  ToolTalkErrorMsg2 =
+      XtNewString(((char*)Dt11GETMESSAGE(2, 17,
+                                         "The request to service this action has failed "
+                                         "for the following reason:\n\n    %s")));
+  TtFileArgMapErr = XtNewString((char*)Dt11GETMESSAGE(
+      2, 18, "An error occurred while attempting to map one of\nthe file arguments."));
+  NoActionMsg3 = XtNewString((
+      (char*)Dt11GETMESSAGE(2, 19,
+                            "Either action \"%s\" was not found\n         or\nthis action does not "
+                            "apply to buffers of type:\n  \"%s\"\n\n")));
+  UnSupportedObjMsg = XtNewString((
+      (char*)Dt11GETMESSAGE(2, 21, "Unsupported input object class: \"%d\"\nfor action: \"%s\".")));
+  TmpFileCreateErrorMsg =
+      XtNewString(((char*)Dt11GETMESSAGE(2, 22,
+                                         "Unable to create a temporary file in directory: "
+                                         "\"%s\"\nfor the action named: \"%s\"")));
+  TmpFileOpenErrorMsg =
+      XtNewString(((char*)Dt11GETMESSAGE(2, 23,
+                                         "Unable to open a temporary file: \"%s\"\nfor "
+                                         "the action named: \"%s\"")));
+  TmpFileWriteErrorMsg =
+      XtNewString(((char*)Dt11GETMESSAGE(2, 24,
+                                         "Unable to write a temporary file: \"%s\"\nfor "
+                                         "the action named: \"%s\"")));
 }
 
 /*
@@ -1037,20 +1002,19 @@ static void InitLocalizedStrings(void)
  * The structure returned must be freed up eventually.
  */
 
-static ActionRequest *
-CreateActionRequest(Widget w, String actionName, DtActionArg *aap, int aac,
-                    String termOpts, String execHost, String cwdHost,
-                    String cwdDir, _DtActInvRecT *invp)
+static ActionRequest* CreateActionRequest(Widget w, String actionName, DtActionArg* aap, int aac,
+                                          String termOpts, String execHost, String cwdHost,
+                                          String cwdDir, _DtActInvRecT* invp)
 
 {
-  int i, j;
+  int i;
   int numObjects = 0;
-  ObjectData *objectDataArray;
+  ObjectData* objectDataArray;
   ObjectData objectData;
-  ActionRequest *request;
+  ActionRequest* request;
 
   /* Allocate a new request structure -- zero filled */
-  request = (ActionRequest *)XtCalloc(1, (Cardinal)sizeof(ActionRequest));
+  request = (ActionRequest*)XtCalloc(1, (Cardinal)sizeof(ActionRequest));
 
   request->actionName = XtNewString(actionName);
 
@@ -1078,18 +1042,17 @@ CreateActionRequest(Widget w, String actionName, DtActionArg *aap, int aac,
   /*
    * Allocate space for all the object data at once
    */
-  objectDataArray = (ObjectData *)XtCalloc(aac, (sizeof(ObjectData)));
+  objectDataArray = (ObjectData*)XtCalloc(aac, (sizeof(ObjectData)));
 
   /*
    * process object names -- assume all file names are of the form
    *    /path/file  (do NOT allow host:/path/file)
    */
   for (i = 0; i < aac; i++) {
-    memset((void *)&objectData, 0, sizeof(ObjectData));
+    memset((void*)&objectData, 0, sizeof(ObjectData));
     if ((aap + i)->argClass == DtACTION_FILE) {
-      if (ParseFileArgument(w, request, &objectData, NULL, aap[i].u.file.name,
-                            NULL, True)) {
-        XtFree((char *)objectDataArray);
+      if (ParseFileArgument(w, request, &objectData, NULL, aap[i].u.file.name, NULL, True)) {
+        XtFree((char*)objectDataArray);
         return (NULL);
       }
     } else if ((aap + i)->argClass == DtACTION_BUFFER) {
@@ -1105,9 +1068,9 @@ CreateActionRequest(Widget w, String actionName, DtActionArg *aap, int aac,
          * set the BUFFER bit to indicate that this is a tmp file
          * representing a buffer.
          */
-        if (ParseFileArgument(w, request, &objectData, NULL, invp->info[i].name,
-                              invp->info[i].type, True)) {
-          XtFree((char *)objectDataArray);
+        if (ParseFileArgument(w, request, &objectData, NULL, invp->info[i].name, invp->info[i].type,
+                              True)) {
+          XtFree((char*)objectDataArray);
           return (NULL);
         }
         /*
@@ -1192,11 +1155,11 @@ CreateActionRequest(Widget w, String actionName, DtActionArg *aap, int aac,
  *      return a pointer to the newly allocated invocation record.
  *
  *****************************************************************************/
-static _DtActInvRecT *CreateInvocationRecord(char *actionName, Widget w,
-                                             DtActionArg *aap, int aac) {
+static _DtActInvRecT* CreateInvocationRecord(char* actionName, Widget w, DtActionArg* aap,
+                                             int aac) {
   int i;
-  _DtActInvRecT *invp; /* pointer to invocation record */
-  char *tmp;
+  _DtActInvRecT* invp; /* pointer to invocation record */
+  char* tmp;
 
   /*
    * allocate invocation record and ID to return to caller
@@ -1231,13 +1194,13 @@ static _DtActInvRecT *CreateInvocationRecord(char *actionName, Widget w,
     return invp;
   }
 
-  invp->info = (_DtActArgInfo *)XtCalloc(aac, sizeof(_DtActArgInfo));
+  invp->info = (_DtActArgInfo*)XtCalloc(aac, sizeof(_DtActArgInfo));
 
   for (i = 0; i < aac; i++) {
     if (aap[i].argClass == DtACTION_BUFFER) {
       int fd;              /* tmp file descriptor */
-      char *format;        /* name template (printf format) */
-      char *is_executable; /* IS_EXECUTABLE attribute */
+      char* format;        /* name template (printf format) */
+      char* is_executable; /* IS_EXECUTABLE attribute */
       mode_t mode;
       int bytesToWrite, bytesWritten;
       int closeAttempts;
@@ -1255,8 +1218,7 @@ static _DtActInvRecT *CreateInvocationRecord(char *actionName, Widget w,
        * over the type "hint".
        */
       if (aap[i].u.buffer.name || (aap[i].u.buffer.type == NULL)) {
-        tmp = DtDtsBufferToDataType(aap[i].u.buffer.bp, aap[i].u.buffer.size,
-                                    aap[i].u.buffer.name);
+        tmp = DtDtsBufferToDataType(aap[i].u.buffer.bp, aap[i].u.buffer.size, aap[i].u.buffer.name);
         /*
          * Malloc our own copy of the type string so we won't
          * have to worry about when to call DtDtsFreeDataType() later.
@@ -1281,8 +1243,7 @@ static _DtActInvRecT *CreateInvocationRecord(char *actionName, Widget w,
        */
 
       /* first determine the permissions for the new tmp file */
-      is_executable = DtDtsDataTypeToAttributeValue(invp->info[i].type,
-                                                    _DtActIS_EXECUTABLE, NULL);
+      is_executable = DtDtsDataTypeToAttributeValue(invp->info[i].type, _DtActIS_EXECUTABLE, NULL);
       /*
        * The tmp file should at LEAST be readable
        */
@@ -1298,16 +1259,14 @@ static _DtActInvRecT *CreateInvocationRecord(char *actionName, Widget w,
         /*
          * Attempt to use the name supplied for the buffer.
          */
-        invp->info[i].name =
-            _DtActGenerateTmpFile(NULL, aap[i].u.buffer.name, mode, &fd);
+        invp->info[i].name = _DtActGenerateTmpFile(NULL, aap[i].u.buffer.name, mode, &fd);
       }
       if (!invp->info[i].name) {
         /*
          * Generate tmp file based on format supplied for the
          * file type.
          */
-        format = DtDtsDataTypeToAttributeValue(invp->info[i].type,
-                                               _DtActNAME_TEMPLATE, NULL);
+        format = DtDtsDataTypeToAttributeValue(invp->info[i].type, _DtActNAME_TEMPLATE, NULL);
 
         invp->info[i].name = _DtActGenerateTmpFile(NULL, format, mode, &fd);
         DtDtsFreeAttributeValue(format);
@@ -1334,8 +1293,8 @@ static _DtActInvRecT *CreateInvocationRecord(char *actionName, Widget w,
        * Write contents of buffer to temp file
        */
       myassert(fd >= 0);
-      for (bytesToWrite = aap[i].u.buffer.size, bytesWritten = 0;
-           bytesToWrite > 0; bytesToWrite -= bytesWritten) {
+      for (bytesToWrite = aap[i].u.buffer.size, bytesWritten = 0; bytesToWrite > 0;
+           bytesToWrite -= bytesWritten) {
         bytesWritten = write(fd, aap[i].u.buffer.bp, bytesToWrite);
         if (bytesWritten < 0) {
           if (errno == EINTR) {
@@ -1364,29 +1323,29 @@ static _DtActInvRecT *CreateInvocationRecord(char *actionName, Widget w,
           break;
 
         switch (errno) {
-        case EBADF: /* invalid fd */
-          myassert(0);
-          break;
-        case EINTR: /* interrupted sys call */
-          closeAttempts++;
-          continue;  /* try again */
-        case ENOSPC: /* Not enough space on NFS-mounted dev */
-          TmpFileWriteError(w, actionName, invp->info[i].name);
-
-          unlink(invp->info[i].name);
-          RESET_INV_PENDING(invp->state);
-          SET_INV_ERROR(invp->state);
-          SET_INV_CANCEL(invp->state);
-
-          /* try another close */
-          if (close(fd)) {
-            /* It should have worked this time */
+          case EBADF: /* invalid fd */
             myassert(0);
-          }
-          return invp;
-        default: /* anything else */
-          myassert(0);
-          break;
+            break;
+          case EINTR: /* interrupted sys call */
+            closeAttempts++;
+            continue;  /* try again */
+          case ENOSPC: /* Not enough space on NFS-mounted dev */
+            TmpFileWriteError(w, actionName, invp->info[i].name);
+
+            unlink(invp->info[i].name);
+            RESET_INV_PENDING(invp->state);
+            SET_INV_ERROR(invp->state);
+            SET_INV_CANCEL(invp->state);
+
+            /* try another close */
+            if (close(fd)) {
+              /* It should have worked this time */
+              myassert(0);
+            }
+            return invp;
+          default: /* anything else */
+            myassert(0);
+            break;
         }
         break; /* only try again for conditions with continue */
       }
@@ -1420,18 +1379,17 @@ static _DtActInvRecT *CreateInvocationRecord(char *actionName, Widget w,
   return invp;
 }
 
-static Boolean ParseFileArgument(Widget w, ActionRequest *request,
-                                 ObjectData *objectData, String hostname,
-                                 String filename, String filetype,
+static Boolean ParseFileArgument(Widget w, ActionRequest* request, ObjectData* objectData,
+                                 String hostname, String filename, String filetype,
                                  Boolean typeFile)
 
 {
-  int i, j;
+  /* int i, j; -- Unused */
   String dirName;
   String host;
-  String dir;
+  /* String dir; -- Unused */
   int hostId;
-  char *resolvedPath = NULL;
+  char* resolvedPath = NULL;
 
   /********************************************************************
           WE NO LONGER ACCEPT host:/path FORMAT
@@ -1446,8 +1404,7 @@ static Boolean ParseFileArgument(Widget w, ActionRequest *request,
     hostId = _DtAddEntry(hostname, &request->hostNames, &request->numHostNames);
   } else {
     if (request->cwdHost != NULL) {
-      hostId = _DtAddEntry(request->cwdHost, &request->hostNames,
-                           &request->numHostNames);
+      hostId = _DtAddEntry(request->cwdHost, &request->hostNames, &request->numHostNames);
     } else {
       /* if all else fails use local host */
       host = _DtGetLocalHostName();
@@ -1500,8 +1457,7 @@ static Boolean ParseFileArgument(Widget w, ActionRequest *request,
     return (True);
   }
 
-  objectData->u.file.dirIndex =
-      _DtAddEntry(dirName, &request->dirNames, &request->numDirNames);
+  objectData->u.file.dirIndex = _DtAddEntry(dirName, &request->dirNames, &request->numDirNames);
   SET_UNKNOWN_IF_DIR(objectData->mask);
   SET_FILE_OBJ(objectData->mask);
   /*
@@ -1524,8 +1480,7 @@ static Boolean ParseFileArgument(Widget w, ActionRequest *request,
         struct stat sbuf;
         if (!stat(resolvedPath, &sbuf)) {
           /* successful stat of file -- check permissions */
-          if (!(sbuf.st_mode & S_IWOTH || sbuf.st_mode & S_IWGRP ||
-                sbuf.st_mode & S_IWUSR)) {
+          if (!(sbuf.st_mode & S_IWOTH || sbuf.st_mode & S_IWGRP || sbuf.st_mode & S_IWUSR)) {
             RESET_WRITE_OBJ(objectData->mask);
           }
         }
@@ -1553,8 +1508,7 @@ String _DtFindCwd(void)
   char buf[MAXPATHLEN + 1];
 
   if ((tmp = getcwd(buf, MAXPATHLEN)) == NULL) {
-    _DtSimpleError(DtProgName, DtError, NULL,
-                   "getcwd(): unable to get current directory", NULL);
+    _DtSimpleError(DtProgName, DtError, NULL, "getcwd(): unable to get current directory", NULL);
     tmp = "/";
   }
   return (XtNewString(tmp));
@@ -1568,7 +1522,7 @@ String _DtFindCwd(void)
  * new index.
  */
 
-static int _DtAddEntry(String string, String **arrayPtr, int *sizePtr)
+static int _DtAddEntry(String string, String** arrayPtr, int* sizePtr)
 
 {
   int i;
@@ -1582,8 +1536,7 @@ static int _DtAddEntry(String string, String **arrayPtr, int *sizePtr)
   /* Add the string */
   i = *sizePtr;
   (*sizePtr)++;
-  (*arrayPtr) = (String *)XtRealloc((String)*arrayPtr,
-                                    (Cardinal)(sizeof(String) * (*sizePtr)));
+  (*arrayPtr) = (String*)XtRealloc((String)*arrayPtr, (Cardinal)(sizeof(String) * (*sizePtr)));
   (*arrayPtr)[i] = XtNewString(string);
   return (i);
 }
@@ -1595,8 +1548,7 @@ static int _DtAddEntry(String string, String **arrayPtr, int *sizePtr)
  * never need to be 'typed'.
  */
 
-static void TryToTypeFile(ObjectData *obj, char *host, char *dir, char *file,
-                          char **resolvedPath)
+static void TryToTypeFile(ObjectData* obj, char* host, char* dir, char* file, char** resolvedPath)
 
 {
   /* Follow the link when typing files */
@@ -1608,33 +1560,32 @@ static void TryToTypeFile(ObjectData *obj, char *host, char *dir, char *file,
  * final file, not the link we are passed.
  */
 
-static int LinkToTypeQuark(char *host, char *dir, char *file,
-                           char **resolvedPath)
+static int LinkToTypeQuark(char* host, char* dir, char* file, char** resolvedPath)
 
 {
-  char *path;
+  char* path;
   char link_path[MAXPATHLEN + 1];
   char file_name[MAXPATHLEN + 1];
   int link_len;
-  char *end;
+  char* end;
   int history_count;
   int history_size;
-  char **history;
+  char** history;
   int i;
-  char *dtype;
+  char* dtype;
   DtShmBoson dquark;
 
   /* Used to check for symbolic link loops */
   history_count = 0;
   history_size = 100;
-  history = (char **)XtMalloc(sizeof(char *) * history_size);
+  history = (char**)XtMalloc(sizeof(char*) * history_size);
 
   path = _DtActMapFileName(host, dir, file, NULL);
   if (path == NULL) {
     *resolvedPath = NULL;
     return (-1);
   }
-  strcpy(file_name, path);
+  strlcpy(file_name, path, sizeof(file_name));
   XtFree(path);
 
   while ((link_len = readlink(file_name, link_path, MAXPATHLEN)) > 0) {
@@ -1645,18 +1596,17 @@ static int LinkToTypeQuark(char *host, char *dir, char *file,
       /* Relative paths are relative to the current directory */
       end = DtStrrchr(file_name, '/') + 1;
       *end = '\0';
-      strcat(file_name, link_path);
+      strlcat(file_name, link_path, sizeof(file_name));
     } else
-      strcpy(file_name, link_path);
+      strlcpy(file_name, link_path, sizeof(file_name));
 
     /* Check for a recursive loop; abort if found */
     for (i = 0; i < history_count; i++) {
       if (strcmp(file_name, history[i]) == 0) {
         /* Drop back to last non-recursive portion of the path */
-        strcpy(file_name, history[history_count - 1]);
-        for (i = 0; i < history_count; i++)
-          XtFree(history[i]);
-        XtFree((char *)history);
+        strlcpy(file_name, history[history_count - 1], sizeof(file_name));
+        for (i = 0; i < history_count; i++) XtFree(history[i]);
+        XtFree((char*)history);
         dtype = DtDtsFileToDataType(file_name);
         dquark = _DtDtsMMStringToBoson(dtype);
         DtDtsFreeDataType(dtype);
@@ -1668,16 +1618,14 @@ static int LinkToTypeQuark(char *host, char *dir, char *file,
     /* Add to the history list */
     if (history_count >= history_size) {
       history_size += 100;
-      history =
-          (char **)XtRealloc((char *)history, sizeof(char *) * history_size);
+      history = (char**)XtRealloc((char*)history, sizeof(char*) * history_size);
     }
     history[history_count++] = XtNewString(file_name);
   }
 
   /* Free up the history list */
-  for (i = 0; i < history_count; i++)
-    XtFree(history[i]);
-  XtFree((char *)history);
+  for (i = 0; i < history_count; i++) XtFree(history[i]);
+  XtFree((char*)history);
 
   dtype = DtDtsFileToDataType(file_name);
   dquark = _DtDtsMMStringToBoson(dtype);
@@ -1703,19 +1651,18 @@ static int LinkToTypeQuark(char *host, char *dir, char *file,
  * caller to free up the request structure.
  */
 
-static Boolean ProcessRequest(Widget w, ActionRequest *request)
+static Boolean ProcessRequest(Widget w, ActionRequest* request)
 
 {
   int unused;
   ActionPtr action;
   int numPrompts;
-  PromptEntry *prompts;
+  PromptEntry* prompts;
   DtShmBoson actionQuark;
   Tt_status status = TT_OK;
 
   /* See if this is the first pass for the request */
   if (request->clonedAction == NULL) {
-
     /* Always start with the first host, when processing a request */
     request->hostIndex = 0;
 
@@ -1723,8 +1670,7 @@ static Boolean ProcessRequest(Widget w, ActionRequest *request)
     actionQuark = _DtDtsMMStringToBoson(request->actionName);
     RESET_TOO_MANY_MAPS(request->mask);
 
-    if (actionQuark == -1 ||
-        (action = _DtActionFindDBEntry(request, actionQuark)) == NULL) {
+    if (actionQuark == -1 || (action = _DtActionFindDBEntry(request, actionQuark)) == NULL) {
       /*
        * No action label is available here for error dialogs
        */
@@ -1733,21 +1679,19 @@ static Boolean ProcessRequest(Widget w, ActionRequest *request)
 
       } else if (request->numObjects > 0) {
         if (IS_FILE_OBJ(request->objects[0].mask)) {
-          NoActionError(
-              w, actionQuark, request->actionName,
-              (char *)_DtDtsMMBosonToString(request->objects[0].type),
-              request->hostNames[request->objects[0].u.file.hostIndex],
-              request->dirNames[request->objects[0].u.file.dirIndex],
-              request->objects[0].u.file.baseFilename);
+          NoActionError(w, actionQuark, request->actionName,
+                        (char*)_DtDtsMMBosonToString(request->objects[0].type),
+                        request->hostNames[request->objects[0].u.file.hostIndex],
+                        request->dirNames[request->objects[0].u.file.dirIndex],
+                        request->objects[0].u.file.baseFilename);
         } else if (IS_BUFFER_OBJ(request->objects[0].mask)) {
           /*
            * RWV -- may have to modify this call to generate a
            * message more suitable for buffer objects.
            */
           NoActionError(w, actionQuark, request->actionName,
-                        (char *)_DtDtsMMBosonToString(request->objects[0].type),
-                        NULL, /* host */
-                        NULL, /* dir */
+                        (char*)_DtDtsMMBosonToString(request->objects[0].type), NULL, /* host */
+                        NULL,                                                         /* dir */
                         "Memory Object" /* filename */);
         } else
           myassert(0 /* should never get here */);
@@ -1756,8 +1700,7 @@ static Boolean ProcessRequest(Widget w, ActionRequest *request)
          * else if (IS_STRING_OBJ(request->objects[0].mask))
          */
       } else
-        NoActionError(w, actionQuark, request->actionName, NULL, NULL, NULL,
-                      NULL);
+        NoActionError(w, actionQuark, request->actionName, NULL, NULL, NULL, NULL);
 
       /*
        * If we are in the middle of reprocessing a single argument
@@ -1771,7 +1714,7 @@ static Boolean ProcessRequest(Widget w, ActionRequest *request)
        * We were never able to start this action.
        */
       {
-        _DtActInvRecT *invRecP = _DtActFindInvRec(request->invocId);
+        _DtActInvRecT* invRecP = _DtActFindInvRec(request->invocId);
         if (invRecP)
           SET_INV_ERROR(invRecP->state);
       }
@@ -1785,11 +1728,10 @@ static Boolean ProcessRequest(Widget w, ActionRequest *request)
      * make sure we can get connected to a ToolTalk session.  If we can't,
      * then we need to bail out.
      */
-    if (IS_TT_MSG(action->mask) &&
-        (status = _DtInitializeToolTalk(NULL)) != TT_OK) {
+    if (IS_TT_MSG(action->mask) && (status = _DtInitializeToolTalk(NULL)) != TT_OK) {
       NoToolTalkConnectionError(w, request->clonedAction->label, status);
       {
-        _DtActInvRecT *invRecP = _DtActFindInvRec(request->invocId);
+        _DtActInvRecT* invRecP = _DtActFindInvRec(request->invocId);
         if (invRecP)
           SET_INV_ERROR(invRecP->state);
       }
@@ -1810,10 +1752,9 @@ static Boolean ProcessRequest(Widget w, ActionRequest *request)
      *       additional input if the user is going to abort the action!
      */
     if ((prompts != NULL) &&
-        ((unused == 0) || IS_ARG_SINGLE_ARG(action->mask) ||
-         IS_ARG_NONE_FOUND(action->mask))) {
+        ((unused == 0) || IS_ARG_SINGLE_ARG(action->mask) || IS_ARG_NONE_FOUND(action->mask))) {
       CreatePromptDialog(w, request, numPrompts, prompts);
-      XtFree((char *)prompts);
+      XtFree((char*)prompts);
       return (False);
     }
 
@@ -1826,7 +1767,6 @@ static Boolean ProcessRequest(Widget w, ActionRequest *request)
        * no parameters is also treated like a single parameter action.
        */
       if (IS_ARG_SINGLE_ARG(action->mask) || IS_ARG_NONE_FOUND(action->mask)) {
-
         PrepareAndExecuteAction(w, request);
 
         /* See if there are still more parameters to be processed */
@@ -1838,14 +1778,13 @@ static Boolean ProcessRequest(Widget w, ActionRequest *request)
          * tells us to continue, or abort.
          */
         CreateContinueDialog(w, request, numPrompts, prompts);
-        XtFree((char *)prompts);
+        XtFree((char*)prompts);
         return (False);
       }
     } else {
       PrepareAndExecuteAction(w, request);
     }
   } else {
-
     PrepareAndExecuteAction(w, request);
     action = request->clonedAction;
 
@@ -1870,16 +1809,16 @@ static Boolean ProcessRequest(Widget w, ActionRequest *request)
  * the thread of control will split, dependent upon the type of action
  * being executed (Command Invoker, Tooltalk).
  */
-static void PrepareAndExecuteAction(Widget w, ActionRequest *request)
+static void PrepareAndExecuteAction(Widget w, ActionRequest* request)
 
 {
-  char *relPathHost;
-  char *relPathDir;
+  char* relPathHost;
+  char* relPathDir;
   int i;
   ActionPtr action = request->clonedAction;
   int argNum;
-  _DtActInvRecT *invp;        /* pointer to invocation record */
-  _DtActChildRecT *childrecp; /* pointer to child record */
+  _DtActInvRecT* invp;        /* pointer to invocation record */
+  _DtActChildRecT* childrecp; /* pointer to child record */
 
   /*
    * We have gathered all the information necessary to invoke
@@ -1916,13 +1855,11 @@ static void PrepareAndExecuteAction(Widget w, ActionRequest *request)
      * request structure was created.
      */
     if (childrecp && childrecp->numObjects > 0) {
-      childrecp->argMap =
-          (_DtActArgMap *)XtCalloc(childrecp->numObjects, sizeof(_DtActArgMap));
+      childrecp->argMap = (_DtActArgMap*)XtCalloc(childrecp->numObjects, sizeof(_DtActArgMap));
 
       for (i = 0; i < childrecp->numObjects && i < invp->ac; i++) {
-        childrecp->argMap[i].argN = i + 1; /*  ignored for CMD actions */
-        childrecp->argMap[i].argIdx =
-            i + request->objOffset; /* idx into invp->info[] */
+        childrecp->argMap[i].argN = i + 1;                    /*  ignored for CMD actions */
+        childrecp->argMap[i].argIdx = i + request->objOffset; /* idx into invp->info[] */
       }
     }
     ProcessCommandInvokerRequest(w, request, relPathHost, relPathDir);
@@ -1945,8 +1882,8 @@ static void PrepareAndExecuteAction(Widget w, ActionRequest *request)
        * argMap[ TT_ARG0, TT_ARG1, ...,TT_ARGN, TT_FILE]
        */
 
-      childrecp->argMap = (_DtActArgMap *)XtCalloc(
-          action->u.tt_msg.value_count + 1, sizeof(_DtActArgMap));
+      childrecp->argMap =
+          (_DtActArgMap*)XtCalloc(action->u.tt_msg.value_count + 1, sizeof(_DtActArgMap));
 
       for (i = 0; i < action->u.tt_msg.value_count; i++) {
         /*
@@ -2029,7 +1966,7 @@ static void PrepareAndExecuteAction(Widget w, ActionRequest *request)
  *
  * Both the host and directory paths must by freed by the caller.
  */
-static void __ExtractCWD(ActionRequest *request, char **hostPtr, char **dirPtr,
+static void __ExtractCWD(ActionRequest* request, char** hostPtr, char** dirPtr,
                          Boolean useObjectInfo)
 
 {
@@ -2039,13 +1976,11 @@ static void __ExtractCWD(ActionRequest *request, char **hostPtr, char **dirPtr,
 
   /* Only dropped objects will have been 'typed' at this point */
   if (useObjectInfo && (IS_CMD(action->mask)) && (request->numObjects > 0) &&
-      (request->objects[0].type >= 0) &&
-      IS_FILE_OBJ(request->objects[0].mask)) {
+      (request->objects[0].type >= 0) && IS_FILE_OBJ(request->objects[0].mask)) {
     if (action->u.cmd.contextHost != NULL)
       *hostPtr = XtNewString(action->u.cmd.contextHost);
     else {
-      *hostPtr =
-          XtNewString(request->hostNames[request->objects[0].u.file.hostIndex]);
+      *hostPtr = XtNewString(request->hostNames[request->objects[0].u.file.hostIndex]);
     }
 
     if (IS_UNKNOWN_IF_DIR(request->objects[0].mask)) {
@@ -2062,11 +1997,9 @@ static void __ExtractCWD(ActionRequest *request, char **hostPtr, char **dirPtr,
        */
       theHost = request->hostNames[request->objects[0].u.file.hostIndex];
       theDir = request->dirNames[request->objects[0].u.file.dirIndex];
-      nfsPath = _DtActMapFileName(
-          theHost, theDir, request->objects[0].u.file.baseFilename, NULL);
+      nfsPath = _DtActMapFileName(theHost, theDir, request->objects[0].u.file.baseFilename, NULL);
 
-      if (nfsPath && (stat(nfsPath, &statInfo) == 0) &&
-          ((statInfo.st_mode & S_IFMT) == S_IFDIR)) {
+      if (nfsPath && (stat(nfsPath, &statInfo) == 0) && ((statInfo.st_mode & S_IFMT) == S_IFDIR)) {
         SET_DIR_OBJ(request->objects[0].mask);
       }
       XtFree(nfsPath);
@@ -2076,25 +2009,23 @@ static void __ExtractCWD(ActionRequest *request, char **hostPtr, char **dirPtr,
       if (action->u.cmd.contextDir != NULL)
         *dirPtr = XtNewString(action->u.cmd.contextDir);
       else {
-        *dirPtr = XtMalloc((
-            Cardinal)(strlen(
-                          request
-                              ->dirNames[request->objects[0].u.file.dirIndex]) +
-                      strlen(request->objects[0].u.file.baseFilename) + 2));
-        strcpy(*dirPtr, request->dirNames[request->objects[0].u.file.dirIndex]);
+        Cardinal dirLen =
+            (Cardinal)(strlen(request->dirNames[request->objects[0].u.file.dirIndex]) +
+                       strlen(request->objects[0].u.file.baseFilename) + 2);
+        *dirPtr = XtMalloc(dirLen);
+        strlcpy(*dirPtr, request->dirNames[request->objects[0].u.file.dirIndex], dirLen);
 
         DtLastChar(*dirPtr, &lastCh, &lastChLen);
         if ((lastChLen != 1) || (*lastCh != '/'))
-          (void)strcat(*dirPtr, "/");
+          (void)strlcat(*dirPtr, "/", dirLen);
 
-        (void)strcat(*dirPtr, request->objects[0].u.file.baseFilename);
+        (void)strlcat(*dirPtr, request->objects[0].u.file.baseFilename, dirLen);
       }
     } else {
       if (action->u.cmd.contextDir != NULL)
         *dirPtr = XtNewString(action->u.cmd.contextDir);
       else {
-        *dirPtr =
-            XtNewString(request->dirNames[request->objects[0].u.file.dirIndex]);
+        *dirPtr = XtNewString(request->dirNames[request->objects[0].u.file.dirIndex]);
       }
     }
   } else {
@@ -2123,12 +2054,12 @@ static void __ExtractCWD(ActionRequest *request, char **hostPtr, char **dirPtr,
  * and cascades up any remaining parameters in the object array.
  */
 
-static Boolean MoreArgumentsToProcess(ActionRequest *request)
+static Boolean MoreArgumentsToProcess(ActionRequest* request)
 
 {
   int i;
-  char *path;
-  char *dtype;
+  char* path;
+  char* dtype;
 
   if (request->numObjects <= 1) {
     return (False);
@@ -2166,9 +2097,8 @@ static Boolean MoreArgumentsToProcess(ActionRequest *request)
     request->clonedAction = NULL;
 
     /* Free up any leftover prompt strings */
-    for (i = 0; i < request->numPromptInputs; i++)
-      XtFree(request->promptInputs[i]);
-    XtFree((char *)request->promptInputs);
+    for (i = 0; i < request->numPromptInputs; i++) XtFree(request->promptInputs[i]);
+    XtFree((char*)request->promptInputs);
     request->promptInputs = NULL;
     request->numPromptInputs = 0;
     SET_REPROCESSING(request->mask);
@@ -2182,10 +2112,9 @@ static Boolean MoreArgumentsToProcess(ActionRequest *request)
     if (IS_FILE_OBJ(request->objects[0].mask)) {
       if ((request->objects[0].u.file.hostIndex >= 0) &&
           (request->objects[0].u.file.dirIndex >= 0)) {
-        path = _DtActMapFileName(
-            request->hostNames[request->objects[0].u.file.hostIndex],
-            request->dirNames[request->objects[0].u.file.dirIndex],
-            request->objects[0].u.file.baseFilename, NULL);
+        path = _DtActMapFileName(request->hostNames[request->objects[0].u.file.hostIndex],
+                                 request->dirNames[request->objects[0].u.file.dirIndex],
+                                 request->objects[0].u.file.baseFilename, NULL);
         dtype = DtDtsFileToDataType(path);
         request->objects[0].type = _DtDtsMMStringToBoson(dtype);
         DtDtsFreeDataType(dtype);
@@ -2224,13 +2153,13 @@ static Boolean MoreArgumentsToProcess(ActionRequest *request)
  * send the message, and the time we need to reference it in the future.
  */
 
-ActionRequest *_DtCloneRequest(ActionRequest *request)
+ActionRequest* _DtCloneRequest(ActionRequest* request)
 
 {
-  ActionRequest *newRequest;
+  ActionRequest* newRequest;
   int i;
 
-  newRequest = (ActionRequest *)XtMalloc((Cardinal)sizeof(ActionRequest));
+  newRequest = (ActionRequest*)XtMalloc((Cardinal)sizeof(ActionRequest));
 
   /*
    * Structure assignment to clone all scalar values
@@ -2243,8 +2172,7 @@ ActionRequest *_DtCloneRequest(ActionRequest *request)
   newRequest->actionName = XtNewString(request->actionName);
 
   if (request->numObjects > 0) {
-    newRequest->objects =
-        (ObjectData *)XtMalloc(sizeof(ObjectData) * request->numObjects);
+    newRequest->objects = (ObjectData*)XtMalloc(sizeof(ObjectData) * request->numObjects);
 
     for (i = 0; i < request->numObjects; i++) {
       newRequest->objects[i] = request->objects[i];
@@ -2273,12 +2201,9 @@ ActionRequest *_DtCloneRequest(ActionRequest *request)
          */
         /* make a copy of the buffer */
         if (request->objects[i].u.buffer.bp) {
-          myassert(newRequest->objects[i].u.buffer.size ==
-                   request->objects[i].u.buffer.size);
-          newRequest->objects[i].u.buffer.bp =
-              XtMalloc(request->objects[i].u.buffer.size);
-          memcpy(newRequest->objects[i].u.buffer.bp,
-                 request->objects[i].u.buffer.bp,
+          myassert(newRequest->objects[i].u.buffer.size == request->objects[i].u.buffer.size);
+          newRequest->objects[i].u.buffer.bp = XtMalloc(request->objects[i].u.buffer.size);
+          memcpy(newRequest->objects[i].u.buffer.bp, request->objects[i].u.buffer.bp,
                  newRequest->objects[i].u.buffer.size);
         }
       } else
@@ -2288,24 +2213,21 @@ ActionRequest *_DtCloneRequest(ActionRequest *request)
 
   newRequest->numPromptInputs = request->numPromptInputs;
   if (request->numPromptInputs > 0) {
-    newRequest->promptInputs =
-        (char **)XtMalloc(sizeof(char *) * request->numPromptInputs);
+    newRequest->promptInputs = (char**)XtMalloc(sizeof(char*) * request->numPromptInputs);
     for (i = 0; i < request->numPromptInputs; i++)
       newRequest->promptInputs[i] = XtNewString(request->promptInputs[i]);
   }
 
   newRequest->numHostNames = request->numHostNames;
   if (request->numHostNames > 0) {
-    newRequest->hostNames =
-        (char **)XtMalloc(sizeof(char *) * request->numHostNames);
+    newRequest->hostNames = (char**)XtMalloc(sizeof(char*) * request->numHostNames);
     for (i = 0; i < request->numHostNames; i++)
       newRequest->hostNames[i] = XtNewString(request->hostNames[i]);
   }
 
   newRequest->numDirNames = request->numDirNames;
   if (request->numDirNames > 0) {
-    newRequest->dirNames =
-        (char **)XtMalloc(sizeof(char *) * request->numDirNames);
+    newRequest->dirNames = (char**)XtMalloc(sizeof(char*) * request->numDirNames);
     for (i = 0; i < request->numDirNames; i++)
       newRequest->dirNames[i] = XtNewString(request->dirNames[i]);
   }
@@ -2330,7 +2252,7 @@ ActionRequest *_DtCloneRequest(ActionRequest *request)
  * Free up the contents of a request structure
  */
 
-void _DtFreeRequest(ActionRequest *request)
+void _DtFreeRequest(ActionRequest* request)
 
 {
   int i;
@@ -2362,22 +2284,19 @@ void _DtFreeRequest(ActionRequest *request)
    * we can free it at once.
    */
   if (request->objects)
-    XtFree((char *)request->objects);
+    XtFree((char*)request->objects);
 
-  for (i = 0; i < request->numPromptInputs; i++)
-    XtFree(request->promptInputs[i]);
+  for (i = 0; i < request->numPromptInputs; i++) XtFree(request->promptInputs[i]);
   if (request->promptInputs)
-    XtFree((char *)request->promptInputs);
+    XtFree((char*)request->promptInputs);
 
-  for (i = 0; i < request->numHostNames; i++)
-    XtFree(request->hostNames[i]);
+  for (i = 0; i < request->numHostNames; i++) XtFree(request->hostNames[i]);
   if (request->hostNames)
-    XtFree((char *)request->hostNames);
+    XtFree((char*)request->hostNames);
 
-  for (i = 0; i < request->numDirNames; i++)
-    XtFree(request->dirNames[i]);
+  for (i = 0; i < request->numDirNames; i++) XtFree(request->dirNames[i]);
   if (request->dirNames)
-    XtFree((char *)request->dirNames);
+    XtFree((char*)request->dirNames);
 
   XtFree(request->termOpts);
   XtFree(request->cwdHost);
@@ -2387,7 +2306,7 @@ void _DtFreeRequest(ActionRequest *request)
   XtFree(request->currentHost);
   XtFree(request->execHost);
 
-  XtFree((char *)request);
+  XtFree((char*)request);
 }
 
 /*
@@ -2408,10 +2327,8 @@ static ActionPtr CloneActionDBEntry(ActionPtr action)
 
   newAction->type_count = action->type_count;
   if (action->type_count > 0) {
-    newAction->arg_types =
-        (DtShmBoson *)XtMalloc(sizeof(DtShmBoson) * newAction->type_count);
-    for (i = 0; i < newAction->type_count; i++)
-      newAction->arg_types[i] = action->arg_types[i];
+    newAction->arg_types = (DtShmBoson*)XtMalloc(sizeof(DtShmBoson) * newAction->type_count);
+    for (i = 0; i < newAction->type_count; i++) newAction->arg_types[i] = action->arg_types[i];
   } else {
     newAction->arg_types = NULL;
   }
@@ -2420,8 +2337,8 @@ static ActionPtr CloneActionDBEntry(ActionPtr action)
   newAction->mask = action->mask;
 
   if (IS_CMD(action->mask)) {
-    cmdAttr *newCmd = &(newAction->u.cmd);
-    cmdAttr *oldCmd = &(action->u.cmd);
+    cmdAttr* newCmd = &(newAction->u.cmd);
+    cmdAttr* oldCmd = &(action->u.cmd);
 
     CloneParsedMessage(&(oldCmd->execString), &(newCmd->execString));
     CloneParsedMessage(&(oldCmd->termOpts), &(newCmd->termOpts));
@@ -2430,8 +2347,7 @@ static ActionPtr CloneActionDBEntry(ActionPtr action)
     CloneParsedMessage(&(oldCmd->execHosts), &(newCmd->execHosts));
     newCmd->execHostCount = oldCmd->execHostCount;
     if (oldCmd->execHostCount > 0) {
-      newCmd->execHostArray =
-          (char **)XtMalloc(sizeof(char *) * newCmd->execHostCount);
+      newCmd->execHostArray = (char**)XtMalloc(sizeof(char*) * newCmd->execHostCount);
       for (i = 0; i < newCmd->execHostCount; i++)
         newCmd->execHostArray[i] = XtNewString(oldCmd->execHostArray[i]);
     } else {
@@ -2440,8 +2356,8 @@ static ActionPtr CloneActionDBEntry(ActionPtr action)
   } else if (IS_MAP(action->mask)) {
     newAction->u.map.map_action = action->u.map.map_action;
   } else if (IS_TT_MSG(action->mask)) {
-    tt_msgAttr *newMsg = &(newAction->u.tt_msg);
-    tt_msgAttr *oldMsg = &(action->u.tt_msg);
+    tt_msgAttr* newMsg = &(newAction->u.tt_msg);
+    tt_msgAttr* oldMsg = &(action->u.tt_msg);
 
     newMsg->tt_class = oldMsg->tt_class;
     newMsg->tt_scope = oldMsg->tt_scope;
@@ -2450,25 +2366,21 @@ static ActionPtr CloneActionDBEntry(ActionPtr action)
 
     newMsg->mode_count = oldMsg->mode_count;
     if (oldMsg->mode_count > 0) {
-      newMsg->tt_argn_mode = (int *)XtMalloc(sizeof(int) * newMsg->mode_count);
-      for (i = 0; i < newMsg->mode_count; i++)
-        newMsg->tt_argn_mode[i] = oldMsg->tt_argn_mode[i];
+      newMsg->tt_argn_mode = (int*)XtMalloc(sizeof(int) * newMsg->mode_count);
+      for (i = 0; i < newMsg->mode_count; i++) newMsg->tt_argn_mode[i] = oldMsg->tt_argn_mode[i];
     } else {
       newMsg->tt_argn_mode = NULL;
     }
 
     newMsg->vtype_count = oldMsg->vtype_count;
-    newMsg->tt_argn_vtype =
-        CloneParsedMessageArray(oldMsg->tt_argn_vtype, oldMsg->vtype_count);
+    newMsg->tt_argn_vtype = CloneParsedMessageArray(oldMsg->tt_argn_vtype, oldMsg->vtype_count);
 
     newMsg->value_count = oldMsg->value_count;
-    newMsg->tt_argn_value =
-        CloneParsedMessageArray(oldMsg->tt_argn_value, oldMsg->value_count);
+    newMsg->tt_argn_value = CloneParsedMessageArray(oldMsg->tt_argn_value, oldMsg->value_count);
 
     newMsg->rep_type_count = oldMsg->rep_type_count;
     if (oldMsg->rep_type_count > 0) {
-      newMsg->tt_argn_rep_type =
-          (int *)XtMalloc(sizeof(int) * newMsg->rep_type_count);
+      newMsg->tt_argn_rep_type = (int*)XtMalloc(sizeof(int) * newMsg->rep_type_count);
       for (i = 0; i < newMsg->rep_type_count; i++)
         newMsg->tt_argn_rep_type[i] = oldMsg->tt_argn_rep_type[i];
     } else {
@@ -2494,7 +2406,7 @@ void _DtFreeActionStruct(ActionPtr action)
   XtFree(action->label);
   XtFree(action->description);
   if (action->arg_types)
-    XtFree((char *)action->arg_types);
+    XtFree((char*)action->arg_types);
 
   if (IS_CMD(action->mask)) {
     FreeParsedMessage(&(action->u.cmd.execString));
@@ -2502,44 +2414,40 @@ void _DtFreeActionStruct(ActionPtr action)
     XtFree(action->u.cmd.contextDir);
     XtFree(action->u.cmd.contextHost);
     FreeParsedMessage(&(action->u.cmd.execHosts));
-    for (i = 0; i < action->u.cmd.execHostCount; i++)
-      XtFree(action->u.cmd.execHostArray[i]);
+    for (i = 0; i < action->u.cmd.execHostCount; i++) XtFree(action->u.cmd.execHostArray[i]);
     if (action->u.cmd.execHostArray) {
-      XtFree((char *)action->u.cmd.execHostArray);
+      XtFree((char*)action->u.cmd.execHostArray);
     }
   } else if (IS_TT_MSG(action->mask)) {
     FreeParsedMessage(&(action->u.tt_msg.tt_op));
     FreeParsedMessage(&(action->u.tt_msg.tt_file));
     if (action->u.tt_msg.tt_argn_mode) {
-      XtFree((char *)action->u.tt_msg.tt_argn_mode);
+      XtFree((char*)action->u.tt_msg.tt_argn_mode);
     }
-    FreeParsedMessageArray(action->u.tt_msg.tt_argn_vtype,
-                           action->u.tt_msg.vtype_count);
-    FreeParsedMessageArray(action->u.tt_msg.tt_argn_value,
-                           action->u.tt_msg.value_count);
+    FreeParsedMessageArray(action->u.tt_msg.tt_argn_vtype, action->u.tt_msg.vtype_count);
+    FreeParsedMessageArray(action->u.tt_msg.tt_argn_value, action->u.tt_msg.value_count);
     if (action->u.tt_msg.tt_argn_rep_type) {
-      XtFree((char *)action->u.tt_msg.tt_argn_rep_type);
+      XtFree((char*)action->u.tt_msg.tt_argn_rep_type);
     }
   }
 
-  XtFree((char *)action);
+  XtFree((char*)action);
 }
 
-static void CloneParsedMessage(parsedMsg *old_pmsg, parsedMsg *new_pmsg)
+static void CloneParsedMessage(parsedMsg* old_pmsg, parsedMsg* new_pmsg)
 
 {
   int i;
-  MsgComponent *piece;
-  MsgComponent *newPiece;
+  MsgComponent* piece;
+  MsgComponent* newPiece;
 
   new_pmsg->numMsgParts = old_pmsg->numMsgParts;
   if (old_pmsg->compiledMessage) {
     /*
      * Some day these may not always be null-terminated strings
      */
-    new_pmsg->compiledMessage = (char *)XtMalloc(old_pmsg->msgLen);
-    memcpy(new_pmsg->compiledMessage, old_pmsg->compiledMessage,
-           old_pmsg->msgLen);
+    new_pmsg->compiledMessage = (char*)XtMalloc(old_pmsg->msgLen);
+    memcpy(new_pmsg->compiledMessage, old_pmsg->compiledMessage, old_pmsg->msgLen);
     new_pmsg->msgLen = old_pmsg->msgLen;
   } else {
     new_pmsg->compiledMessage = NULL;
@@ -2548,8 +2456,8 @@ static void CloneParsedMessage(parsedMsg *old_pmsg, parsedMsg *new_pmsg)
 
   /* Clone the message components */
   if (old_pmsg->numMsgParts > 0) {
-    new_pmsg->parsedMessage = (MsgComponent *)XtMalloc(
-        (Cardinal)(sizeof(MsgComponent) * old_pmsg->numMsgParts));
+    new_pmsg->parsedMessage =
+        (MsgComponent*)XtMalloc((Cardinal)(sizeof(MsgComponent) * old_pmsg->numMsgParts));
 
     for (i = 0; i < old_pmsg->numMsgParts; i++) {
       piece = &(old_pmsg->parsedMessage[i]);
@@ -2579,7 +2487,7 @@ static void CloneParsedMessage(parsedMsg *old_pmsg, parsedMsg *new_pmsg)
  * itself (since many of our structures contain in-line instances of
  * the parsedMsg structure).
  */
-static void FreeParsedMessage(parsedMsg *parsedMessage)
+static void FreeParsedMessage(parsedMsg* parsedMessage)
 
 {
   int i;
@@ -2590,7 +2498,7 @@ static void FreeParsedMessage(parsedMsg *parsedMessage)
       XtFree(parsedMessage->parsedMessage[i].precedingText);
       XtFree(parsedMessage->parsedMessage[i].prompt);
     }
-    XtFree((char *)parsedMessage->parsedMessage);
+    XtFree((char*)parsedMessage->parsedMessage);
   }
 
   XtFree(parsedMessage->compiledMessage);
@@ -2600,19 +2508,18 @@ static void FreeParsedMessage(parsedMsg *parsedMessage)
  * Allocate an array to hold a copy of all of the parsedMsg structures.
  * This array must be freed eventually by the caller.
  */
-static parsedMsg *CloneParsedMessageArray(parsedMsg *pmsgArray, int count)
+static parsedMsg* CloneParsedMessageArray(parsedMsg* pmsgArray, int count)
 
 {
-  parsedMsg *newArray;
+  parsedMsg* newArray;
   int i;
 
   if (count == 0)
     return (NULL);
 
-  newArray = (parsedMsg *)XtMalloc(sizeof(parsedMsg) * count);
+  newArray = (parsedMsg*)XtMalloc(sizeof(parsedMsg) * count);
 
-  for (i = 0; i < count; i++)
-    CloneParsedMessage(pmsgArray + i, newArray + i);
+  for (i = 0; i < count; i++) CloneParsedMessage(pmsgArray + i, newArray + i);
 
   return (newArray);
 }
@@ -2621,15 +2528,14 @@ static parsedMsg *CloneParsedMessageArray(parsedMsg *pmsgArray, int count)
  * Free up the counted array of parsedMsg structures.
  * The array pointing to them also needs to be freed.
  */
-static void FreeParsedMessageArray(parsedMsg *parsedMessageArray, int count)
+static void FreeParsedMessageArray(parsedMsg* parsedMessageArray, int count)
 
 {
   int i;
 
-  for (i = 0; i < count; i++)
-    FreeParsedMessage(parsedMessageArray + i);
+  for (i = 0; i < count; i++) FreeParsedMessage(parsedMessageArray + i);
 
-  XtFree((char *)parsedMessageArray);
+  XtFree((char*)parsedMessageArray);
 }
 
 /***************************************************************************/
@@ -2648,22 +2554,21 @@ static void FreeParsedMessageArray(parsedMsg *parsedMessageArray, int count)
  * any old static values.
  */
 
-Boolean _DtCompileMessagePiece(Widget w, ActionRequest *request,
-                               char *relPathHost, char *relPathDir,
-                               parsedMsg *piece, Boolean initialize,
-                               unsigned long processingMask,
-                               Boolean **paramUsed, int *promptDataIndex)
+Boolean _DtCompileMessagePiece(Widget w, ActionRequest* request, char* relPathHost,
+                               char* relPathDir, parsedMsg* piece, Boolean initialize,
+                               unsigned long processingMask, Boolean** paramUsed,
+                               int* promptDataIndex)
 
 {
   int i, j;
   Boolean firstParmUsed;
-  MsgComponent *segment;
-  char *compiledMsg = NULL;
+  MsgComponent* segment;
+  char* compiledMsg = NULL;
   int compiledMsgSize = 0;
   ObjectData tmpObjData;
-  static char *sessionHostName = NULL;
-  static char *displayHostName = NULL;
-  static char *localHostName = NULL;
+  static char* sessionHostName = NULL;
+  static char* displayHostName = NULL;
+  static char* localHostName = NULL;
 
   XtFree(piece->compiledMessage);
   piece->compiledMessage = NULL;
@@ -2678,10 +2583,8 @@ Boolean _DtCompileMessagePiece(Widget w, ActionRequest *request,
     *promptDataIndex = 0;
 
     if (request->numObjects > 0) {
-      *paramUsed = (Boolean *)XtMalloc(
-          (Cardinal)(sizeof(Boolean) * request->numObjects));
-      for (i = 0; i < request->numObjects; i++)
-        (*paramUsed)[i] = False;
+      *paramUsed = (Boolean*)XtMalloc((Cardinal)(sizeof(Boolean) * request->numObjects));
+      for (i = 0; i < request->numObjects; i++) (*paramUsed)[i] = False;
     }
   }
 
@@ -2711,164 +2614,156 @@ Boolean _DtCompileMessagePiece(Widget w, ActionRequest *request,
 
     /* Add any text preceding the keyword */
     if (segment->precedingText) {
-      compiledMsg = GrowMsgBuffer(compiledMsg, &compiledMsgSize,
-                                  (int)strlen(segment->precedingText));
+      compiledMsg =
+          GrowMsgBuffer(compiledMsg, &compiledMsgSize, (int)strlen(segment->precedingText));
       (void)strcat(compiledMsg, segment->precedingText);
     }
 
     /* Process the keyword */
     switch (segment->keyword) {
-    case LOCAL_HOST: {
-      /* Add in the local host name */
-      compiledMsg = GrowMsgBuffer(compiledMsg, &compiledMsgSize,
-                                  (int)strlen(localHostName));
-      (void)strcat(compiledMsg, localHostName);
-      break;
-    }
-
-    case DATABASE_HOST: {
-      /*
-       * Add in the host associated with the DB file from which this
-       * action was loaded.
-       */
-      char *fullPath;
-      char *host;
-
-      fullPath = _DtDbPathIdToString(request->clonedAction->file_name_id);
-      host = _DtHostString(fullPath);
-      if (host) {
-        compiledMsg = GrowMsgBuffer(compiledMsg, &compiledMsgSize,
-                                    host ? (int)strlen(host) : 0);
-        (void)strcat(compiledMsg, host);
-        XtFree(host);
+      case LOCAL_HOST: {
+        /* Add in the local host name */
+        compiledMsg = GrowMsgBuffer(compiledMsg, &compiledMsgSize, (int)strlen(localHostName));
+        (void)strcat(compiledMsg, localHostName);
+        break;
       }
-      XtFree(fullPath);
-      break;
-    }
 
-    case DISPLAY_HOST: {
-      /*
-       * Use the displayHostName determined the first time thru
-       */
-      compiledMsg = GrowMsgBuffer(compiledMsg, &compiledMsgSize,
-                                  (int)strlen(displayHostName));
-      (void)strcat(compiledMsg, displayHostName);
-      break;
-    }
+      case DATABASE_HOST: {
+        /*
+         * Add in the host associated with the DB file from which this
+         * action was loaded.
+         */
+        char* fullPath;
+        char* host;
 
-    case SESSION_HOST: {
-      /*
-       * Add in the session server host where providing the
-       * display management.  (i.e. the host where the login client
-       * is running.)
-       */
-      compiledMsg = GrowMsgBuffer(compiledMsg, &compiledMsgSize,
-                                  (int)strlen(sessionHostName));
-      (void)strcat(compiledMsg, sessionHostName);
-      break;
-    }
-
-    case NO_KEYWORD: {
-      /*
-       * If this is an entry which simply collected some user input,
-       * then add the user's input to the message buffer.
-       * This corresponds to the keywords:
-       *
-       *         %"prompt"%
-       *         %(String)"prompt"%
-       */
-      if (segment->prompt) {
-        /* Create dummy object; makes processing easier */
-        if (ParseFileArgument(w, request, &tmpObjData, NULL,
-                              request->promptInputs[*promptDataIndex], NULL,
-                              False)) {
-          XtFree(compiledMsg);
-          return (False);
+        fullPath = _DtDbPathIdToString(request->clonedAction->file_name_id);
+        host = _DtHostString(fullPath);
+        if (host) {
+          compiledMsg = GrowMsgBuffer(compiledMsg, &compiledMsgSize, host ? (int)strlen(host) : 0);
+          (void)strcat(compiledMsg, host);
+          XtFree(host);
         }
-
-        if (!InsertArgumentString(w, &compiledMsg, &compiledMsgSize, request,
-                                  &tmpObjData, segment->mask, relPathHost,
-                                  relPathDir, False, 0)) {
-          XtFree(compiledMsg);
-          return (False);
-        }
-
-        /* Signal that this prompt has been used */
-        (*promptDataIndex)++;
+        XtFree(fullPath);
+        break;
       }
-      break;
-    }
 
-    case ARG: {
-      if (segment->argNum == ALL_ARGS) {
-        /* Insert all currently unused parameters */
-        for (j = 0, firstParmUsed = False; j < request->numObjects; j++) {
-          /* Used or empty objects are skipped */
-          if ((*paramUsed)[j] == False) {
-            if (IS_FILE_OBJ(request->objects[j].mask) &&
-                request->objects[j].u.file.origFilename) {
-              if (!InsertArgumentString(w, &compiledMsg, &compiledMsgSize,
-                                        request, request->objects + j,
-                                        segment->mask, relPathHost, relPathDir,
-                                        firstParmUsed, processingMask)) {
-                XtFree(compiledMsg);
-                return (False);
-              }
-              firstParmUsed = True;
-            }
-            /*
-             * RWV:
-             * Since we use tmp files for buffers and do not support
-             * strings; we need not add special code for buffer and
-             * string support.
-             */
-            /* fdt: add support for buffers and strings
-             * else if (IS_BUFFER_OBJ(request->objects[i].mask) &&
-             *          request->objects[i].u.buffer.buffer)
-             * else if (IS_STRING_OBJ(request->objects[i].mask) &&
-             *          request->objects[i].u.string.string)
-             */
-          }
-        }
-      } else if (segment->argNum <= request->numObjects) {
-        if (IS_FILE_OBJ(request->objects[segment->argNum - 1].mask) &&
-            request->objects[segment->argNum - 1].u.file.origFilename) {
-          /* Replace only with the specified argument */
-          (*paramUsed)[segment->argNum - 1] = True;
-          /*
-           * All buffer objects have been written to tmp files.
-           * This code replaces a reference to an object with its
-           * (tmp) file name.
-           *      Tooltalk processing code elsewhere
-           * (ActionTt.c) detects the conditions under which a buffer
-           * object reference should be replaced by the buffer contents
-           * instead of the tmp file name.  (i.e. a value field with a
-           * single argument reference with no additional text).  In such
-           * cases the compiled message string will be ignored.
-           */
-          if (!InsertArgumentString(w, &compiledMsg, &compiledMsgSize, request,
-                                    request->objects + segment->argNum - 1,
-                                    segment->mask, relPathHost, relPathDir,
-                                    False, processingMask)) {
+      case DISPLAY_HOST: {
+        /*
+         * Use the displayHostName determined the first time thru
+         */
+        compiledMsg = GrowMsgBuffer(compiledMsg, &compiledMsgSize, (int)strlen(displayHostName));
+        (void)strcat(compiledMsg, displayHostName);
+        break;
+      }
+
+      case SESSION_HOST: {
+        /*
+         * Add in the session server host where providing the
+         * display management.  (i.e. the host where the login client
+         * is running.)
+         */
+        compiledMsg = GrowMsgBuffer(compiledMsg, &compiledMsgSize, (int)strlen(sessionHostName));
+        (void)strcat(compiledMsg, sessionHostName);
+        break;
+      }
+
+      case NO_KEYWORD: {
+        /*
+         * If this is an entry which simply collected some user input,
+         * then add the user's input to the message buffer.
+         * This corresponds to the keywords:
+         *
+         *         %"prompt"%
+         *         %(String)"prompt"%
+         */
+        if (segment->prompt) {
+          /* Create dummy object; makes processing easier */
+          if (ParseFileArgument(w, request, &tmpObjData, NULL,
+                                request->promptInputs[*promptDataIndex], NULL, False)) {
             XtFree(compiledMsg);
             return (False);
           }
+
+          if (!InsertArgumentString(w, &compiledMsg, &compiledMsgSize, request, &tmpObjData,
+                                    segment->mask, relPathHost, relPathDir, False, 0)) {
+            XtFree(compiledMsg);
+            return (False);
+          }
+
+          /* Signal that this prompt has been used */
+          (*promptDataIndex)++;
         }
-        /*
-         * RWV:
-         * Since we use tmp files for buffers and do not support
-         * strings; we need not add special code for buffer and
-         * string support.
-         */
-        /* fdt: add support for buffers and strings
-         * else if (IS_BUFFER_OBJ(request->objects[i].mask) &&
-         *          request->objects[i].u.buffer.buffer)
-         * else if (IS_STRING_OBJ(request->objects[i].mask) &&
-         *          request->objects[i].u.string.string)
-         */
+        break;
       }
-      break;
-    }
+
+      case ARG: {
+        if (segment->argNum == ALL_ARGS) {
+          /* Insert all currently unused parameters */
+          for (j = 0, firstParmUsed = False; j < request->numObjects; j++) {
+            /* Used or empty objects are skipped */
+            if ((*paramUsed)[j] == False) {
+              if (IS_FILE_OBJ(request->objects[j].mask) &&
+                  request->objects[j].u.file.origFilename) {
+                if (!InsertArgumentString(w, &compiledMsg, &compiledMsgSize, request,
+                                          request->objects + j, segment->mask, relPathHost,
+                                          relPathDir, firstParmUsed, processingMask)) {
+                  XtFree(compiledMsg);
+                  return (False);
+                }
+                firstParmUsed = True;
+              }
+              /*
+               * RWV:
+               * Since we use tmp files for buffers and do not support
+               * strings; we need not add special code for buffer and
+               * string support.
+               */
+              /* fdt: add support for buffers and strings
+               * else if (IS_BUFFER_OBJ(request->objects[i].mask) &&
+               *          request->objects[i].u.buffer.buffer)
+               * else if (IS_STRING_OBJ(request->objects[i].mask) &&
+               *          request->objects[i].u.string.string)
+               */
+            }
+          }
+        } else if (segment->argNum <= request->numObjects) {
+          if (IS_FILE_OBJ(request->objects[segment->argNum - 1].mask) &&
+              request->objects[segment->argNum - 1].u.file.origFilename) {
+            /* Replace only with the specified argument */
+            (*paramUsed)[segment->argNum - 1] = True;
+            /*
+             * All buffer objects have been written to tmp files.
+             * This code replaces a reference to an object with its
+             * (tmp) file name.
+             *      Tooltalk processing code elsewhere
+             * (ActionTt.c) detects the conditions under which a buffer
+             * object reference should be replaced by the buffer contents
+             * instead of the tmp file name.  (i.e. a value field with a
+             * single argument reference with no additional text).  In such
+             * cases the compiled message string will be ignored.
+             */
+            if (!InsertArgumentString(w, &compiledMsg, &compiledMsgSize, request,
+                                      request->objects + segment->argNum - 1, segment->mask,
+                                      relPathHost, relPathDir, False, processingMask)) {
+              XtFree(compiledMsg);
+              return (False);
+            }
+          }
+          /*
+           * RWV:
+           * Since we use tmp files for buffers and do not support
+           * strings; we need not add special code for buffer and
+           * string support.
+           */
+          /* fdt: add support for buffers and strings
+           * else if (IS_BUFFER_OBJ(request->objects[i].mask) &&
+           *          request->objects[i].u.buffer.buffer)
+           * else if (IS_STRING_OBJ(request->objects[i].mask) &&
+           *          request->objects[i].u.string.string)
+           */
+        }
+        break;
+      }
     }
   }
 
@@ -2885,17 +2780,16 @@ Boolean _DtCompileMessagePiece(Widget w, ActionRequest *request,
  * converted to another format.
  */
 
-static Boolean InsertArgumentString(Widget w, char **bufPtr, int *bufSizePtr,
-                                    ActionRequest *request, ObjectData *object,
-                                    unsigned long mask, char *relPathHost,
-                                    char *relPathDir, Boolean addLeadingSpace,
+static Boolean InsertArgumentString(Widget w, char** bufPtr, int* bufSizePtr,
+                                    ActionRequest* request, ObjectData* object, unsigned long mask,
+                                    char* relPathHost, char* relPathDir, Boolean addLeadingSpace,
                                     unsigned long processingMask)
 
 {
-  char *path;
-  char *value;
-  char *dataType;
-  char *mediaAttr;
+  char* path;
+  char* value;
+  char* dataType;
+  char* mediaAttr;
 
   if (processingMask & _DTAct_TT_VTYPE)
     SET_TREAT_AS_FILE(mask);
@@ -2904,7 +2798,7 @@ static Boolean InsertArgumentString(Widget w, char **bufPtr, int *bufSizePtr,
     if (object->type == -1) {
       /* Object still needs to be typed */
       if (IS_FILE_OBJ(object->mask)) {
-        char *origInfo = object->u.file.origFilename;
+        char* origInfo = object->u.file.origFilename;
 
         ParseFileArgument(w, request, object, NULL, origInfo, NULL, True);
         XtFree(origInfo);
@@ -2932,12 +2826,11 @@ static Boolean InsertArgumentString(Widget w, char **bufPtr, int *bufSizePtr,
          * do nothing.
          */
         if (object->type != (-1)) {
-          dataType = (char *)_DtDtsMMBosonToString(object->type);
+          dataType = (char*)_DtDtsMMBosonToString(object->type);
 
-          if ((path = _DtActMapFileName(
-                   request->hostNames[object->u.file.hostIndex],
-                   request->dirNames[object->u.file.dirIndex],
-                   object->u.file.baseFilename, NULL)) == NULL) {
+          if ((path = _DtActMapFileName(request->hostNames[object->u.file.hostIndex],
+                                        request->dirNames[object->u.file.dirIndex],
+                                        object->u.file.baseFilename, NULL)) == NULL) {
             path = NULL;
           }
 
@@ -2961,10 +2854,9 @@ static Boolean InsertArgumentString(Widget w, char **bufPtr, int *bufSizePtr,
 
       if (IS_CMD(request->clonedAction->mask)) {
         /* Map into a real path, relative to the execution host */
-        if ((path = _DtActMapFileName(
-                 request->hostNames[object->u.file.hostIndex],
-                 request->dirNames[object->u.file.dirIndex],
-                 object->u.file.baseFilename, request->currentHost)) == NULL) {
+        if ((path = _DtActMapFileName(request->hostNames[object->u.file.hostIndex],
+                                      request->dirNames[object->u.file.dirIndex],
+                                      object->u.file.baseFilename, request->currentHost)) == NULL) {
           AddFailedHostToList(request, request->currentHost);
           return (False);
         }
@@ -2986,13 +2878,11 @@ static Boolean InsertArgumentString(Widget w, char **bufPtr, int *bufSizePtr,
         if (processingMask & _DTAct_TT_ARG) {
           /* Map into "host:/path" */
           /* fdt: May need to instead map into 'network indep' form */
-          InsertUnmappedArgumentString(bufPtr, bufSizePtr, object,
-                                       addLeadingSpace);
+          InsertUnmappedArgumentString(bufPtr, bufSizePtr, object, addLeadingSpace);
         } else {
-          if ((path = _DtActMapFileName(
-                   request->hostNames[object->u.file.hostIndex],
-                   request->dirNames[object->u.file.dirIndex],
-                   object->u.file.baseFilename, NULL)) == NULL) {
+          if ((path = _DtActMapFileName(request->hostNames[object->u.file.hostIndex],
+                                        request->dirNames[object->u.file.dirIndex],
+                                        object->u.file.baseFilename, NULL)) == NULL) {
             return (False);
           }
 
@@ -3029,8 +2919,7 @@ static Boolean InsertArgumentString(Widget w, char **bufPtr, int *bufSizePtr,
  * map the filename using the ToolTalk filename mapping functions.
  */
 
-static void InsertUnmappedArgumentString(char **bufPtr, int *bufSizePtr,
-                                         ObjectData *object,
+static void InsertUnmappedArgumentString(char** bufPtr, int* bufSizePtr, ObjectData* object,
                                          Boolean addLeadingSpace)
 
 {
@@ -3063,14 +2952,14 @@ static void InsertUnmappedArgumentString(char **bufPtr, int *bufSizePtr,
  * NULL terminated.
  */
 
-static String GrowMsgBuffer(String buffer, int *size, int count)
+static String GrowMsgBuffer(String buffer, int* size, int count)
 
 {
   int currentBufUsed = buffer ? strlen(buffer) : 0;
 
   if ((currentBufUsed + count + 1) >= *size) {
     (*size) += (count + 1 > 1024) ? count + 1 : 1024;
-    buffer = (char *)XtRealloc(buffer, (Cardinal)*size);
+    buffer = (char*)XtRealloc(buffer, (Cardinal)*size);
 
     /* If this is the first alloc for the buffer, then terminate the buffer */
     if (currentBufUsed == 0)
@@ -3092,8 +2981,7 @@ static String GrowMsgBuffer(String buffer, int *size, int count)
  * prompt strings, which always are added.
  */
 
-static void AddPrompt(int argNum, String prompt, int *numPrompts,
-                      PromptEntry **prompts)
+static void AddPrompt(int argNum, String prompt, int* numPrompts, PromptEntry** prompts)
 
 {
   int i;
@@ -3111,8 +2999,8 @@ static void AddPrompt(int argNum, String prompt, int *numPrompts,
   }
 
   (*numPrompts)++;
-  *prompts = (PromptEntry *)XtRealloc(
-      (char *)*prompts, (Cardinal)(sizeof(PromptEntry) * *numPrompts));
+  *prompts =
+      (PromptEntry*)XtRealloc((char*)*prompts, (Cardinal)(sizeof(PromptEntry) * *numPrompts));
   (*prompts)[(*numPrompts) - 1].argIndex = argNum;
   (*prompts)[(*numPrompts) - 1].prompt = prompt;
 }
@@ -3130,9 +3018,8 @@ static void AddPrompt(int argNum, String prompt, int *numPrompts,
  * entries in the array MUST NOT be freed up.
  */
 
-static int MatchParamsToAction(ActionRequest *request, int *numPrompts,
-                               PromptEntry **prompts) {
-  Boolean *paramUsed = NULL;
+static int MatchParamsToAction(ActionRequest* request, int* numPrompts, PromptEntry** prompts) {
+  Boolean* paramUsed = NULL;
   int unused;
   Boolean argsOptionFound;
   int i;
@@ -3151,9 +3038,8 @@ static int MatchParamsToAction(ActionRequest *request, int *numPrompts,
    */
   unused = request->numObjects;
   if (unused > 0) {
-    paramUsed = (Boolean *)XtMalloc((Cardinal)(sizeof(Boolean) * unused));
-    for (i = 0; i < unused; i++)
-      paramUsed[i] = False;
+    paramUsed = (Boolean*)XtMalloc((Cardinal)(sizeof(Boolean) * unused));
+    for (i = 0; i < unused; i++) paramUsed[i] = False;
   }
 
   if (IS_CMD(action->mask)) {
@@ -3168,22 +3054,21 @@ static int MatchParamsToAction(ActionRequest *request, int *numPrompts,
      *	 location of the prompt and hence where to put the
      *	 user-supplied value; except by order of occurrence.
      */
-    ProcessOneSegment(request, &(action->u.cmd.execHosts), prompts, numPrompts,
-                      &argsOptionFound, &lastArgReferenced, &unused, paramUsed);
-    ProcessOneSegment(request, &(action->u.cmd.execString), prompts, numPrompts,
-                      &argsOptionFound, &lastArgReferenced, &unused, paramUsed);
-    ProcessOneSegment(request, &(action->u.cmd.termOpts), prompts, numPrompts,
-                      &argsOptionFound, &lastArgReferenced, &unused, paramUsed);
+    ProcessOneSegment(request, &(action->u.cmd.execHosts), prompts, numPrompts, &argsOptionFound,
+                      &lastArgReferenced, &unused, paramUsed);
+    ProcessOneSegment(request, &(action->u.cmd.execString), prompts, numPrompts, &argsOptionFound,
+                      &lastArgReferenced, &unused, paramUsed);
+    ProcessOneSegment(request, &(action->u.cmd.termOpts), prompts, numPrompts, &argsOptionFound,
+                      &lastArgReferenced, &unused, paramUsed);
   } else if (IS_TT_MSG(action->mask)) {
-    ProcessOneSegment(request, &(action->u.tt_msg.tt_op), prompts, numPrompts,
-                      &argsOptionFound, &lastArgReferenced, &unused, paramUsed);
-    ProcessOneSegment(request, &(action->u.tt_msg.tt_file), prompts, numPrompts,
-                      &argsOptionFound, &lastArgReferenced, &unused, paramUsed);
+    ProcessOneSegment(request, &(action->u.tt_msg.tt_op), prompts, numPrompts, &argsOptionFound,
+                      &lastArgReferenced, &unused, paramUsed);
+    ProcessOneSegment(request, &(action->u.tt_msg.tt_file), prompts, numPrompts, &argsOptionFound,
+                      &lastArgReferenced, &unused, paramUsed);
 
     for (i = 0; i < action->u.tt_msg.vtype_count; i++) {
-      ProcessOneSegment(request, &(action->u.tt_msg.tt_argn_vtype[i]), prompts,
-                        numPrompts, &argsOptionFound, &lastArgReferenced,
-                        &unused, paramUsed);
+      ProcessOneSegment(request, &(action->u.tt_msg.tt_argn_vtype[i]), prompts, numPrompts,
+                        &argsOptionFound, &lastArgReferenced, &unused, paramUsed);
     }
 
     for (i = 0; i < action->u.tt_msg.value_count; i++) {
@@ -3191,9 +3076,8 @@ static int MatchParamsToAction(ActionRequest *request, int *numPrompts,
        * We require that at most ONE argument be consumed by a
        * tt_argn_value field.
        */
-      ProcessOneSegment(request, &(action->u.tt_msg.tt_argn_value[i]), prompts,
-                        numPrompts, &argsOptionFound, &lastArgReferenced,
-                        &unused, paramUsed);
+      ProcessOneSegment(request, &(action->u.tt_msg.tt_argn_value[i]), prompts, numPrompts,
+                        &argsOptionFound, &lastArgReferenced, &unused, paramUsed);
     }
   }
 
@@ -3215,8 +3099,7 @@ static int MatchParamsToAction(ActionRequest *request, int *numPrompts,
      * is referenced, but arg1 and arg3 are not, then only count arg3
      * as an unused (and thus extra) parameter.
      */
-    for (i = 0; ((i < lastArgReferenced - 1) && (i < request->numObjects));
-         i++) {
+    for (i = 0; ((i < lastArgReferenced - 1) && (i < request->numObjects)); i++) {
       if (!paramUsed[i])
         unused--;
     }
@@ -3232,11 +3115,10 @@ static int MatchParamsToAction(ActionRequest *request, int *numPrompts,
   return (unused);
 }
 
-static void ProcessOneSegment(ActionRequest *request, parsedMsg *msg,
-                              PromptEntry **prompts, int *numPrompts,
-                              Boolean *argsOptionFound, int *lastArgReferenced,
-                              int *unused, Boolean *paramUsed) {
-  MsgComponent *piece;
+static void ProcessOneSegment(ActionRequest* request, parsedMsg* msg, PromptEntry** prompts,
+                              int* numPrompts, Boolean* argsOptionFound, int* lastArgReferenced,
+                              int* unused, Boolean* paramUsed) {
+  MsgComponent* piece;
   int i;
 
   /*
@@ -3295,8 +3177,7 @@ static void ProcessOneSegment(ActionRequest *request, parsedMsg *msg,
  * into the prompt.  It will unpost the dialog.
  */
 
-static void CancelOut(Widget w, XEvent *event, XtPointer params,
-                      XtPointer num_params) {
+static void CancelOut(Widget w, XEvent* event, XtPointer params, XtPointer num_params) {
   Arg args[10];
   Widget cancel;
 
@@ -3314,17 +3195,16 @@ static void CancelOut(Widget w, XEvent *event, XtPointer params,
  * request and will destroy the dialog.
  */
 
-static void CancelPromptDialog(Widget widget, PromptDialog *dialog,
-                               XtPointer call_data)
+static void CancelPromptDialog(Widget widget, PromptDialog* dialog, XtPointer call_data)
 
 {
-  _DtActInvRecT *invp;
+  _DtActInvRecT* invp;
 
   /* Destroy the dialog */
   XtDestroyWidget(XtParent(dialog->topLevel));
 
   /* Free up the prompt sub-structure */
-  XtFree((char *)dialog->prompts);
+  XtFree((char*)dialog->prompts);
 
   invp = _DtActFindInvRec(dialog->request->invocId);
   myassert(invp); /* There should always be an invocation record */
@@ -3333,7 +3213,7 @@ static void CancelPromptDialog(Widget widget, PromptDialog *dialog,
   _DtFreeRequest(dialog->request);
 
   /* Free up the callback structure */
-  XtFree((char *)dialog);
+  XtFree((char*)dialog);
 
   if (!invp)
     return; /* This should never happen */
@@ -3356,8 +3236,7 @@ static void CancelPromptDialog(Widget widget, PromptDialog *dialog,
  * tab group to the next tab group.
  */
 
-static void ChangePromptTraversal(Widget widget, PromptDialog *dialog,
-                                  XtPointer call_data) {
+static void ChangePromptTraversal(Widget widget, PromptDialog* dialog, XtPointer call_data) {
   XmProcessTraversal(widget, XmTRAVERSE_NEXT_TAB_GROUP);
 }
 
@@ -3368,8 +3247,7 @@ static void ChangePromptTraversal(Widget widget, PromptDialog *dialog,
  * It will also destroy the dialog box.
  */
 
-static void ProcessPromptDialog(Widget widget, PromptDialog *dialog,
-                                XtPointer call_data)
+static void ProcessPromptDialog(Widget widget, PromptDialog* dialog, XtPointer call_data)
 
 {
   int i, j;
@@ -3393,13 +3271,12 @@ static void ProcessPromptDialog(Widget widget, PromptDialog *dialog,
       }
 
       if (dialog->prompts[i].argIndex > dialog->request->numObjects) {
-        dialog->request->objects = (ObjectData *)XtRealloc(
-            (char *)dialog->request->objects,
-            (Cardinal)(sizeof(ObjectData) * (dialog->prompts[i].argIndex)));
+        dialog->request->objects =
+            (ObjectData*)XtRealloc((char*)dialog->request->objects,
+                                   (Cardinal)(sizeof(ObjectData) * (dialog->prompts[i].argIndex)));
 
         /* Initialize the new array entries */
-        for (j = dialog->request->numObjects; j < dialog->prompts[i].argIndex;
-             j++) {
+        for (j = dialog->request->numObjects; j < dialog->prompts[i].argIndex; j++) {
           dialog->request->objects[j].mask = 0;
           SET_FILE_OBJ(dialog->request->objects[j].mask);
           dialog->request->objects[j].type = -1;
@@ -3422,8 +3299,7 @@ static void ProcessPromptDialog(Widget widget, PromptDialog *dialog,
        * nor can they be typed, until we know it they refer to a file.
        * This can't be determined until we construct the action message.
        */
-      dialog->request->objects[dialog->prompts[i].argIndex - 1]
-          .u.file.origFilename = value;
+      dialog->request->objects[dialog->prompts[i].argIndex - 1].u.file.origFilename = value;
     } else /* Prompt-only input */
     {
       /*
@@ -3432,12 +3308,11 @@ static void ProcessPromptDialog(Widget widget, PromptDialog *dialog,
        * as the index into the object array.
        */
       dialog->request->numPromptInputs++;
-      dialog->request->promptInputs = (String *)XtRealloc(
-          (char *)dialog->request->promptInputs,
-          (Cardinal)(dialog->request->numPromptInputs * sizeof(String)));
+      dialog->request->promptInputs =
+          (String*)XtRealloc((char*)dialog->request->promptInputs,
+                             (Cardinal)(dialog->request->numPromptInputs * sizeof(String)));
 
-      dialog->request->promptInputs[dialog->request->numPromptInputs - 1] =
-          value;
+      dialog->request->promptInputs[dialog->request->numPromptInputs - 1] = value;
     }
   }
 
@@ -3452,7 +3327,7 @@ static void ProcessPromptDialog(Widget widget, PromptDialog *dialog,
    * up the request, when all processing is done.
    */
   if (ProcessRequest(dialog->associatedWidget, dialog->request)) {
-    _DtActInvRecT *invp;
+    _DtActInvRecT* invp;
 
     if ((invp = _DtActFindInvRec(dialog->request->invocId))) {
       /* all done invoking ? */
@@ -3472,10 +3347,10 @@ static void ProcessPromptDialog(Widget widget, PromptDialog *dialog,
   }
 
   /* Free up the prompt sub-structure */
-  XtFree((char *)dialog->prompts);
+  XtFree((char*)dialog->prompts);
 
   /* Free up the callback structure */
-  XtFree((char *)dialog);
+  XtFree((char*)dialog);
 }
 
 /*
@@ -3484,12 +3359,12 @@ static void ProcessPromptDialog(Widget widget, PromptDialog *dialog,
  * of text widgets.
  */
 
-static void CreatePromptDialog(Widget w, ActionRequest *request, int numPrompts,
-                               PromptEntry *prompts)
+static void CreatePromptDialog(Widget w, ActionRequest* request, int numPrompts,
+                               PromptEntry* prompts)
 
 {
-  PromptDialog *dialog;
-  DialogPromptEntry *promptDes;
+  PromptDialog* dialog;
+  DialogPromptEntry* promptDes;
   XmString pt1;
   String title;
   Widget shell, bboard, frame, form, label;
@@ -3518,17 +3393,14 @@ static void CreatePromptDialog(Widget w, ActionRequest *request, int numPrompts,
   _DtSvcProcessUnlock();
 
   /* Allocate the structures we'll be needing */
-  dialog = (PromptDialog *)XtMalloc((Cardinal)sizeof(PromptDialog));
-  promptDes = (DialogPromptEntry *)XtMalloc(
-      (Cardinal)(sizeof(DialogPromptEntry) * numPrompts));
+  dialog = (PromptDialog*)XtMalloc((Cardinal)sizeof(PromptDialog));
+  promptDes = (DialogPromptEntry*)XtMalloc((Cardinal)(sizeof(DialogPromptEntry) * numPrompts));
 
   /*  Create the shell, frame and form used for the dialog.  */
 
-  size_t titleLen =
-      strlen(PromptDialogTitle) + strlen(request->clonedAction->label) + 1;
-  title = (char *)XtMalloc((Cardinal)titleLen);
-  (void)snprintf(title, titleLen, "%1$s%2$s", PromptDialogTitle,
-                 request->clonedAction->label);
+  size_t titleLen = strlen(PromptDialogTitle) + strlen(request->clonedAction->label) + 1;
+  title = (char*)XtMalloc((Cardinal)titleLen);
+  (void)snprintf(title, titleLen, "%1$s%2$s", PromptDialogTitle, request->clonedAction->label);
   n = 0;
   XtSetArg(args[n], XmNallowShellResize, True);
   n++;
@@ -3686,8 +3558,7 @@ static void CreatePromptDialog(Widget w, ActionRequest *request, int numPrompts,
   n++;
   ok = XmCreatePushButtonGadget(form, "ok", args, n);
   XtManageChild(ok);
-  XtAddCallback(ok, XmNactivateCallback, (XtCallbackProc)ProcessPromptDialog,
-                (XtPointer)dialog);
+  XtAddCallback(ok, XmNactivateCallback, (XtCallbackProc)ProcessPromptDialog, (XtPointer)dialog);
   XmStringFree(labelString);
 
   /* Set the default action */
@@ -3739,8 +3610,7 @@ static void CreatePromptDialog(Widget w, ActionRequest *request, int numPrompts,
   n++;
   cancel = XmCreatePushButtonGadget(form, "cancel", args, n);
   XtManageChild(cancel);
-  XtAddCallback(cancel, XmNactivateCallback, (XtCallbackProc)CancelPromptDialog,
-                (XtPointer)dialog);
+  XtAddCallback(cancel, XmNactivateCallback, (XtCallbackProc)CancelPromptDialog, (XtPointer)dialog);
   XmStringFree(labelString);
 
   /*
@@ -3778,15 +3648,12 @@ static void CreatePromptDialog(Widget w, ActionRequest *request, int numPrompts,
   /*  Adjust the decorations for the dialog shell of the dialog  */
 
   n = 0;
-  XtSetArg(args[n], XmNmwmDecorations,
-           MWM_DECOR_BORDER | MWM_DECOR_MENU | MWM_DECOR_TITLE);
+  XtSetArg(args[n], XmNmwmDecorations, MWM_DECOR_BORDER | MWM_DECOR_MENU | MWM_DECOR_TITLE);
   n++;
   XtSetValues(shell, args, n);
 
-  xa_WM_DELETE_WINDOW =
-      XInternAtom(XtDisplay(shell), "WM_DELETE_WINDOW", False);
-  XmAddWMProtocolCallback(shell, xa_WM_DELETE_WINDOW,
-                          (XtCallbackProc)CancelPromptDialog,
+  xa_WM_DELETE_WINDOW = XInternAtom(XtDisplay(shell), "WM_DELETE_WINDOW", False);
+  XmAddWMProtocolCallback(shell, xa_WM_DELETE_WINDOW, (XtCallbackProc)CancelPromptDialog,
                           (XtPointer)dialog);
 
   /* Fill in our instance structure */
@@ -3817,12 +3684,11 @@ static void CreatePromptDialog(Widget w, ActionRequest *request, int numPrompts,
  * processing of the request, ignoring any unused parameters.
  */
 
-static void ContinueRequest(Widget widget, XtPointer user_data,
-                            XtPointer call_data)
+static void ContinueRequest(Widget widget, XtPointer user_data, XtPointer call_data)
 
 {
   int i;
-  ContinueDialog *dialog = (ContinueDialog *)user_data;
+  ContinueDialog* dialog = (ContinueDialog*)user_data;
 
   /* Destroy the dialog */
   XtDestroyWidget(XtParent(dialog->topLevel));
@@ -3834,7 +3700,7 @@ static void ContinueRequest(Widget widget, XtPointer user_data,
    */
   if (dialog->numPrompts == 0) {
     if (ProcessRequest(dialog->associatedWidget, dialog->request)) {
-      _DtActInvRecT *invp;
+      _DtActInvRecT* invp;
 
       if ((invp = _DtActFindInvRec(dialog->request->invocId)) != NULL) {
         /* all done invoking ? */
@@ -3854,17 +3720,16 @@ static void ContinueRequest(Widget widget, XtPointer user_data,
       _DtFreeRequest(dialog->request);
     }
   } else {
-    CreatePromptDialog(dialog->associatedWidget, dialog->request,
-                       dialog->numPrompts, dialog->prompts);
+    CreatePromptDialog(dialog->associatedWidget, dialog->request, dialog->numPrompts,
+                       dialog->prompts);
   }
 
   /* Free up the prompt sub-structure */
-  for (i = 0; i < dialog->numPrompts; i++)
-    XtFree(dialog->prompts[i].prompt);
-  XtFree((char *)dialog->prompts);
+  for (i = 0; i < dialog->numPrompts; i++) XtFree(dialog->prompts[i].prompt);
+  XtFree((char*)dialog->prompts);
 
   /* Free up the callback structure */
-  XtFree((char *)dialog);
+  XtFree((char*)dialog);
 }
 
 /*
@@ -3873,21 +3738,19 @@ static void ContinueRequest(Widget widget, XtPointer user_data,
  * free up the dialog data and the request and will destroy the dialog.
  */
 
-static void CancelRequest(Widget widget, XtPointer user_data,
-                          XtPointer call_data)
+static void CancelRequest(Widget widget, XtPointer user_data, XtPointer call_data)
 
 {
   int i;
-  ContinueDialog *dialog = (ContinueDialog *)user_data;
-  _DtActInvRecT *invp;
+  ContinueDialog* dialog = (ContinueDialog*)user_data;
+  _DtActInvRecT* invp;
 
   /* Destroy the dialog */
   XtDestroyWidget(XtParent(dialog->topLevel));
 
   /* Free up the prompt sub-structure */
-  for (i = 0; i < dialog->numPrompts; i++)
-    XtFree(dialog->prompts[i].prompt);
-  XtFree((char *)dialog->prompts);
+  for (i = 0; i < dialog->numPrompts; i++) XtFree(dialog->prompts[i].prompt);
+  XtFree((char*)dialog->prompts);
 
   /* get the invocation record */
   invp = _DtActFindInvRec(dialog->request->invocId);
@@ -3897,7 +3760,7 @@ static void CancelRequest(Widget widget, XtPointer user_data,
   _DtFreeRequest(dialog->request);
 
   /* Free up the callback structure */
-  XtFree((char *)dialog);
+  XtFree((char*)dialog);
 
   if (!invp)
     return; /* should never happen */
@@ -3921,21 +3784,21 @@ static void CancelRequest(Widget widget, XtPointer user_data,
  * This function builds the dialog which will collect the user's response.
  */
 
-static void CreateContinueDialog(Widget w, ActionRequest *request,
-                                 int numPrompts, PromptEntry *prompts)
+static void CreateContinueDialog(Widget w, ActionRequest* request, int numPrompts,
+                                 PromptEntry* prompts)
 
 {
-  ContinueDialog *dialog;
+  ContinueDialog* dialog;
   String title;
   XmString label;
   int i;
   int n;
   Arg args[10];
   XmString ok, cancel;
-  char *fmt;
+  char* fmt;
 
   /* Allocate the structures we'll be needing */
-  dialog = (ContinueDialog *)XtMalloc((Cardinal)sizeof(ContinueDialog));
+  dialog = (ContinueDialog*)XtMalloc((Cardinal)sizeof(ContinueDialog));
   dialog->request = request;
   dialog->associatedWidget = w;
   dialog->numPrompts = numPrompts;
@@ -3946,8 +3809,7 @@ static void CreateContinueDialog(Widget w, ActionRequest *request,
    * the user finally responds to this dialog.
    */
   if (prompts) {
-    dialog->prompts =
-        (PromptEntry *)XtMalloc((Cardinal)(sizeof(PromptEntry) * numPrompts));
+    dialog->prompts = (PromptEntry*)XtMalloc((Cardinal)(sizeof(PromptEntry) * numPrompts));
     for (i = 0; i < numPrompts; i++) {
       dialog->prompts[i].argIndex = prompts[i].argIndex;
       dialog->prompts[i].prompt = XtNewString(prompts[i].prompt);
@@ -3959,12 +3821,11 @@ static void CreateContinueDialog(Widget w, ActionRequest *request,
   cancel = XmStringCreateLocalized((String)_DtCancelString);
 
   /* Create the error dialog */
-  fmt = XtNewString((char *)Dt11GETMESSAGE(2, 2, "%1$s%2$s"));
-  size_t titleLen = strlen(PromptDialogTitle) +
-                    strlen(request->clonedAction->label) + strlen(fmt) + 1;
-  title = (char *)XtMalloc((Cardinal)titleLen);
-  (void)snprintf(title, titleLen, fmt, PromptDialogTitle,
-                 request->clonedAction->label);
+  fmt = XtNewString((char*)Dt11GETMESSAGE(2, 2, "%1$s%2$s"));
+  size_t titleLen =
+      strlen(PromptDialogTitle) + strlen(request->clonedAction->label) + strlen(fmt) + 1;
+  title = (char*)XtMalloc((Cardinal)titleLen);
+  (void)snprintf(title, titleLen, fmt, PromptDialogTitle, request->clonedAction->label);
   label = XmStringCreateLocalized(ContinueMessage);
   XtFree(fmt);
 
@@ -3984,10 +3845,8 @@ static void CreateContinueDialog(Widget w, ActionRequest *request,
   XmStringFree(label);
 
   XtUnmanageChild(XmMessageBoxGetChild(dialog->topLevel, XmDIALOG_HELP_BUTTON));
-  XtAddCallback(dialog->topLevel, XmNokCallback, ContinueRequest,
-                (XtPointer)dialog);
-  XtAddCallback(dialog->topLevel, XmNcancelCallback, CancelRequest,
-                (XtPointer)dialog);
+  XtAddCallback(dialog->topLevel, XmNokCallback, ContinueRequest, (XtPointer)dialog);
+  XtAddCallback(dialog->topLevel, XmNcancelCallback, CancelRequest, (XtPointer)dialog);
   XtManageChild(dialog->topLevel);
 }
 
@@ -4009,15 +3868,15 @@ static void CreateContinueDialog(Widget w, ActionRequest *request,
  * using the next exec host, or we will terminate, if no more hosts are left.
  */
 
-static void ProcessCommandInvokerRequest(Widget w, ActionRequest *request,
-                                         char *relPathHost, char *relPathDir)
+static void ProcessCommandInvokerRequest(Widget w, ActionRequest* request, char* relPathHost,
+                                         char* relPathDir)
 
 {
-  char *cwdHost;
-  char *cwdDir;
+  char* cwdHost;
+  char* cwdDir;
   ActionPtr action = request->clonedAction;
-  _DtActInvRecT *invp = NULL;
-  _DtActChildRecT *childp = NULL;
+  _DtActInvRecT* invp = NULL;
+  _DtActChildRecT* childp = NULL;
 
   if (ResolveCommandInvokerMessagePieces(w, request, relPathHost, relPathDir)) {
     /*
@@ -4063,8 +3922,7 @@ static void ProcessCommandInvokerRequest(Widget w, ActionRequest *request,
         HostAccessError(w, request->clonedAction->label, request->badHostList);
       } else {
         /* Display error dialog listing all failed exec hosts */
-        MultiHostAccessError(w, request->clonedAction->label,
-                             request->badHostList);
+        MultiHostAccessError(w, request->clonedAction->label, request->badHostList);
       }
     } else {
       if (invp && childp) {
@@ -4090,15 +3948,14 @@ static void ProcessCommandInvokerRequest(Widget w, ActionRequest *request,
  * arguments, and any information collected from the prompt dialog.
  */
 
-static Boolean
-ResolveCommandInvokerMessagePieces(Widget w, ActionRequest *request,
-                                   char *relPathHost, char *relPathDir)
+static Boolean ResolveCommandInvokerMessagePieces(Widget w, ActionRequest* request,
+                                                  char* relPathHost, char* relPathDir)
 
 {
   ActionPtr action = request->clonedAction;
-  cmdAttr *cmd = &(action->u.cmd);
-  char *termOpts;
-  Boolean *paramUsed = NULL;
+  cmdAttr* cmd = &(action->u.cmd);
+  char* termOpts;
+  Boolean* paramUsed = NULL;
   int promptDataIndex = 0;
   /*
    * NOTE: The current implementation of prompt strings requires that
@@ -4112,17 +3969,14 @@ ResolveCommandInvokerMessagePieces(Widget w, ActionRequest *request,
    */
 
   /* Set up the next host to execute on */
-  _DtCompileMessagePiece(w, request, relPathHost, relPathDir,
-                         &(action->u.cmd.execHosts), True, 0, &paramUsed,
-                         &promptDataIndex);
+  _DtCompileMessagePiece(w, request, relPathHost, relPathDir, &(action->u.cmd.execHosts), True, 0,
+                         &paramUsed, &promptDataIndex);
   SetExecHost(request);
 
-  if ((_DtCompileMessagePiece(w, request, relPathHost, relPathDir,
-                              &(cmd->execString), False, 0, &paramUsed,
-                              &promptDataIndex) == False) ||
-      (_DtCompileMessagePiece(w, request, relPathHost, relPathDir,
-                              &(cmd->termOpts), False, 0, &paramUsed,
-                              &promptDataIndex) == False)) {
+  if ((_DtCompileMessagePiece(w, request, relPathHost, relPathDir, &(cmd->execString), False, 0,
+                              &paramUsed, &promptDataIndex) == False) ||
+      (_DtCompileMessagePiece(w, request, relPathHost, relPathDir, &(cmd->termOpts), False, 0,
+                              &paramUsed, &promptDataIndex) == False)) {
     /* Free up any intermediate work we've done here */
     XtFree(cmd->execString.compiledMessage);
     XtFree(cmd->termOpts.compiledMessage);
@@ -4141,8 +3995,7 @@ ResolveCommandInvokerMessagePieces(Widget w, ActionRequest *request,
    * options.
    */
   if (request->termOpts) {
-    size_t termOptsLen =
-        strlen(cmd->termOpts.compiledMessage) + strlen(request->termOpts) + 2;
+    size_t termOptsLen = strlen(cmd->termOpts.compiledMessage) + strlen(request->termOpts) + 2;
     termOpts = XtMalloc(termOptsLen);
     strlcpy(termOpts, cmd->termOpts.compiledMessage, termOptsLen);
     strlcat(termOpts, " ", termOptsLen);
@@ -4159,17 +4012,16 @@ ResolveCommandInvokerMessagePieces(Widget w, ActionRequest *request,
  * Process a command-invoker request.
  */
 
-static void InitiateCommandInvokerRequest(Widget w, ActionRequest *request,
-                                          String host, String dir)
+static void InitiateCommandInvokerRequest(Widget w, ActionRequest* request, String host, String dir)
 
 {
   char procIdBuf[_DtAct_MAX_BUF_SIZE];
   char tmpFileBuf[_DtAct_MAX_BUF_SIZE];
-  char *procId;          /* for dtexec command line */
-  char *tmpFiles = NULL; /* for dtexec command line */
-  _DtActInvRecT *invp;
-  _DtActChildRecT *childp;
-  CallbackData *data = (CallbackData *)XtMalloc((Cardinal)sizeof(CallbackData));
+  char* procId;          /* for dtexec command line */
+  char* tmpFiles = NULL; /* for dtexec command line */
+  _DtActInvRecT* invp;
+  _DtActChildRecT* childp;
+  CallbackData* data = (CallbackData*)XtMalloc((Cardinal)sizeof(CallbackData));
   ActionPtr action = request->clonedAction;
 
   tmpFileBuf[0] = '\0'; /* seed the buffer with a null string */
@@ -4180,22 +4032,22 @@ static void InitiateCommandInvokerRequest(Widget w, ActionRequest *request,
 
   /* Get the default procId from toolTalk */
   switch (tt_ptr_error(procId = tt_default_procid())) {
-  case TT_ERR_NOMP:;  /* fall through */
-  case TT_ERR_PROCID: /* Try to establish a connection */
-    tt_free(procId);
-    if (!_DtInitializeToolTalk(NULL))
+    case TT_ERR_NOMP:;  /* fall through */
+    case TT_ERR_PROCID: /* Try to establish a connection */
+      tt_free(procId);
+      if (!_DtInitializeToolTalk(NULL))
+        procId = NULL;
+      else if (tt_ptr_error(procId = tt_default_procid()) != TT_OK) {
+        myassert(0); /* we should never get here */
+        procId = NULL;
+      }
+      break;
+    case TT_OK:
+      break;
+    default:
+      tt_free(procId);
       procId = NULL;
-    else if (tt_ptr_error(procId = tt_default_procid()) != TT_OK) {
-      myassert(0); /* we should never get here */
-      procId = NULL;
-    }
-    break;
-  case TT_OK:
-    break;
-  default:
-    tt_free(procId);
-    procId = NULL;
-    break;
+      break;
   }
   /*
    * The string generated for procId should never exceed the procId buf size.
@@ -4214,14 +4066,12 @@ static void InitiateCommandInvokerRequest(Widget w, ActionRequest *request,
    */
 
   if ((invp = _DtActFindInvRec(request->invocId)) != NULL) {
-    if ((childp = _DtActFindChildRec(request->invocId, request->childId)) !=
-        NULL) {
+    if ((childp = _DtActFindChildRec(request->invocId, request->childId)) != NULL) {
       int i;
-      char *p;
+      char* p;
       int len = 0;
 
       for (i = 0; i < childp->numObjects; i++) {
-
         if (!(IS_BUFFER_OBJ(invp->info[childp->argMap[i].argIdx].mask)))
           continue; /* not a buffer object */
 
@@ -4262,12 +4112,10 @@ static void InitiateCommandInvokerRequest(Widget w, ActionRequest *request,
   data->actionPtr = action;
   data->requestPtr = _DtCloneRequest(request);
 
-  if (_DtActionCommandInvoke(action->mask & _DtAct_WINTYPE_BITS, host, dir,
-                             action->u.cmd.execString.compiledMessage,
-                             action->u.cmd.termOpts.compiledMessage,
-                             request->currentHost, procId, tmpFiles,
-                             CmdInvSuccessfulRequest, (XtPointer)data,
-                             CmdInvFailedRequest, (XtPointer)data))
+  if (_DtActionCommandInvoke(
+          action->mask & _DtAct_WINTYPE_BITS, host, dir, action->u.cmd.execString.compiledMessage,
+          action->u.cmd.termOpts.compiledMessage, request->currentHost, procId, tmpFiles,
+          CmdInvSuccessfulRequest, (XtPointer)data, CmdInvFailedRequest, (XtPointer)data))
     if (invp)
       SET_INV_CMD_QUEUED(invp->state);
 
@@ -4282,13 +4130,13 @@ static void InitiateCommandInvokerRequest(Widget w, ActionRequest *request,
  * part of the request, if one was specified.
  */
 
-static void SetExecHost(ActionRequest *request)
+static void SetExecHost(ActionRequest* request)
 
 {
   ActionPtr action = request->clonedAction;
   int hostCount = 0;
   int hostListSize = 0;
-  char **hostList = NULL;
+  char** hostList = NULL;
 
   XtFree(request->currentHost);
 
@@ -4298,8 +4146,7 @@ static void SetExecHost(ActionRequest *request)
     if (request->execHost)
       ParseHostList(request->execHost, &hostList, &hostListSize, &hostCount);
     else if (action->u.cmd.execHosts.compiledMessage) {
-      ParseHostList(action->u.cmd.execHosts.compiledMessage, &hostList,
-                    &hostListSize, &hostCount);
+      ParseHostList(action->u.cmd.execHosts.compiledMessage, &hostList, &hostListSize, &hostCount);
     }
 
     RemoveDuplicateHostNames(hostList, &hostCount);
@@ -4322,8 +4169,7 @@ static void SetExecHost(ActionRequest *request)
      */
     request->currentHost = _DtGetLocalHostName();
   } else {
-    request->currentHost =
-        XtNewString(action->u.cmd.execHostArray[request->hostIndex]);
+    request->currentHost = XtNewString(action->u.cmd.execHostArray[request->hostIndex]);
   }
 }
 
@@ -4332,12 +4178,12 @@ static void SetExecHost(ActionRequest *request)
  * to the passed-in string array.
  */
 
-static void ParseHostList(char *hostString, char ***hostListPtr,
-                          int *hostListSizePtr, int *hostCountPtr)
+static void ParseHostList(char* hostString, char*** hostListPtr, int* hostListSizePtr,
+                          int* hostCountPtr)
 
 {
-  char *workString;
-  char *nextHost;
+  char* workString;
+  char* nextHost;
   _Xstrtokparams strtok_buf;
 
   workString = XtNewString(hostString);
@@ -4349,8 +4195,8 @@ static void ParseHostList(char *hostString, char ***hostListPtr,
     if (strlen(nextHost) > 0) {
       if (*hostCountPtr >= *hostListSizePtr) {
         (*hostListSizePtr) += 5;
-        (*hostListPtr) = (char **)XtRealloc(
-            (char *)(*hostListPtr), sizeof(char *) * (*hostListSizePtr));
+        (*hostListPtr) =
+            (char**)XtRealloc((char*)(*hostListPtr), sizeof(char*) * (*hostListSizePtr));
       }
 
       (*hostListPtr)[*hostCountPtr] = XtNewString(nextHost);
@@ -4368,7 +4214,7 @@ static void ParseHostList(char *hostString, char ***hostListPtr,
  * any duplicate entries.  It is not very useful to attempt to execute on
  * a given host, more than once.
  */
-static void RemoveDuplicateHostNames(char **hostList, int *hostCountPtr)
+static void RemoveDuplicateHostNames(char** hostList, int* hostCountPtr)
 
 {
   int i, j, k;
@@ -4378,8 +4224,7 @@ static void RemoveDuplicateHostNames(char **hostList, int *hostCountPtr)
       if (strcmp(hostList[i], hostList[j]) == 0) {
         /* Remove the second entry */
         XtFree(hostList[j]);
-        for (k = j; k < (*hostCountPtr) - 1; k++)
-          hostList[k] = hostList[k + 1];
+        for (k = j; k < (*hostCountPtr) - 1; k++) hostList[k] = hostList[k + 1];
         (*hostCountPtr)--;
       } else
         j++;
@@ -4393,7 +4238,7 @@ static void RemoveDuplicateHostNames(char **hostList, int *hostCountPtr)
  * list we can display within the error dialog.
  */
 
-static void AddFailedHostToList(ActionRequest *request, String badHost)
+static void AddFailedHostToList(ActionRequest* request, String badHost)
 
 {
   int curLen;
@@ -4403,14 +4248,13 @@ static void AddFailedHostToList(ActionRequest *request, String badHost)
   else
     curLen = 0;
 
-  request->badHostList =
-      XtRealloc(request->badHostList, curLen + 10 + strlen(badHost));
+  request->badHostList = XtRealloc(request->badHostList, curLen + 10 + strlen(badHost));
 
   if (curLen > 0) {
-    strcat(request->badHostList, ", ");
-    strcat(request->badHostList, badHost);
+    strlcat(request->badHostList, ", ", curLen + 10 + strlen(badHost));
+    strlcat(request->badHostList, badHost, curLen + 10 + strlen(badHost));
   } else
-    strcpy(request->badHostList, badHost);
+    strlcpy(request->badHostList, badHost, curLen + 10 + strlen(badHost));
 }
 
 /*
@@ -4420,20 +4264,20 @@ static void AddFailedHostToList(ActionRequest *request, String badHost)
  * request.
  */
 
-static void CmdInvSuccessfulRequest(char *message, void *data2)
+static void CmdInvSuccessfulRequest(char* message, void* data2)
 
 {
-  _DtActInvRecT *invp = NULL;
-  _DtActChildRecT *childrecp = NULL;
+  _DtActInvRecT* invp = NULL;
+  _DtActChildRecT* childrecp = NULL;
 
-  CallbackData *data = (CallbackData *)data2;
+  CallbackData* data = (CallbackData*)data2;
 
   /*
    * Mark this invocation step as done
    * The child process itself may not be done.
    */
   if ((invp = _DtActFindInvRec(data->requestPtr->invocId)) != NULL) {
-    extern void *_DtCmdCheckQForId(DtActionInvocationID id);
+    extern void* _DtCmdCheckQForId(DtActionInvocationID id);
 
     SET_INV_DONE(invp->state);
     RESET_INV_CMD_QUEUED(invp->state);
@@ -4464,7 +4308,7 @@ static void CmdInvSuccessfulRequest(char *message, void *data2)
 
   _DtFreeRequest(data->requestPtr);
   XtFree(data->actionLabel);
-  XtFree((char *)data);
+  XtFree((char*)data);
 }
 
 /*
@@ -4475,15 +4319,15 @@ static void CmdInvSuccessfulRequest(char *message, void *data2)
  * associated with this request).
  */
 
-static void CmdInvFailedRequest(char *error_message, void *data2)
+static void CmdInvFailedRequest(char* error_message, void* data2)
 
 {
-  CallbackData *data = (CallbackData *)data2;
+  CallbackData* data = (CallbackData*)data2;
   String msg = error_message;
   ActionPtr action;
-  ActionRequest *request;
-  _DtActChildRecT *childp = NULL;
-  _DtActInvRecT *invp = NULL;
+  ActionRequest* request;
+  _DtActChildRecT* childp = NULL;
+  _DtActInvRecT* invp = NULL;
 
   /*
    * If this was not the last host in the execHost list, then retry
@@ -4513,7 +4357,7 @@ static void CmdInvFailedRequest(char *error_message, void *data2)
    * Make sure the CMD_QUEUED bit is set correctly
    */
   if (invp) {
-    extern void *_DtCmdCheckQForId(DtActionInvocationID id);
+    extern void* _DtCmdCheckQForId(DtActionInvocationID id);
 
     SET_INV_DONE(invp->state);
     RESET_INV_CMD_QUEUED(invp->state);
@@ -4548,7 +4392,6 @@ static void CmdInvFailedRequest(char *error_message, void *data2)
     /* Retry, using the next host */
     PrepareAndExecuteAction(data->associatedWidget, request);
   } else {
-
     if (invp && childp) {
       /*
        * RWV ---
@@ -4563,8 +4406,7 @@ static void CmdInvFailedRequest(char *error_message, void *data2)
     /* No more hosts (they all failed); put up error dialog */
     if (action->u.cmd.execHostCount <= 1) {
       /* Be backwards compatible */
-      CommandInvokerError(data->associatedWidget, action->label,
-                          msg + data->offset);
+      CommandInvokerError(data->associatedWidget, action->label, msg + data->offset);
     } else {
       MultiHostAccessError(data->associatedWidget, request->clonedAction->label,
                            request->badHostList);
@@ -4575,7 +4417,7 @@ static void CmdInvFailedRequest(char *error_message, void *data2)
     _DtFreeRequest(request);
     XtFree(data->actionLabel);
   }
-  XtFree((char *)data);
+  XtFree((char*)data);
 }
 
 /*
@@ -4585,13 +4427,13 @@ static void CmdInvFailedRequest(char *error_message, void *data2)
  * The returned string must be freed by the caller.
  */
 
-char *_DtActMapFileName(const char *curHost, const char *dir, const char *file,
-                        const char *newHost) {
+char* _DtActMapFileName(const char* curHost, const char* dir, const char* file,
+                        const char* newHost) {
   char buf[MAXPATHLEN];
-  char *chp = NULL;
+  char* chp = NULL;
   int clen = 0;
-  char *netpath = NULL;
-  char *path = NULL;
+  char* netpath = NULL;
+  char* path = NULL;
 
   /*
    * Create the full path name relative to curHost
@@ -4600,15 +4442,15 @@ char *_DtActMapFileName(const char *curHost, const char *dir, const char *file,
   buf[0] = '\0'; /* empty string to start with */
 
   if (dir)
-    strcpy(buf, dir);
+    strlcpy(buf, dir, sizeof(buf));
   if (file) {
     /* check if there is already a '/' separator */
     if (*file != '/') {
       DtLastChar(buf, &chp, &clen);
       if (!((clen == 1) && (*chp == '/')))
-        strcat(buf, "/");
+        strlcat(buf, "/", sizeof(buf));
     }
-    strcat(buf, file);
+    strlcat(buf, file, sizeof(buf));
   }
 
   /* We should have constructed a file name string now */
@@ -4627,43 +4469,43 @@ char *_DtActMapFileName(const char *curHost, const char *dir, const char *file,
      * cannonical netfile name then reinterpret it on the new host.
      */
     switch (tt_ptr_error(netpath = tt_host_file_netfile(curHost, buf))) {
-    case TT_OK:
-      break;
-    case TT_ERR_PATH:
-      netpath = NULL;
-      break;
-    case TT_ERR_DBAVAIL:
-      netpath = NULL;
-      break;
-    case TT_ERR_DBEXIST:
-      netpath = NULL;
-      break;
-    case TT_ERR_INTERNAL:
-      netpath = NULL;
-      break;
-    default:
-      netpath = NULL;
-      break;
-    }
-    if (netpath) {
-      switch (tt_ptr_error(path = tt_host_netfile_file(newHost, netpath))) {
       case TT_OK:
         break;
       case TT_ERR_PATH:
-        path = NULL;
+        netpath = NULL;
         break;
       case TT_ERR_DBAVAIL:
-        path = NULL;
+        netpath = NULL;
         break;
       case TT_ERR_DBEXIST:
-        path = NULL;
+        netpath = NULL;
         break;
       case TT_ERR_INTERNAL:
-        path = NULL;
+        netpath = NULL;
         break;
       default:
-        path = NULL;
+        netpath = NULL;
         break;
+    }
+    if (netpath) {
+      switch (tt_ptr_error(path = tt_host_netfile_file(newHost, netpath))) {
+        case TT_OK:
+          break;
+        case TT_ERR_PATH:
+          path = NULL;
+          break;
+        case TT_ERR_DBAVAIL:
+          path = NULL;
+          break;
+        case TT_ERR_DBEXIST:
+          path = NULL;
+          break;
+        case TT_ERR_INTERNAL:
+          path = NULL;
+          break;
+        default:
+          path = NULL;
+          break;
       }
     }
   } else {
@@ -4683,43 +4525,43 @@ char *_DtActMapFileName(const char *curHost, const char *dir, const char *file,
      * cannonical netfile name then reinterpret it on the local host.
      */
     switch (tt_ptr_error(netpath = tt_host_file_netfile(curHost, buf))) {
-    case TT_OK:
-      break;
-    case TT_ERR_PATH:
-      netpath = NULL;
-      break;
-    case TT_ERR_DBAVAIL:
-      netpath = NULL;
-      break;
-    case TT_ERR_DBEXIST:
-      netpath = NULL;
-      break;
-    case TT_ERR_INTERNAL:
-      netpath = NULL;
-      break;
-    default:
-      netpath = NULL;
-      break;
-    }
-    if (netpath) {
-      switch (tt_ptr_error(path = tt_netfile_file(netpath))) {
       case TT_OK:
         break;
       case TT_ERR_PATH:
-        path = NULL;
+        netpath = NULL;
         break;
       case TT_ERR_DBAVAIL:
-        path = NULL;
+        netpath = NULL;
         break;
       case TT_ERR_DBEXIST:
-        path = NULL;
+        netpath = NULL;
         break;
       case TT_ERR_INTERNAL:
-        path = NULL;
+        netpath = NULL;
         break;
       default:
-        path = NULL;
+        netpath = NULL;
         break;
+    }
+    if (netpath) {
+      switch (tt_ptr_error(path = tt_netfile_file(netpath))) {
+        case TT_OK:
+          break;
+        case TT_ERR_PATH:
+          path = NULL;
+          break;
+        case TT_ERR_DBAVAIL:
+          path = NULL;
+          break;
+        case TT_ERR_DBEXIST:
+          path = NULL;
+          break;
+        case TT_ERR_INTERNAL:
+          path = NULL;
+          break;
+        default:
+          path = NULL;
+          break;
       }
     }
   }
@@ -4731,7 +4573,7 @@ char *_DtActMapFileName(const char *curHost, const char *dir, const char *file,
   if (netpath)
     tt_free(netpath);
   if (path) {
-    char *s = path;
+    char* s = path;
     path = XtNewString(s);
     tt_free(s);
   }

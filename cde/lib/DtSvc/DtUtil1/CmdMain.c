@@ -73,9 +73,9 @@
  */
 #define COMMAND_CHECK_FAILURE 1
 
-#define Cmd_FreeAllocatedStringVector(sv)                                      \
-  _DtCmdFreeStringVector(sv);                                                  \
-  XtFree((char *)sv);
+#define Cmd_FreeAllocatedStringVector(sv) \
+  _DtCmdFreeStringVector(sv);             \
+  XtFree((char*)sv);
 
 /*
  * Global variables for the Command Invoker.
@@ -85,37 +85,35 @@ static char _cmdClientHost[MAXHOSTNAMELEN];
 /*
  * Static variables for the Command Invoker.
  */
-static Cmd_RequestQueue *requestQueue = NULL;
+static Cmd_RequestQueue* requestQueue = NULL;
 
 /*
  * Static function declarations:.
  */
 
-static void QueueRequest(SPC_Channel_Ptr channel, char *context, char *execHost,
-                         char *execString, char **argv, int windowType,
-                         unsigned long requestNum, DtSvcMsgContext replyContext,
-                         DtCmdInvExecuteProc success_proc, void *success_data,
-                         DtCmdInvExecuteProc failure_proc, void *failure_data);
+static void QueueRequest(SPC_Channel_Ptr channel, char* context, char* execHost, char* execString,
+                         char** argv, int windowType, unsigned long requestNum,
+                         DtSvcMsgContext replyContext, DtCmdInvExecuteProc success_proc,
+                         void* success_data, DtCmdInvExecuteProc failure_proc, void* failure_data);
 static void ExecuteQueuedRequest(unsigned long requestNum);
 
-static void FreeRequest(Cmd_RequestQueue *pNode);
+static void FreeRequest(Cmd_RequestQueue* pNode);
 
-static void CheckCommandTerminator(SPC_Channel_Ptr cmdChannel, int pid,
-                                   int type, int cause, unsigned long ind);
+static void CheckCommandTerminator(SPC_Channel_Ptr cmdChannel, int pid, int type, int cause,
+                                   unsigned long ind);
 static int DtCmdGetWindowType(unsigned long windowTypeMask);
 static void _DtCmdInitializeErrorMessages(void);
 
-extern void _DtEnvMapForRemote(char *targetHost);
+extern void _DtEnvMapForRemote(char* targetHost);
 extern void _DtEnvRestoreLocal(void);
 
 /*
  * Command invocatin error messages.
  */
-static char *errorExec, *errorSpawn, *errorFork, *errorSpcTerminator,
-    *errorLength, *errorRequest, *errorChdir, *errorRemoteSubprocess,
-    *errorUnknownHost, *errorBadConnect, *errorBadService,
-    *errorRegisterHandshake, *errorRegisterUsername, *errorRegisterNetrc,
-    *errorRegisterOpen, *errorEnvTooBig, *errorInetSecurity, *successHost;
+static char *errorExec, *errorSpawn, *errorFork, *errorSpcTerminator, *errorLength, *errorRequest,
+    *errorChdir, *errorRemoteSubprocess, *errorUnknownHost, *errorBadConnect, *errorBadService,
+    *errorRegisterHandshake, *errorRegisterUsername, *errorRegisterNetrc, *errorRegisterOpen,
+    *errorEnvTooBig, *errorInetSecurity, *successHost;
 
 /*******************************************************************************
  *
@@ -127,9 +125,8 @@ static char *errorExec, *errorSpawn, *errorFork, *errorSpcTerminator,
  *
  ******************************************************************************/
 
-int _DtSPCSpawn(char *path, char *cwd, char **args, char **env,
-                SPC_Channel_Ptr chan, char *execHost, char *contextHost,
-                char *contextDir, char *errorMessage) {
+int _DtSPCSpawn(char* path, char* cwd, char** args, char** env, SPC_Channel_Ptr chan,
+                char* execHost, char* contextHost, char* contextDir, char* errorMessage) {
   int retVal;
 
   /*
@@ -144,22 +141,21 @@ int _DtSPCSpawn(char *path, char *cwd, char **args, char **env,
 
   if ((retVal = XeSPCSpawn(path, cwd, args, env, chan)) == SPC_ERROR) {
     switch (DtSPCErrorNumber) {
-    case SPC_cannot_Chdir:
-      (void)snprintf(errorMessage, MAX_BUF_SIZE, errorChdir, contextDir,
-                     execHost);
-      break;
-    case SPC_Cannot_Fork:
-      (void)snprintf(errorMessage, MAX_BUF_SIZE, errorFork, execHost);
-      break;
-    case SPC_Env_Too_Big:
-    case SPC_Arg_Too_Long:
-      (void)snprintf(errorMessage, MAX_BUF_SIZE, errorLength, SPC_BUFSIZ);
-      break;
-    default:
-      /*
-       * SPC_Cannot_Exec
-       */
-      (void)snprintf(errorMessage, MAX_BUF_SIZE, errorSpawn, execHost, path);
+      case SPC_cannot_Chdir:
+        (void)snprintf(errorMessage, MAX_BUF_SIZE, errorChdir, contextDir, execHost);
+        break;
+      case SPC_Cannot_Fork:
+        (void)snprintf(errorMessage, MAX_BUF_SIZE, errorFork, execHost);
+        break;
+      case SPC_Env_Too_Big:
+      case SPC_Arg_Too_Long:
+        (void)snprintf(errorMessage, MAX_BUF_SIZE, errorLength, SPC_BUFSIZ);
+        break;
+      default:
+        /*
+         * SPC_Cannot_Exec
+         */
+        (void)snprintf(errorMessage, MAX_BUF_SIZE, errorSpawn, execHost, path);
     }
   }
 
@@ -188,10 +184,10 @@ int _DtSPCSpawn(char *path, char *cwd, char **args, char **env,
  *	originally returned by DtSPCOpen.
  *
  ******************************************************************************/
-SPC_Channel_Ptr _DtSPCOpen(char *hostname, int iomode, char *errorMessage) {
+SPC_Channel_Ptr _DtSPCOpen(char* hostname, int iomode, char* errorMessage) {
   SPC_Channel_Ptr chan;
 
-  struct passwd *pwd_ret;
+  struct passwd* pwd_ret;
 
   /*
    * Restore the original environment
@@ -205,54 +201,51 @@ SPC_Channel_Ptr _DtSPCOpen(char *hostname, int iomode, char *errorMessage) {
 
   if ((chan = XeSPCOpen(hostname, iomode)) == SPC_ERROR) {
     uid_t this_uid;
-    char *username;
+    char* username;
 
     switch (DtSPCErrorNumber) {
-    case SPC_Unknown_Host:
-      (void)snprintf(errorMessage, MAX_BUF_SIZE, errorUnknownHost, hostname);
-      break;
-    case SPC_Bad_Connect:
-      (void)snprintf(errorMessage, MAX_BUF_SIZE, errorBadConnect, hostname,
-                     SPC_SERVICE, _cmdClientHost);
-      break;
-    case SPC_Bad_Service:
-      (void)snprintf(errorMessage, MAX_BUF_SIZE, errorBadService, SPC_SERVICE,
-                     _cmdClientHost);
-      break;
-    case SPC_Register_Handshake:
-      this_uid = getuid();
-      if ((pwd_ret = _XGetpwuid(this_uid, pwd_buf)) == NULL)
-        username = NULL;
-      else
-        username = pwd_ret->pw_name;
-      (void)snprintf(errorMessage, MAX_BUF_SIZE, errorRegisterHandshake,
-                     hostname, username, this_uid, _cmdClientHost, hostname);
-      break;
-    case SPC_Register_Username:
-      this_uid = getuid();
-      if ((pwd_ret = _XGetpwuid(this_uid, pwd_buf)) == NULL)
-        username = NULL;
-      else
-        username = pwd_ret->pw_name;
-      (void)snprintf(errorMessage, MAX_BUF_SIZE, errorRegisterUsername,
-                     hostname, username);
-      break;
-    case SPC_Register_Netrc:
-      (void)snprintf(errorMessage, MAX_BUF_SIZE, errorRegisterNetrc, hostname);
-      break;
-    case SPC_Env_Too_Big:
-      (void)snprintf(errorMessage, MAX_BUF_SIZE, errorEnvTooBig, hostname,
-                     SPC_BUFSIZ);
-      break;
-    case SPC_Connection_EOF:
-      (void)snprintf(errorMessage, MAX_BUF_SIZE, errorBadConnect, hostname,
-                     SPC_SERVICE, _cmdClientHost);
-      break;
-    default:
-      /*
-       * SPC_Register_Open:
-       */
-      (void)snprintf(errorMessage, MAX_BUF_SIZE, errorRegisterOpen, hostname);
+      case SPC_Unknown_Host:
+        (void)snprintf(errorMessage, MAX_BUF_SIZE, errorUnknownHost, hostname);
+        break;
+      case SPC_Bad_Connect:
+        (void)snprintf(errorMessage, MAX_BUF_SIZE, errorBadConnect, hostname, SPC_SERVICE,
+                       _cmdClientHost);
+        break;
+      case SPC_Bad_Service:
+        (void)snprintf(errorMessage, MAX_BUF_SIZE, errorBadService, SPC_SERVICE, _cmdClientHost);
+        break;
+      case SPC_Register_Handshake:
+        this_uid = getuid();
+        if ((pwd_ret = _XGetpwuid(this_uid, pwd_buf)) == NULL)
+          username = NULL;
+        else
+          username = pwd_ret->pw_name;
+        (void)snprintf(errorMessage, MAX_BUF_SIZE, errorRegisterHandshake, hostname, username,
+                       this_uid, _cmdClientHost, hostname);
+        break;
+      case SPC_Register_Username:
+        this_uid = getuid();
+        if ((pwd_ret = _XGetpwuid(this_uid, pwd_buf)) == NULL)
+          username = NULL;
+        else
+          username = pwd_ret->pw_name;
+        (void)snprintf(errorMessage, MAX_BUF_SIZE, errorRegisterUsername, hostname, username);
+        break;
+      case SPC_Register_Netrc:
+        (void)snprintf(errorMessage, MAX_BUF_SIZE, errorRegisterNetrc, hostname);
+        break;
+      case SPC_Env_Too_Big:
+        (void)snprintf(errorMessage, MAX_BUF_SIZE, errorEnvTooBig, hostname, SPC_BUFSIZ);
+        break;
+      case SPC_Connection_EOF:
+        (void)snprintf(errorMessage, MAX_BUF_SIZE, errorBadConnect, hostname, SPC_SERVICE,
+                       _cmdClientHost);
+        break;
+      default:
+        /*
+         * SPC_Register_Open:
+         */
+        (void)snprintf(errorMessage, MAX_BUF_SIZE, errorRegisterOpen, hostname);
     }
   }
 
@@ -296,19 +289,18 @@ SPC_Channel_Ptr _DtSPCOpen(char *hostname, int iomode, char *errorMessage) {
  *
  *****************************************************************************/
 
-static void QueueRequest(SPC_Channel_Ptr channel, char *context, char *execHost,
-                         char *execString, char **argv, int winType,
-                         unsigned long requestNum, DtSvcMsgContext replyContext,
-                         DtCmdInvExecuteProc success_proc, void *success_data,
-                         DtCmdInvExecuteProc failure_proc, void *failure_data)
+static void QueueRequest(SPC_Channel_Ptr channel, char* context, char* execHost, char* execString,
+                         char** argv, int winType, unsigned long requestNum,
+                         DtSvcMsgContext replyContext, DtCmdInvExecuteProc success_proc,
+                         void* success_data, DtCmdInvExecuteProc failure_proc, void* failure_data)
 
 {
-  Cmd_RequestQueue *pNode;
-  Cmd_RequestQueue *pNewNode;
+  Cmd_RequestQueue* pNode;
+  Cmd_RequestQueue* pNewNode;
 
-  pNewNode = (Cmd_RequestQueue *)XtMalloc(sizeof(Cmd_RequestQueue));
+  pNewNode = (Cmd_RequestQueue*)XtMalloc(sizeof(Cmd_RequestQueue));
 
-  pNewNode->next = (Cmd_RequestQueue *)NULL;
+  pNewNode->next = (Cmd_RequestQueue*)NULL;
   pNewNode->channel = channel;
   pNewNode->context = XtNewString(context);
   pNewNode->exec_host = XtNewString(execHost);
@@ -333,8 +325,7 @@ static void QueueRequest(SPC_Channel_Ptr channel, char *context, char *execHost,
   /*
    * Find the End Of the Queue and link in the NewNode.
    */
-  for (pNode = requestQueue; pNode->next != NULL; pNode = pNode->next)
-    ;
+  for (pNode = requestQueue; pNode->next != NULL; pNode = pNode->next);
 
   pNode->next = pNewNode;
 }
@@ -356,10 +347,10 @@ static void QueueRequest(SPC_Channel_Ptr channel, char *context, char *execHost,
  *****************************************************************************/
 
 static void ExecuteQueuedRequest(unsigned long requestNum) {
-  char *errorMessage;
+  char* errorMessage;
   Boolean success = True;
-  Cmd_RequestQueue *prev = NULL;
-  Cmd_RequestQueue *pNode = requestQueue;
+  Cmd_RequestQueue* prev = NULL;
+  Cmd_RequestQueue* pNode = requestQueue;
   unsigned long iomode;
 
   for (; pNode != NULL; pNode = pNode->next) {
@@ -392,15 +383,13 @@ static void ExecuteQueuedRequest(unsigned long requestNum) {
 
   iomode = (SPCIO_NOIO | SPCIO_SYNC_TERMINATOR | SPCIO_FORCE_CONTEXT);
 
-  if ((pNode->channel = (_DtSPCOpen(pNode->exec_host, iomode, errorMessage))) ==
-      SPC_ERROR) {
+  if ((pNode->channel = (_DtSPCOpen(pNode->exec_host, iomode, errorMessage))) == SPC_ERROR) {
     success = False;
   }
 
   if (success)
-    if ((_DtSPCSpawn(pNode->argv[0], pNode->context, pNode->argv, NULL,
-                     pNode->channel, pNode->exec_host, NULL, NULL,
-                     errorMessage)) == SPC_ERROR) {
+    if ((_DtSPCSpawn(pNode->argv[0], pNode->context, pNode->argv, NULL, pNode->channel,
+                     pNode->exec_host, NULL, NULL, errorMessage)) == SPC_ERROR) {
       success = False;
       if (DtSPCErrorNumber != SPC_Arg_Too_Long)
         DtSPCClose(pNode->channel);
@@ -408,10 +397,9 @@ static void ExecuteQueuedRequest(unsigned long requestNum) {
 
   if (success && pNode->success_proc != NULL) {
     if (cmd_Resources.executionHostLogging && pNode->success_data != NULL) {
-      CallbackData *data;
-      data = (CallbackData *)pNode->success_data;
-      (void)snprintf(errorMessage, MAX_BUF_SIZE, successHost, data->actionLabel,
-                     pNode->exec_host);
+      CallbackData* data;
+      data = (CallbackData*)pNode->success_data;
+      (void)snprintf(errorMessage, MAX_BUF_SIZE, successHost, data->actionLabel, pNode->exec_host);
       _DtCmdLogErrorMessage(errorMessage);
     }
 
@@ -420,8 +408,8 @@ static void ExecuteQueuedRequest(unsigned long requestNum) {
     if (cmd_Resources.executionHostLogging) {
       if (DtSPCErrorNumber == SPC_Arg_Too_Long) {
         int cmdlen, i;
-        char *cmdp; /* pointer to complete command string */
-        char *tmp_message;
+        char* cmdp; /* pointer to complete command string */
+        char* tmp_message;
 
         /*
          * The message should include all of the command because
@@ -435,17 +423,14 @@ static void ExecuteQueuedRequest(unsigned long requestNum) {
           cmdlen += 2; /* make room for a space + string terminator */
         }
 
-        tmp_message = (char *)XtMalloc(strlen(errorSpawn) +
-                                       strlen(pNode->exec_host) + cmdlen + 4);
-        cmdp = (char *)XtMalloc(cmdlen + 1);
+        tmp_message = (char*)XtMalloc(strlen(errorSpawn) + strlen(pNode->exec_host) + cmdlen + 4);
+        cmdp = (char*)XtMalloc(cmdlen + 1);
         *cmdp = '\0';
         for (i = 0; pNode->argv[i]; i++) {
           strlcat(cmdp, pNode->argv[i], cmdlen + 1);
           strlcat(cmdp, " ", cmdlen + 1);
         }
-        (void)snprintf(tmp_message,
-                       strlen(errorSpawn) + strlen(pNode->exec_host) + cmdlen +
-                           4,
+        (void)snprintf(tmp_message, strlen(errorSpawn) + strlen(pNode->exec_host) + cmdlen + 4,
                        errorSpawn, pNode->exec_host, cmdp);
         _DtCmdLogErrorMessage(tmp_message);
         XtFree(cmdp);
@@ -456,11 +441,11 @@ static void ExecuteQueuedRequest(unsigned long requestNum) {
       (*pNode->failure_proc)(errorMessage, pNode->failure_data);
   }
 
-  XtFree((char *)errorMessage);
+  XtFree((char*)errorMessage);
   FreeRequest(pNode);
 }
 
-Cmd_RequestQueue *_DtCmdGetQueueHead(void) { return requestQueue; }
+Cmd_RequestQueue* _DtCmdGetQueueHead(void) { return requestQueue; }
 
 /******************************************************************************
  *
@@ -474,8 +459,7 @@ Cmd_RequestQueue *_DtCmdGetQueueHead(void) { return requestQueue; }
  *
  *****************************************************************************/
 
-static void FreeRequest(Cmd_RequestQueue *pNode) {
-
+static void FreeRequest(Cmd_RequestQueue* pNode) {
   if (pNode == NULL)
     return;
 
@@ -484,7 +468,7 @@ static void FreeRequest(Cmd_RequestQueue *pNode) {
   XtFree(pNode->exec_string);
   Cmd_FreeAllocatedStringVector(pNode->argv);
 
-  XtFree((char *)pNode);
+  XtFree((char*)pNode);
 }
 
 /******************************************************************************
@@ -501,14 +485,14 @@ static void FreeRequest(Cmd_RequestQueue *pNode) {
  *
  *****************************************************************************/
 
-int _DtCmdCommandInvokerExecute(
-    char *errorMessage,           /* MODIFIED */
-    DtSvcMsgContext replyContext, /* OBSOLETE -- always NULL */
-    int winMask, char *contextHost, char *contextDir,
-    char *contextFile, /* OBSOLETE -- always NULL */
-    char *execParms, char *execHost, char *execString, char *procId,
-    char *tmpFiles, DtCmdInvExecuteProc success_proc, void *success_data,
-    DtCmdInvExecuteProc failure_proc, void *failure_data)
+int _DtCmdCommandInvokerExecute(char* errorMessage,           /* MODIFIED */
+                                DtSvcMsgContext replyContext, /* OBSOLETE -- always NULL */
+                                int winMask, char* contextHost, char* contextDir,
+                                char* contextFile, /* OBSOLETE -- always NULL */
+                                char* execParms, char* execHost, char* execString, char* procId,
+                                char* tmpFiles, DtCmdInvExecuteProc success_proc,
+                                void* success_data, DtCmdInvExecuteProc failure_proc,
+                                void* failure_data)
 
 {
   int ioMode, i, index1;
@@ -516,15 +500,15 @@ int _DtCmdCommandInvokerExecute(
   pid_t commandPid;
   char context[MAXPATHLEN];
   char tmpDir[MAXPATHLEN];
-  char **commandArray;
+  char** commandArray;
   SPC_Channel_Ptr cmdChannel;
-  char *theCommand = NULL;
+  char* theCommand = NULL;
   Boolean terminalRequest = False;
-  char *commandArray2[MAX_EXEC_ARGS];
+  char* commandArray2[MAX_EXEC_ARGS];
   Boolean localExecution = True;
 
   static unsigned long requestNum = 0;
-  char *toolRequest = NULL; /* backward compatibility kludge */
+  char* toolRequest = NULL; /* backward compatibility kludge */
 
   myassert(!(contextFile && replyContext));
 
@@ -534,9 +518,9 @@ int _DtCmdCommandInvokerExecute(
    * small integer values used by the rest of the command invoker code.
    */
   if ((windowType = DtCmdGetWindowType(winMask)) == -1) {
-    (void)snprintf(errorMessage, MAX_BUF_SIZE, errorRequest, toolRequest,
-                   DtTERMINAL, DtPERM_TERMINAL, DtOUTPUT_ONLY, DtSHARED_OUTPUT,
-                   "" /* Obsolete shell window */, DtNO_STDIO);
+    (void)snprintf(errorMessage, MAX_BUF_SIZE, errorRequest, toolRequest, DtTERMINAL,
+                   DtPERM_TERMINAL, DtOUTPUT_ONLY, DtSHARED_OUTPUT, "" /* Obsolete shell window */,
+                   DtNO_STDIO);
     return (_CMD_EXECUTE_FATAL);
   }
 
@@ -544,20 +528,19 @@ int _DtCmdCommandInvokerExecute(
    * Create the command to be exec'ed.
    */
   if (windowType == PERM_TERMINAL || windowType == TERMINAL) {
-    _DtCmdCreateTerminalCommand(&theCommand, windowType, execString, execParms,
-                                execHost, procId, tmpFiles);
+    _DtCmdCreateTerminalCommand(&theCommand, windowType, execString, execParms, execHost, procId,
+                                tmpFiles);
     terminalRequest = True;
   } else {
     /*
      * NO-STDIO || START-SESSION request.
      */
 
-    size_t theCommandLen =
-        strlen(cmd_Resources.dtexecPath) + strlen(" -open ") +
-        4 /* waitTime len */
-        + strlen(" -ttprocid ") + strlen(_DtActNULL_GUARD(procId)) +
-        strlen(_DtActNULL_GUARD(tmpFiles)) + strlen(execString) +
-        5 /* for 2 quotes,2 blanks,null */;
+    size_t theCommandLen = strlen(cmd_Resources.dtexecPath) + strlen(" -open ") +
+                           4 /* waitTime len */
+                           + strlen(" -ttprocid ") + strlen(_DtActNULL_GUARD(procId)) +
+                           strlen(_DtActNULL_GUARD(tmpFiles)) + strlen(execString) +
+                           5 /* for 2 quotes,2 blanks,null */;
     theCommand = XtMalloc(theCommandLen);
 
     snprintf(theCommand, theCommandLen, "%s -open %d -ttprocid '%s' %s %s",
@@ -578,7 +561,7 @@ int _DtCmdCommandInvokerExecute(
     if (!(_DtCmdCheckForExecutable(cmd_Resources.dtexecPath))) {
       (void)snprintf(errorMessage, MAX_BUF_SIZE, cmd_Globals.error_subprocess,
                      cmd_Resources.dtexecPath);
-      XtFree((char *)theCommand);
+      XtFree((char*)theCommand);
       return (_CMD_EXECUTE_FAILURE);
     } else
       cmd_Globals.subprocess_ok = True;
@@ -592,7 +575,7 @@ int _DtCmdCommandInvokerExecute(
     if (!(_DtCmdCheckForExecutable(cmd_Resources.localTerminal))) {
       (void)snprintf(errorMessage, MAX_BUF_SIZE, cmd_Globals.error_terminal,
                      cmd_Resources.localTerminal);
-      XtFree((char *)theCommand);
+      XtFree((char*)theCommand);
       return (_CMD_EXECUTE_FAILURE);
     } else
       cmd_Globals.terminal_ok = True;
@@ -602,42 +585,39 @@ int _DtCmdCommandInvokerExecute(
    * Break the command into something execvp or SPCSpawn can handle
    * and then free "theCommand" if this is a termianl-based request.
    */
-  commandArray = (char **)XtMalloc(MAX_EXEC_ARGS * sizeof(char *));
+  commandArray = (char**)XtMalloc(MAX_EXEC_ARGS * sizeof(char*));
   _DtCmdStringToArrayOfStrings(theCommand, commandArray);
 
   XtFree(theCommand);
 
   if (!localExecution) {
-    char *netfile;
-    char *argv[4];
-    char *tmp;
+    char* netfile;
+    char* argv[4];
+    char* tmp;
 
     /* REMOTE Execution */
 
     ioMode = SPCIO_NOIO | SPCIO_SYNC_TERMINATOR | SPCIO_FORCE_CONTEXT;
 
-    if ((cmdChannel = (_DtSPCOpen(execHost, ioMode, errorMessage))) ==
-        SPC_ERROR) {
+    if ((cmdChannel = (_DtSPCOpen(execHost, ioMode, errorMessage))) == SPC_ERROR) {
       Cmd_FreeAllocatedStringVector(commandArray);
       return (_CMD_EXECUTE_FAILURE);
     }
 
     /* Old syntax should no longer appear in contextHost/Dir */
-    myassert((contextHost ? *contextHost != '*' : 1) &&
-             (contextDir ? *contextDir != '*' : 1));
+    myassert((contextHost ? *contextHost != '*' : 1) && (contextDir ? *contextDir != '*' : 1));
     /*
      * Create a "netfile" for the cwd to be used.
      */
-    netfile = (char *)tt_host_file_netfile(
-        ((contextHost == NULL) ? execHost : contextHost),
-        ((contextDir == NULL) ? (char *)getenv("HOME") : contextDir));
+    netfile =
+        (char*)tt_host_file_netfile(((contextHost == NULL) ? execHost : contextHost),
+                                    ((contextDir == NULL) ? (char*)getenv("HOME") : contextDir));
 
     if (tt_pointer_error(netfile) != TT_OK) {
-      (void)snprintf(
-          errorMessage, MAX_BUF_SIZE, cmd_Globals.error_directory_name_map,
-          ((contextDir == NULL) ? (char *)getenv("HOME") : contextDir),
-          ((contextHost == NULL) ? execHost : contextHost),
-          tt_status_message(tt_pointer_error(netfile)));
+      (void)snprintf(errorMessage, MAX_BUF_SIZE, cmd_Globals.error_directory_name_map,
+                     ((contextDir == NULL) ? (char*)getenv("HOME") : contextDir),
+                     ((contextHost == NULL) ? execHost : contextHost),
+                     tt_status_message(tt_pointer_error(netfile)));
       Cmd_FreeAllocatedStringVector(commandArray);
       return (_CMD_EXECUTE_FAILURE);
     }
@@ -655,22 +635,20 @@ int _DtCmdCommandInvokerExecute(
      */
 
     argv[0] = cmd_Resources.dtexecPath;
-    argv[1] = (char *)NULL;
+    argv[1] = (char*)NULL;
 
-    if ((_DtSPCSpawn(argv[0], context, argv, NULL, cmdChannel, execHost,
-                     contextHost, contextDir, errorMessage)) == SPC_ERROR) {
-      if (DtSPCErrorNumber != SPC_cannot_Chdir &&
-          DtSPCErrorNumber != SPC_Cannot_Fork &&
-          DtSPCErrorNumber != SPC_Env_Too_Big &&
-          DtSPCErrorNumber != SPC_Arg_Too_Long)
+    if ((_DtSPCSpawn(argv[0], context, argv, NULL, cmdChannel, execHost, contextHost, contextDir,
+                     errorMessage)) == SPC_ERROR) {
+      if (DtSPCErrorNumber != SPC_cannot_Chdir && DtSPCErrorNumber != SPC_Cannot_Fork &&
+          DtSPCErrorNumber != SPC_Env_Too_Big && DtSPCErrorNumber != SPC_Arg_Too_Long)
         /*
          * The Error message must mention that the dtexec
          * process is not executable so must overwrite the
          * error message returned by the Spawn function with
          * an appropriate message.
          */
-        (void)snprintf(errorMessage, MAX_BUF_SIZE, errorRemoteSubprocess,
-                       execHost, cmd_Resources.dtexecPath);
+        (void)snprintf(errorMessage, MAX_BUF_SIZE, errorRemoteSubprocess, execHost,
+                       cmd_Resources.dtexecPath);
       DtSPCClose(cmdChannel);
       Cmd_FreeAllocatedStringVector(commandArray);
       return (_CMD_EXECUTE_FAILURE);
@@ -685,7 +663,7 @@ int _DtCmdCommandInvokerExecute(
     _DtCmdStringToArrayOfStrings(execString, commandArray2);
 
     size_t tmpLen = strlen(commandArray2[0]) + strlen("whence ") + 2;
-    tmp = (char *)XtMalloc(tmpLen);
+    tmp = (char*)XtMalloc(tmpLen);
     (void)snprintf(tmp, tmpLen, "whence %s", commandArray2[0]);
 
     _DtCmdFreeStringVector(commandArray2);
@@ -693,13 +671,12 @@ int _DtCmdCommandInvokerExecute(
     argv[0] = "ksh";
     argv[1] = "-c";
     argv[2] = tmp;
-    argv[3] = (char *)NULL;
+    argv[3] = (char*)NULL;
 
     /*
      * Reopen the channel
      */
-    if ((cmdChannel = (_DtSPCOpen(execHost, ioMode, errorMessage))) ==
-        SPC_ERROR) {
+    if ((cmdChannel = (_DtSPCOpen(execHost, ioMode, errorMessage))) == SPC_ERROR) {
       Cmd_FreeAllocatedStringVector(commandArray);
       return (_CMD_EXECUTE_FAILURE);
     }
@@ -709,24 +686,22 @@ int _DtCmdCommandInvokerExecute(
      * terminates.
      */
     _DtSvcProcessLock();
-    if ((DtSPCRegisterTerminator(
-            cmdChannel, (SPC_TerminateHandlerType)CheckCommandTerminator,
-            (void *)++requestNum)) == SPC_ERROR) {
+    if ((DtSPCRegisterTerminator(cmdChannel, (SPC_TerminateHandlerType)CheckCommandTerminator,
+                                 (void*)++requestNum)) == SPC_ERROR) {
       DtSPCClose(cmdChannel);
       Cmd_FreeAllocatedStringVector(commandArray);
       (void)strlcpy(errorMessage, errorSpcTerminator, MAX_BUF_SIZE);
-      XtFree((char *)tmp);
+      XtFree((char*)tmp);
       _DtSvcProcessUnlock();
       return (_CMD_EXECUTE_FAILURE);
     }
 
-    if ((_DtSPCSpawn(argv[0], context, argv, NULL, cmdChannel, execHost,
-                     contextHost, contextDir, errorMessage)) == SPC_ERROR) {
+    if ((_DtSPCSpawn(argv[0], context, argv, NULL, cmdChannel, execHost, contextHost, contextDir,
+                     errorMessage)) == SPC_ERROR) {
       DtSPCClose(cmdChannel);
-      (void)snprintf(errorMessage, MAX_BUF_SIZE, errorRemoteSubprocess,
-                     execHost, argv[0]);
+      (void)snprintf(errorMessage, MAX_BUF_SIZE, errorRemoteSubprocess, execHost, argv[0]);
       Cmd_FreeAllocatedStringVector(commandArray);
-      XtFree((char *)tmp);
+      XtFree((char*)tmp);
       _DtSvcProcessUnlock();
       return (_CMD_EXECUTE_FAILURE);
     }
@@ -737,9 +712,8 @@ int _DtCmdCommandInvokerExecute(
      * line will be executed after the above spawned process
      * terminates.
      */
-    QueueRequest(cmdChannel, context, execHost, execString, commandArray,
-                 windowType, requestNum, replyContext, success_proc,
-                 success_data, failure_proc, failure_data);
+    QueueRequest(cmdChannel, context, execHost, execString, commandArray, windowType, requestNum,
+                 replyContext, success_proc, success_data, failure_proc, failure_data);
     _DtSvcProcessUnlock();
     XtFree(tmp);
     return (_CMD_EXECUTE_QUEUED);
@@ -776,8 +750,7 @@ int _DtCmdCommandInvokerExecute(
 
     if (!_DtCmdValidDir(_cmdClientHost, contextDir, contextHost)) {
       Cmd_FreeAllocatedStringVector(commandArray);
-      (void)snprintf(errorMessage, MAX_BUF_SIZE, errorChdir, contextDir,
-                     execHost);
+      (void)snprintf(errorMessage, MAX_BUF_SIZE, errorChdir, contextDir, execHost);
       if (-1 == chdir(tmpDir)) {
         perror(strerror(errno));
       }
@@ -810,7 +783,6 @@ int _DtCmdCommandInvokerExecute(
     }
 
     if (commandPid == 0) {
-
 #if defined(CSRG_BASED)
       setsid();
 #else
@@ -849,8 +821,7 @@ int _DtCmdCommandInvokerExecute(
 #endif /* _SUN_OS */
         }
 
-        for (i = 3; i < open_max; i++)
-          (void)fcntl(i, F_SETFD, 1);
+        for (i = 3; i < open_max; i++) (void)fcntl(i, F_SETFD, 1);
       }
 
       (void)execvp(commandArray[0], commandArray);
@@ -863,7 +834,7 @@ int _DtCmdCommandInvokerExecute(
        * to the terminal window if the request requires a
        * terminal.
        */
-      (void)sprintf(errorMessage, errorExec, commandArray[0]);
+      (void)snprintf(errorMessage, MAX_BUF_SIZE, errorExec, commandArray[0]);
       (void)printf("%s\n", errorMessage);
       (void)_exit(1);
     }
@@ -895,16 +866,14 @@ int _DtCmdCommandInvokerExecute(
  *
  *****************************************************************************/
 
-static void CheckCommandTerminator(
-    SPC_Channel_Ptr cmdChannel, int pid, /* NOT USED */
-    int type,                            /* NOT USED */
-    int cause,                           /* Exit value of the remote process. */
-    unsigned long requestNum)            /* Specifies the request number. */
+static void CheckCommandTerminator(SPC_Channel_Ptr cmdChannel, int pid, /* NOT USED */
+                                   int type,                            /* NOT USED */
+                                   int cause,                /* Exit value of the remote process. */
+                                   unsigned long requestNum) /* Specifies the request number. */
 {
-
   char errorMessage[MAX_BUF_SIZE];
-  Cmd_RequestQueue *prev = NULL;
-  Cmd_RequestQueue *pNode = requestQueue;
+  Cmd_RequestQueue* prev = NULL;
+  Cmd_RequestQueue* pNode = requestQueue;
 
   DtSPCClose(cmdChannel);
 
@@ -938,8 +907,7 @@ static void CheckCommandTerminator(
    */
   if (cause == COMMAND_CHECK_FAILURE) {
     if (pNode->failure_proc != NULL) {
-      (void)sprintf(errorMessage, errorSpawn, pNode->exec_host,
-                    pNode->exec_string);
+      (void)snprintf(errorMessage, MAX_BUF_SIZE, errorSpawn, pNode->exec_host, pNode->exec_string);
       if (cmd_Resources.executionHostLogging)
         _DtCmdLogErrorMessage(errorMessage);
       (*pNode->failure_proc)(errorMessage, pNode->failure_data);
@@ -985,19 +953,19 @@ static int DtCmdGetWindowType(unsigned long windowTypeMask) {
    */
 
   switch (windowTypeMask) {
-  case _DtAct_NO_STDIO_BIT:
-    winTypeNum = 0;
-    break;
-  case _DtAct_TERMINAL_BIT:
-    winTypeNum = TERMINAL;
-    break;
-  case _DtAct_PERM_TERM_BIT:
-    winTypeNum = PERM_TERMINAL;
-    break;
-  default:
-    myassert(0); /* should never get here */
-    winTypeNum = PERM_TERMINAL;
-    break;
+    case _DtAct_NO_STDIO_BIT:
+      winTypeNum = 0;
+      break;
+    case _DtAct_TERMINAL_BIT:
+      winTypeNum = TERMINAL;
+      break;
+    case _DtAct_PERM_TERM_BIT:
+      winTypeNum = PERM_TERMINAL;
+      break;
+    default:
+      myassert(0); /* should never get here */
+      winTypeNum = PERM_TERMINAL;
+      break;
   }
 
   return winTypeNum;
@@ -1014,46 +982,42 @@ static int DtCmdGetWindowType(unsigned long windowTypeMask) {
  *
  *	If logging is turned on, the success or failure message is logged.
  ******************************************************************************/
-int _DtActionCommandInvoke(long wintype, char *cwdHost, char *cwdDir,
-                           char *execString, char *termOpts, char *execHost,
-                           char *procId, char *tmpFiles,
-                           void (*success_proc)(char *, void *),
-                           void *success_data,
-                           void (*failure_proc)(char *, void *),
-                           void *failure_data) {
+int _DtActionCommandInvoke(long wintype, char* cwdHost, char* cwdDir, char* execString,
+                           char* termOpts, char* execHost, char* procId, char* tmpFiles,
+                           void (*success_proc)(char*, void*), void* success_data,
+                           void (*failure_proc)(char*, void*), void* failure_data) {
   int status;
   char errorMessage[MAX_BUF_SIZE * 2];
 
-  status = _DtCmdCommandInvokerExecute(
-      errorMessage, NULL, wintype, cwdHost, cwdDir, NULL, termOpts, execHost,
-      execString, procId, tmpFiles, success_proc, success_data, failure_proc,
-      failure_data);
+  status = _DtCmdCommandInvokerExecute(errorMessage, NULL, wintype, cwdHost, cwdDir, NULL, termOpts,
+                                       execHost, execString, procId, tmpFiles, success_proc,
+                                       success_data, failure_proc, failure_data);
   switch (status) {
-  case _CMD_EXECUTE_SUCCESS:
-    if (cmd_Resources.executionHostLogging && success_data != NULL) {
-      CallbackData *data;
-      data = (CallbackData *)success_data;
-      (void)sprintf(errorMessage, successHost, data->actionLabel, execHost);
-      _DtCmdLogErrorMessage(errorMessage);
-    }
-    if (success_proc != NULL)
-      (*success_proc)(NULL, success_data);
-    break;
-  case _CMD_EXECUTE_QUEUED:
-    /*
-     * Return for now and when the termination handler
-     * gets hit, the queued request will be executed.
-     */
-    break;
-  default:
-    /*
-     * _CMD_EXECUTE_FAILURE or _CMD_EXECUTE_FATAL
-     */
-    if (cmd_Resources.executionHostLogging)
-      _DtCmdLogErrorMessage(errorMessage);
-    if (failure_proc != NULL)
-      (*failure_proc)(errorMessage, failure_data);
-    break;
+    case _CMD_EXECUTE_SUCCESS:
+      if (cmd_Resources.executionHostLogging && success_data != NULL) {
+        CallbackData* data;
+        data = (CallbackData*)success_data;
+        (void)snprintf(errorMessage, MAX_BUF_SIZE * 2, successHost, data->actionLabel, execHost);
+        _DtCmdLogErrorMessage(errorMessage);
+      }
+      if (success_proc != NULL)
+        (*success_proc)(NULL, success_data);
+      break;
+    case _CMD_EXECUTE_QUEUED:
+      /*
+       * Return for now and when the termination handler
+       * gets hit, the queued request will be executed.
+       */
+      break;
+    default:
+      /*
+       * _CMD_EXECUTE_FAILURE or _CMD_EXECUTE_FATAL
+       */
+      if (cmd_Resources.executionHostLogging)
+        _DtCmdLogErrorMessage(errorMessage);
+      if (failure_proc != NULL)
+        (*failure_proc)(errorMessage, failure_data);
+      break;
   }
 
   return (status == _CMD_EXECUTE_QUEUED) ? 1 : 0;
@@ -1080,19 +1044,18 @@ int _DtActionCommandInvoke(long wintype, char *cwdHost, char *cwdDir,
  *
  *****************************************************************************/
 
-void _DtCommandInvokerExecute(
-    char *request_name, char *context_host, char *context_dir,
-    char *context_file, char *exec_parameters, char *exec_host,
-    char *exec_string, DtCmdInvExecuteProc success_proc, void *success_data,
-    DtCmdInvExecuteProc failure_proc, void *failure_data)
+void _DtCommandInvokerExecute(char* request_name, char* context_host, char* context_dir,
+                              char* context_file, char* exec_parameters, char* exec_host,
+                              char* exec_string, DtCmdInvExecuteProc success_proc,
+                              void* success_data, DtCmdInvExecuteProc failure_proc,
+                              void* failure_data)
 
 {
   _DtSvcAppLock(cmd_Globals.app_context);
 
-  _DtActionCommandInvoke(_DtAct_NO_STDIO_BIT, context_host, context_dir,
-                         exec_string, exec_parameters, exec_host, NULL, NULL,
-                         success_proc, success_data, failure_proc,
-                         failure_data);
+  _DtActionCommandInvoke(_DtAct_NO_STDIO_BIT, context_host, context_dir, exec_string,
+                         exec_parameters, exec_host, NULL, NULL, success_proc, success_data,
+                         failure_proc, failure_data);
   _DtSvcAppUnlock(cmd_Globals.app_context);
 }
 
@@ -1127,11 +1090,10 @@ void _DtCommandInvokerExecute(
  *
  *****************************************************************************/
 
-void _DtInitializeCommandInvoker(
-    Display *display, char *toolClass, /* ignored */
-    char *appClass,                    /* ignored */
-    DtSvcMessageProc reloadDBHandler,  /* OBSOLETE -- ignored */
-    XtAppContext appContext) {
+void _DtInitializeCommandInvoker(Display* display, char* toolClass, /* ignored */
+                                 char* appClass,                    /* ignored */
+                                 DtSvcMessageProc reloadDBHandler,  /* OBSOLETE -- ignored */
+                                 XtAppContext appContext) {
   static int beenCalled = 0;
 
   _DtSvcAppLock(appContext);
@@ -1187,58 +1149,56 @@ void _DtInitializeCommandInvoker(
  *****************************************************************************/
 
 static void _DtCmdInitializeErrorMessages(void) {
-
   /*
    * Non-Fatal -> Abort the request
    */
-  errorChdir = strdup(((char *)Dt11GETMESSAGE(
+  errorChdir = strdup(((char*)Dt11GETMESSAGE(
       3, 2,
       "An attempt to change to the following directory:\n\n  %s\n\nfrom host "
       "\"%s\" failed.\n\nCheck the spelling and permissions and make sure the "
       "directory exists.")));
 
-  errorSpawn = strdup(((char *)Dt11GETMESSAGE(
+  errorSpawn = strdup(((char*)Dt11GETMESSAGE(
       3, 5,
       "An attempt to execute the following command on host\n\"%s\" failed:\n\n "
       " %s\n\nCheck that the program exists, has the correct\npermissions and "
       "is executable.")));
 
-  errorExec = strdup(((char *)Dt11GETMESSAGE(
-      3, 6,
-      "An attempt to execute the following command failed:\n\n  %s\n\nCheck "
-      "that the program exists, has the correct\npermissions and is "
-      "executable.")));
+  errorExec = strdup(
+      ((char*)Dt11GETMESSAGE(3, 6,
+                             "An attempt to execute the following command failed:\n\n  %s\n\nCheck "
+                             "that the program exists, has the correct\npermissions and is "
+                             "executable.")));
 
-  cmd_Globals.error_terminal = strdup(((char *)Dt11GETMESSAGE(
+  cmd_Globals.error_terminal = strdup(((char*)Dt11GETMESSAGE(
       3, 7,
       "This action cannot be started because the following\nterminal emulator "
       "cannot be executed:\n\n  %s\n\nCheck that the program exists, has the "
       "correct permissions\nand is executable.  This problem may have occurred "
       "because the\nprogram is not in your \"PATH\".")));
 
-  errorLength = strdup(
-      ((char *)Dt11GETMESSAGE(3, 9,
-                              "The total number of characters in this action "
-                              "exceeds the limit of \"%d\".\n\nYou may need to "
-                              "break the action into more than one action.")));
+  errorLength = strdup(((char*)Dt11GETMESSAGE(3, 9,
+                                              "The total number of characters in this action "
+                                              "exceeds the limit of \"%d\".\n\nYou may need to "
+                                              "break the action into more than one action.")));
 
-  errorFork = strdup(((char *)Dt11GETMESSAGE(
-      3, 11,
-      "An attempt to start a new process on host \"%s\" failed.\n\nTo "
-      "continue, you may need to stop an unneeded process on this host.")));
+  errorFork = strdup(
+      ((char*)Dt11GETMESSAGE(3, 11,
+                             "An attempt to start a new process on host \"%s\" failed.\n\nTo "
+                             "continue, you may need to stop an unneeded process on this host.")));
 
-  errorRequest = strdup(((char *)Dt11GETMESSAGE(
+  errorRequest = strdup(((char*)Dt11GETMESSAGE(
       3, 17,
       "This action's WINDOW_TYPE \"%s\" is un-recognized.\n\nThe WINDOW_TYPE "
       "should be one of the following:\n\n  %s, %s, %s,\n   %s, %s, or %s\n")));
 
-  cmd_Globals.error_subprocess = strdup(((char *)Dt11GETMESSAGE(
+  cmd_Globals.error_subprocess = strdup(((char*)Dt11GETMESSAGE(
       3, 18,
       "This action cannot be started because the DT subprocess program:\n\n   "
       "%s\n\ncannot be executed.  Check that the program has the "
       "correct\npermissions and is executable.")));
 
-  errorRemoteSubprocess = strdup(((char *)Dt11GETMESSAGE(
+  errorRemoteSubprocess = strdup(((char*)Dt11GETMESSAGE(
       3, 20,
       "This action cannot be executed on host \"%s\"\nbecause the following "
       "required program either\ndoes not exist or it is not executable:\n\n   "
@@ -1248,68 +1208,68 @@ static void _DtCmdInitializeErrorMessages(void) {
    * The following errors may occur when a SPC
    * channel is opened.
    */
-  errorUnknownHost = XtNewString(
-      ((char *)Dt11GETMESSAGE(3, 24,
-                              "This action cannot be executed because\nhost "
-                              "\"%s\" cannot be reached.")));
+  errorUnknownHost =
+      XtNewString(((char*)Dt11GETMESSAGE(3, 24,
+                                         "This action cannot be executed because\nhost "
+                                         "\"%s\" cannot be reached.")));
 
-  errorBadConnect = XtNewString(((char *)Dt11GETMESSAGE(
-      3, 25,
-      "This action cannot be executed on host \"%s\" because the\n\"%s\" "
-      "service is not properly configured on this host.")));
+  errorBadConnect = XtNewString(
+      ((char*)Dt11GETMESSAGE(3, 25,
+                             "This action cannot be executed on host \"%s\" because the\n\"%s\" "
+                             "service is not properly configured on this host.")));
 
-  errorBadService = XtNewString(((char *)Dt11GETMESSAGE(
-      3, 26,
-      "This action cannot be executed because the \"%s\"\nservice is not "
-      "configured on host \"%s\".")));
+  errorBadService = XtNewString(
+      ((char*)Dt11GETMESSAGE(3, 26,
+                             "This action cannot be executed because the \"%s\"\nservice is not "
+                             "configured on host \"%s\".")));
 
-  errorRegisterHandshake = XtNewString(((char *)Dt11GETMESSAGE(
+  errorRegisterHandshake = XtNewString(((char*)Dt11GETMESSAGE(
       3, 27,
       "This action cannot be executed on host \"%s\" because user\n\"%s\" has "
       "a user id of \"%d\" on host \"%s\" and this does\nnot match the "
       "username and user id on the action\ninvocation host \"%s\".")));
 
-  errorRegisterUsername = XtNewString(((char *)Dt11GETMESSAGE(
+  errorRegisterUsername = XtNewString(((char*)Dt11GETMESSAGE(
       3, 28,
       "This action cannot be executed on host \"%s\" because\nuser \"%s\" does "
       "not have an account on this host.")));
 
-  errorRegisterNetrc = XtNewString(((char *)Dt11GETMESSAGE(
-      3, 29,
-      "This action cannot be executed on host \"%s\" because\na pathname to "
-      "the authentication file cannot be created.")));
+  errorRegisterNetrc = XtNewString(
+      ((char*)Dt11GETMESSAGE(3, 29,
+                             "This action cannot be executed on host \"%s\" because\na pathname to "
+                             "the authentication file cannot be created.")));
 
-  errorRegisterOpen = XtNewString(((char *)Dt11GETMESSAGE(
-      3, 30,
-      "This action cannot be executed on host \"%s\" because\nthe "
-      "authentication file on this host cannot be opened.\n\nThis may be "
-      "caused by your network home not being\nproperly configured.")));
+  errorRegisterOpen = XtNewString(
+      ((char*)Dt11GETMESSAGE(3, 30,
+                             "This action cannot be executed on host \"%s\" because\nthe "
+                             "authentication file on this host cannot be opened.\n\nThis may be "
+                             "caused by your network home not being\nproperly configured.")));
 
-  errorEnvTooBig = XtNewString(((char *)Dt11GETMESSAGE(
+  errorEnvTooBig = XtNewString(((char*)Dt11GETMESSAGE(
       3, 31,
       "This action cannot be executed on host \"%s\" because\nthe environment "
       "exceeds \"%d\" bytes.")));
 
-  errorInetSecurity = XtNewString(((char *)Dt11GETMESSAGE(
-      3, 32,
-      "This action cannot be executed on host \"%s\" because\nhost \"%s\" is "
-      "not authorized to use the \"%s\" service.\n\nTo fix this, add host "
-      "\"%s\" to the \"%s\" service\nentry in file \"%s\" on host \"%s\".")));
+  errorInetSecurity = XtNewString((
+      (char*)Dt11GETMESSAGE(3, 32,
+                            "This action cannot be executed on host \"%s\" because\nhost \"%s\" is "
+                            "not authorized to use the \"%s\" service.\n\nTo fix this, add host "
+                            "\"%s\" to the \"%s\" service\nentry in file \"%s\" on host \"%s\".")));
 
   /*
    * Do not post a dialog, write to the error log file only.
    */
 
-  errorSpcTerminator = strdup(((char *)Dt11GETMESSAGE(
+  errorSpcTerminator = strdup(((char*)Dt11GETMESSAGE(
       3, 15,
       "An attempt to register the output log from a remote host failed.\n\nTo "
       "continue, you may need to stop an existing process.")));
 
-  successHost = strdup(((char *)Dt11GETMESSAGE(
-      3, 21, "The action \"%s\" was successfully executed on host \"%s\".")));
+  successHost = strdup((
+      (char*)Dt11GETMESSAGE(3, 21, "The action \"%s\" was successfully executed on host \"%s\".")));
 
-  cmd_Globals.error_directory_name_map = strdup(
-      ((char *)Dt11GETMESSAGE(3, 22,
-                              "The directory \"%s\" on host \"%s\"\ncould not "
-                              "be converted to a network path.\n(%s)")));
+  cmd_Globals.error_directory_name_map =
+      strdup(((char*)Dt11GETMESSAGE(3, 22,
+                                    "The directory \"%s\" on host \"%s\"\ncould not "
+                                    "be converted to a network path.\n(%s)")));
 }

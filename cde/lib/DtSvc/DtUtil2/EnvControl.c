@@ -51,9 +51,9 @@
 #include <X11/Xatom.h>
 #include <X11/Xos_r.h>
 
-static int _DtEnvRemove(char *str, int length);
+static int _DtEnvRemove(char* str, int length);
 
-extern char **environ;
+extern char** environ;
 
 /*
  *  We assume that the following fields of these static structures
@@ -68,7 +68,7 @@ static struct environStruct _preDtEnvironment;
  */
 static unsigned int envBitVector = 0;
 
-static void _EnvAdd(char *, char *, unsigned int);
+static void _EnvAdd(char*, char*, unsigned int);
 
 /****************************************************************
  * NOTES on an application's environ(5):
@@ -125,17 +125,19 @@ static void _EnvAdd(char *, char *, unsigned int);
  * in order to prevent expansion of SCCS id keywords.
  */
 
-static const char *iconPmSuffixes[] = {"%B"
-                                       "%M.pm",
-                                       "%B"
-                                       "%M.bm",
-                                       "%B", NULL};
+static const char* iconPmSuffixes[] = {
+    "%B"
+    "%M.pm",
+    "%B"
+    "%M.bm",
+    "%B", NULL};
 
-static const char *iconBmSuffixes[] = {"%B"
-                                       "%M.bm",
-                                       "%B"
-                                       "%M.pm",
-                                       "%B", NULL};
+static const char* iconBmSuffixes[] = {
+    "%B"
+    "%M.bm",
+    "%B"
+    "%M.pm",
+    "%B", NULL};
 
 /*
  * makeDefaultIconPath
@@ -157,11 +159,11 @@ static const char *iconBmSuffixes[] = {"%B"
  * suffixes	An array of suffixes used in constructing the path elements in
  *		the user's home directory.  Must have a trailing NULL pointer.
  */
-static char *makeDefaultIconPath(const char *varname, const char *basedefault,
-                                 const char **suffixes) {
-  char *fmt = "%s/.dt/icons/%s:";
-  char *homedir;
-  char *outbuf;
+static char* makeDefaultIconPath(const char* varname, const char* basedefault,
+                                 const char** suffixes) {
+  char* fmt = "%s/.dt/icons/%s:";
+  char* homedir;
+  char* outbuf;
   int bytes_needed, fmt_bytes, homedir_bytes;
 
   bytes_needed = strlen(varname) + strlen(basedefault) + 2;
@@ -170,14 +172,13 @@ static char *makeDefaultIconPath(const char *varname, const char *basedefault,
   if (NULL != homedir) {
     homedir_bytes = strlen(homedir);
     fmt_bytes = strlen(fmt);
-    for (; *suffixes; ++suffixes)
-      bytes_needed += (homedir_bytes + fmt_bytes + strlen(*suffixes));
+    for (; *suffixes; ++suffixes) bytes_needed += (homedir_bytes + fmt_bytes + strlen(*suffixes));
   }
 
   outbuf = XtMalloc(bytes_needed);
   (void)snprintf(outbuf, bytes_needed, "%s=", varname);
   if (homedir != NULL) {
-    char *temp = XtMalloc(bytes_needed);
+    char* temp = XtMalloc(bytes_needed);
 
     for (; *suffixes; ++suffixes) {
       (void)snprintf(temp, bytes_needed, fmt, homedir, *suffixes);
@@ -195,12 +196,11 @@ static char *makeDefaultIconPath(const char *varname, const char *basedefault,
 /*
  * Construct a default value for XMICONSEARCHPATH into outbuf.
  */
-static char *makeDefaultIconPmPath(void) {
-  static char *defaultIconPmPath = NULL;
+static char* makeDefaultIconPmPath(void) {
+  static char* defaultIconPmPath = NULL;
 
   if (NULL == defaultIconPmPath)
-    defaultIconPmPath =
-        makeDefaultIconPath(PM_PATH_ENVIRON, DTPMSYSDEFAULT, iconPmSuffixes);
+    defaultIconPmPath = makeDefaultIconPath(PM_PATH_ENVIRON, DTPMSYSDEFAULT, iconPmSuffixes);
 
   return XtNewString(defaultIconPmPath);
 }
@@ -208,12 +208,11 @@ static char *makeDefaultIconPmPath(void) {
 /*
  * Construct a default value for XMICONBMSEARCHPATH into outbuf.
  */
-static char *makeDefaultIconBmPath(void) {
-  static char *defaultIconBmPath = NULL;
+static char* makeDefaultIconBmPath(void) {
+  static char* defaultIconBmPath = NULL;
 
   if (NULL == defaultIconBmPath)
-    defaultIconBmPath =
-        makeDefaultIconPath(BM_PATH_ENVIRON, DTBMSYSDEFAULT, iconBmSuffixes);
+    defaultIconBmPath = makeDefaultIconPath(BM_PATH_ENVIRON, DTBMSYSDEFAULT, iconBmSuffixes);
 
   return XtNewString(defaultIconBmPath);
 }
@@ -238,9 +237,9 @@ static char *makeDefaultIconBmPath(void) {
  *****************************<->***********************************/
 void _DtEnvSessionManager(void) {
 #define SESSION_MANAGER "SESSION_MANAGER"
-  char *session_manager = getenv(SESSION_MANAGER);
+  char* session_manager = getenv(SESSION_MANAGER);
   if (NULL == session_manager) {
-    Display *display;
+    Display* display;
     Atom sm_atom;
 
     display = XOpenDisplay(NULL);
@@ -251,18 +250,14 @@ void _DtEnvSessionManager(void) {
         unsigned long nitems, leftover;
         int actual_format;
 
-        if (Success == XGetWindowProperty(display, XDefaultRootWindow(display),
-                                          sm_atom, 0L, 256, False, XA_STRING,
-                                          &actual_type, &actual_format, &nitems,
-                                          &leftover,
-                                          (unsigned char **)&session_manager)) {
+        if (Success == XGetWindowProperty(display, XDefaultRootWindow(display), sm_atom, 0L, 256,
+                                          False, XA_STRING, &actual_type, &actual_format, &nitems,
+                                          &leftover, (unsigned char**)&session_manager)) {
           if (NULL != session_manager && None != actual_format) {
-            char *envstr;
-            size_t envstr_len =
-                strlen(SESSION_MANAGER) + strlen(session_manager) + 2;
-            envstr = (char *)malloc(envstr_len);
-            snprintf(envstr, envstr_len, "%s=%s", SESSION_MANAGER,
-                     session_manager);
+            char* envstr;
+            size_t envstr_len = strlen(SESSION_MANAGER) + strlen(session_manager) + 2;
+            envstr = (char*)malloc(envstr_len);
+            snprintf(envstr, envstr_len, "%s=%s", SESSION_MANAGER, session_manager);
             putenv(envstr);
             XtFree(session_manager);
           }
@@ -296,341 +291,331 @@ void _DtEnvSessionManager(void) {
 int _DtEnvControl(int mode) {
   static int environSetup = 0;
 
-  char *tempString;
-  char *ptr; /* used for indexing into the $PATH */
+  char* tempString;
+  char* ptr; /* used for indexing into the $PATH */
   int returnValue = DT_ENV_NO_OP;
   int bytes_needed;
 
   _DtSvcProcessLock();
   switch (mode) {
+    case DT_ENV_SET:
+      if (!environSetup) /* first time through */
+      {
+        /*
+         * Make sure the SESSION_MANAGER variable is set.
+         */
+        _DtEnvSessionManager();
 
-  case DT_ENV_SET:
-    if (!environSetup) /* first time through */
-    {
-      /*
-       * Make sure the SESSION_MANAGER variable is set.
-       */
-      _DtEnvSessionManager();
+        /*
+         * Set up DT environment in the application
+         * environment, while stashing the old environment
+         * in the _preDtEnvironment structure
+         *
+         * Note: this code will not check for duplicate
+         * environment values--it will append or prepend
+         * the DT environment values regardless of what's
+         * in the current environment.
+         *
+         *  Of the form:
+         *
+         *  PATH = /opt/dt/bin :  originalPath
+         *  %s  %s    %s        %s    %s
+         *
+         *
+         *  XBMLANGPATH = originalPath : dtPath
+         *        %s    %s    %s       %s    %s
+         *
+         *  Note: Of all the environmental vars, ONLY $PATH
+         *  is jammed with the DT value first.
+         *
+         *  Check for NULL environment strings before the sprintf
+         *
+         */
 
-      /*
-       * Set up DT environment in the application
-       * environment, while stashing the old environment
-       * in the _preDtEnvironment structure
-       *
-       * Note: this code will not check for duplicate
-       * environment values--it will append or prepend
-       * the DT environment values regardless of what's
-       * in the current environment.
-       *
-       *  Of the form:
-       *
-       *  PATH = /opt/dt/bin :  originalPath
-       *  %s  %s    %s        %s    %s
-       *
-       *
-       *  XBMLANGPATH = originalPath : dtPath
-       *        %s    %s    %s       %s    %s
-       *
-       *  Note: Of all the environmental vars, ONLY $PATH
-       *  is jammed with the DT value first.
-       *
-       *  Check for NULL environment strings before the sprintf
-       *
-       */
+        /*
+         * Get the application's original environment
+         * to save it in the _preDtEnvironment structure
+         *
+         * We save in the _preDtEnvironment structure
+         * only existing (non-NULL getenv()) values.
+         *
+         */
 
-      /*
-       * Get the application's original environment
-       * to save it in the _preDtEnvironment structure
-       *
-       * We save in the _preDtEnvironment structure
-       * only existing (non-NULL getenv()) values.
-       *
-       */
+        /*
+         * Prepend BIN_PATH_STRING to the PATH component.
+         */
+        tempString = getenv(BIN_PATH_ENVIRON);
 
-      /*
-       * Prepend BIN_PATH_STRING to the PATH component.
-       */
-      tempString = getenv(BIN_PATH_ENVIRON);
-
-      /*
-       *  First, ensure that BIN_PATH_STRING isn't already there.
-       */
-      if (!tempString || !(strstr(tempString, BIN_PATH_STRING))) {
-        if (!tempString) {
-          /*
-           * No existing PATH environment variable.
-           * Just create the new DT environment.
-           */
-          bytes_needed = strlen(BIN_PATH_ENVIRON) + strlen(BIN_PATH_STRING) + 2;
-
-          _postDtEnvironment.binPath = XtMalloc(bytes_needed);
-          snprintf(_postDtEnvironment.binPath, bytes_needed, "%s=%s",
-                   BIN_PATH_ENVIRON, BIN_PATH_STRING);
-        } else {
-          /*
-           * Save the existing PATH.
-           */
-          bytes_needed = strlen(BIN_PATH_ENVIRON) + strlen(tempString) + 2;
-
-          _preDtEnvironment.binPath = XtMalloc(bytes_needed);
-          snprintf(_preDtEnvironment.binPath, bytes_needed, "%s=%s",
-                   BIN_PATH_ENVIRON, tempString);
-
-          bytes_needed = strlen(tempString) + strlen(BIN_PATH_ENVIRON) +
-                         strlen(BIN_PATH_STRING) + 4;
-
-          _postDtEnvironment.binPath = XtMalloc(bytes_needed);
-#ifdef sun
-          if ((ptr = strstr(tempString, "/usr/openwin/bin")))
-#elif defined(CSRG_BASED)
-          if ((ptr = strstr(tempString, "/usr/X11R6/bin")))
-#elif defined(__linux__)
-          if ((ptr = strstr(tempString, "/usr/bin")))
-#else
-          if ((ptr = strstr(tempString, "/usr/bin/X11")))
-#endif
-          {
+        /*
+         *  First, ensure that BIN_PATH_STRING isn't already there.
+         */
+        if (!tempString || !(strstr(tempString, BIN_PATH_STRING))) {
+          if (!tempString) {
             /*
-             * Shorten the string in tempString
-             * to the initial segment, up to the
-             * initial slash in "/usr/bin/X11"
+             * No existing PATH environment variable.
+             * Just create the new DT environment.
              */
-            if (ptr != tempString) {
-              /*
-               * then put our dt string just ahead of
-               * "/usr/bin/X11" in the new PATH
-               */
-              *(ptr - 1) = '\0';
-              sprintf(_postDtEnvironment.binPath, "%s=%s:%s:%s",
-                      BIN_PATH_ENVIRON, tempString, BIN_PATH_STRING, ptr);
-            } else {
-              /*
-               *  Turns out that "/usr/bin/X11"
-               *  is at the front of the PATH, so...
-               */
-              sprintf(_postDtEnvironment.binPath, "%s=%s:%s", BIN_PATH_ENVIRON,
-                      BIN_PATH_STRING, tempString);
-            }
+            bytes_needed = strlen(BIN_PATH_ENVIRON) + strlen(BIN_PATH_STRING) + 2;
 
-          } else if (ptr = strstr(tempString, "/usr/bin")) {
-            /*
-             * Shorten the string in tempString
-             * to the initial segment, up to the
-             * initial slash in "/usr/bin"
-             */
-            if (ptr != tempString) {
-              /*
-               * then put our dt string just ahead of
-               * "/usr/bin" in the new PATH
-               */
-
-              *(ptr - 1) = '\0';
-              sprintf(_postDtEnvironment.binPath, "%s=%s:%s:%s",
-                      BIN_PATH_ENVIRON, tempString, BIN_PATH_STRING, ptr);
-            } else {
-              /*
-               *  Turns out that "/usr/bin"
-               *  is at the front of the PATH, so...
-               */
-              snprintf(_postDtEnvironment.binPath, bytes_needed, "%s=%s:%s",
-                       BIN_PATH_ENVIRON, BIN_PATH_STRING, tempString);
-            }
+            _postDtEnvironment.binPath = XtMalloc(bytes_needed);
+            snprintf(_postDtEnvironment.binPath, bytes_needed, "%s=%s", BIN_PATH_ENVIRON,
+                     BIN_PATH_STRING);
           } else {
             /*
-             * Put our dt string on the front of the PATH
+             * Save the existing PATH.
              */
-            snprintf(_postDtEnvironment.binPath, bytes_needed, "%s=%s:%s",
-                     BIN_PATH_ENVIRON, BIN_PATH_STRING, tempString);
+            bytes_needed = strlen(BIN_PATH_ENVIRON) + strlen(tempString) + 2;
+
+            _preDtEnvironment.binPath = XtMalloc(bytes_needed);
+            snprintf(_preDtEnvironment.binPath, bytes_needed, "%s=%s", BIN_PATH_ENVIRON,
+                     tempString);
+
+            bytes_needed =
+                strlen(tempString) + strlen(BIN_PATH_ENVIRON) + strlen(BIN_PATH_STRING) + 4;
+
+            _postDtEnvironment.binPath = XtMalloc(bytes_needed);
+#ifdef sun
+            if ((ptr = strstr(tempString, "/usr/openwin/bin")))
+#elif defined(CSRG_BASED)
+            if ((ptr = strstr(tempString, "/usr/X11R6/bin")))
+#elif defined(__linux__)
+            if ((ptr = strstr(tempString, "/usr/bin")))
+#else
+            if ((ptr = strstr(tempString, "/usr/bin/X11")))
+#endif
+            {
+              /*
+               * Shorten the string in tempString
+               * to the initial segment, up to the
+               * initial slash in "/usr/bin/X11"
+               */
+              if (ptr != tempString) {
+                /*
+                 * then put our dt string just ahead of
+                 * "/usr/bin/X11" in the new PATH
+                 */
+                *(ptr - 1) = '\0';
+                snprintf(_postDtEnvironment.binPath, bytes_needed, "%s=%s:%s:%s", BIN_PATH_ENVIRON,
+                         tempString, BIN_PATH_STRING, ptr);
+              } else {
+                /*
+                 *  Turns out that "/usr/bin/X11"
+                 *  is at the front of the PATH, so...
+                 */
+                snprintf(_postDtEnvironment.binPath, bytes_needed, "%s=%s:%s", BIN_PATH_ENVIRON,
+                         BIN_PATH_STRING, tempString);
+              }
+
+            } else if ((ptr = strstr(tempString, "/usr/bin"))) {
+              /*
+               * Shorten the string in tempString
+               * to the initial segment, up to the
+               * initial slash in "/usr/bin"
+               */
+              if (ptr != tempString) {
+                /*
+                 * then put our dt string just ahead of
+                 * "/usr/bin" in the new PATH
+                 */
+
+                *(ptr - 1) = '\0';
+                snprintf(_postDtEnvironment.binPath, bytes_needed, "%s=%s:%s:%s", BIN_PATH_ENVIRON,
+                         tempString, BIN_PATH_STRING, ptr);
+              } else {
+                /*
+                 *  Turns out that "/usr/bin"
+                 *  is at the front of the PATH, so...
+                 */
+                snprintf(_postDtEnvironment.binPath, bytes_needed, "%s=%s:%s", BIN_PATH_ENVIRON,
+                         BIN_PATH_STRING, tempString);
+              }
+            } else {
+              /*
+               * Put our dt string on the front of the PATH
+               */
+              snprintf(_postDtEnvironment.binPath, bytes_needed, "%s=%s:%s", BIN_PATH_ENVIRON,
+                       BIN_PATH_STRING, tempString);
+            }
           }
+
+          _EnvAdd(BIN_PATH_ENVIRON, _postDtEnvironment.binPath, BV_BINPATH);
         }
 
-        _EnvAdd(BIN_PATH_ENVIRON, _postDtEnvironment.binPath, BV_BINPATH);
-      }
+        tempString = getenv(PM_PATH_ENVIRON);
+        if (tempString) {
+          bytes_needed = strlen(PM_PATH_ENVIRON) + strlen(tempString) + 2;
 
-      tempString = getenv(PM_PATH_ENVIRON);
-      if (tempString) {
-        bytes_needed = strlen(PM_PATH_ENVIRON) + strlen(tempString) + 2;
+          _preDtEnvironment.pmPath = XtMalloc(bytes_needed);
+          snprintf(_preDtEnvironment.pmPath, bytes_needed, "%s=%s", PM_PATH_ENVIRON, tempString);
+        } else {
+          /* it doesn't exist, so generate a default value */
+          _postDtEnvironment.pmPath = makeDefaultIconPmPath();
+          _EnvAdd(PM_PATH_ENVIRON, _postDtEnvironment.pmPath, BV_PMPATH);
+        }
 
-        _preDtEnvironment.pmPath = XtMalloc(bytes_needed);
-        snprintf(_preDtEnvironment.pmPath, bytes_needed, "%s=%s",
-                 PM_PATH_ENVIRON, tempString);
-      } else {
-        /* it doesn't exist, so generate a default value */
-        _postDtEnvironment.pmPath = makeDefaultIconPmPath();
-        _EnvAdd(PM_PATH_ENVIRON, _postDtEnvironment.pmPath, BV_PMPATH);
-      }
+        tempString = getenv(BM_PATH_ENVIRON);
+        if (tempString) {
+          bytes_needed = strlen(BM_PATH_ENVIRON) + strlen(tempString) + 2;
 
-      tempString = getenv(BM_PATH_ENVIRON);
-      if (tempString) {
-        bytes_needed = strlen(BM_PATH_ENVIRON) + strlen(tempString) + 2;
+          _preDtEnvironment.bmPath = XtMalloc(bytes_needed);
+          snprintf(_preDtEnvironment.bmPath, bytes_needed, "%s=%s", BM_PATH_ENVIRON, tempString);
+        } else {
+          /* it doesn't exist, so generate a default value */
+          _postDtEnvironment.bmPath = makeDefaultIconBmPath();
+          _EnvAdd(BM_PATH_ENVIRON, _postDtEnvironment.bmPath, BV_BMPATH);
+        }
 
-        _preDtEnvironment.bmPath = XtMalloc(bytes_needed);
-        snprintf(_preDtEnvironment.bmPath, bytes_needed, "%s=%s",
-                 BM_PATH_ENVIRON, tempString);
-      } else {
-        /* it doesn't exist, so generate a default value */
-        _postDtEnvironment.bmPath = makeDefaultIconBmPath();
-        _EnvAdd(BM_PATH_ENVIRON, _postDtEnvironment.bmPath, BV_BMPATH);
-      }
+        /* Do the admin for the NLSPATH env variable */
+        tempString = getenv(NLS_PATH_ENVIRON);
+        if (!tempString) {
+          /* If it doesn't exist, set it to the CDE default */
+          bytes_needed = strlen(NLS_PATH_ENVIRON) + strlen(NLS_PATH_STRING) + 2;
 
-      /* Do the admin for the NLSPATH env variable */
-      tempString = getenv(NLS_PATH_ENVIRON);
-      if (!tempString) {
-        /* If it doesn't exist, set it to the CDE default */
-        bytes_needed = strlen(NLS_PATH_ENVIRON) + strlen(NLS_PATH_STRING) + 2;
+          _postDtEnvironment.nlsPath = XtMalloc(bytes_needed);
+          snprintf(_postDtEnvironment.nlsPath, bytes_needed, "%s=%s", NLS_PATH_ENVIRON,
+                   NLS_PATH_STRING);
+        } else {
+          /* If it does exist, store it away so it can be
+           * restored afterwards.....
+           */
+          bytes_needed = strlen(NLS_PATH_ENVIRON) + strlen(tempString) + 2;
 
-        _postDtEnvironment.nlsPath = XtMalloc(bytes_needed);
-        snprintf(_postDtEnvironment.nlsPath, bytes_needed, "%s=%s",
-                 NLS_PATH_ENVIRON, NLS_PATH_STRING);
-      } else {
-        /* If it does exist, store it away so it can be
-         * restored afterwards.....
-         */
-        bytes_needed = strlen(NLS_PATH_ENVIRON) + strlen(tempString) + 2;
+          _preDtEnvironment.nlsPath = XtMalloc(bytes_needed);
+          snprintf(_preDtEnvironment.nlsPath, bytes_needed, "%s=%s", NLS_PATH_ENVIRON, tempString);
 
-        _preDtEnvironment.nlsPath = XtMalloc(bytes_needed);
-        snprintf(_preDtEnvironment.nlsPath, bytes_needed, "%s=%s",
-                 NLS_PATH_ENVIRON, tempString);
+          /* ... then append the CDE default to the existing
+           * value
+           */
+          bytes_needed =
+              strlen(NLS_PATH_ENVIRON) + strlen(tempString) + strlen(NLS_PATH_STRING) + 3;
 
-        /* ... then append the CDE default to the existing
-         * value
-         */
-        bytes_needed = strlen(NLS_PATH_ENVIRON) + strlen(tempString) +
-                       strlen(NLS_PATH_STRING) + 3;
+          _postDtEnvironment.nlsPath = XtMalloc(bytes_needed);
+          snprintf(_postDtEnvironment.nlsPath, bytes_needed, "%s=%s:%s", NLS_PATH_ENVIRON,
+                   tempString, NLS_PATH_STRING);
+        }
 
-        _postDtEnvironment.nlsPath = XtMalloc(bytes_needed);
-        snprintf(_postDtEnvironment.nlsPath, bytes_needed, "%s=%s:%s",
-                 NLS_PATH_ENVIRON, tempString, NLS_PATH_STRING);
-      }
-
-      _EnvAdd(NLS_PATH_ENVIRON, _postDtEnvironment.nlsPath, BV_NLSPATH);
-
-      tempString = getenv(SYSTEM_APPL_PATH_ENVIRON);
-      if (!tempString) {
-        bytes_needed = strlen(SYSTEM_APPL_PATH_ENVIRON) +
-                       strlen(SYSTEM_APPL_PATH_STRING) + 2;
-
-        _postDtEnvironment.sysApplPath = XtMalloc(bytes_needed);
-        snprintf(_postDtEnvironment.sysApplPath, bytes_needed, "%s=%s",
-                 SYSTEM_APPL_PATH_ENVIRON, SYSTEM_APPL_PATH_STRING);
-      } else {
-        bytes_needed =
-            strlen(SYSTEM_APPL_PATH_ENVIRON) + strlen(tempString) + 2;
-
-        _preDtEnvironment.sysApplPath = XtMalloc(bytes_needed);
-        snprintf(_preDtEnvironment.sysApplPath, bytes_needed, "%s=%s",
-                 SYSTEM_APPL_PATH_ENVIRON, tempString);
-
-        bytes_needed = strlen(SYSTEM_APPL_PATH_ENVIRON) + strlen(tempString) +
-                       strlen(SYSTEM_APPL_PATH_STRING) + 3;
-
-        _postDtEnvironment.sysApplPath = XtMalloc(bytes_needed);
-        snprintf(_postDtEnvironment.sysApplPath, bytes_needed, "%s=%s:%s",
-                 SYSTEM_APPL_PATH_ENVIRON, tempString, SYSTEM_APPL_PATH_STRING);
-      }
-
-      _EnvAdd(SYSTEM_APPL_PATH_ENVIRON, _postDtEnvironment.sysApplPath,
-              BV_SYSAPPLPATH);
-
-      environSetup = 1;
-      returnValue = DT_ENV_SET;
-    } else /* we've already been here -- do nothing */
-    {
-      returnValue = DT_ENV_NO_OP;
-    }
-    break;
-
-  case DT_ENV_RESTORE_PRE_DT:
-    if (environSetup) {
-      if (_preDtEnvironment.nlsPath) {
-        _EnvAdd(NLS_PATH_ENVIRON, _preDtEnvironment.nlsPath, BV_NLSPATH);
-      } else {
-        _DtEnvRemove(NLS_PATH_ENVIRON, 0);
-        envBitVector &= ~BV_NLSPATH;
-      }
-
-      if (_preDtEnvironment.sysApplPath) {
-        _EnvAdd(SYSTEM_APPL_PATH_ENVIRON, _preDtEnvironment.sysApplPath,
-                BV_SYSAPPLPATH);
-      } else {
-        _DtEnvRemove(SYSTEM_APPL_PATH_ENVIRON, 0);
-        envBitVector &= ~BV_SYSAPPLPATH;
-      }
-
-      if (_preDtEnvironment.pmPath) {
-        _EnvAdd(PM_PATH_ENVIRON, _preDtEnvironment.pmPath, BV_PMPATH);
-      } else {
-        _DtEnvRemove(PM_PATH_ENVIRON, 0);
-        envBitVector &= ~BV_PMPATH;
-      }
-
-      if (_preDtEnvironment.bmPath) {
-        _EnvAdd(BM_PATH_ENVIRON, _preDtEnvironment.bmPath, BV_BMPATH);
-      } else {
-        _DtEnvRemove(BM_PATH_ENVIRON, 0);
-        envBitVector &= ~BV_BMPATH;
-      }
-
-      returnValue = DT_ENV_RESTORE_PRE_DT;
-    } else {
-      returnValue = DT_ENV_NO_OP;
-    }
-    break;
-
-  case DT_ENV_RESTORE_POST_DT:
-    if (environSetup) {
-
-      if (_postDtEnvironment.nlsPath) {
         _EnvAdd(NLS_PATH_ENVIRON, _postDtEnvironment.nlsPath, BV_NLSPATH);
+
+        tempString = getenv(SYSTEM_APPL_PATH_ENVIRON);
+        if (!tempString) {
+          bytes_needed = strlen(SYSTEM_APPL_PATH_ENVIRON) + strlen(SYSTEM_APPL_PATH_STRING) + 2;
+
+          _postDtEnvironment.sysApplPath = XtMalloc(bytes_needed);
+          snprintf(_postDtEnvironment.sysApplPath, bytes_needed, "%s=%s", SYSTEM_APPL_PATH_ENVIRON,
+                   SYSTEM_APPL_PATH_STRING);
+        } else {
+          bytes_needed = strlen(SYSTEM_APPL_PATH_ENVIRON) + strlen(tempString) + 2;
+
+          _preDtEnvironment.sysApplPath = XtMalloc(bytes_needed);
+          snprintf(_preDtEnvironment.sysApplPath, bytes_needed, "%s=%s", SYSTEM_APPL_PATH_ENVIRON,
+                   tempString);
+
+          bytes_needed = strlen(SYSTEM_APPL_PATH_ENVIRON) + strlen(tempString) +
+                         strlen(SYSTEM_APPL_PATH_STRING) + 3;
+
+          _postDtEnvironment.sysApplPath = XtMalloc(bytes_needed);
+          snprintf(_postDtEnvironment.sysApplPath, bytes_needed, "%s=%s:%s",
+                   SYSTEM_APPL_PATH_ENVIRON, tempString, SYSTEM_APPL_PATH_STRING);
+        }
+
+        _EnvAdd(SYSTEM_APPL_PATH_ENVIRON, _postDtEnvironment.sysApplPath, BV_SYSAPPLPATH);
+
+        environSetup = 1;
+        returnValue = DT_ENV_SET;
+      } else /* we've already been here -- do nothing */
+      {
+        returnValue = DT_ENV_NO_OP;
       }
+      break;
 
-      if (_postDtEnvironment.pmPath) {
-        _EnvAdd(PM_PATH_ENVIRON, _postDtEnvironment.pmPath, BV_PMPATH);
+    case DT_ENV_RESTORE_PRE_DT:
+      if (environSetup) {
+        if (_preDtEnvironment.nlsPath) {
+          _EnvAdd(NLS_PATH_ENVIRON, _preDtEnvironment.nlsPath, BV_NLSPATH);
+        } else {
+          _DtEnvRemove(NLS_PATH_ENVIRON, 0);
+          envBitVector &= ~BV_NLSPATH;
+        }
+
+        if (_preDtEnvironment.sysApplPath) {
+          _EnvAdd(SYSTEM_APPL_PATH_ENVIRON, _preDtEnvironment.sysApplPath, BV_SYSAPPLPATH);
+        } else {
+          _DtEnvRemove(SYSTEM_APPL_PATH_ENVIRON, 0);
+          envBitVector &= ~BV_SYSAPPLPATH;
+        }
+
+        if (_preDtEnvironment.pmPath) {
+          _EnvAdd(PM_PATH_ENVIRON, _preDtEnvironment.pmPath, BV_PMPATH);
+        } else {
+          _DtEnvRemove(PM_PATH_ENVIRON, 0);
+          envBitVector &= ~BV_PMPATH;
+        }
+
+        if (_preDtEnvironment.bmPath) {
+          _EnvAdd(BM_PATH_ENVIRON, _preDtEnvironment.bmPath, BV_BMPATH);
+        } else {
+          _DtEnvRemove(BM_PATH_ENVIRON, 0);
+          envBitVector &= ~BV_BMPATH;
+        }
+
+        returnValue = DT_ENV_RESTORE_PRE_DT;
+      } else {
+        returnValue = DT_ENV_NO_OP;
       }
+      break;
 
-      if (_postDtEnvironment.bmPath) {
-        _EnvAdd(BM_PATH_ENVIRON, _postDtEnvironment.bmPath, BV_BMPATH);
+    case DT_ENV_RESTORE_POST_DT:
+      if (environSetup) {
+        if (_postDtEnvironment.nlsPath) {
+          _EnvAdd(NLS_PATH_ENVIRON, _postDtEnvironment.nlsPath, BV_NLSPATH);
+        }
+
+        if (_postDtEnvironment.pmPath) {
+          _EnvAdd(PM_PATH_ENVIRON, _postDtEnvironment.pmPath, BV_PMPATH);
+        }
+
+        if (_postDtEnvironment.bmPath) {
+          _EnvAdd(BM_PATH_ENVIRON, _postDtEnvironment.bmPath, BV_BMPATH);
+        }
+
+        if (_postDtEnvironment.sysApplPath) {
+          _EnvAdd(SYSTEM_APPL_PATH_ENVIRON, _postDtEnvironment.sysApplPath, BV_SYSAPPLPATH);
+        }
+
+        returnValue = DT_ENV_RESTORE_POST_DT;
+      } else {
+        returnValue = DT_ENV_NO_OP;
       }
+      break;
 
-      if (_postDtEnvironment.sysApplPath) {
-        _EnvAdd(SYSTEM_APPL_PATH_ENVIRON, _postDtEnvironment.sysApplPath,
-                BV_SYSAPPLPATH);
-      }
-
-      returnValue = DT_ENV_RESTORE_POST_DT;
-    } else {
-      returnValue = DT_ENV_NO_OP;
-    }
-    break;
-
-  default:
-    /* do nothing */
-    break;
+    default:
+      /* do nothing */
+      break;
   }
 
   _DtSvcProcessUnlock();
 
 #ifdef DEBUG
   switch (mode) {
-  case DT_ENV_SET:
-    printf("DT environment set:\n");
-    printf("-------------------------------\n");
-    break;
+    case DT_ENV_SET:
+      printf("DT environment set:\n");
+      printf("-------------------------------\n");
+      break;
 
-  case DT_ENV_RESTORE_PRE_DT:
-    printf("Pre-DT environment restored:\n");
-    printf("-------------------------------\n");
-    break;
+    case DT_ENV_RESTORE_PRE_DT:
+      printf("Pre-DT environment restored:\n");
+      printf("-------------------------------\n");
+      break;
 
-  case DT_ENV_RESTORE_POST_DT:
-    printf("Post-DT environment restored:\n");
-    printf("-------------------------------\n");
-    break;
+    case DT_ENV_RESTORE_POST_DT:
+      printf("Post-DT environment restored:\n");
+      printf("-------------------------------\n");
+      break;
 
-  case DT_ENV_NO_OP:
-    printf("No change from last invocation:\n");
-    printf("-------------------------------\n");
-    break;
+    case DT_ENV_NO_OP:
+      printf("No change from last invocation:\n");
+      printf("-------------------------------\n");
+      break;
   }
 
   tempString = getenv(BIN_PATH_ENVIRON);
@@ -669,7 +654,7 @@ int _DtEnvControl(int mode) {
  *                  is being set.
  *
  *****************************<->***********************************/
-static void _EnvAdd(char *envVar, char *envVarSetting, unsigned int bv_flag) {
+static void _EnvAdd(char* envVar, char* envVarSetting, unsigned int bv_flag) {
   _DtSvcProcessLock();
   if (envBitVector & bv_flag) {
 #if defined(CSRG_BASED) || defined(__linux__)
@@ -678,7 +663,7 @@ static void _EnvAdd(char *envVar, char *envVarSetting, unsigned int bv_flag) {
 
     int i;
     size_t envVarLen = strlen(envVar);
-    char *envPtr = NULL;
+    char* envPtr = NULL;
 
     /* if we have previously put this environment variable out to the
      * environment, we can retrieve it and reuse it rather than letting
@@ -687,8 +672,7 @@ static void _EnvAdd(char *envVar, char *envVarSetting, unsigned int bv_flag) {
 
     for (i = 0; environ[i]; i++) {
       if (environ[i][0] == envVar[0] && (strlen(environ[i]) >= envVarLen) &&
-          (environ[i][envVarLen] == '=') &&
-          !strncmp(envVar, environ[i], envVarLen)) {
+          (environ[i][envVarLen] == '=') && !strncmp(envVar, environ[i], envVarLen)) {
         envPtr = environ[i];
         break;
       }
@@ -697,7 +681,7 @@ static void _EnvAdd(char *envVar, char *envVarSetting, unsigned int bv_flag) {
     if (envPtr) {
       XtFree(envPtr);
       envPtr = strdup(envVarSetting);
-      strcpy(envPtr, envVarSetting);
+      /* strcpy(envPtr, envVarSetting); -- Redundant after strdup */
       environ[i] = envPtr;
     } else {
       /* This should never happen */
@@ -734,7 +718,7 @@ static void _EnvAdd(char *envVar, char *envVarSetting, unsigned int bv_flag) {
  *                          "1" if the variable isn't found.
  *
  *****************************<->***********************************/
-int _DtEnvRemove(char *str, int length) {
+int _DtEnvRemove(char* str, int length) {
   char **pEnviron, **pEnviron2 = environ;
   char *p, *freeMe;
   int temp;
@@ -761,8 +745,7 @@ int _DtEnvRemove(char *str, int length) {
   p = *pEnviron;
 
   for (index = 0; index < count; index++) {
-    if (p[0] == str[0] && (strlen(p) >= len) && (p[len] == '=') &&
-        !strncmp(p, str, len)) {
+    if (p[0] == str[0] && (strlen(p) >= len) && (p[len] == '=') && !strncmp(p, str, len)) {
 #if defined(__linux__) || defined(CSRG_BASED)
       /* JET - 2/19/99
          It seems much safer to let libc worry about this
@@ -845,8 +828,8 @@ _EnvPrint( void )
  *  then sPath is invalid and should be reassigned.
  *
  *************************************<->***********************************/
-static char *_AddToPath(char *sPath, char *sDir) {
-  char *sNew;
+static char* _AddToPath(char* sPath, char* sDir) {
+  char* sNew;
 
   if (sPath != NULL) {
     sNew = XtRealloc(sPath, strlen(sPath) + 1 + strlen(sDir) + 1);
@@ -887,15 +870,14 @@ static char *_AddToPath(char *sPath, char *sDir) {
  *                            failure: DT_ENV_NO_OP
  *
  *************************************<->***********************************/
-int _DtWsmSetBackdropSearchPath(Screen *screen, char *backdropPath,
-                                Boolean useMultiColorIcons)
+int _DtWsmSetBackdropSearchPath(Screen* screen, char* backdropPath, Boolean useMultiColorIcons)
 
 {
-  char *sBackDirs;
-  char *sOldEnv;
-  char *sNext;
-  char *bm_pm_fmt = "%s/%%B.bm:%s/%%B.pm:%s/%%B";
-  char *pm_bm_fmt = "%s/%%B.pm:%s/%%B.bm:%s/%%B";
+  char* sBackDirs;
+  char* sOldEnv;
+  char* sNext;
+  char* bm_pm_fmt = "%s/%%B.bm:%s/%%B.pm:%s/%%B";
+  char* pm_bm_fmt = "%s/%%B.pm:%s/%%B.bm:%s/%%B";
   int fmtlen = strlen(pm_bm_fmt);
   int returnValue = DT_ENV_NO_OP;
   int bytes_needed;
@@ -903,7 +885,7 @@ int _DtWsmSetBackdropSearchPath(Screen *screen, char *backdropPath,
 
   /* for creating the name=value string */
   char postDtEnvironmentStringBuf[MAX_ENV_STRING];
-  char *postDtEnvironmentString;
+  char* postDtEnvironmentString;
 
   if (backdropPath == NULL)
     return (returnValue);
@@ -922,7 +904,7 @@ int _DtWsmSetBackdropSearchPath(Screen *screen, char *backdropPath,
 
     /* make a copy that we can modify locally */
     sBackDirs = strdup(backdropPath);
-    strcpy(sBackDirs, backdropPath);
+    /* strcpy(sBackDirs, backdropPath); -- Redundant */
 
     /*
      * Initialize path string
@@ -944,12 +926,11 @@ int _DtWsmSetBackdropSearchPath(Screen *screen, char *backdropPath,
         postDtEnvironmentString = postDtEnvironmentStringBuf;
 
       if (useMultiColorIcons)
-        sprintf(postDtEnvironmentString, pm_bm_fmt, sNext, sNext, sNext);
+        snprintf(postDtEnvironmentString, bytes_needed, pm_bm_fmt, sNext, sNext, sNext);
       else
-        sprintf(postDtEnvironmentString, bm_pm_fmt, sNext, sNext, sNext);
+        snprintf(postDtEnvironmentString, bytes_needed, bm_pm_fmt, sNext, sNext, sNext);
 
-      _postDtEnvironment.pmPath =
-          _AddToPath(_postDtEnvironment.pmPath, postDtEnvironmentString);
+      _postDtEnvironment.pmPath = _AddToPath(_postDtEnvironment.pmPath, postDtEnvironmentString);
 
       if (postDtEnvironmentString != postDtEnvironmentStringBuf) {
         if (postDtEnvironmentString)
@@ -969,19 +950,19 @@ int _DtWsmSetBackdropSearchPath(Screen *screen, char *backdropPath,
     if (!_preDtEnvironment.pmPath) {
       bytes_needed = strlen(PM_PATH_ENVIRON) + strlen(sOldEnv) + 2;
       _preDtEnvironment.pmPath = XtMalloc(bytes_needed);
-      sprintf(_preDtEnvironment.pmPath, "%s=%s", PM_PATH_ENVIRON, sOldEnv);
+      snprintf(_preDtEnvironment.pmPath, bytes_needed, "%s=%s", PM_PATH_ENVIRON, sOldEnv);
     }
 
     /* make a copy that we can modify locally */
     sBackDirs = strdup(backdropPath);
-    strcpy(sBackDirs, backdropPath);
+    /* strcpy(sBackDirs, backdropPath); -- Redundant */
 
     /*
      * Initialize path environment string
      */
     bytes_needed = strlen(PM_PATH_ENVIRON) + strlen(sOldEnv) + 2;
     _postDtEnvironment.pmPath = XtMalloc(bytes_needed);
-    sprintf(_postDtEnvironment.pmPath, "%s=%s", PM_PATH_ENVIRON, sOldEnv);
+    snprintf(_postDtEnvironment.pmPath, bytes_needed, "%s=%s", PM_PATH_ENVIRON, sOldEnv);
 
     /* get first directory */
     sNext = _XStrtok(sBackDirs, ":", strtok_buf);
@@ -995,12 +976,11 @@ int _DtWsmSetBackdropSearchPath(Screen *screen, char *backdropPath,
         postDtEnvironmentString = postDtEnvironmentStringBuf;
 
       if (useMultiColorIcons)
-        sprintf(postDtEnvironmentString, pm_bm_fmt, sNext, sNext, sNext);
+        snprintf(postDtEnvironmentString, bytes_needed, pm_bm_fmt, sNext, sNext, sNext);
       else
-        sprintf(postDtEnvironmentString, bm_pm_fmt, sNext, sNext, sNext);
+        snprintf(postDtEnvironmentString, bytes_needed, bm_pm_fmt, sNext, sNext, sNext);
 
-      _postDtEnvironment.pmPath =
-          _AddToPath(_postDtEnvironment.pmPath, postDtEnvironmentString);
+      _postDtEnvironment.pmPath = _AddToPath(_postDtEnvironment.pmPath, postDtEnvironmentString);
 
       if (postDtEnvironmentString != postDtEnvironmentStringBuf) {
         XtFree(postDtEnvironmentString);
@@ -1030,7 +1010,7 @@ int _DtWsmSetBackdropSearchPath(Screen *screen, char *backdropPath,
 
     /* make a copy that we can modify locally */
     sBackDirs = strdup(backdropPath);
-    strcpy(sBackDirs, backdropPath);
+    /* strcpy(sBackDirs, backdropPath); -- Redundant */
 
     /*
      * Initialize path string
@@ -1048,10 +1028,9 @@ int _DtWsmSetBackdropSearchPath(Screen *screen, char *backdropPath,
       else
         postDtEnvironmentString = postDtEnvironmentStringBuf;
 
-      sprintf(postDtEnvironmentString, bm_pm_fmt, sNext, sNext, sNext);
+      snprintf(postDtEnvironmentString, bytes_needed, bm_pm_fmt, sNext, sNext, sNext);
 
-      _postDtEnvironment.bmPath =
-          _AddToPath(_postDtEnvironment.bmPath, postDtEnvironmentString);
+      _postDtEnvironment.bmPath = _AddToPath(_postDtEnvironment.bmPath, postDtEnvironmentString);
 
       if (postDtEnvironmentString != postDtEnvironmentStringBuf) {
         if (postDtEnvironmentString)
@@ -1071,19 +1050,19 @@ int _DtWsmSetBackdropSearchPath(Screen *screen, char *backdropPath,
     if (!_preDtEnvironment.bmPath) {
       bytes_needed = strlen(BM_PATH_ENVIRON) + strlen(sOldEnv) + 2;
       _preDtEnvironment.pmPath = XtMalloc(bytes_needed);
-      sprintf(_preDtEnvironment.pmPath, "%s=%s", BM_PATH_ENVIRON, sOldEnv);
+      snprintf(_preDtEnvironment.pmPath, bytes_needed, "%s=%s", BM_PATH_ENVIRON, sOldEnv);
     }
 
     /* make a copy that we can modify locally */
     sBackDirs = strdup(backdropPath);
-    strcpy(sBackDirs, backdropPath);
+    /* strcpy(sBackDirs, backdropPath); -- Redundant */
 
     /*
      * Initialize path environment string
      */
     bytes_needed = strlen(BM_PATH_ENVIRON) + strlen(sOldEnv) + 2;
     _postDtEnvironment.bmPath = XtMalloc(bytes_needed);
-    sprintf(_postDtEnvironment.bmPath, "%s=%s", BM_PATH_ENVIRON, sOldEnv);
+    snprintf(_postDtEnvironment.bmPath, bytes_needed, "%s=%s", BM_PATH_ENVIRON, sOldEnv);
 
     /* get first directory */
     sNext = _XStrtok(sBackDirs, ":", strtok_buf);
@@ -1096,10 +1075,9 @@ int _DtWsmSetBackdropSearchPath(Screen *screen, char *backdropPath,
       else
         postDtEnvironmentString = postDtEnvironmentStringBuf;
 
-      sprintf(postDtEnvironmentString, bm_pm_fmt, sNext, sNext, sNext);
+      snprintf(postDtEnvironmentString, bytes_needed, bm_pm_fmt, sNext, sNext, sNext);
 
-      _postDtEnvironment.bmPath =
-          _AddToPath(_postDtEnvironment.bmPath, postDtEnvironmentString);
+      _postDtEnvironment.bmPath = _AddToPath(_postDtEnvironment.bmPath, postDtEnvironmentString);
 
       if (postDtEnvironmentString != postDtEnvironmentStringBuf) {
         XtFree(postDtEnvironmentString);

@@ -118,6 +118,42 @@ executable('dtchooser',
   install : true
 )
 
+
+# Generate Xsession
+# Note: config/Xsession.src needs preprocessing
+cpp = find_program('cpp')
+cpp_args = [
+  '-P', 
+  '-DXCOMM=#', 
+  '-Dlinux', 
+  '-D__linux__',
+  '-DCDE_INSTALLATION_TOP=' + get_option('prefix'), # Was prefix + '/dt', but we install to prefix/bin
+                                                    # so DT_BINPATH must match prefix/bin
+  '-DCDE_CONFIGURATION_TOP=/etc/dt',
+  '-DXPROJECTROOT=' + get_option('prefix'),
+  '-DBINDIR=' + get_option('prefix') + '/bin'
+]
+
+# We need to use real prefix for CDE_INSTALLATION_TOP if we want it to work in /usr or /usr/local
+# code often assumes /usr/dt. Let's map it to prefix for now.
+# But Xsession.src line 240: DT_BINPATH=CDE_INSTALLATION_TOP/bin. 
+# If prefix is /usr, then bin is /usr/bin. Correct.
+
+xsession = custom_target('Xsession',
+  input : 'config/Xsession.src',
+  output : 'Xsession',
+  command : [
+    cpp, 
+    cpp_args, 
+    '-I' + meson.current_source_dir() + '/config', # To find _common.ksh.src
+    '@INPUT@', 
+    '@OUTPUT@'
+  ],
+  install : true,
+  install_dir : get_option('bindir'),
+  install_mode : 'rwxr-xr-x'
+)
+
 # Systemd Integration
 systemd_config = configuration_data()
 systemd_config.set('bindir', join_paths(get_option('prefix'), 'bin'))

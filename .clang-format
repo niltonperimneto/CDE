@@ -1,0 +1,11 @@
+---
+Language:        Cpp
+BasedOnStyle:    Google
+IndentWidth:     2
+TabWidth:        8
+UseTab:          Never
+BreakBeforeBraces: Attach
+AllowShortIfStatementsOnASingleLine: false
+IndentCaseLabels: true
+ColumnLimit:     100
+SortIncludes:    false # Too risky for legacy C code with strict include ordering

@@ -79,3 +79,4 @@ configure_file(output : 'cde_config.h', configuration : conf_data)
 # Recurse into subdirectories
 subdir('cde')
 subdir('programs')
+subdir('contrib')

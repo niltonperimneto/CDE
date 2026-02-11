@@ -1,0 +1,5 @@
+---
+Checks:          'clang-diagnostic-*,clang-analyzer-*,bugprone-*,performance-*,readability-redundant-*,readability-inconsistent-declaration-parameter-name'
+WarningsAsErrors: ''
+HeaderFilterRegex: ''
+FormatStyle:     file
