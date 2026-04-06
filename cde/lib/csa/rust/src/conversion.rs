@@ -24,16 +24,36 @@ unsafe fn convert_attr_name(c_name: c::cms_attr_name) -> r::cms_attr_name {
     }
 }
 
-// Convert cms_access_entry linked list
+// Convert cms_access_entry linked list.
+//
+// The depth limit prevents a stack overflow when processing a malformed or
+// adversarially-crafted calendar access list.  512 entries is far beyond any
+// realistic ACL, so legitimate data is never truncated.
+const MAX_ACCESS_LIST_DEPTH: usize = 512;
+
 unsafe fn convert_access_list(ptr: *mut c::cms_access_entry) -> Option<Box<r::cms_access_entry>> {
+    convert_access_list_inner(ptr, 0)
+}
+
+unsafe fn convert_access_list_inner(
+    ptr: *mut c::cms_access_entry,
+    depth: usize,
+) -> Option<Box<r::cms_access_entry>> {
     if ptr.is_null() {
+        return None;
+    }
+    if depth >= MAX_ACCESS_LIST_DEPTH {
+        eprintln!(
+            "[csa] convert_access_list: depth limit {} reached, truncating list",
+            MAX_ACCESS_LIST_DEPTH
+        );
         return None;
     }
     let node = *ptr;
     Some(Box::new(r::cms_access_entry {
         user: r::cms_name(convert_string(node.user)),
         rights: node.rights,
-        next: convert_access_list(node.next),
+        next: convert_access_list_inner(node.next, depth + 1),
     }))
 }
 

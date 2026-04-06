@@ -125,12 +125,28 @@ fn listen_loop(conn: Connection) {
                     q.push_back(tt_msg);
                 }
 
-                // Wake up main thread
+                // Wake up main thread via the pipe.  Retry on EINTR; ignore EAGAIN
+                // (the pipe already has a pending byte, so the reader will wake up).
                 let pipe_write_fd = PIPE_WRITE.load(Ordering::SeqCst);
                 if pipe_write_fd != -1 {
-                    unsafe {
-                        let buf = b"!";
-                        libc::write(pipe_write_fd, buf.as_ptr() as *const c_void, 1);
+                    let buf = b"!";
+                    loop {
+                        let n = unsafe {
+                            libc::write(pipe_write_fd, buf.as_ptr() as *const c_void, 1)
+                        };
+                        if n == 1 {
+                            break; // success
+                        }
+                        let err = std::io::Error::last_os_error();
+                        if err.kind() == std::io::ErrorKind::Interrupted {
+                            continue; // EINTR — retry
+                        }
+                        // EAGAIN / EWOULDBLOCK: pipe is full, reader will see it anyway
+                        // Any other error: log and break to avoid a busy-loop
+                        if err.kind() != std::io::ErrorKind::WouldBlock {
+                            eprintln!("[libtt_shim] pipe wake-up write failed: {}", err);
+                        }
+                        break;
                     }
                 }
             }
