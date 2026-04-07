@@ -233,15 +233,15 @@ Turn stubs into real implementations; add error propagation.
 
 | ID | Component | Action |
 |----|-----------|--------|
-| P2-1 | **DtSearch** | Implement `DtSearchInit` state machine; wire real database open/close lifecycle |
-| P2-2 | **DtSearch** | Replace global `usrblk` access with `Mutex<UsrBlk>`; audit all C-global reads |
-| P2-3 | **ttsession** | Derive `Clone` on `ToolTalkManager`; update zbus API to a single pinned version (5.x) |
-| P2-4 | **ttsession** | Read ptypes path from `$DTDIR` / XDG config, not a hard-coded `/etc` path |
-| P2-5 | **libtt_shim** | Serialise `TtMessage.args` into D-Bus body using `serde`; stop dropping arguments |
-| P2-6 | **libtt_shim** | Implement circuit-breaker in `listen_loop` (max 5 consecutive errors → exponential backoff) |
-| P2-7 | **DtHelp engine** | Add `checked_mul` overflow guard on pixel buffer size; validate `width > 0 && height > 0` |
-| P2-8 | **dtterm_shim** | Implement `-geometry WxH+X+Y` → `--dimensions`/`--position` alacritty translation |
-| P2-9 | **All crates** | Replace `once_cell` with `std::sync::OnceLock` / `std::sync::LazyLock` (Rust ≥ 1.80) |
+| P2-1 | **DtSearch** | `INITIALIZED` AtomicBool, `DB_PATH` OnceLock, `DtSearchInit` wired | ✅ Done |
+| P2-2 | **DtSearch** | `DtSearchQuery` calls real `QueryParser` + `Searcher`; `DtSearchExit` no longer calls `process::exit` | ✅ Done |
+| P2-3 | **ttsession** | `ToolTalkManager` already derives `Clone`; updated to zbus 5 API | ✅ Done |
+| P2-4 | **ttsession** | `ptype_db_path()` reads `$DTDIR` / `$CDE_CONFIGURATION_TOP` with `/etc/dt/tt/types` fallback | ✅ Done |
+| P2-5 | **libtt_shim** | Serialise `TtMessage.args` into D-Bus body using `serde`; stop dropping arguments | pending |
+| P2-6 | **libtt_shim** | Implement circuit-breaker in `listen_loop` (max 5 consecutive errors → exponential backoff) | pending |
+| P2-7 | **DtHelp engine** | Add `checked_mul` overflow guard on pixel buffer size; validate `width > 0 && height > 0` | pending |
+| P2-8 | **dtterm_shim** | Implement `-geometry WxH+X+Y` → `--dimensions`/`--position` alacritty translation | pending |
+| P2-9 | **All crates** | Replace `once_cell` with `std::sync::OnceLock` / `std::sync::LazyLock` (Rust ≥ 1.80) | pending |
 
 ### Phase 3 — Dependency Modernisation (1–2 sprints)
 

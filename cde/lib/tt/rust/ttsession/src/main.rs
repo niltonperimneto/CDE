@@ -1,11 +1,27 @@
 use anyhow::Result;
 use log::info;
-use zbus::ConnectionBuilder;
 use std::future::pending;
+
 use crate::manager::ToolTalkManager;
 
 mod manager;
 mod types;
+
+/// Resolve the directory that holds compiled ptype JSON files.
+///
+/// Priority:
+///   1. `$DTDIR/appconfig/types/C/tt/compiled`  (standard CDE install tree)
+///   2. `$CDE_CONFIGURATION_TOP/dt/tt/types`     (packager override)
+///   3. `/etc/dt/tt/types`                        (hard-coded fallback)
+fn ptype_db_path() -> String {
+    if let Ok(dtdir) = std::env::var("DTDIR") {
+        return format!("{}/appconfig/types/C/tt/compiled", dtdir);
+    }
+    if let Ok(cfg_top) = std::env::var("CDE_CONFIGURATION_TOP") {
+        return format!("{}/dt/tt/types", cfg_top);
+    }
+    "/etc/dt/tt/types".to_string()
+}
 
 #[tokio::main]
 async fn main() -> Result<()> {
@@ -13,51 +29,25 @@ async fn main() -> Result<()> {
     info!("Starting ttsession (Rust D-Bus Broker)...");
 
     let manager = ToolTalkManager::new();
-    
-    // Default location for compiled ptypes (JSON)
-    // In production, this might be /usr/dt/appconfig/types/C/tt/compiled or similar.
-    // We'll use a relative path or CDE_CONFIGURATION_TOP based one.
-    // For now: /etc/dt/tt/types
-    manager.load_ptypes("/etc/dt/tt/types");
+    let db_path = ptype_db_path();
+    manager.load_ptypes(&db_path);
 
-    let conn = ConnectionBuilder::session()?
+    // zbus 5: builder is at zbus::connection::Builder.
+    // Clone manager before handing ownership to serve_at so we can call
+    // spawn_monitor afterwards.  ToolTalkManager derives Clone (its only
+    // field is Arc<Mutex<...>>).
+    let conn = zbus::connection::Builder::session()?
         .name("org.cde.ToolTalk")?
-        .serve_at("/org/cde/ToolTalk", manager.clone())? // ToolTalkManager needs to be Clone? It has Arc.
+        .serve_at("/org/cde/ToolTalk", manager.clone())?
         .build()
         .await?;
 
     info!("ttsession started on D-Bus: org.cde.ToolTalk");
-    
-    // Spawn signal monitor to sniff/route messages
-    // We need access to the manager instance.
-    // Connection::serve_at takes ownership or specific type? zbus 3.x usually takes Clone or moves.
-    // If we move manager into serve_at, we can't use it.
-    // Let's check if ToolTalkManager derives Clone.
-    
-    // Actually, serve_at takes the interface implementation.
-    // If I want to use it afterwards, I should implement Clone (easy, it just has Arc).
-    
-    // But `serve_at` consumes it unless it's a clone.
-    
-    // Wait, let's clone it before serving.
-    // But I haven't implemented Clone for ToolTalkManager yet.
-    
-    // Alternative: spawn monitor BEFORE serving? No, monitor needs connection.
-    // But connection builder needs manager.
-    
-    // I need to implement Clone for ToolTalkManager in manager.rs first.
-    
-    // For now, let's update main.rs assuming Clone or looking for solution.
-    // If I change `spawn_monitor` to not need self, but `ptypes`, I'm back to before.
-    // But instance method is cleaner.
-    
-    // Providing 'manager' to serve_at consumes it.
-    // I will implement Clone for ToolTalkManager (manual or derive).
-    
-    manager.spawn_monitor(conn.clone()).await;
 
-    // Do not exit
+    manager.spawn_monitor(conn).await;
+
+    // Run forever — the signal monitor task drives the event loop.
     pending::<()>().await;
-    
+
     Ok(())
 }

@@ -5,7 +5,7 @@ edition = "2021"
 
 [dependencies]
 tokio = { version = "1.28", features = ["full"] }
-zbus = { version = "3.14", features = ["tokio"] }
+zbus = { version = "5", features = ["tokio"] }
 anyhow = "1.0"
 thiserror = "1.0"
 log = "0.4"
