@@ -1,3 +1,7 @@
+// This crate has no FFI obligations; forbid all unsafe code.
+#![forbid(unsafe_code)]
+#![deny(unsafe_op_in_unsafe_fn)]
+
 use clap::Parser;
 use quick_xml::events::Event;
 use quick_xml::reader::Reader;

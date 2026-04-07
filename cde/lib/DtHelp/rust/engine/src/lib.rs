@@ -1,3 +1,5 @@
+#![deny(unsafe_op_in_unsafe_fn)]
+
 use cosmic_text::{Attrs, Buffer, Color, FontSystem, Metrics, SwashCache};
 use libc::c_char;
 use tiny_skia::{Paint, PixmapMut, Transform};

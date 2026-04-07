@@ -1,3 +1,7 @@
+// This crate has no FFI obligations; forbid all unsafe code.
+#![forbid(unsafe_code)]
+#![deny(unsafe_op_in_unsafe_fn)]
+
 /*
  * dtterm_shim — CDE Terminal Emulator Wrapper
  *

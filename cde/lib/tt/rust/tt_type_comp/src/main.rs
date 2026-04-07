@@ -1,3 +1,8 @@
+// This crate has no FFI obligations; forbid all unsafe code.
+#![forbid(unsafe_code)]
+// Every unsafe operation must be explicitly annotated at the call site.
+#![deny(unsafe_op_in_unsafe_fn)]
+
 mod ast;
 mod parser;
 

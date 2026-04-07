@@ -1,3 +1,6 @@
+// Every unsafe operation inside an unsafe fn must be explicitly annotated.
+#![deny(unsafe_op_in_unsafe_fn)]
+
 pub mod format;
 pub mod parser;
 pub mod raima;

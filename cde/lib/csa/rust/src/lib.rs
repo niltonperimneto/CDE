@@ -1,3 +1,5 @@
+#![deny(unsafe_op_in_unsafe_fn)]
+
 // Include generated modules
 pub mod agent {
     #![allow(non_snake_case)]
