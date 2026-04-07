@@ -26,30 +26,30 @@ pub static Tttk_message_id: SyncConstPtr = SyncConstPtr(b"messageID\0".as_ptr() 
 
 // ... existing code ...
 
-use once_cell::sync::{Lazy, OnceCell};
 use std::collections::{HashSet, VecDeque};
 use std::sync::atomic::{AtomicI32, Ordering};
-use std::sync::{Arc, Mutex};
+use std::sync::{Arc, LazyLock, Mutex, OnceLock};
 use std::thread;
 use std::time::Duration;
 use zbus::blocking::Connection;
 
 // Global queue for incoming messages
-static MSG_QUEUE: Lazy<Mutex<VecDeque<TtMessage>>> = Lazy::new(|| Mutex::new(VecDeque::new()));
+static MSG_QUEUE: LazyLock<Mutex<VecDeque<TtMessage>>> =
+    LazyLock::new(|| Mutex::new(VecDeque::new()));
 
 // Pipe FDs for waking up the main loop
 static PIPE_READ: AtomicI32 = AtomicI32::new(-1);
 static PIPE_WRITE: AtomicI32 = AtomicI32::new(-1);
 
-static CONN: OnceCell<Connection> = OnceCell::new();
+static CONN: OnceLock<Connection> = OnceLock::new();
 
 // ---------------------------------------------------------------------------
 // Allocation registry — tracks every pointer produced by CString::into_raw()
 // so that tt_free() can safely reclaim it without risking a double-free on
 // pointers that were allocated by C code and passed to tt_free() by mistake.
 // ---------------------------------------------------------------------------
-static ALLOC_REGISTRY: Lazy<Mutex<HashSet<usize>>> =
-    Lazy::new(|| Mutex::new(HashSet::new()));
+static ALLOC_REGISTRY: LazyLock<Mutex<HashSet<usize>>> =
+    LazyLock::new(|| Mutex::new(HashSet::new()));
 
 /// Record a `CString::into_raw()` pointer so `tt_free` can reclaim it.
 fn register_alloc(ptr: *mut c_char) {

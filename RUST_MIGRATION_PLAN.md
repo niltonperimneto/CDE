@@ -239,9 +239,9 @@ Turn stubs into real implementations; add error propagation.
 | P2-4 | **ttsession** | `ptype_db_path()` reads `$DTDIR` / `$CDE_CONFIGURATION_TOP` with `/etc/dt/tt/types` fallback | ✅ Done |
 | P2-5 | **libtt_shim** | Serialise `TtMessage.args` into D-Bus body using `serde`; stop dropping arguments | pending |
 | P2-6 | **libtt_shim** | Implement circuit-breaker in `listen_loop` (max 5 consecutive errors → exponential backoff) | pending |
-| P2-7 | **DtHelp engine** | Add `checked_mul` overflow guard on pixel buffer size; validate `width > 0 && height > 0` | pending |
-| P2-8 | **dtterm_shim** | Implement `-geometry WxH+X+Y` → `--dimensions`/`--position` alacritty translation | pending |
-| P2-9 | **All crates** | Replace `once_cell` with `std::sync::OnceLock` / `std::sync::LazyLock` (Rust ≥ 1.80) | pending |
+| P2-7 | **DtHelp engine** | `checked_mul` overflow guard; zero-dimension early return in `dthelp_engine_render` | ✅ Done |
+| P2-8 | **dtterm_shim** | `parse_geometry()` translates `WxH[+X+Y]` → `--dimensions C R`; position warn on Wayland | ✅ Done |
+| P2-9 | **libtt_shim** | `once_cell` removed; `LazyLock`/`OnceLock` from `std::sync` used throughout | ✅ Done |
 
 ### Phase 3 — Dependency Modernisation (1–2 sprints)
 
