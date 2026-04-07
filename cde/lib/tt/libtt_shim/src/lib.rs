@@ -27,7 +27,7 @@ pub static Tttk_message_id: SyncConstPtr = SyncConstPtr(b"messageID\0".as_ptr() 
 // ... existing code ...
 
 use once_cell::sync::{Lazy, OnceCell};
-use std::collections::VecDeque;
+use std::collections::{HashSet, VecDeque};
 use std::sync::atomic::{AtomicI32, Ordering};
 use std::sync::{Arc, Mutex};
 use std::thread;
@@ -42,6 +42,30 @@ static PIPE_READ: AtomicI32 = AtomicI32::new(-1);
 static PIPE_WRITE: AtomicI32 = AtomicI32::new(-1);
 
 static CONN: OnceCell<Connection> = OnceCell::new();
+
+// ---------------------------------------------------------------------------
+// Allocation registry — tracks every pointer produced by CString::into_raw()
+// so that tt_free() can safely reclaim it without risking a double-free on
+// pointers that were allocated by C code and passed to tt_free() by mistake.
+// ---------------------------------------------------------------------------
+static ALLOC_REGISTRY: Lazy<Mutex<HashSet<usize>>> =
+    Lazy::new(|| Mutex::new(HashSet::new()));
+
+/// Record a `CString::into_raw()` pointer so `tt_free` can reclaim it.
+fn register_alloc(ptr: *mut c_char) {
+    if let Ok(mut reg) = ALLOC_REGISTRY.lock() {
+        reg.insert(ptr as usize);
+    }
+}
+
+/// Allocate a new C string, register it for later `tt_free`, and return
+/// the raw pointer.  Panics only if the literal contains an interior NUL,
+/// which cannot happen for the constants used here.
+fn alloc_cstring(s: &str) -> *mut c_char {
+    let ptr = CString::new(s).expect("alloc_cstring: interior NUL").into_raw();
+    register_alloc(ptr);
+    ptr
+}
 
 #[no_mangle]
 pub extern "C" fn tt_initialize() -> TtStatus {
@@ -162,17 +186,13 @@ fn listen_loop(conn: Connection) {
 #[no_mangle]
 pub extern "C" fn tt_default_session() -> *mut c_char {
     eprintln!("[libtt_shim] tt_default_session called");
-    // Return a dummy session ID
-    CString::new("01 12345 127.0.0.1 1000 1000 /tmp/.TT_SESSION")
-        .unwrap()
-        .into_raw()
+    alloc_cstring("01 12345 127.0.0.1 1000 1000 /tmp/.TT_SESSION")
 }
 
 #[no_mangle]
 pub extern "C" fn tt_open() -> *mut c_char {
     eprintln!("[libtt_shim] tt_open called");
-    // Return a dummy procid
-    CString::new("12345").unwrap().into_raw()
+    alloc_cstring("12345")
 }
 
 #[no_mangle]
@@ -190,13 +210,21 @@ pub extern "C" fn tt_fd() -> c_int {
 
 #[no_mangle]
 pub extern "C" fn tt_free(p: *mut c_void) {
-    // In real implementation, we need to know if this was allocated by Rust (CString) or C.
-    // shim implementation of tt_default_session returns CString::into_raw, so strict tt_free would need to reclaim it.
-    // For now, specific leak is better than double-free crash.
-    if !p.is_null() {
-        unsafe {
-            // let _ = CString::from_raw(p as *mut c_char); // Uncomment if we track allocations accurately
-        }
+    if p.is_null() {
+        return;
+    }
+    // Only reclaim pointers that were produced by Rust (registered in ALLOC_REGISTRY).
+    // Pointers allocated by C code must not be freed here to avoid double-free UB.
+    let addr = p as usize;
+    let owned = ALLOC_REGISTRY
+        .lock()
+        .map(|mut reg| reg.remove(&addr))
+        .unwrap_or(false);
+    if owned {
+        // SAFETY: `addr` was inserted by `register_alloc` which was called
+        // immediately after `CString::into_raw()`, so the pointer is a valid,
+        // non-aliased CString that has not yet been freed.
+        unsafe { drop(CString::from_raw(p as *mut c_char)) };
     }
 }
 

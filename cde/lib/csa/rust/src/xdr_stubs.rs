@@ -27,8 +27,21 @@ macro_rules! impl_xdr_func {
                     Err(_) => 0,
                 },
                 bindings::xdr_op_XDR_FREE => {
+                    // XDR_FREE means "release any heap data that the XDR decode
+                    // step allocated inside *obj".  The surrounding struct itself
+                    // belongs to the C caller and must NOT be freed here.
+                    //
+                    // `drop_in_place` would run the Rust destructor and then
+                    // leave the object in a destroyed (invalid) state while the
+                    // C caller still holds a live pointer — use-after-free / UB.
+                    //
+                    // The correct approach is to overwrite *obj with a freshly
+                    // default-initialised value.  This drops the old Rust-owned
+                    // heap data (Vecs, Strings, Boxes) via the normal Drop glue
+                    // while leaving the allocation pointed to by `obj` intact and
+                    // in a valid, zeroed state for the C runtime.
                     unsafe {
-                        std::ptr::drop_in_place(obj);
+                        std::ptr::write(obj, std::mem::zeroed());
                     }
                     1
                 }

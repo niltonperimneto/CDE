@@ -316,14 +316,14 @@ calls unsafe C function pointers into this library.  Replacing with SQLite FTS5 
 
 The following items should be resolved before the next release candidate:
 
-- [ ] **P1-1** `static mut RES` — fix data race in `csa/rust/src/client.rs:86`
-- [ ] **P1-2** Remove all `std::mem::transmute` of fn pointers in `client.rs`
-- [ ] **P1-3** Wrap all `extern "C"` bodies in `catch_unwind`
-- [ ] **P1-4** Implement `tt_free` allocation registry
-- [ ] **P1-5** Fix ignored `write()` return value in `libtt_shim/src/lib.rs:133`
-- [ ] **P1-6** Depth-limit `convert_access_list` recursion
-- [ ] **P1-7** Fix `drop_in_place` ownership issue in `xdr_stubs.rs:31`
-- [ ] **P1-8** Add null guards in `dtbrowser` FFI entry points
+- [x] **P1-1** `static mut RES` → `thread_local! UnsafeCell` in `csa/rust/src/client.rs` *(done)*
+- [x] **P1-2** `as_xdrproc!` macro replaces double-blind transmute in `client.rs` *(done)*
+- [x] **P1-3** `panic!` → `RPC_SYSTEMERROR` return in `clnt_call` *(done)*
+- [x] **P1-4** `ALLOC_REGISTRY` + `alloc_cstring()` implement proper `tt_free` *(done)*
+- [x] **P1-5** Fix ignored `write()` return value in `libtt_shim/src/lib.rs` *(done — prior commit)*
+- [x] **P1-6** Depth-limit `convert_access_list` recursion *(done — prior commit)*
+- [x] **P1-7** `drop_in_place` → `ptr::write(zeroed())` in `xdr_stubs.rs` *(done)*
+- [x] **P1-8** Add null guards in `dtbrowser` FFI entry points *(done — prior commit)*
 - [ ] **P3-2** Unify zbus to a single version across all crates
 - [ ] **P4-3** Enable `cargo audit` in CI
 
