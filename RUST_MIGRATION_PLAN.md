@@ -327,7 +327,8 @@ The following items should be resolved before the next release candidate:
 - [x] **P3-1** Replace `xdr-codec 0.2` with in-tree `cde_xdr` crate *(done — Phases A–F complete, 65 tests pass)*
 - [x] **P3-2** Unify zbus to a single version across all crates *(done — libtt_shim and ttsession both on zbus 5)*
 - [x] **P3-4** Workspace `Cargo.toml` at `cde/` root *(done — 12 crates unified, env_logger 0.11 everywhere)*
-- [ ] **P4-3** Enable `cargo audit` in CI *(requires `cargo install cargo-audit`; add to meson test suite)*
+- [x] **P4-3** `cargo audit` CI integration *(done — `cde/.cargo/audit.toml` + `cde/scripts/rust-ci.sh`; install cargo-audit to activate)*
+- [x] **P4-6** `#![forbid(unsafe_code)]` / `#![deny(unsafe_op_in_unsafe_fn)]` on all remaining crates *(done)*
 
 ---
 
