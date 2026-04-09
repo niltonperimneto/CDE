@@ -4,7 +4,10 @@ version = "0.1.0"
 edition = "2021"
 
 [lib]
-crate-type = ["staticlib"]
+# staticlib: produces the .a used by C callers.
+# rlib: allows the fuzz target (and future Rust tests) to link against
+#       the pure-Rust modules (QueryParser, Searcher, etc.) directly.
+crate-type = ["staticlib", "rlib"]
 
 [dependencies]
 libc = "0.2.180"

@@ -237,8 +237,8 @@ Turn stubs into real implementations; add error propagation.
 | P2-2 | **DtSearch** | `DtSearchQuery` calls real `QueryParser` + `Searcher`; `DtSearchExit` no longer calls `process::exit` | ✅ Done |
 | P2-3 | **ttsession** | `ToolTalkManager` already derives `Clone`; updated to zbus 5 API | ✅ Done |
 | P2-4 | **ttsession** | `ptype_db_path()` reads `$DTDIR` / `$CDE_CONFIGURATION_TOP` with `/etc/dt/tt/types` fallback | ✅ Done |
-| P2-5 | **libtt_shim** | Serialise `TtMessage.args` into D-Bus body using `serde`; stop dropping arguments | pending |
-| P2-6 | **libtt_shim** | Implement circuit-breaker in `listen_loop` (max 5 consecutive errors → exponential backoff) | pending |
+| P2-5 | **libtt_shim** | Serialise `TtMessage.args` into D-Bus body using `serde`; stop dropping arguments | ✅ Done |
+| P2-6 | **libtt_shim** | Implement circuit-breaker in `listen_loop` (max 5 consecutive errors → exponential backoff) | ✅ Done |
 | P2-7 | **DtHelp engine** | `checked_mul` overflow guard; zero-dimension early return in `dthelp_engine_render` | ✅ Done |
 | P2-8 | **dtterm_shim** | `parse_geometry()` translates `WxH[+X+Y]` → `--dimensions C R`; position warn on Wayland | ✅ Done |
 | P2-9 | **libtt_shim** | `once_cell` removed; `LazyLock`/`OnceLock` from `std::sync` used throughout | ✅ Done |
@@ -329,6 +329,11 @@ The following items should be resolved before the next release candidate:
 - [x] **P3-4** Workspace `Cargo.toml` at `cde/` root *(done — 12 crates unified, env_logger 0.11 everywhere)*
 - [x] **P4-3** `cargo audit` CI integration *(done — `cde/.cargo/audit.toml` + `cde/scripts/rust-ci.sh`; install cargo-audit to activate)*
 - [x] **P4-6** `#![forbid(unsafe_code)]` / `#![deny(unsafe_op_in_unsafe_fn)]` on all remaining crates *(done)*
+- [x] **P2-5** `TtMessage.args` serialised into D-Bus body as `a(ss)` in `tt_message_send` *(done)*
+- [x] **P2-6** Circuit-breaker in `listen_loop` — 5 error cap, exponential backoff, pipe invalidation *(done)*
+- [x] **T-5** `TT_WRN_NOTFOUND` placeholder replaced with full set of `TT_OK/TT_WRN_*/TT_ERR_*` constants matching `tt_c.h` *(done)*
+- [x] **P1-7** Corrected: `XDR_FREE` uses `drop_in_place + Default::default()` — `mem::zeroed()` was UB for String/Vec/Box *(done)*
+- [x] **P4-2** `cargo-fuzz` targets added for DtSearch QueryParser and ToolTalk message encoding *(done — DtSearch + tt_shim fuzz workspaces)*
 
 ---
 

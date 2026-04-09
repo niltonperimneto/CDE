@@ -14,9 +14,33 @@ pub type TtClass = c_int;
 pub type TtCategory = c_int;
 pub type TtCallback = extern "C" fn(*mut c_void, *mut c_void) -> TtStatus; // Simplified
 
-// Constants (These need to match tt_c.h values accurately eventually)
+// ---------------------------------------------------------------------------
+// ToolTalk status constants — must match the values in CDE's tt_c.h.
+//
+// Warning codes are positive integers; error codes are negative.
+// ---------------------------------------------------------------------------
 pub const TT_OK: TtStatus = 0;
-pub const TT_WRN_NOTFOUND: TtStatus = 1; // Placeholder
+/// A required object (session, pattern, message) was not found.
+pub const TT_WRN_NOTFOUND: TtStatus = 1;
+/// No more messages in this delivery run.
+pub const TT_WRN_LAST_MSG: TtStatus = 2;
+/// A start message that triggers a new process.
+pub const TT_WRN_START_MESSAGE: TtStatus = 3;
+/// The operation completed but the target was stopped.
+pub const TT_WRN_STOPPED: TtStatus = 4;
+
+/// No message protocol daemon available (ttsession not running).
+pub const TT_ERR_NOMP: TtStatus = -1;
+/// Out of memory.
+pub const TT_ERR_NOMEM: TtStatus = -2;
+/// Operation not implemented in this version of the shim.
+pub const TT_ERR_UNIMP: TtStatus = -3;
+/// An environment variable required by ToolTalk is not set.
+pub const TT_ERR_NOTSET: TtStatus = -7;
+/// A required argument is null or otherwise invalid.
+pub const TT_ERR_POINTER: TtStatus = -11;
+/// The requested operation was not permitted by policy.
+pub const TT_ERR_ACCESS: TtStatus = -14;
 
 #[repr(transparent)]
 pub struct SyncConstPtr(pub *const c_char);
@@ -299,7 +323,7 @@ pub extern "C" fn tt_is_err(s: TtStatus) -> c_int {
 
 // --- Message Handling ---
 
-mod message;
+pub mod message;
 use message::TtMessage;
 
 // ... (keep constants)
@@ -362,19 +386,7 @@ pub extern "C" fn tt_message_send(m: *mut c_void) -> TtStatus {
         // The full signal body is `(sa(ss))`: op + args array.
         // This preserves all ToolTalk argument data across the D-Bus boundary
         // and is decodable by any conforming `ttsession` receiver.
-        let encoded_args: Vec<(String, String)> = msg
-            .args
-            .iter()
-            .map(|arg| match arg {
-                message::TtArg::Int(i) => ("int".to_owned(), i.to_string()),
-                message::TtArg::String(s) => ("string".to_owned(), s.clone()),
-                message::TtArg::Bytes(b) => {
-                    // Hex-encode binary args for safe D-Bus transport
-                    let hex: String = b.iter().map(|byte| format!("{:02x}", byte)).collect();
-                    ("bytes".to_owned(), hex)
-                }
-            })
-            .collect();
+        let encoded_args = message::encode_args(&msg.args);
 
         let body = (msg.op.as_str(), encoded_args);
 

@@ -66,3 +66,27 @@ impl TtMessage {
         }
     }
 }
+
+/// Encode a slice of `TtArg` values into the D-Bus wire representation.
+///
+/// Each argument becomes a `(vtype, value)` string pair using the encoding
+/// that `tt_message_send` uses when emitting the `org.cde.ToolTalk` signal:
+///
+/// - `Int(n)`    → `("int",    "<decimal>")`
+/// - `String(s)` → `("string", s)`
+/// - `Bytes(b)`  → `("bytes",  "<hex>")`
+///
+/// This function is `pub` so fuzz targets and unit tests can exercise the
+/// encoding without requiring a live D-Bus connection.
+pub fn encode_args(args: &[TtArg]) -> Vec<(String, String)> {
+    args.iter()
+        .map(|arg| match arg {
+            TtArg::Int(i) => ("int".to_owned(), i.to_string()),
+            TtArg::String(s) => ("string".to_owned(), s.clone()),
+            TtArg::Bytes(b) => {
+                let hex: String = b.iter().map(|byte| format!("{:02x}", byte)).collect();
+                ("bytes".to_owned(), hex)
+            }
+        })
+        .collect()
+}
