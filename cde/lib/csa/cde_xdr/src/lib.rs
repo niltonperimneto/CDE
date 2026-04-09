@@ -183,7 +183,7 @@ mod tests {
     #[test]
     fn roundtrip_bytes_padded() {
         // 3 bytes → 1 byte of padding
-        let v = vec![0xCA, 0xFE, 0xBA];
+        let v: Vec<u8> = vec![0xCA, 0xFE, 0xBA];
         let mut buf = Vec::new();
         let n = pack(&v, &mut buf).unwrap();
         assert_eq!(n, 8); // 4 (len) + 3 (data) + 1 (pad)

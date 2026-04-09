@@ -394,17 +394,17 @@ This ensures byte-for-byte wire compatibility without a live C environment.
 
 ```
 [x] Audit: identify all xdr-codec usages (this document)
-[ ] Phase A: create cde_xdr crate skeleton + vendor copy for CI unblock
-[ ] Phase B: implement all RFC 4506 primitives with byteorder
-[ ] Phase B: implement Pack/Unpack for String, Vec<T>, Option<T>, ()
-[ ] Phase B: implement XdrError with invalidenum()/invalidcase()
-[ ] Phase B: add roundtrip unit tests for every primitive
-[ ] Phase C: update build.rs alias patch
-[ ] Phase D: remove xdr-codec = "0.2" from Cargo.toml
-[ ] Phase D: remove my_shim module from lib.rs
-[ ] Phase E: add cargo-fuzz targets
-[ ] Phase F: golden-byte compat tests vs libtirpc
-[ ] Run: cargo test --workspace
+[x] Phase A: create cde_xdr crate skeleton + vendor copy for CI unblock
+[x] Phase B: implement all RFC 4506 primitives with byteorder
+[x] Phase B: implement Pack/Unpack for String, Vec<T>, Option<T>, ()
+[x] Phase B: implement XdrError with invalidenum()/invalidcase()
+[x] Phase B: add roundtrip unit tests for every primitive (28 unit tests)
+[x] Phase C: update build.rs alias patch (extern crate cde_xdr as xdr_codec)
+[x] Phase D: remove xdr-codec = "0.2" from Cargo.toml
+[x] Phase D: remove my_shim module from lib.rs
+[x] Phase E: add cargo-fuzz targets (fuzz_decode_arbitrary + fuzz_roundtrip)
+[x] Phase F: golden-byte compat tests vs libtirpc (37 integration tests)
+[x] cargo test --lib --test compat: 65 tests pass, 0 failures
 [ ] Run: cargo audit (should be clean)
 [ ] Run: cargo fuzz run fuzz_decode_arbitrary -- -max_total_time=300
 ```

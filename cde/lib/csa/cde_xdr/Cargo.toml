@@ -8,5 +8,9 @@ license = "LGPL-2.0"
 [dependencies]
 byteorder = "1.5"
 
+[[test]]
+name = "compat"
+path = "tests/compat.rs"
+
 [dev-dependencies]
-# For property-based roundtrip tests
+# No extra dev-deps needed — compat.rs uses only cde_xdr + std
