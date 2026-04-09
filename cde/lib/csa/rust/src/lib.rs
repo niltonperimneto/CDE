@@ -1,5 +1,8 @@
 #![deny(unsafe_op_in_unsafe_fn)]
 
+// Alias cde_xdr as xdr_codec so xdrgen-generated code and existing imports work unchanged.
+extern crate cde_xdr as xdr_codec;
+
 // Include generated modules
 pub mod agent {
     #![allow(non_snake_case)]
@@ -91,14 +94,6 @@ pub enum Update_Status {
     update_failed = 1,
 }
 
-pub mod my_shim {
-    pub fn invalidenum<T>(_: T) -> xdr_codec::Error {
-        xdr_codec::Error::invalidenum()
-    }
-    pub fn invalidcase<T>(_: T) -> xdr_codec::Error {
-        xdr_codec::Error::invalidcase()
-    }
-}
 
 #[no_mangle]
 pub extern "C" fn xdr_Update_Status(_xdrs: *mut c_void, _obj: *mut Update_Status) -> i32 {

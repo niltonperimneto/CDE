@@ -8,7 +8,7 @@ crate-type = ["staticlib", "rlib"]
 
 [dependencies]
 libc = "0.2"
-xdr-codec = "0.2"
+cde_xdr = { path = "../cde_xdr" }
 
 [build-dependencies]
 cbindgen = "0.26"
