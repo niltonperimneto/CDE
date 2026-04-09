@@ -15,7 +15,5 @@ cbindgen = "0.26"
 bindgen = "0.69"
 # We assume xdrgen is installed as a binary tool (cargo install xdrgen)
 
-[profile.release]
-strip = false
-lto = false
+# [profile.release] is now defined at the workspace root (cde/Cargo.toml)
 

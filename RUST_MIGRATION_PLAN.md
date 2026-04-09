@@ -324,8 +324,10 @@ The following items should be resolved before the next release candidate:
 - [x] **P1-6** Depth-limit `convert_access_list` recursion *(done — prior commit)*
 - [x] **P1-7** `drop_in_place` → `ptr::write(zeroed())` in `xdr_stubs.rs` *(done)*
 - [x] **P1-8** Add null guards in `dtbrowser` FFI entry points *(done — prior commit)*
-- [ ] **P3-2** Unify zbus to a single version across all crates
-- [ ] **P4-3** Enable `cargo audit` in CI
+- [x] **P3-1** Replace `xdr-codec 0.2` with in-tree `cde_xdr` crate *(done — Phases A–F complete, 65 tests pass)*
+- [x] **P3-2** Unify zbus to a single version across all crates *(done — libtt_shim and ttsession both on zbus 5)*
+- [x] **P3-4** Workspace `Cargo.toml` at `cde/` root *(done — 12 crates unified, env_logger 0.11 everywhere)*
+- [ ] **P4-3** Enable `cargo audit` in CI *(requires `cargo install cargo-audit`; add to meson test suite)*
 
 ---
 
