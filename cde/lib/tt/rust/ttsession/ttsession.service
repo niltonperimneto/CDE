@@ -1,0 +1,47 @@
+# systemd user service unit for the CDE ToolTalk D-Bus broker.
+#
+# Installation:
+#   User (per-login session):
+#     cp ttsession.service ~/.config/systemd/user/
+#     systemctl --user daemon-reload
+#     systemctl --user enable --now ttsession
+#
+#   System-wide:
+#     cp ttsession.service /usr/lib/systemd/user/
+#     systemctl --user daemon-reload
+#
+# The broker is also auto-started on-demand when the first application calls
+# org.cde.ToolTalk.SendMessage, via D-Bus session activation (see the
+# accompanying org.cde.ToolTalk.service file).
+
+[Unit]
+Description=CDE ToolTalk Session Message Broker
+Documentation=man:ttsession(1)
+# Require the session D-Bus socket to be available before we start.
+After=dbus.socket
+Requires=dbus.socket
+
+[Service]
+# Type=dbus: systemd waits until we acquire BusName on the session bus
+# before marking the service as started.  This ensures dependents can
+# safely call org.cde.ToolTalk.SendMessage as soon as they start.
+Type=dbus
+BusName=org.cde.ToolTalk
+ExecStart=/usr/lib/cde/ttsession
+
+# Restart on unexpected crashes; give a short grace period between attempts.
+Restart=on-failure
+RestartSec=2s
+
+# Security hardening — ttsession needs no special privileges.
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=read-only
+
+# Forward stdout/stderr to the journal for `journalctl --user -u ttsession`.
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=default.target
