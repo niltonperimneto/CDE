@@ -11,17 +11,19 @@ use libc::{c_char, c_int, c_long};
 use search::{QueryParser, Searcher};
 use std::ffi::CStr;
 use std::sync::atomic::{AtomicBool, Ordering};
-use std::sync::OnceLock;
+use std::sync::Mutex;
 
 // ---------------------------------------------------------------------------
 // Initialisation state
 //
 // INITIALIZED gates all query operations: callers that skip DtSearchInit
 // get a clear error code (DtSrFATAL = -1) rather than a silent no-op.
-// DB_PATH stores the database path supplied at init time.
+//
+// DB_PATH uses Mutex<Option<String>> rather than OnceLock<String> so that
+// DtSearchReinit() can clear and replace it (OnceLock cannot be reset).
 // ---------------------------------------------------------------------------
 static INITIALIZED: AtomicBool = AtomicBool::new(false);
-static DB_PATH: OnceLock<String> = OnceLock::new();
+static DB_PATH: Mutex<Option<String>> = Mutex::new(None);
 
 // DtSearch return codes (from DtSearch.h)
 const DTSROK: c_int = 0;
@@ -46,24 +48,31 @@ pub extern "C" fn DtSearchInit(
     // Extract database path from config_file, if provided.
     if !config_file.is_null() {
         if let Ok(path) = unsafe { CStr::from_ptr(config_file) }.to_str() {
-            // OnceLock::set fails silently if already set — that is fine here
-            // because a second concurrent DtSearchInit is harmless.
-            let _ = DB_PATH.set(path.to_owned());
+            if let Ok(mut db) = DB_PATH.lock() {
+                *db = Some(path.to_owned());
+            }
         }
     }
 
     INITIALIZED.store(true, Ordering::Release);
-    eprintln!(
-        "[DtSearch] Initialised. DB path: {}",
-        DB_PATH.get().map(String::as_str).unwrap_or("<none>")
-    );
+    let path_display = DB_PATH
+        .lock()
+        .ok()
+        .and_then(|g| g.clone())
+        .unwrap_or_else(|| "<none>".to_owned());
+    eprintln!("[DtSearch] Initialised. DB path: {}", path_display);
     DTSROK
 }
 
 #[unsafe(no_mangle)]
 pub extern "C" fn DtSearchReinit() -> c_int {
-    // Clear state so DtSearchInit can run again.
+    // Clear both the init flag and the stored path so that the next
+    // DtSearchInit() call can supply a new database path.
+    // (OnceLock cannot be reset, hence DB_PATH uses Mutex<Option<>>.)
     INITIALIZED.store(false, Ordering::Release);
+    if let Ok(mut db) = DB_PATH.lock() {
+        *db = None;
+    }
     eprintln!("[DtSearch] Reinitialised");
     DTSROK
 }
@@ -90,7 +99,7 @@ pub extern "C" fn DtSearchQuery(
     let db = if !dbname.is_null() {
         unsafe { CStr::from_ptr(dbname) }.to_str().ok().map(str::to_owned)
     } else {
-        DB_PATH.get().cloned()
+        DB_PATH.lock().ok().and_then(|guard| guard.clone())
     };
 
     let db_path = match db {
@@ -138,18 +147,31 @@ pub extern "C" fn DtSearchQuery(
     if let Err(e) = db_parser.open(&db_path) {
         eprintln!("[DtSearch] Cannot open database '{}': {}", db_path, e);
         // Database unavailable is non-fatal for a stub build — return 0 hits.
+        // Always null *dittolist to prevent stale-pointer dereferences on C side.
+        if !_dittolist.is_null() {
+            unsafe { *_dittolist = std::ptr::null_mut() };
+        }
         if !dittocount.is_null() {
             unsafe { *dittocount = 0 };
         }
         return DTSROK;
     }
 
-    let searcher = Searcher::new();
+    // Pass the already-opened parser into Searcher so that get_universe()
+    // (used by Query::Not) can call read_dbrec() on a connected parser.
+    // Searcher::new() creates a disconnected parser and would always return
+    // an empty universe for NOT queries.
+    let searcher = Searcher::with_parser(db_parser);
     let results = searcher.search(&query);
     let count = results.len() as c_long;
 
     eprintln!("[DtSearch] Found {} results", count);
 
+    // Stub: real result marshalling not yet implemented.
+    // Zero both outputs so the C caller never dereferences a stale pointer.
+    if !_dittolist.is_null() {
+        unsafe { *_dittolist = std::ptr::null_mut() };
+    }
     if !dittocount.is_null() {
         unsafe { *dittocount = count };
     }

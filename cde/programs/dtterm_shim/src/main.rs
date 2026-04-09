@@ -70,19 +70,23 @@ struct Geometry {
 }
 
 /// Parse a CDE/X11 geometry string of the form `[C]x[R][+X+Y]` or
-/// `[C]x[R][-X-Y]`.  Any part may be absent.  Returns `None` only if
-/// the string is entirely unparseable.
+/// `[C]x[R][-X-Y]`.  The `x` separator between columns and rows is required;
+/// the column, row, and position fields are individually optional.
+/// Position-only strings like `+100+200` are **not** supported.
+/// Returns `None` if no `x`/`X` separator is found.
 ///
 /// Examples: `80x24`, `80x24+100+200`, `132x50-0-0`
 fn parse_geometry(s: &str) -> Option<Geometry> {
-    // Split on 'x' (case-insensitive, though canonical is lower-case)
     let s = s.trim();
     if s.is_empty() {
         return None;
     }
 
-    // Find the 'x' separator between columns and rows
-    let x_pos = s.to_lowercase().find('x')?;
+    // Locate the 'x'/'X' separator directly in the original string.
+    // Using `to_lowercase().find()` would give a byte offset into the
+    // lowercased copy; for non-ASCII input Unicode lowercasing can change
+    // string length, making that offset invalid for slicing `s` (panic).
+    let x_pos = s.find(|c| c == 'x' || c == 'X')?;
     let cols_str = &s[..x_pos];
     let rest = &s[x_pos + 1..];
 

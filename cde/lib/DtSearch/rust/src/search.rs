@@ -21,6 +21,16 @@ impl Searcher {
         }
     }
 
+    /// Create a `Searcher` backed by an already-opened parser.
+    ///
+    /// Prefer this over `new()` when a `DtSearchParser` has already been
+    /// opened for the target database — passing it in ensures that
+    /// `get_universe()` (used by `Query::Not`) can call `read_dbrec()` on a
+    /// connected handle instead of always returning an empty set.
+    pub fn with_parser(parser: DtSearchParser) -> Self {
+        Searcher { parser }
+    }
+
     pub fn search(&self, query: &Query) -> HashSet<i32> {
         match query {
             Query::Term(term) => self.search_term(term),

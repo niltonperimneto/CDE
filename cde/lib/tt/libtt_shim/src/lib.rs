@@ -63,12 +63,27 @@ fn register_alloc(ptr: *mut c_char) {
 }
 
 /// Allocate a new C string, register it for later `tt_free`, and return
-/// the raw pointer.  Panics only if the literal contains an interior NUL,
-/// which cannot happen for the constants used here.
+/// the raw pointer.
+///
+/// Returns `null` and logs a warning if `s` contains an interior NUL byte.
+/// This is **intentionally** non-panicking: `alloc_cstring` is called from
+/// `extern "C"` functions, and a Rust panic unwinding across a C stack frame
+/// is undefined behaviour.  C callers must check the return value for null.
 fn alloc_cstring(s: &str) -> *mut c_char {
-    let ptr = CString::new(s).expect("alloc_cstring: interior NUL").into_raw();
-    register_alloc(ptr);
-    ptr
+    match CString::new(s) {
+        Ok(cs) => {
+            let ptr = cs.into_raw();
+            register_alloc(ptr);
+            ptr
+        }
+        Err(_) => {
+            eprintln!(
+                "[libtt_shim] alloc_cstring: interior NUL in string (len={}), returning NULL",
+                s.len()
+            );
+            std::ptr::null_mut()
+        }
+    }
 }
 
 #[no_mangle]

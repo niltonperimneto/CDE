@@ -187,7 +187,11 @@ impl Pack for String {
     fn pack<W: Write>(&self, w: &mut W) -> Result<usize> {
         let bytes = self.as_bytes();
         let len = bytes.len();
-        (len as u32).pack(w)?;
+        // XDR length field is 4 bytes (u32). Strings longer than u32::MAX
+        // cannot be represented; return an error rather than silently truncate.
+        let len32 = u32::try_from(len)
+            .map_err(|_| XdrError::size_limit(len, u32::MAX as usize))?;
+        len32.pack(w)?;
         w.write_all(bytes)?;
         let pad = write_padding(w, len)?;
         Ok(4 + len + pad)
@@ -221,7 +225,10 @@ const MAX_OPAQUE_LEN: usize = 16 * 1024 * 1024;
 impl Pack for Vec<u8> {
     fn pack<W: Write>(&self, w: &mut W) -> Result<usize> {
         let len = self.len();
-        (len as u32).pack(w)?;
+        // XDR opaque length field is 4 bytes; reject oversized inputs.
+        let len32 = u32::try_from(len)
+            .map_err(|_| XdrError::size_limit(len, u32::MAX as usize))?;
+        len32.pack(w)?;
         w.write_all(self)?;
         let pad = write_padding(w, len)?;
         Ok(4 + len + pad)
@@ -251,7 +258,10 @@ const MAX_ARRAY_ELEMS: usize = 1_000_000;
 
 impl<T: Pack> Pack for Vec<T> {
     fn pack<W: Write>(&self, w: &mut W) -> Result<usize> {
-        let mut sz = (self.len() as u32).pack(w)?;
+        // XDR array count field is 4 bytes; reject oversized inputs.
+        let count32 = u32::try_from(self.len())
+            .map_err(|_| XdrError::size_limit(self.len(), u32::MAX as usize))?;
+        let mut sz = count32.pack(w)?;
         for item in self {
             sz += item.pack(w)?;
         }

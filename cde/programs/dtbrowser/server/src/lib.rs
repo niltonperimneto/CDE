@@ -3,14 +3,19 @@
 use std::ffi::CStr;
 use std::fs;
 use std::io::{Read, Write};
-use std::net::{TcpListener, TcpStream};
+use std::net::{SocketAddr, TcpListener, TcpStream};
 use std::os::raw::c_char;
 use std::path::Path;
 use std::sync::atomic::{AtomicBool, Ordering};
+use std::sync::OnceLock;
 use std::thread;
 
 // AtomicBool eliminates the data race that `static mut bool` caused.
 static SERVER_RUNNING: AtomicBool = AtomicBool::new(false);
+
+// Bound address stored so dtbrowser_server_stop() can connect-to-self to
+// unblock listener.incoming() / accept().
+static LISTEN_ADDR: OnceLock<SocketAddr> = OnceLock::new();
 
 #[no_mangle]
 pub extern "C" fn dtbrowser_server_start(root: *const c_char) -> u16 {
@@ -31,6 +36,8 @@ pub extern "C" fn dtbrowser_server_start(root: *const c_char) -> u16 {
     };
 
     let port = addr.port();
+    // Record the bound address before spawning so stop() can find it.
+    let _ = LISTEN_ADDR.set(addr);
     SERVER_RUNNING.store(true, Ordering::SeqCst);
 
     thread::spawn(move || {
@@ -55,18 +62,26 @@ pub extern "C" fn dtbrowser_server_start(root: *const c_char) -> u16 {
 #[no_mangle]
 pub extern "C" fn dtbrowser_server_stop() {
     SERVER_RUNNING.store(false, Ordering::SeqCst);
-    // In a real app we'd need to unblock the listener, e.g. connect to self
+    // Unblock the listener thread, which is blocked inside accept().
+    // A dummy connection to self causes accept() to return, the loop checks
+    // SERVER_RUNNING, finds it false, and exits cleanly.
+    if let Some(addr) = LISTEN_ADDR.get() {
+        let _ = TcpStream::connect(addr);
+    }
 }
 
 fn handle_client(mut stream: TcpStream, root: &str) {
     // 8 KiB is enough for a typical HTTP/1.1 request line + headers.
     // 1024 bytes would silently truncate requests with long headers or cookies.
     let mut buffer = [0; 8192];
-    if let Err(_) = stream.read(&mut buffer) {
-        return;
-    }
+    let n = match stream.read(&mut buffer) {
+        Ok(n) => n,
+        Err(_) => return,
+    };
 
-    let request = String::from_utf8_lossy(&buffer);
+    // Parse only the bytes actually read — the rest of `buffer` is zeroed and
+    // would produce spurious null bytes in the request line if not trimmed.
+    let request = String::from_utf8_lossy(&buffer[..n]);
     let path = parse_request(&request);
 
     // Security: canonicalize the target path and verify it stays within the allowed root.
