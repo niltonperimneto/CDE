@@ -1,0 +1,63 @@
+# CDE Rust migration — workspace root
+#
+# This workspace unifies all Rust crates in the CDE migration under a single
+# dependency resolver and lock file.  Benefits:
+#   • cargo build --workspace  — builds all crates together
+#   • cargo test  --workspace  — runs all test suites
+#   • cargo audit --workspace  — single CVE scan across all dependencies
+#   • cargo clippy --workspace — unified lint pass
+#
+# The fuzz crate (cde_xdr/fuzz/) is intentionally excluded because cargo-fuzz
+# requires its own workspace root.
+
+[workspace]
+resolver = "2"
+members = [
+    "lib/DtHelp/rust",
+    "lib/DtHelp/rust/engine",
+    "lib/DtHelp/rust/sgml2md",
+    "lib/DtSearch/rust",
+    "lib/csa/cde_xdr",
+    "lib/csa/rust",
+    "lib/tt/libtt_shim",
+    "lib/tt/rust/tt_type_comp",
+    "lib/tt/rust/ttsession",
+    "programs/dtbrowser/ipc",
+    "programs/dtbrowser/server",
+    "programs/dtterm_shim",
+]
+exclude = [
+    # cargo-fuzz must operate in its own workspace
+    "lib/csa/cde_xdr/fuzz",
+]
+
+# ---------------------------------------------------------------------------
+# Shared dependency versions
+#
+# Crates opt in to these by writing `dep.workspace = true` in their own
+# Cargo.toml.  Pinning here ensures every crate in the workspace uses the same
+# version, preventing duplicate transitive copies and audit blind-spots.
+# ---------------------------------------------------------------------------
+[workspace.dependencies]
+anyhow      = "1.0"
+byteorder   = "1.5"
+clap        = { version = "4.4", features = ["derive"] }
+env_logger  = "0.11"
+futures     = "0.3"
+libc        = "0.2"
+log         = "0.4"
+serde       = { version = "1.0", features = ["derive"] }
+serde_json  = "1.0"
+thiserror   = "1.0"
+tokio       = { version = "1.28", features = ["full"] }
+zbus        = "5"
+
+# Workspace-level profile tuning
+[profile.dev]
+# Keep debug info for all crates; useful for FFI debugging with gdb/lldb.
+debug = true
+
+[profile.release]
+# Keep symbols for CDE native library debugging; LTO is opt-in per crate.
+strip = false
+lto   = false

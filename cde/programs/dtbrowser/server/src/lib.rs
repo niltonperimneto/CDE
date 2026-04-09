@@ -1,17 +1,29 @@
-use std::ffi::{CStr, CString};
+#![deny(unsafe_op_in_unsafe_fn)]
+
+use std::ffi::CStr;
 use std::fs;
 use std::io::{Read, Write};
-use std::net::{TcpListener, TcpStream};
+use std::net::{SocketAddr, TcpListener, TcpStream};
 use std::os::raw::c_char;
-use std::path::{Path, PathBuf};
+use std::path::Path;
+use std::sync::atomic::{AtomicBool, Ordering};
+use std::sync::OnceLock;
 use std::thread;
 
-static mut SERVER_RUNNING: bool = false;
+// AtomicBool eliminates the data race that `static mut bool` caused.
+static SERVER_RUNNING: AtomicBool = AtomicBool::new(false);
+
+// Bound address stored so dtbrowser_server_stop() can connect-to-self to
+// unblock listener.incoming() / accept().
+static LISTEN_ADDR: OnceLock<SocketAddr> = OnceLock::new();
 
 #[no_mangle]
 pub extern "C" fn dtbrowser_server_start(root: *const c_char) -> u16 {
-    let c_root = unsafe { CStr::from_ptr(root) };
-    let root_path = c_root.to_string_lossy().to_string();
+    // Guard against null pointer before any dereference.
+    if root.is_null() {
+        return 0;
+    }
+    let root_path = unsafe { CStr::from_ptr(root) }.to_string_lossy().to_string();
 
     let listener = match TcpListener::bind("127.0.0.1:0") {
         Ok(l) => l,
@@ -24,12 +36,14 @@ pub extern "C" fn dtbrowser_server_start(root: *const c_char) -> u16 {
     };
 
     let port = addr.port();
-    unsafe { SERVER_RUNNING = true };
+    // Record the bound address before spawning so stop() can find it.
+    let _ = LISTEN_ADDR.set(addr);
+    SERVER_RUNNING.store(true, Ordering::SeqCst);
 
     thread::spawn(move || {
         eprintln!("[Rust-Server] Listening on http://127.0.0.1:{}", port);
         for stream in listener.incoming() {
-            if unsafe { !SERVER_RUNNING } {
+            if !SERVER_RUNNING.load(Ordering::SeqCst) {
                 break;
             }
             match stream {
@@ -47,38 +61,87 @@ pub extern "C" fn dtbrowser_server_start(root: *const c_char) -> u16 {
 
 #[no_mangle]
 pub extern "C" fn dtbrowser_server_stop() {
-    unsafe { SERVER_RUNNING = false };
-    // In a real app we'd need to unblock the listener, e.g. connect to self
+    SERVER_RUNNING.store(false, Ordering::SeqCst);
+    // Unblock the listener thread, which is blocked inside accept().
+    // A dummy connection to self causes accept() to return, the loop checks
+    // SERVER_RUNNING, finds it false, and exits cleanly.
+    if let Some(addr) = LISTEN_ADDR.get() {
+        let _ = TcpStream::connect(addr);
+    }
 }
 
 fn handle_client(mut stream: TcpStream, root: &str) {
-    let mut buffer = [0; 1024];
-    if let Err(_) = stream.read(&mut buffer) {
-        return;
-    }
+    // 8 KiB is enough for a typical HTTP/1.1 request line + headers.
+    // 1024 bytes would silently truncate requests with long headers or cookies.
+    let mut buffer = [0; 8192];
+    let n = match stream.read(&mut buffer) {
+        Ok(n) => n,
+        Err(_) => return,
+    };
 
-    let request = String::from_utf8_lossy(&buffer);
+    // Parse only the bytes actually read — the rest of `buffer` is zeroed and
+    // would produce spurious null bytes in the request line if not trimmed.
+    let request = String::from_utf8_lossy(&buffer[..n]);
     let path = parse_request(&request);
 
-    // Security: Prevent directory traversal
-    if path.contains("..") {
+    // Security: canonicalize the target path and verify it stays within the allowed root.
+    // A simple `..` string check is insufficient — URL-encoded sequences and symlinks
+    // can both bypass it.  Canonicalization resolves all components first.
+    let base = Path::new(root);
+    let relative = path.trim_start_matches('/');
+
+    // Reject any request that still carries a literal ".." component after stripping.
+    if relative.split('/').any(|c| c == "..") {
         let response = "HTTP/1.1 403 Forbidden\r\n\r\nAccess Denied";
         let _ = stream.write(response.as_bytes());
         return;
     }
 
+    // Canonicalize the help root once here so the escape check below uses the
+    // real path (resolves symlinks), not the hardcoded string literal.
+    let help_root_literal = Path::new("/usr/dt/appconfig/help");
+    let canonical_help_root = help_root_literal.canonicalize().ok();
+
     let file_path = if path.starts_with("/help/") {
-        Path::new("/usr/dt/appconfig/help").join(path.trim_start_matches("/help/"))
+        help_root_literal.join(path.trim_start_matches("/help/"))
     } else {
-        Path::new(root).join(path.trim_start_matches('/'))
+        base.join(relative)
     };
 
     // Default to index.html if dir
-    let final_path = if file_path.is_dir() {
+    let file_path = if file_path.is_dir() {
         file_path.join("index.html")
     } else {
         file_path
     };
+
+    // Canonical check: resolved path must begin with the declared root.
+    let final_path = match file_path.canonicalize() {
+        Ok(p) => p,
+        Err(_) => {
+            let response = "HTTP/1.1 404 Not Found\r\n\r\nFile Not Found";
+            let _ = stream.write(response.as_bytes());
+            return;
+        }
+    };
+    let allowed_root = match base.canonicalize() {
+        Ok(r) => r,
+        Err(_) => {
+            let response = "HTTP/1.1 500 Internal Server Error\r\n\r\n";
+            let _ = stream.write(response.as_bytes());
+            return;
+        }
+    };
+    // A path is allowed if it lives under the web root OR under the CDE help root.
+    // Both comparisons use canonicalized paths so symlinks cannot escape either tree.
+    let under_help = canonical_help_root
+        .as_ref()
+        .map_or(false, |hr| final_path.starts_with(hr));
+    if !final_path.starts_with(&allowed_root) && !under_help {
+        let response = "HTTP/1.1 403 Forbidden\r\n\r\nAccess Denied";
+        let _ = stream.write(response.as_bytes());
+        return;
+    }
 
     if final_path.exists() && final_path.is_file() {
         let content = match fs::read(&final_path) {

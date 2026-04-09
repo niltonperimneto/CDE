@@ -1,3 +1,5 @@
+#![deny(unsafe_op_in_unsafe_fn)]
+
 use cosmic_text::{Attrs, Buffer, Color, FontSystem, Metrics, SwashCache};
 use libc::c_char;
 use tiny_skia::{Paint, PixmapMut, Transform};
@@ -80,10 +82,28 @@ pub extern "C" fn dthelp_engine_render(
         .buffer
         .shape_until_scroll(&mut engine.font_system, false);
 
-    // Create pixmap wrapper around the provided buffer
-    // Safety: Caller must ensure pixels points to a buffer of size width * height * 4
-    let data =
-        unsafe { std::slice::from_raw_parts_mut(pixels as *mut u8, (width * height * 4) as usize) };
+    // H-1: validate dimensions before constructing the slice.
+    // A width or height of zero is nonsensical; large values can overflow
+    // the byte-count calculation and produce an out-of-bounds slice.
+    let byte_count = (width as usize)
+        .checked_mul(height as usize)
+        .and_then(|n| n.checked_mul(4))
+        .filter(|&n| n > 0);
+    let byte_count = match byte_count {
+        Some(n) => n,
+        None => {
+            eprintln!(
+                "[dthelp_engine] render: invalid dimensions {}×{} (overflow or zero)",
+                width, height
+            );
+            return;
+        }
+    };
+
+    // SAFETY: caller guarantees `pixels` points to at least `byte_count`
+    // bytes of writable memory.  We verified the size is non-zero and
+    // does not overflow above.
+    let data = unsafe { std::slice::from_raw_parts_mut(pixels as *mut u8, byte_count) };
 
     if let Some(mut pixmap) = PixmapMut::from_bytes(data, width, height) {
         pixmap.fill(tiny_skia::Color::WHITE);

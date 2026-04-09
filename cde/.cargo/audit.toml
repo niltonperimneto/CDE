@@ -1,0 +1,26 @@
+# cargo-audit configuration for the CDE Rust migration workspace.
+#
+# Run with:  cargo audit
+# Install:   cargo install cargo-audit
+#
+# CI usage (treat everything as an error):
+#   cargo audit --deny warnings --deny unmaintained
+#
+# This file is read automatically by `cargo audit` when run from any directory
+# under `cde/`.
+
+[advisories]
+# Advisories to ignore permanently (add with a comment explaining why).
+# Format: "RUSTSEC-YYYY-NNNN"
+ignore = []
+
+# Treat unmaintained crates as audit failures.
+# This is what caught the original xdr-codec 0.2 dependency.
+unmaintained = "deny"
+
+# Yanked crates cause build failures anyway; flag them at audit time too.
+yanked = "warn"
+
+[output]
+# Exit with a non-zero status if there are any advisories (suitable for CI).
+deny = ["vulnerabilities", "unmaintained"]

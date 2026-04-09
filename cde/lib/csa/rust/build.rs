@@ -136,19 +136,8 @@ fn main() {
                     output_file.display()
                 );
 
-                // Patch the generated code to use our shim which discards the argument
-                let gen_content =
-                    fs::read_to_string(&output_file).expect("Failed to read generated rs");
-                let patched_content = gen_content
-                    .replace(
-                        "xdr_codec :: Error :: invalidenum",
-                        "crate :: my_shim :: invalidenum",
-                    )
-                    .replace(
-                        "xdr_codec :: Error :: invalidcase",
-                        "crate :: my_shim :: invalidcase",
-                    );
-                fs::write(&output_file, patched_content).expect("Failed to write patched rs");
+                // No post-processing needed: cde_xdr is aliased as xdr_codec at crate root,
+                // so xdrgen-generated `xdr_codec::Error::invalidenum()` resolves correctly.
             }
             Ok(s) => {
                 println!("cargo:warning=xdrgen failed with {}", s);

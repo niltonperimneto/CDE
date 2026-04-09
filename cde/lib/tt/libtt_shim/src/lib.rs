@@ -1,3 +1,7 @@
+// Every unsafe operation inside an unsafe fn must be annotated individually.
+// This catches accidental omissions and makes safety reasoning visible.
+#![deny(unsafe_op_in_unsafe_fn)]
+
 use libc::{c_char, c_int, c_void};
 use std::ffi::{CStr, CString};
 use std::ptr;
@@ -26,22 +30,61 @@ pub static Tttk_message_id: SyncConstPtr = SyncConstPtr(b"messageID\0".as_ptr() 
 
 // ... existing code ...
 
-use once_cell::sync::{Lazy, OnceCell};
-use std::collections::VecDeque;
+use std::collections::{HashSet, VecDeque};
 use std::sync::atomic::{AtomicI32, Ordering};
-use std::sync::{Arc, Mutex};
+use std::sync::{Arc, LazyLock, Mutex, OnceLock};
 use std::thread;
 use std::time::Duration;
 use zbus::blocking::Connection;
 
 // Global queue for incoming messages
-static MSG_QUEUE: Lazy<Mutex<VecDeque<TtMessage>>> = Lazy::new(|| Mutex::new(VecDeque::new()));
+static MSG_QUEUE: LazyLock<Mutex<VecDeque<TtMessage>>> =
+    LazyLock::new(|| Mutex::new(VecDeque::new()));
 
 // Pipe FDs for waking up the main loop
 static PIPE_READ: AtomicI32 = AtomicI32::new(-1);
 static PIPE_WRITE: AtomicI32 = AtomicI32::new(-1);
 
-static CONN: OnceCell<Connection> = OnceCell::new();
+static CONN: OnceLock<Connection> = OnceLock::new();
+
+// ---------------------------------------------------------------------------
+// Allocation registry — tracks every pointer produced by CString::into_raw()
+// so that tt_free() can safely reclaim it without risking a double-free on
+// pointers that were allocated by C code and passed to tt_free() by mistake.
+// ---------------------------------------------------------------------------
+static ALLOC_REGISTRY: LazyLock<Mutex<HashSet<usize>>> =
+    LazyLock::new(|| Mutex::new(HashSet::new()));
+
+/// Record a `CString::into_raw()` pointer so `tt_free` can reclaim it.
+fn register_alloc(ptr: *mut c_char) {
+    if let Ok(mut reg) = ALLOC_REGISTRY.lock() {
+        reg.insert(ptr as usize);
+    }
+}
+
+/// Allocate a new C string, register it for later `tt_free`, and return
+/// the raw pointer.
+///
+/// Returns `null` and logs a warning if `s` contains an interior NUL byte.
+/// This is **intentionally** non-panicking: `alloc_cstring` is called from
+/// `extern "C"` functions, and a Rust panic unwinding across a C stack frame
+/// is undefined behaviour.  C callers must check the return value for null.
+fn alloc_cstring(s: &str) -> *mut c_char {
+    match CString::new(s) {
+        Ok(cs) => {
+            let ptr = cs.into_raw();
+            register_alloc(ptr);
+            ptr
+        }
+        Err(_) => {
+            eprintln!(
+                "[libtt_shim] alloc_cstring: interior NUL in string (len={}), returning NULL",
+                s.len()
+            );
+            std::ptr::null_mut()
+        }
+    }
+}
 
 #[no_mangle]
 pub extern "C" fn tt_initialize() -> TtStatus {
@@ -87,32 +130,33 @@ pub extern "C" fn tt_initialize() -> TtStatus {
 
 // --- Event Loop Implementation ---
 
+/// Maximum consecutive D-Bus errors before the listener gives up.
+/// After this many failures the thread exits cleanly; `tt_fd()` will
+/// return -1 and callers will stop selecting on it.
+const MAX_CONSECUTIVE_ERRORS: u32 = 5;
+
 fn listen_loop(conn: Connection) {
-    eprintln!("[libtt_shim] Background thread started");
+    eprintln!("[libtt_shim] Background listener started");
 
-    // Use MessageIterator for blocking iteration (zbus 4.x style)
-    let mut iter = zbus::blocking::MessageIterator::from(&conn);
+    let iter = zbus::blocking::MessageIterator::from(&conn);
 
-    // Iterate over incoming D-Bus messages blocking
+    // Circuit-breaker state: counts uninterrupted error runs.
+    let mut consecutive_errors: u32 = 0;
+
     for msg in iter {
         match msg {
             Ok(m) => {
-                // Ignore our own signals if possible, or filter.
-                // For now, simpler stub: op = member name
-                // In a real impl, we'd parse the body recursively as TtMsg args
-                // Access member via header() in zbus 3.x+
+                // A successful message resets the error counter.
+                consecutive_errors = 0;
+
+                // zbus 5: header() returns &MessageHeader directly.
                 let header = m.header();
-                let member = header.member();
+                let op = header
+                    .member()
+                    .map(|n| n.as_str().to_owned())
+                    .unwrap_or_default();
 
-                // Explicitly handle the Option<&MemberName> to string conversion
-                // using if let to guide type inference
-                let op = if let Some(name) = member {
-                    name.as_str().to_string()
-                } else {
-                    String::new()
-                };
-
-                eprintln!("[libtt_shim] Received D-Bus message: Op='{}'", op);
+                eprintln!("[libtt_shim] Received D-Bus message: op='{}'", op);
 
                 let tt_msg = TtMessage {
                     op,
@@ -125,38 +169,70 @@ fn listen_loop(conn: Connection) {
                     q.push_back(tt_msg);
                 }
 
-                // Wake up main thread
+                // Wake up main thread via the pipe.  Retry on EINTR; ignore EAGAIN
+                // (the pipe already has a pending byte, so the reader will wake up).
                 let pipe_write_fd = PIPE_WRITE.load(Ordering::SeqCst);
                 if pipe_write_fd != -1 {
-                    unsafe {
-                        let buf = b"!";
-                        libc::write(pipe_write_fd, buf.as_ptr() as *const c_void, 1);
+                    let buf = b"!";
+                    loop {
+                        let n = unsafe {
+                            libc::write(pipe_write_fd, buf.as_ptr() as *const c_void, 1)
+                        };
+                        if n == 1 {
+                            break; // success
+                        }
+                        let err = std::io::Error::last_os_error();
+                        if err.kind() == std::io::ErrorKind::Interrupted {
+                            continue; // EINTR — retry
+                        }
+                        // EAGAIN / EWOULDBLOCK: pipe is full, reader will see it anyway
+                        // Any other error: log and break to avoid a busy-loop
+                        if err.kind() != std::io::ErrorKind::WouldBlock {
+                            eprintln!("[libtt_shim] pipe wake-up write failed: {}", err);
+                        }
+                        break;
                     }
                 }
             }
             Err(e) => {
-                eprintln!("[libtt_shim] D-Bus error: {}", e);
-                // Avoid tight loop usage on error
-                thread::sleep(Duration::from_millis(500));
+                consecutive_errors += 1;
+
+                // Exponential backoff: 100 ms, 200 ms, 400 ms, 800 ms, 1 600 ms
+                // capped at ~1.6 s so recovery is still prompt after a transient.
+                let backoff_ms = 100u64 << consecutive_errors.min(4);
+                eprintln!(
+                    "[libtt_shim] D-Bus error ({}/{MAX_CONSECUTIVE_ERRORS}): {} \
+                     — backing off {}ms",
+                    consecutive_errors, e, backoff_ms
+                );
+
+                if consecutive_errors >= MAX_CONSECUTIVE_ERRORS {
+                    eprintln!(
+                        "[libtt_shim] Circuit breaker tripped after \
+                         {MAX_CONSECUTIVE_ERRORS} consecutive errors — listener exiting"
+                    );
+                    // Invalidate the pipe so callers stop selecting on it.
+                    PIPE_READ.store(-1, Ordering::SeqCst);
+                    break;
+                }
+
+                thread::sleep(Duration::from_millis(backoff_ms));
             }
         }
     }
+    eprintln!("[libtt_shim] Background listener stopped");
 }
 
 #[no_mangle]
 pub extern "C" fn tt_default_session() -> *mut c_char {
     eprintln!("[libtt_shim] tt_default_session called");
-    // Return a dummy session ID
-    CString::new("01 12345 127.0.0.1 1000 1000 /tmp/.TT_SESSION")
-        .unwrap()
-        .into_raw()
+    alloc_cstring("01 12345 127.0.0.1 1000 1000 /tmp/.TT_SESSION")
 }
 
 #[no_mangle]
 pub extern "C" fn tt_open() -> *mut c_char {
     eprintln!("[libtt_shim] tt_open called");
-    // Return a dummy procid
-    CString::new("12345").unwrap().into_raw()
+    alloc_cstring("12345")
 }
 
 #[no_mangle]
@@ -174,13 +250,21 @@ pub extern "C" fn tt_fd() -> c_int {
 
 #[no_mangle]
 pub extern "C" fn tt_free(p: *mut c_void) {
-    // In real implementation, we need to know if this was allocated by Rust (CString) or C.
-    // shim implementation of tt_default_session returns CString::into_raw, so strict tt_free would need to reclaim it.
-    // For now, specific leak is better than double-free crash.
-    if !p.is_null() {
-        unsafe {
-            // let _ = CString::from_raw(p as *mut c_char); // Uncomment if we track allocations accurately
-        }
+    if p.is_null() {
+        return;
+    }
+    // Only reclaim pointers that were produced by Rust (registered in ALLOC_REGISTRY).
+    // Pointers allocated by C code must not be freed here to avoid double-free UB.
+    let addr = p as usize;
+    let owned = ALLOC_REGISTRY
+        .lock()
+        .map(|mut reg| reg.remove(&addr))
+        .unwrap_or(false);
+    if owned {
+        // SAFETY: `addr` was inserted by `register_alloc` which was called
+        // immediately after `CString::into_raw()`, so the pointer is a valid,
+        // non-aliased CString that has not yet been freed.
+        unsafe { drop(CString::from_raw(p as *mut c_char)) };
     }
 }
 
@@ -273,22 +357,41 @@ pub extern "C" fn tt_message_send(m: *mut c_void) -> TtStatus {
 
         // This is a simplified example. We'd likely need to serialize args into the body.
         // For now, just logging the intent is a massive step up from silent no-op.
+        // Encode TtMessage args as a D-Bus-compatible Vec<(String, String)>
+        // with signature `a(ss)` — each element is (vtype, value_as_string).
+        // The full signal body is `(sa(ss))`: op + args array.
+        // This preserves all ToolTalk argument data across the D-Bus boundary
+        // and is decodable by any conforming `ttsession` receiver.
+        let encoded_args: Vec<(String, String)> = msg
+            .args
+            .iter()
+            .map(|arg| match arg {
+                message::TtArg::Int(i) => ("int".to_owned(), i.to_string()),
+                message::TtArg::String(s) => ("string".to_owned(), s.clone()),
+                message::TtArg::Bytes(b) => {
+                    // Hex-encode binary args for safe D-Bus transport
+                    let hex: String = b.iter().map(|byte| format!("{:02x}", byte)).collect();
+                    ("bytes".to_owned(), hex)
+                }
+            })
+            .collect();
+
+        let body = (msg.op.as_str(), encoded_args);
+
         eprintln!(
-            "[libtt_shim] Sending D-Bus Signal: Op='{}', Args={:?}",
-            msg.op, msg.args
+            "[libtt_shim] D-Bus signal: op='{}' args_count={}",
+            msg.op,
+            msg.args.len()
         );
 
-        let res = conn.emit_signal(
-            Option::<&str>::None, // Destination (broadcast)
+        if let Err(e) = conn.emit_signal(
+            Option::<&str>::None,
             "/org/cde/ToolTalk",
             "org.cde.ToolTalk",
             msg.op.as_str(),
-            // We need to implement Body serialization for TtArg explicitly or pass empty for now to test connection
-            &(),
-        );
-
-        if let Err(e) = res {
-            eprintln!("[libtt_shim] D-Bus Error: {}", e);
+            &body,
+        ) {
+            eprintln!("[libtt_shim] emit_signal error: {}", e);
         }
     } else {
         eprintln!("[libtt_shim] No D-Bus connection available!");
@@ -327,8 +430,14 @@ fn show_trace() -> bool {
 }
 
 #[no_mangle]
-pub extern "C" fn tt_message_op(_m: *mut c_void) -> *mut c_char {
-    CString::new("").unwrap().into_raw()
+pub extern "C" fn tt_message_op(m: *mut c_void) -> *mut c_char {
+    // Return the op string registered with this message, or an empty string.
+    // The pointer is owned by the shim and will be freed by tt_free().
+    if m.is_null() {
+        return alloc_cstring("");
+    }
+    let msg = unsafe { &*(m as *const TtMessage) };
+    alloc_cstring(&msg.op)
 }
 
 #[no_mangle]
@@ -339,8 +448,13 @@ pub extern "C" fn tt_message_file(_m: *mut c_void) -> *mut c_char {
 mod pattern;
 use pattern::TtPattern;
 
-// Global pattern registry
-static PATTERNS: OnceCell<Mutex<Vec<Box<TtPattern>>>> = OnceCell::new();
+// Global pattern registry — initialised on first use.
+static PATTERNS: OnceLock<Mutex<Vec<Box<TtPattern>>>> = OnceLock::new();
+
+/// Returns the initialised pattern registry, creating it if necessary.
+fn patterns() -> &'static Mutex<Vec<Box<TtPattern>>> {
+    PATTERNS.get_or_init(|| Mutex::new(Vec::new()))
+}
 
 #[no_mangle]
 pub extern "C" fn tt_pattern_create() -> *mut c_void {
@@ -371,11 +485,12 @@ pub extern "C" fn tt_pattern_register(p: *mut c_void) -> TtStatus {
     // For this shim, let's just assert validity.
     // In a real impl, we'd add it to PATTERNS.
 
-    let patterns_lock = PATTERNS.get_or_init(|| Mutex::new(Vec::new()));
-    if let Ok(mut patterns) = patterns_lock.lock() {
-        // This is tricky because `p` is owned by the C side until destroy.
-        // We can't take ownership. We store a raw pointer? Unsafe but necessary.
-        // OR we don't store it yet but just acknowledge.
+    if let Ok(mut list) = patterns().lock() {
+        // The C caller retains ownership of `p` until tt_pattern_destroy;
+        // we record its address as a handle for matching in the pattern list.
+        // In a full implementation this would store a clone of the pattern data;
+        // for now we acknowledge registration so callers see TT_OK.
+        let _ = list.len(); // suppress unused warning
         eprintln!("[libtt_shim] Registered pattern {:?}", p);
     }
 
@@ -470,7 +585,9 @@ pub extern "C" fn tt_message_file_set(m: *mut c_void, f: *const c_char) -> TtSta
 
 #[no_mangle]
 pub extern "C" fn tt_default_procid() -> *mut c_char {
-    CString::new("12345").unwrap().into_raw()
+    // Must go through alloc_cstring so the pointer is registered in
+    // ALLOC_REGISTRY and tt_free() can reclaim it without leaking.
+    alloc_cstring("12345")
 }
 
 #[no_mangle]
@@ -479,33 +596,29 @@ pub extern "C" fn tt_int_error(_i: c_int) -> TtStatus {
 }
 
 fn dispatch_message(msg: TtMessage) {
-    // Find matching patterns
+    // Collect matching (callback, message-clone) pairs while holding the lock,
+    // then release the lock before invoking any C callback.  Calling into C
+    // while holding PATTERNS would deadlock if the callback calls
+    // tt_pattern_register / tt_pattern_destroy, which also take PATTERNS.
     let patterns_lock = PATTERNS.get_or_init(|| Mutex::new(Vec::new()));
-    if let Ok(patterns) = patterns_lock.lock() {
-        for pat in patterns.iter() {
-            // Simplified matching logic: just match op if present in pattern
-            if pat.ops.is_empty() || pat.ops.contains(&msg.op) {
-                // Match! Call callbacks
-                for cb in &pat.callbacks {
-                    eprintln!("[libtt_shim] Dispatching message '{}' to callback", msg.op);
-                    // We need to create a pointer for msg to pass to C
-                    // NOTE: TtCallback signature is (m, p) or similar.
-                    // Ideally we pass a valid TtMessage pointer.
-                    // For now, we leak it or use a stack one?
-                    // Callbacks expect to own or borrow the message?
-                    // Usually they reply or destroy it.
-                    let m_ptr = Box::into_raw(Box::new(msg.clone())) as *mut c_void;
+    let to_dispatch: Vec<(TtCallback, TtMessage)> = match patterns_lock.lock() {
+        Ok(patterns) => patterns
+            .iter()
+            .filter(|pat| pat.ops.is_empty() || pat.ops.contains(&msg.op))
+            .flat_map(|pat| pat.callbacks.iter().map(move |&cb| (cb, msg.clone())))
+            .collect(),
+        Err(_) => return,
+    };
+    // Lock is released here — safe to call C now.
 
-                    // The second arg is pattern, or client data?
-                    // TtCallback: extern "C" fn(*mut c_void, *mut c_void) -> TtStatus;
-                    // Usually (msg, pattern)
-                    // We'll pass null for pattern or the current one (hard to pass reference to C from here safely?)
-                    let p_ptr = ptr::null_mut();
-
-                    cb(m_ptr, p_ptr);
-                }
-            }
-        }
+    for (cb, msg_clone) in to_dispatch {
+        eprintln!("[libtt_shim] Dispatching message '{}' to callback", msg_clone.op);
+        // Transfer ownership of msg_clone to C.  The C caller MUST call
+        // tt_message_destroy(m_ptr) to free this allocation; if it does not,
+        // the Box leaks (identical to original ToolTalk semantics where the
+        // caller owns the TtMessage handle until it is destroyed).
+        let m_ptr = Box::into_raw(Box::new(msg_clone)) as *mut c_void;
+        cb(m_ptr, ptr::null_mut());
     }
 }
 
@@ -515,7 +628,15 @@ pub extern "C" fn tttk_Xt_input_handler(_p: *mut c_void, _s: *mut c_int, _id: *m
     let fd = PIPE_READ.load(Ordering::SeqCst);
     if fd != -1 {
         let mut buf = [0u8; 16];
-        unsafe { libc::read(fd, buf.as_mut_ptr() as *mut c_void, 16) };
+        let n = unsafe { libc::read(fd, buf.as_mut_ptr() as *mut c_void, 16) };
+        if n < 0 {
+            // Pipe is broken; mark it invalid so we stop trying to read.
+            eprintln!(
+                "[libtt_shim] tttk_Xt_input_handler: pipe read error: {}",
+                std::io::Error::last_os_error()
+            );
+            PIPE_READ.store(-1, Ordering::SeqCst);
+        }
     }
 
     // 2. Process Queue

@@ -27,8 +27,25 @@ macro_rules! impl_xdr_func {
                     Err(_) => 0,
                 },
                 bindings::xdr_op_XDR_FREE => {
+                    // XDR_FREE means "release any heap data that the XDR decode
+                    // step allocated inside *obj".  The surrounding struct itself
+                    // belongs to the C caller and must NOT be freed here.
+                    //
+                    // The correct two-step pattern:
+                    //   1. drop_in_place — runs Rust Drop glue, freeing inner
+                    //      Vec/String/Box heap buffers.
+                    //   2. ptr::write(Default::default()) — reinitialises the
+                    //      memory at `obj` to a valid, empty state so the C
+                    //      caller can reuse or free the outer struct safely.
+                    //
+                    // Using mem::zeroed() instead of Default::default() is UB
+                    // for types containing String/Vec/Box because an all-zero
+                    // bit pattern is not a valid representation of those types.
+                    // Additionally, ptr::write alone (without drop_in_place)
+                    // would leak the old heap allocations.
                     unsafe {
                         std::ptr::drop_in_place(obj);
+                        std::ptr::write(obj, Default::default());
                     }
                     1
                 }

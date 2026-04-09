@@ -1,0 +1,16 @@
+[package]
+name = "cde_xdr"
+version = "0.1.0"
+edition = "2021"
+description = "RFC 4506 XDR codec — drop-in replacement for the unmaintained xdr-codec 0.2"
+license = "LGPL-2.0"
+
+[dependencies]
+byteorder = "1.5"
+
+[[test]]
+name = "compat"
+path = "tests/compat.rs"
+
+[dev-dependencies]
+# No extra dev-deps needed — compat.rs uses only cde_xdr + std

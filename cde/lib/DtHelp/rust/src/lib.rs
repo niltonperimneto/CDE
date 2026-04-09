@@ -1,3 +1,5 @@
+#![deny(unsafe_op_in_unsafe_fn)]
+
 use libc::{c_char, c_int, c_void};
 use pulldown_cmark::{Event, Parser, Tag};
 use std::ffi::CStr;
@@ -91,7 +93,7 @@ fn send_text_callback(ctx: *mut c_void, callback: ParseCallback, text: &str) {
 
 // Added missing function from SetList.c
 #[no_mangle]
-pub extern "C" fn dthelp_engine_get_height(engine: *mut c_void, width: c_int) -> c_int {
+pub extern "C" fn dthelp_engine_get_height(_engine: *mut c_void, _width: c_int) -> c_int {
     // Stub implementation
     // In real implementation, this would layout the text and return height.
     // For now, return a dummy height based on some estimation or just a constant.

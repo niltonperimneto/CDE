@@ -21,6 +21,16 @@ impl Searcher {
         }
     }
 
+    /// Create a `Searcher` backed by an already-opened parser.
+    ///
+    /// Prefer this over `new()` when a `DtSearchParser` has already been
+    /// opened for the target database — passing it in ensures that
+    /// `get_universe()` (used by `Query::Not`) can call `read_dbrec()` on a
+    /// connected handle instead of always returning an empty set.
+    pub fn with_parser(parser: DtSearchParser) -> Self {
+        Searcher { parser }
+    }
+
     pub fn search(&self, query: &Query) -> HashSet<i32> {
         match query {
             Query::Term(term) => self.search_term(term),
@@ -197,5 +207,179 @@ impl QueryParser {
 
     fn is_identifier(&self, s: &str) -> bool {
         !matches!(s, "&" | "|" | "~" | "(" | ")")
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Tests
+// ---------------------------------------------------------------------------
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    // ---- helpers -----------------------------------------------------------
+
+    /// Parse `input` and panic with the error if parsing fails.
+    fn parse(input: &str) -> Query {
+        QueryParser::new(input)
+            .parse()
+            .unwrap_or_else(|e| panic!("parse({:?}) failed: {}", input, e))
+    }
+
+    /// Assert the query parses to a `Query::Term` with the given word.
+    fn assert_term(q: &Query, expected: &str) {
+        match q {
+            Query::Term(t) => assert_eq!(t, expected, "term mismatch"),
+            other => panic!("expected Term({:?}), got {:?}", expected, other),
+        }
+    }
+
+    // ---- tokenisation ------------------------------------------------------
+
+    #[test]
+    fn single_term() {
+        let q = parse("hello");
+        assert_term(&q, "hello");
+    }
+
+    #[test]
+    fn empty_query_is_error() {
+        assert!(
+            QueryParser::new("").parse().is_err(),
+            "empty string should fail to parse"
+        );
+    }
+
+    #[test]
+    fn whitespace_only_is_error() {
+        assert!(QueryParser::new("   \t\n").parse().is_err());
+    }
+
+    // ---- boolean operators -------------------------------------------------
+
+    #[test]
+    fn explicit_and() {
+        let q = parse("foo & bar");
+        assert!(
+            matches!(q, Query::And(_, _)),
+            "expected And, got {:?}",
+            q
+        );
+        if let Query::And(l, r) = &q {
+            assert_term(l, "foo");
+            assert_term(r, "bar");
+        }
+    }
+
+    #[test]
+    fn explicit_or() {
+        let q = parse("foo | bar");
+        assert!(matches!(q, Query::Or(_, _)), "expected Or");
+        if let Query::Or(l, r) = &q {
+            assert_term(l, "foo");
+            assert_term(r, "bar");
+        }
+    }
+
+    #[test]
+    fn not_operator() {
+        let q = parse("~hidden");
+        assert!(matches!(q, Query::Not(_)), "expected Not");
+        if let Query::Not(inner) = &q {
+            assert_term(inner, "hidden");
+        }
+    }
+
+    #[test]
+    fn implicit_and_between_terms() {
+        // "apple banana" should be treated as "apple AND banana"
+        let q = parse("apple banana");
+        assert!(
+            matches!(q, Query::And(_, _)),
+            "adjacent terms should produce implicit And"
+        );
+    }
+
+    // ---- grouping ----------------------------------------------------------
+
+    #[test]
+    fn parenthesised_or() {
+        // "a & (b | c)" — the Or is nested inside And's right operand
+        let q = parse("a & (b | c)");
+        assert!(matches!(q, Query::And(_, _)));
+        if let Query::And(left, right) = &q {
+            assert_term(left, "a");
+            assert!(
+                matches!(right.as_ref(), Query::Or(_, _)),
+                "right of And should be Or"
+            );
+        }
+    }
+
+    #[test]
+    fn unclosed_paren_is_error() {
+        assert!(
+            QueryParser::new("(foo & bar").parse().is_err(),
+            "unclosed parenthesis should fail"
+        );
+    }
+
+    #[test]
+    fn nested_not() {
+        let q = parse("~~word");
+        // ~~word → Not(Not(Term("word")))
+        assert!(matches!(q, Query::Not(_)));
+        if let Query::Not(inner) = &q {
+            assert!(matches!(inner.as_ref(), Query::Not(_)));
+        }
+    }
+
+    // ---- complex expressions -----------------------------------------------
+
+    #[test]
+    fn three_term_and_chain() {
+        // "a & b & c" left-associates: (a & b) & c
+        let q = parse("a & b & c");
+        assert!(matches!(q, Query::And(_, _)));
+        // Verify the outer right arm is the term "c"
+        if let Query::And(_, right) = &q {
+            assert_term(right, "c");
+        }
+    }
+
+    #[test]
+    fn not_combined_with_and() {
+        let q = parse("visible & ~hidden");
+        assert!(matches!(q, Query::And(_, _)));
+        if let Query::And(l, r) = &q {
+            assert_term(l, "visible");
+            assert!(matches!(r.as_ref(), Query::Not(_)));
+        }
+    }
+
+    #[test]
+    fn complex_expression() {
+        // Ensure a non-trivial expression parses without panicking.
+        let _ = parse("(dt & help) | (dtwm & ~crash)");
+    }
+
+    // ---- query display / Debug trait ---------------------------------------
+
+    #[test]
+    fn query_is_debug() {
+        // Confirm the Debug derive works (useful for test failure messages).
+        let q = parse("a | b");
+        let _ = format!("{:?}", q);
+    }
+
+    // ---- clone semantics ---------------------------------------------------
+
+    #[test]
+    fn query_clone() {
+        let q = parse("foo & bar");
+        let cloned = q.clone();
+        // Both should have the same structure — just verify they are And.
+        assert!(matches!(cloned, Query::And(_, _)));
     }
 }
