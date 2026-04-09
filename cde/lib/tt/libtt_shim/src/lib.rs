@@ -570,7 +570,9 @@ pub extern "C" fn tt_message_file_set(m: *mut c_void, f: *const c_char) -> TtSta
 
 #[no_mangle]
 pub extern "C" fn tt_default_procid() -> *mut c_char {
-    CString::new("12345").unwrap().into_raw()
+    // Must go through alloc_cstring so the pointer is registered in
+    // ALLOC_REGISTRY and tt_free() can reclaim it without leaking.
+    alloc_cstring("12345")
 }
 
 #[no_mangle]
@@ -579,33 +581,29 @@ pub extern "C" fn tt_int_error(_i: c_int) -> TtStatus {
 }
 
 fn dispatch_message(msg: TtMessage) {
-    // Find matching patterns
+    // Collect matching (callback, message-clone) pairs while holding the lock,
+    // then release the lock before invoking any C callback.  Calling into C
+    // while holding PATTERNS would deadlock if the callback calls
+    // tt_pattern_register / tt_pattern_destroy, which also take PATTERNS.
     let patterns_lock = PATTERNS.get_or_init(|| Mutex::new(Vec::new()));
-    if let Ok(patterns) = patterns_lock.lock() {
-        for pat in patterns.iter() {
-            // Simplified matching logic: just match op if present in pattern
-            if pat.ops.is_empty() || pat.ops.contains(&msg.op) {
-                // Match! Call callbacks
-                for cb in &pat.callbacks {
-                    eprintln!("[libtt_shim] Dispatching message '{}' to callback", msg.op);
-                    // We need to create a pointer for msg to pass to C
-                    // NOTE: TtCallback signature is (m, p) or similar.
-                    // Ideally we pass a valid TtMessage pointer.
-                    // For now, we leak it or use a stack one?
-                    // Callbacks expect to own or borrow the message?
-                    // Usually they reply or destroy it.
-                    let m_ptr = Box::into_raw(Box::new(msg.clone())) as *mut c_void;
+    let to_dispatch: Vec<(TtCallback, TtMessage)> = match patterns_lock.lock() {
+        Ok(patterns) => patterns
+            .iter()
+            .filter(|pat| pat.ops.is_empty() || pat.ops.contains(&msg.op))
+            .flat_map(|pat| pat.callbacks.iter().map(move |&cb| (cb, msg.clone())))
+            .collect(),
+        Err(_) => return,
+    };
+    // Lock is released here — safe to call C now.
 
-                    // The second arg is pattern, or client data?
-                    // TtCallback: extern "C" fn(*mut c_void, *mut c_void) -> TtStatus;
-                    // Usually (msg, pattern)
-                    // We'll pass null for pattern or the current one (hard to pass reference to C from here safely?)
-                    let p_ptr = ptr::null_mut();
-
-                    cb(m_ptr, p_ptr);
-                }
-            }
-        }
+    for (cb, msg_clone) in to_dispatch {
+        eprintln!("[libtt_shim] Dispatching message '{}' to callback", msg_clone.op);
+        // Transfer ownership of msg_clone to C.  The C caller MUST call
+        // tt_message_destroy(m_ptr) to free this allocation; if it does not,
+        // the Box leaks (identical to original ToolTalk semantics where the
+        // caller owns the TtMessage handle until it is destroyed).
+        let m_ptr = Box::into_raw(Box::new(msg_clone)) as *mut c_void;
+        cb(m_ptr, ptr::null_mut());
     }
 }
 
@@ -615,7 +613,15 @@ pub extern "C" fn tttk_Xt_input_handler(_p: *mut c_void, _s: *mut c_int, _id: *m
     let fd = PIPE_READ.load(Ordering::SeqCst);
     if fd != -1 {
         let mut buf = [0u8; 16];
-        unsafe { libc::read(fd, buf.as_mut_ptr() as *mut c_void, 16) };
+        let n = unsafe { libc::read(fd, buf.as_mut_ptr() as *mut c_void, 16) };
+        if n < 0 {
+            // Pipe is broken; mark it invalid so we stop trying to read.
+            eprintln!(
+                "[libtt_shim] tttk_Xt_input_handler: pipe read error: {}",
+                std::io::Error::last_os_error()
+            );
+            PIPE_READ.store(-1, Ordering::SeqCst);
+        }
     }
 
     // 2. Process Queue

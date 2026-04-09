@@ -80,6 +80,13 @@ pub unsafe fn clnt_call(
     timeout: timeval,
 ) -> clnt_stat {
     let client = &*clnt;
+    // Guard against a NULL cl_ops pointer (e.g. partially-initialised CLIENT
+    // struct returned by a failing clnt_create call).  Without this check
+    // dereferencing cl_ops would be instant UB.
+    if client.cl_ops.is_null() {
+        eprintln!("[libcsa] clnt_call: cl_ops is NULL (RPC_SYSTEMERROR)");
+        return RPC_SYSTEMERROR;
+    }
     let ops = &*client.cl_ops;
     match ops.cl_call {
         Some(call_fn) => call_fn(clnt, proc_num, xargs, argsp, xres, resp, timeout),

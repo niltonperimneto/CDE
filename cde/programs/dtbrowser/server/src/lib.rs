@@ -59,7 +59,9 @@ pub extern "C" fn dtbrowser_server_stop() {
 }
 
 fn handle_client(mut stream: TcpStream, root: &str) {
-    let mut buffer = [0; 1024];
+    // 8 KiB is enough for a typical HTTP/1.1 request line + headers.
+    // 1024 bytes would silently truncate requests with long headers or cookies.
+    let mut buffer = [0; 8192];
     if let Err(_) = stream.read(&mut buffer) {
         return;
     }
@@ -80,9 +82,13 @@ fn handle_client(mut stream: TcpStream, root: &str) {
         return;
     }
 
+    // Canonicalize the help root once here so the escape check below uses the
+    // real path (resolves symlinks), not the hardcoded string literal.
+    let help_root_literal = Path::new("/usr/dt/appconfig/help");
+    let canonical_help_root = help_root_literal.canonicalize().ok();
+
     let file_path = if path.starts_with("/help/") {
-        let help_base = Path::new("/usr/dt/appconfig/help");
-        help_base.join(path.trim_start_matches("/help/"))
+        help_root_literal.join(path.trim_start_matches("/help/"))
     } else {
         base.join(relative)
     };
@@ -111,7 +117,12 @@ fn handle_client(mut stream: TcpStream, root: &str) {
             return;
         }
     };
-    if !final_path.starts_with(&allowed_root) && !final_path.starts_with("/usr/dt/appconfig/help") {
+    // A path is allowed if it lives under the web root OR under the CDE help root.
+    // Both comparisons use canonicalized paths so symlinks cannot escape either tree.
+    let under_help = canonical_help_root
+        .as_ref()
+        .map_or(false, |hr| final_path.starts_with(hr));
+    if !final_path.starts_with(&allowed_root) && !under_help {
         let response = "HTTP/1.1 403 Forbidden\r\n\r\nAccess Denied";
         let _ = stream.write(response.as_bytes());
         return;
