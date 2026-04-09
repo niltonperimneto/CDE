@@ -1,0 +1,21 @@
+# D-Bus session bus activation file for org.cde.ToolTalk.
+#
+# When any application calls a method on org.cde.ToolTalk (e.g.
+# org.cde.ToolTalk.SendMessage) and the service is not yet running, the D-Bus
+# daemon uses this file to auto-start ttsession via systemd.
+#
+# Installation:
+#   User (per-login session):
+#     cp org.cde.ToolTalk.service ~/.local/share/dbus-1/services/
+#
+#   System-wide:
+#     cp org.cde.ToolTalk.service /usr/share/dbus-1/services/
+#
+# The SystemdService directive delegates the actual lifecycle management to
+# systemd, which honours the Restart= policy in ttsession.service and
+# integrates with journald for logging.
+
+[D-BUS Service]
+Name=org.cde.ToolTalk
+Exec=/usr/lib/cde/ttsession
+SystemdService=ttsession.service

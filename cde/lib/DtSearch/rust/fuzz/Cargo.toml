@@ -1,0 +1,15 @@
+[package]
+name = "dtsearch-fuzz"
+edition = "2021"
+publish = false
+
+[package.metadata]
+cargo-fuzz = true
+
+[dependencies]
+libfuzzer-sys = "0.4"
+dtsearch_rs = { path = ".." }
+
+[[bin]]
+name = "fuzz_query_parser"
+path = "fuzz_targets/fuzz_query_parser.rs"

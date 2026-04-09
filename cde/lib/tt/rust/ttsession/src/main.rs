@@ -6,9 +6,9 @@ use anyhow::Result;
 use log::info;
 use std::future::pending;
 
-use crate::manager::ToolTalkManager;
+use crate::broker::ToolTalkBroker;
 
-mod manager;
+mod broker;
 mod types;
 
 /// Resolve the directory that holds compiled ptype JSON files.
@@ -30,27 +30,28 @@ fn ptype_db_path() -> String {
 #[tokio::main]
 async fn main() -> Result<()> {
     env_logger::init();
-    info!("Starting ttsession (Rust D-Bus Broker)...");
+    info!("Starting ttsession (Rust D-Bus method-call broker)...");
 
-    let manager = ToolTalkManager::new();
+    let broker = ToolTalkBroker::new();
     let db_path = ptype_db_path();
-    manager.load_ptypes(&db_path);
+    broker.load_ptypes(&db_path).await;
 
+    // Register the broker on the session bus and acquire the well-known name.
     // zbus 5: builder is at zbus::connection::Builder.
-    // Clone manager before handing ownership to serve_at so we can call
-    // spawn_monitor afterwards.  ToolTalkManager derives Clone (its only
-    // field is Arc<Mutex<...>>).
-    let conn = zbus::connection::Builder::session()?
+    //
+    // The connection is stored in `_conn` to keep it alive for the duration of
+    // the process.  Dropping it would release the bus name and unregister the
+    // object.  All dispatch happens inside ToolTalkBroker::send_message(); no
+    // separate monitor task is needed.
+    let _conn = zbus::connection::Builder::session()?
         .name("org.cde.ToolTalk")?
-        .serve_at("/org/cde/ToolTalk", manager.clone())?
+        .serve_at("/org/cde/ToolTalk", broker)?
         .build()
         .await?;
 
-    info!("ttsession started on D-Bus: org.cde.ToolTalk");
+    info!("ttsession started — serving org.cde.ToolTalk at /org/cde/ToolTalk");
 
-    manager.spawn_monitor(conn).await;
-
-    // Run forever — the signal monitor task drives the event loop.
+    // Run forever; the tokio runtime drives zbus method dispatch.
     pending::<()>().await;
 
     Ok(())

@@ -14,9 +14,33 @@ pub type TtClass = c_int;
 pub type TtCategory = c_int;
 pub type TtCallback = extern "C" fn(*mut c_void, *mut c_void) -> TtStatus; // Simplified
 
-// Constants (These need to match tt_c.h values accurately eventually)
+// ---------------------------------------------------------------------------
+// ToolTalk status constants — must match the values in CDE's tt_c.h.
+//
+// Warning codes are positive integers; error codes are negative.
+// ---------------------------------------------------------------------------
 pub const TT_OK: TtStatus = 0;
-pub const TT_WRN_NOTFOUND: TtStatus = 1; // Placeholder
+/// A required object (session, pattern, message) was not found.
+pub const TT_WRN_NOTFOUND: TtStatus = 1;
+/// No more messages in this delivery run.
+pub const TT_WRN_LAST_MSG: TtStatus = 2;
+/// A start message that triggers a new process.
+pub const TT_WRN_START_MESSAGE: TtStatus = 3;
+/// The operation completed but the target was stopped.
+pub const TT_WRN_STOPPED: TtStatus = 4;
+
+/// No message protocol daemon available (ttsession not running).
+pub const TT_ERR_NOMP: TtStatus = -1;
+/// Out of memory.
+pub const TT_ERR_NOMEM: TtStatus = -2;
+/// Operation not implemented in this version of the shim.
+pub const TT_ERR_UNIMP: TtStatus = -3;
+/// An environment variable required by ToolTalk is not set.
+pub const TT_ERR_NOTSET: TtStatus = -7;
+/// A required argument is null or otherwise invalid.
+pub const TT_ERR_POINTER: TtStatus = -11;
+/// The requested operation was not permitted by policy.
+pub const TT_ERR_ACCESS: TtStatus = -14;
 
 #[repr(transparent)]
 pub struct SyncConstPtr(pub *const c_char);
@@ -36,6 +60,7 @@ use std::sync::{Arc, LazyLock, Mutex, OnceLock};
 use std::thread;
 use std::time::Duration;
 use zbus::blocking::Connection;
+use zbus::message::Type as MessageType;
 
 // Global queue for incoming messages
 static MSG_QUEUE: LazyLock<Mutex<VecDeque<TtMessage>>> =
@@ -138,6 +163,34 @@ const MAX_CONSECUTIVE_ERRORS: u32 = 5;
 fn listen_loop(conn: Connection) {
     eprintln!("[libtt_shim] Background listener started");
 
+    // Register a server-side match rule so the daemon only delivers
+    // org.cde.ToolTalk.MessageDelivered signals to us.  Without this the
+    // daemon would flood us with every signal on the session bus.
+    let rule = match zbus::MatchRule::builder()
+        .msg_type(MessageType::Signal)
+        .interface("org.cde.ToolTalk")
+        .and_then(|b| b.member("MessageDelivered"))
+    {
+        Ok(builder) => builder.build(),
+        Err(e) => {
+            eprintln!("[libtt_shim] Failed to build match rule: {} — listening without filter", e);
+            // Fall through; we will still filter in the loop below.
+            zbus::MatchRule::builder()
+                .msg_type(MessageType::Signal)
+                .interface("org.cde.ToolTalk")
+                .expect("hard-coded interface is valid")
+                .build()
+        }
+    };
+
+    match zbus::blocking::fdo::DBusProxy::new(&conn) {
+        Ok(dbus) => match dbus.add_match_rule(rule) {
+            Ok(()) => eprintln!("[libtt_shim] Subscribed to org.cde.ToolTalk.MessageDelivered"),
+            Err(e) => eprintln!("[libtt_shim] add_match_rule failed: {}", e),
+        },
+        Err(e) => eprintln!("[libtt_shim] DBusProxy creation failed: {}", e),
+    }
+
     let iter = zbus::blocking::MessageIterator::from(&conn);
 
     // Circuit-breaker state: counts uninterrupted error runs.
@@ -151,20 +204,66 @@ fn listen_loop(conn: Connection) {
 
                 // zbus 5: header() returns &MessageHeader directly.
                 let header = m.header();
-                let op = header
-                    .member()
-                    .map(|n| n.as_str().to_owned())
-                    .unwrap_or_default();
 
-                eprintln!("[libtt_shim] Received D-Bus message: op='{}'", op);
+                // Only process Signal messages.
+                if header.message_type() != MessageType::Signal {
+                    continue;
+                }
+
+                // Only from our interface.
+                let iface = match header.interface() {
+                    Some(i) => i.as_str().to_owned(),
+                    None => continue,
+                };
+                if iface != "org.cde.ToolTalk" {
+                    continue;
+                }
+
+                // Only the MessageDelivered signal.
+                let member = match header.member() {
+                    Some(m) => m.as_str().to_owned(),
+                    None => continue,
+                };
+                if member != "MessageDelivered" {
+                    continue;
+                }
+
+                // Decode body: (op, args, scope, file, sender)
+                // D-Bus signature: s a(sss) i s s
+                type Body = (String, Vec<(String, String, String)>, i32, String, String);
+                let (op, encoded_args, scope, file, remote_sender) =
+                    match m.body().deserialize::<Body>() {
+                        Ok(b) => b,
+                        Err(e) => {
+                            eprintln!("[libtt_shim] MessageDelivered decode error: {}", e);
+                            continue;
+                        }
+                    };
+
+                eprintln!(
+                    "[libtt_shim] MessageDelivered: op='{}' from '{}' args={}",
+                    op,
+                    remote_sender,
+                    encoded_args.len()
+                );
+
+                let args: Vec<message::TtArg> = encoded_args
+                    .into_iter()
+                    .filter_map(|(mode_s, vtype, value)| {
+                        message::TtArg::from_encoded(&mode_s, &vtype, &value)
+                    })
+                    .collect();
 
                 let tt_msg = TtMessage {
                     op,
-                    // ... defaults
+                    scope,
+                    file: if file.is_empty() { None } else { Some(file) },
+                    sender: Some(remote_sender),
+                    args,
                     ..TtMessage::new()
                 };
 
-                // Push to queue
+                // Push to queue.
                 if let Ok(mut q) = MSG_QUEUE.lock() {
                     q.push_back(tt_msg);
                 }
@@ -185,8 +284,8 @@ fn listen_loop(conn: Connection) {
                         if err.kind() == std::io::ErrorKind::Interrupted {
                             continue; // EINTR — retry
                         }
-                        // EAGAIN / EWOULDBLOCK: pipe is full, reader will see it anyway
-                        // Any other error: log and break to avoid a busy-loop
+                        // EAGAIN / EWOULDBLOCK: pipe is full, reader will see it anyway.
+                        // Any other error: log and break to avoid a busy-loop.
                         if err.kind() != std::io::ErrorKind::WouldBlock {
                             eprintln!("[libtt_shim] pipe wake-up write failed: {}", err);
                         }
@@ -299,7 +398,7 @@ pub extern "C" fn tt_is_err(s: TtStatus) -> c_int {
 
 // --- Message Handling ---
 
-mod message;
+pub mod message;
 use message::TtMessage;
 
 // ... (keep constants)
@@ -347,57 +446,53 @@ pub extern "C" fn tt_message_send(m: *mut c_void) -> TtStatus {
 
     let msg = unsafe { &*(m as *mut TtMessage) };
 
-    // Check if we have a connection
-    if let Some(conn) = CONN.get() {
-        // Send via D-Bus
-        // Mapping strategy:
-        // Interface: "org.cde.ToolTalk"
-        // Path: "/org/cde/ToolTalk"
-        // Member: msg.op
+    let Some(conn) = CONN.get() else {
+        eprintln!("[libtt_shim] tt_message_send: no D-Bus connection — is ttsession running?");
+        return TT_ERR_NOMP;
+    };
 
-        // This is a simplified example. We'd likely need to serialize args into the body.
-        // For now, just logging the intent is a massive step up from silent no-op.
-        // Encode TtMessage args as a D-Bus-compatible Vec<(String, String)>
-        // with signature `a(ss)` — each element is (vtype, value_as_string).
-        // The full signal body is `(sa(ss))`: op + args array.
-        // This preserves all ToolTalk argument data across the D-Bus boundary
-        // and is decodable by any conforming `ttsession` receiver.
-        let encoded_args: Vec<(String, String)> = msg
-            .args
-            .iter()
-            .map(|arg| match arg {
-                message::TtArg::Int(i) => ("int".to_owned(), i.to_string()),
-                message::TtArg::String(s) => ("string".to_owned(), s.clone()),
-                message::TtArg::Bytes(b) => {
-                    // Hex-encode binary args for safe D-Bus transport
-                    let hex: String = b.iter().map(|byte| format!("{:02x}", byte)).collect();
-                    ("bytes".to_owned(), hex)
-                }
-            })
-            .collect();
+    // Encode args as (mode, vtype, value) triples — D-Bus signature a(sss).
+    let encoded_args = message::encode_args(&msg.args);
+    let file = msg.file.as_deref().unwrap_or("");
 
-        let body = (msg.op.as_str(), encoded_args);
+    eprintln!(
+        "[libtt_shim] SendMessage: op='{}' scope={} args={}",
+        msg.op,
+        msg.scope,
+        encoded_args.len()
+    );
 
-        eprintln!(
-            "[libtt_shim] D-Bus signal: op='{}' args_count={}",
-            msg.op,
-            msg.args.len()
-        );
-
-        if let Err(e) = conn.emit_signal(
-            Option::<&str>::None,
-            "/org/cde/ToolTalk",
-            "org.cde.ToolTalk",
-            msg.op.as_str(),
-            &body,
-        ) {
-            eprintln!("[libtt_shim] emit_signal error: {}", e);
+    // Call org.cde.ToolTalk.SendMessage on the broker and wait for its reply.
+    // This gives us a synchronous TT_OK / TT_ERR_* status and ensures the
+    // broker has received the message before we return to the C caller.
+    let reply = match conn.call_method(
+        Some("org.cde.ToolTalk"),
+        "/org/cde/ToolTalk",
+        Some("org.cde.ToolTalk"),
+        "SendMessage",
+        &(msg.op.as_str(), encoded_args.as_slice(), msg.scope, file),
+    ) {
+        Ok(r) => r,
+        Err(e) => {
+            eprintln!("[libtt_shim] SendMessage call failed: {}", e);
+            return TT_ERR_NOMP;
         }
-    } else {
-        eprintln!("[libtt_shim] No D-Bus connection available!");
-    }
+    };
 
-    TT_OK
+    match reply.body().deserialize::<i32>() {
+        Ok(status) => {
+            if status != TT_OK {
+                eprintln!("[libtt_shim] Broker returned error status={}", status);
+            }
+            status
+        }
+        Err(e) => {
+            // Reply decode failure — broker replied but we can't parse it.
+            // Treat as success to avoid cascading failures in CDE callers.
+            eprintln!("[libtt_shim] SendMessage reply decode error: {}", e);
+            TT_OK
+        }
+    }
 }
 
 // ...
@@ -600,13 +695,26 @@ fn dispatch_message(msg: TtMessage) {
     // then release the lock before invoking any C callback.  Calling into C
     // while holding PATTERNS would deadlock if the callback calls
     // tt_pattern_register / tt_pattern_destroy, which also take PATTERNS.
+    //
+    // Two-phase collection: first gather the matching callbacks into a plain
+    // Vec<TtCallback> (which releases the borrow on `msg.op`), then pair each
+    // callback with a fresh clone of `msg`.  This avoids a borrow-checker
+    // conflict where both the `filter` and `flat_map` closures would need to
+    // reference `msg` simultaneously.
     let patterns_lock = PATTERNS.get_or_init(|| Mutex::new(Vec::new()));
     let to_dispatch: Vec<(TtCallback, TtMessage)> = match patterns_lock.lock() {
-        Ok(patterns) => patterns
-            .iter()
-            .filter(|pat| pat.ops.is_empty() || pat.ops.contains(&msg.op))
-            .flat_map(|pat| pat.callbacks.iter().map(move |&cb| (cb, msg.clone())))
-            .collect(),
+        Ok(patterns) => {
+            let matching_callbacks: Vec<TtCallback> = patterns
+                .iter()
+                .filter(|pat| pat.ops.is_empty() || pat.ops.contains(&msg.op))
+                .flat_map(|pat| pat.callbacks.iter().copied())
+                .collect();
+            // Borrow of `msg.op` ends here; safe to clone freely below.
+            matching_callbacks
+                .into_iter()
+                .map(|cb| (cb, msg.clone()))
+                .collect()
+        }
         Err(_) => return,
     };
     // Lock is released here — safe to call C now.

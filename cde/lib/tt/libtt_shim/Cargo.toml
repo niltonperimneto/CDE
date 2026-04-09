@@ -4,11 +4,13 @@ version = "0.1.0"
 edition = "2021"
 
 [lib]
-crate-type = ["cdylib", "staticlib"]
+# cdylib/staticlib: produces the shared/static library used by C callers.
+# rlib: allows the fuzz target (and future Rust unit tests) to link
+#       the pure-Rust logic (message encoding, pattern matching) directly.
+crate-type = ["cdylib", "staticlib", "rlib"]
 
 [dependencies]
 libc = "0.2"
-dbus = "0.9"
 ctor = "0.2"
 zbus        = "5"
 serde       = "1.0"
