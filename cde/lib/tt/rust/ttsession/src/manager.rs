@@ -5,7 +5,7 @@ use std::fs;
 use std::path::Path;
 use std::process::Command;
 use std::sync::{Arc, Mutex};
-use zbus::{Connection, MessageStream, MessageType};
+use zbus::{message::Type as MessageType, Connection, MessageStream};
 
 use crate::types::Ptype;
 

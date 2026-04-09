@@ -1,3 +1,7 @@
+// ttsession is pure Rust (tokio + zbus); no FFI obligations.
+#![forbid(unsafe_code)]
+#![deny(unsafe_op_in_unsafe_fn)]
+
 use anyhow::Result;
 use log::info;
 use std::future::pending;

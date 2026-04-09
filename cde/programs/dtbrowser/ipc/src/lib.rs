@@ -1,3 +1,5 @@
+#![deny(unsafe_op_in_unsafe_fn)]
+
 use std::ffi::{CStr, CString};
 use std::os::raw::c_char;
 
