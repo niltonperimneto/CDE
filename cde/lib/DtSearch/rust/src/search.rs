@@ -173,7 +173,17 @@ impl QueryParser {
     }
 
     pub fn parse(&mut self) -> Result<Query, String> {
-        self.parse_expression()
+        if self.tokens.is_empty() {
+            return Err("empty query".to_string());
+        }
+        let q = self.parse_expression()?;
+        // Enforce full consumption: any leftover tokens indicate a malformed
+        // expression (e.g. a dangling `)` or stray `@n`).
+        if self.pos < self.tokens.len() {
+            let leftover = &self.tokens[self.pos];
+            return Err(format!("unexpected token '{leftover}' after query expression"));
+        }
+        Ok(q)
     }
 
     fn peek(&self) -> Option<&String> {
@@ -236,7 +246,11 @@ impl QueryParser {
                 }
                 Ok(expr)
             } else {
-                // Identifier (possibly followed by a collocation operator).
+                // Must be a plain identifier — reject stray operators.
+                let t = self.peek().unwrap();
+                if !self.is_identifier(t) {
+                    return Err(format!("unexpected token '{t}' — expected a word"));
+                }
                 let t = self.consume().unwrap();
                 // Lookahead for `@n WORD` — matches boolyac.y:127
                 //   `WORD_TOKEN COLLOC_TOKEN WORD_TOKEN`

@@ -102,7 +102,8 @@ pub unsafe extern "C" fn cde_dtwm_decl_count(handle: *const CdeDtwmHandle) -> us
     if handle.is_null() {
         return 0;
     }
-    unsafe { (*handle).file.declarations.len() }
+    panic::catch_unwind(AssertUnwindSafe(|| unsafe { (*handle).file.declarations.len() }))
+        .unwrap_or_else(|_| { set_last_error("cde_dtwm_decl_count: Rust panic"); 0 })
 }
 
 /// Return the declaration kind as a static string, or NULL on out-of-range.
@@ -117,20 +118,23 @@ pub unsafe extern "C" fn cde_dtwm_decl_kind(
     if handle.is_null() {
         return ptr::null();
     }
-    let decls = unsafe { &(*handle).file.declarations };
-    let Some(decl) = decls.get(index) else {
-        return ptr::null();
-    };
-    // Static strings, safe to return directly.
-    match decl.kind {
-        crate::ast::DeclKind::Menu => b"Menu\0".as_ptr() as *const c_char,
-        crate::ast::DeclKind::Keys => b"Keys\0".as_ptr() as *const c_char,
-        crate::ast::DeclKind::Buttons => b"Buttons\0".as_ptr() as *const c_char,
-        crate::ast::DeclKind::Panel => b"PANEL\0".as_ptr() as *const c_char,
-        crate::ast::DeclKind::Box_ => b"BOX\0".as_ptr() as *const c_char,
-        crate::ast::DeclKind::Control => b"CONTROL\0".as_ptr() as *const c_char,
-        crate::ast::DeclKind::Switch => b"SWITCH\0".as_ptr() as *const c_char,
-    }
+    panic::catch_unwind(AssertUnwindSafe(|| {
+        let decls = unsafe { &(*handle).file.declarations };
+        let Some(decl) = decls.get(index) else {
+            return ptr::null();
+        };
+        // Static byte strings — NUL-terminated, 'static lifetime.
+        match decl.kind {
+            crate::ast::DeclKind::Menu    => b"Menu\0".as_ptr() as *const c_char,
+            crate::ast::DeclKind::Keys    => b"Keys\0".as_ptr() as *const c_char,
+            crate::ast::DeclKind::Buttons => b"Buttons\0".as_ptr() as *const c_char,
+            crate::ast::DeclKind::Panel   => b"PANEL\0".as_ptr() as *const c_char,
+            crate::ast::DeclKind::Box_    => b"BOX\0".as_ptr() as *const c_char,
+            crate::ast::DeclKind::Control => b"CONTROL\0".as_ptr() as *const c_char,
+            crate::ast::DeclKind::Switch  => b"SWITCH\0".as_ptr() as *const c_char,
+        }
+    }))
+    .unwrap_or_else(|_| { set_last_error("cde_dtwm_decl_kind: Rust panic"); ptr::null() })
 }
 
 fn intern_cstring(handle: &CdeDtwmHandle, s: &str) -> *const c_char {
@@ -154,11 +158,14 @@ pub unsafe extern "C" fn cde_dtwm_decl_name(
     if handle.is_null() {
         return ptr::null();
     }
-    let h = unsafe { &*handle };
-    let Some(decl) = h.file.declarations.get(index) else {
-        return ptr::null();
-    };
-    intern_cstring(h, &decl.name)
+    panic::catch_unwind(AssertUnwindSafe(|| {
+        let h = unsafe { &*handle };
+        match h.file.declarations.get(index) {
+            Some(decl) => intern_cstring(h, &decl.name),
+            None => ptr::null(),
+        }
+    }))
+    .unwrap_or_else(|_| { set_last_error("cde_dtwm_decl_name: Rust panic"); ptr::null() })
 }
 
 /// Return the declaration body text (interned for the handle's lifetime).
@@ -173,9 +180,12 @@ pub unsafe extern "C" fn cde_dtwm_decl_body(
     if handle.is_null() {
         return ptr::null();
     }
-    let h = unsafe { &*handle };
-    let Some(decl) = h.file.declarations.get(index) else {
-        return ptr::null();
-    };
-    intern_cstring(h, &decl.body)
+    panic::catch_unwind(AssertUnwindSafe(|| {
+        let h = unsafe { &*handle };
+        match h.file.declarations.get(index) {
+            Some(decl) => intern_cstring(h, &decl.body),
+            None => ptr::null(),
+        }
+    }))
+    .unwrap_or_else(|_| { set_last_error("cde_dtwm_decl_body: Rust panic"); ptr::null() })
 }

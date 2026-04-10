@@ -24,8 +24,8 @@ use nom::{
     IResult,
     branch::alt,
     bytes::complete::{escaped_transform, is_not, tag, take_while, take_while1},
-    character::complete::{char, digit1, multispace0, multispace1},
-    combinator::{map, opt, recognize, value},
+    character::complete::{anychar, char, digit1, multispace0, multispace1},
+    combinator::{map, map_res, opt, recognize, value},
     multi::many0,
     sequence::{delimited, preceded},
 };
@@ -149,8 +149,13 @@ fn string_lit(input: &str) -> IResult<&str, String> {
                     value("\n", tag("n")),
                     value("\t", tag("t")),
                     value("\r", tag("r")),
-                    // Preserve unknown escapes literally.
-                    map(take_while(|_| false), |_: &str| ""),
+                    // Unknown escape: consume the next character so parsing
+                    // always makes progress (avoids infinite loop in
+                    // `escaped_transform` when encountering e.g. `\x`).
+                    map_res(anychar, |c: char| -> Result<&'static str, ()> {
+                        let _ = c; // discard — we can't easily return an owned
+                        Ok("")     // string here; drop the escape sequence
+                    }),
                 )),
             )),
             |opt_s: Option<String>| opt_s.unwrap_or_default(),

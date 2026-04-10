@@ -50,4 +50,6 @@ value_item = _{ quoted | unquoted_token }
 quoted = _{ "\"" ~ ( "\\" ~ ANY | !"\"" ~ ANY )* ~ "\"" }
 unquoted_token = _{ ( !( "\n" | "\r" | "#" | " " | "\t" ) ~ ANY )+ }
 
-identifier = @{ (ASCII_ALPHA | "_") ~ (ASCII_ALPHANUMERIC | "_")* }
+// Identifiers allow hyphens (e.g. "file-roller", "DATA_ATTRIBUTES_NAME") to
+// match real-world .dt files in-tree such as programs/types/file-roller.dt.
+identifier = @{ (ASCII_ALPHA | "_") ~ (ASCII_ALPHANUMERIC | "_" | "-")* }

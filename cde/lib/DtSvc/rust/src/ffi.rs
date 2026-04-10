@@ -106,7 +106,8 @@ pub unsafe extern "C" fn cde_dt_action_count(handle: *const CdeDtHandle) -> usiz
     if handle.is_null() {
         return 0;
     }
-    unsafe { (*handle).db.action_count() }
+    panic::catch_unwind(AssertUnwindSafe(|| unsafe { (*handle).db.action_count() }))
+        .unwrap_or_else(|_| { set_last_error("cde_dt_action_count: Rust panic"); 0 })
 }
 
 /// Number of DATA_ATTRIBUTES records loaded into the handle.
@@ -115,7 +116,8 @@ pub unsafe extern "C" fn cde_dt_datatype_count(handle: *const CdeDtHandle) -> us
     if handle.is_null() {
         return 0;
     }
-    unsafe { (*handle).db.datatype_count() }
+    panic::catch_unwind(AssertUnwindSafe(|| unsafe { (*handle).db.datatype_count() }))
+        .unwrap_or_else(|_| { set_last_error("cde_dt_datatype_count: Rust panic"); 0 })
 }
 
 fn intern_cstring(handle: &CdeDtHandle, s: &str) -> *const c_char {
@@ -158,7 +160,10 @@ pub unsafe extern "C" fn cde_dt_action_get_exec(
             None => ptr::null(),
         }
     }));
-    result.unwrap_or(ptr::null())
+    result.unwrap_or_else(|_| {
+        set_last_error("cde_dt_action_get_exec: Rust panic");
+        ptr::null()
+    })
 }
 
 /// Look up an ACTION's LABEL field.
@@ -170,6 +175,7 @@ pub unsafe extern "C" fn cde_dt_action_get_label(
     handle: *const CdeDtHandle,
     name: *const c_char,
 ) -> *const c_char {
+    clear_last_error();
     if handle.is_null() || name.is_null() {
         return ptr::null();
     }
@@ -185,7 +191,10 @@ pub unsafe extern "C" fn cde_dt_action_get_label(
             None => ptr::null(),
         }
     }));
-    result.unwrap_or(ptr::null())
+    result.unwrap_or_else(|_| {
+        set_last_error("cde_dt_action_get_label: Rust panic");
+        ptr::null()
+    })
 }
 
 /// Parse a single `.dt` file into an already-existing handle. Useful for
