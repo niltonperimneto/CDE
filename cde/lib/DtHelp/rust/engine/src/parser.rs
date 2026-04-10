@@ -23,7 +23,7 @@ const EV_CODE_END: c_int = 10;
 const EV_LINK_START: c_int = 11;
 const EV_LINK_END: c_int = 12;
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn dthelp_parse_markdown(
     buffer: *const c_char,
     ctx: *mut c_void,
@@ -43,7 +43,7 @@ pub extern "C" fn dthelp_parse_markdown(
 
     for event in parser {
         match event {
-            Event::Start(Tag::Heading(level, _, _)) => {
+            Event::Start(Tag::Heading(_level, _, _)) => {
                 // Pass level as text if needed
                 (callback)(ctx, EV_HEADER_START, std::ptr::null());
             }
@@ -76,7 +76,7 @@ pub extern "C" fn dthelp_parse_markdown(
             Event::Text(text) => {
                 send_text_callback(ctx, callback, &text);
             }
-            Event::Start(Tag::Link(_, url, title)) => {
+            Event::Start(Tag::Link(_, url, _title)) => {
                 send_text_callback(ctx, callback, &url);
                 (callback)(ctx, EV_LINK_START, std::ptr::null());
             }

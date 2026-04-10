@@ -1,6 +1,8 @@
 project('cde', ['c', 'cpp'],
   version : '2.5.3',
+  meson_version: '>= 1.0.0',
   default_options : ['warning_level=1', 'c_std=gnu23', 'cpp_std=gnu++98'])
+
 
 cc = meson.get_compiler('c')
 

@@ -15,18 +15,14 @@ foreach s : server_sources
   server_sources_with_path += server_src_dir + s
 endforeach
 
-# Parser Yacc Generation
+# Parser Yacc Generation — use bison api.prefix for yy→yyy rename
 yacc = find_program('yacc', 'bison')
 parser_c_h = custom_target('parser',
   input : server_src_dir + 'parser.y',
   output : ['parser.c', 'parser.h'],
   command : [
-    'sh', '-c', 
-    yacc.full_path() + ' -d @INPUT@ && ' +
-    'sed -e "s/yy/yyy/g" -e "/# line/d" y.tab.c > $1 && ' +
-    'sed -e "s/yy/yyy/g" y.tab.h > $2 && ' +
-    'rm y.tab.c y.tab.h',
-    'sh', '@OUTPUT0@', '@OUTPUT1@'
+    yacc, '-Dapi.prefix={yyy}', '-d',
+    '-o', '@OUTPUT0@', '--defines=@OUTPUT1@', '@INPUT@'
   ]
 )
 

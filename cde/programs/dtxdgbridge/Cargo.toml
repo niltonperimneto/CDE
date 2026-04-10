@@ -1,0 +1,22 @@
+[package]
+name = "dtxdgbridge"
+version = "0.1.0"
+edition = "2024"
+description = "XDG .desktop → CDE Action (.dt) bridge daemon"
+license = "LGPL-2.0-or-later"
+
+[dependencies]
+anyhow      = { workspace = true }
+env_logger  = { workspace = true }
+log         = { workspace = true }
+tokio       = { workspace = true }
+zbus        = { workspace = true }
+
+# inotify-based filesystem watcher
+notify = { version = "7", features = ["macos_kqueue"] }
+
+[dev-dependencies]
+tempfile = "3"
+
+[lints.rust]
+unsafe_code = "forbid"

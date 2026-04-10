@@ -31,13 +31,12 @@ There are also a lot of other documents and information there that you
 might find useful.
 
 Assuming you've met all of the requirements regarding packages needed
-for the build, you can follow the standard autoconf method:
+for the build, you can follow the standard Meson build method:
 
-```
-$ ./autogen.sh
-$ ./configure
-$ make
-$ sudo make install
+```bash
+$ meson setup build
+$ meson compile -C build
+$ sudo meson install -C build
 ```
 
 # Support

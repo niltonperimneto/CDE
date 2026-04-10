@@ -36,8 +36,8 @@ pub use error::XdrError as Error;
 /// big-endian, 4-byte-aligned format per the XDR specification.
 ///
 /// The signature matches `xdr_codec::Pack` from version 0.2.
-pub trait Pack {
-    fn pack<W: std::io::Write>(&self, out: &mut W) -> Result<usize>;
+pub trait Pack<Out: std::io::Write> {
+    fn pack(&self, out: &mut Out) -> Result<usize>;
 }
 
 /// Decodes a value from an XDR byte stream (RFC 4506).
@@ -47,8 +47,8 @@ pub trait Pack {
 /// including any padding.
 ///
 /// The signature matches `xdr_codec::Unpack` from version 0.2.
-pub trait Unpack: Sized {
-    fn unpack<R: std::io::Read>(input: &mut R) -> Result<(Self, usize)>;
+pub trait Unpack<In: std::io::Read>: Sized {
+    fn unpack(input: &mut In) -> Result<(Self, usize)>;
 }
 
 // ---------------------------------------------------------------------------
@@ -59,7 +59,7 @@ pub trait Unpack: Sized {
 ///
 /// Equivalent to `xdr_codec::pack(v, out)`.
 #[inline]
-pub fn pack<T: Pack, W: std::io::Write>(v: &T, out: &mut W) -> Result<usize> {
+pub fn pack<T: Pack<W>, W: std::io::Write>(v: &T, out: &mut W) -> Result<usize> {
     v.pack(out)
 }
 
@@ -68,8 +68,44 @@ pub fn pack<T: Pack, W: std::io::Write>(v: &T, out: &mut W) -> Result<usize> {
 ///
 /// Equivalent to `xdr_codec::unpack::<T, R>(input)`.
 #[inline]
-pub fn unpack<T: Unpack, R: std::io::Read>(input: &mut R) -> Result<(T, usize)> {
+pub fn unpack<T: Unpack<In>, In: std::io::Read>(input: &mut In) -> Result<(T, usize)> {
     T::unpack(input)
+}
+
+/// Pack a string with an optional maximum length limit.
+#[inline]
+pub fn pack_string<W: std::io::Write>(v: &str, _max_len: Option<usize>, out: &mut W) -> Result<usize> {
+    v.to_string().pack(out)
+}
+
+/// Unpack a string with an optional maximum length limit.
+#[inline]
+pub fn unpack_string<In: std::io::Read>(input: &mut In, _max_len: Option<usize>) -> Result<(String, usize)> {
+    String::unpack(input)
+}
+
+/// Pack a flexible array `Vec<T>`.
+#[inline]
+pub fn pack_flex<T: Pack<W>, W: std::io::Write>(v: &Vec<T>, _max_len: Option<usize>, out: &mut W) -> Result<usize> {
+    v.pack(out)
+}
+
+/// Unpack a flexible array `Vec<T>`.
+#[inline]
+pub fn unpack_flex<T: Unpack<In>, In: std::io::Read>(input: &mut In, _max_len: Option<usize>) -> Result<(Vec<T>, usize)> {
+    Vec::<T>::unpack(input)
+}
+
+/// Pack an opaque flexible array `Vec<u8>`.
+#[inline]
+pub fn pack_opaque_flex<W: std::io::Write>(v: &Vec<u8>, _max_len: Option<usize>, out: &mut W) -> Result<usize> {
+    v.pack(out)
+}
+
+/// Unpack an opaque flexible array `Vec<u8>`.
+#[inline]
+pub fn unpack_opaque_flex<In: std::io::Read>(input: &mut In, _max_len: Option<usize>) -> Result<(Vec<u8>, usize)> {
+    Vec::<u8>::unpack(input)
 }
 
 // ---------------------------------------------------------------------------

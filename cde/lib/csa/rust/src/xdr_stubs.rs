@@ -4,7 +4,7 @@ use xdr_codec;
 
 macro_rules! impl_xdr_func {
     ($func_name:ident, $type_path:path) => {
-        #[no_mangle]
+        #[unsafe(no_mangle)]
         pub extern "C" fn $func_name(xdrs: *mut XDR, obj: *mut $type_path) -> i32 {
             let op = unsafe { (*xdrs).x_op };
             let mut stream = unsafe { XdrStream::new(xdrs) };

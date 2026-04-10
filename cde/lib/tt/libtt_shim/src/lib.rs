@@ -46,10 +46,10 @@ pub const TT_ERR_ACCESS: TtStatus = -14;
 pub struct SyncConstPtr(pub *const c_char);
 unsafe impl Sync for SyncConstPtr {}
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub static Tttk_string: SyncConstPtr = SyncConstPtr(b"string\0".as_ptr() as *const c_char);
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub static Tttk_message_id: SyncConstPtr = SyncConstPtr(b"messageID\0".as_ptr() as *const c_char);
 
 // ... existing code ...
@@ -114,7 +114,7 @@ fn alloc_cstring(s: &str) -> *mut c_char {
     }
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn tt_initialize() -> TtStatus {
     eprintln!("[libtt_shim] tt_initialize called");
     if CONN.get().is_some() {
@@ -325,32 +325,32 @@ fn listen_loop(conn: Connection) {
     eprintln!("[libtt_shim] Background listener stopped");
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn tt_default_session() -> *mut c_char {
     eprintln!("[libtt_shim] tt_default_session called");
     alloc_cstring("01 12345 127.0.0.1 1000 1000 /tmp/.TT_SESSION")
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn tt_open() -> *mut c_char {
     eprintln!("[libtt_shim] tt_open called");
     alloc_cstring("12345")
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn tt_close() -> TtStatus {
     eprintln!("[libtt_shim] tt_close called");
     TT_OK
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn tt_fd() -> c_int {
     PIPE_READ.load(Ordering::SeqCst)
 }
 
 // --- Memory Management ---
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn tt_free(p: *mut c_void) {
     if p.is_null() {
         return;
@@ -373,27 +373,27 @@ pub extern "C" fn tt_free(p: *mut c_void) {
     }
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn tt_ptr_error(_p: *const c_void) -> TtStatus {
     TT_OK
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn tt_pointer_error(_p: *const c_void) -> TtStatus {
     TT_OK
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn tt_mark() -> c_int {
     1
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn tt_release(p: *mut c_void) {
     tt_free(p);
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn tt_is_err(s: TtStatus) -> c_int {
     if s != TT_OK {
         1
@@ -411,25 +411,25 @@ use message::TtMessage;
 
 // --- Message Handling ---
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn tt_message_create() -> *mut c_void {
     // Allocate a new TtMessage on the heap and return raw pointer
     let msg = Box::new(TtMessage::new());
     Box::into_raw(msg) as *mut c_void
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn tt_message_reply(_m: *mut c_void) -> TtStatus {
     eprintln!("[libtt_shim] tt_message_reply called");
     TT_OK
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn tt_message_arg_val(_m: *mut c_void, _n: c_int) -> *mut c_char {
     ptr::null_mut()
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn tt_message_destroy(m: *mut c_void) -> TtStatus {
     if !m.is_null() {
         unsafe {
@@ -440,7 +440,7 @@ pub extern "C" fn tt_message_destroy(m: *mut c_void) -> TtStatus {
     TT_OK
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn tt_message_send(m: *mut c_void) -> TtStatus {
     if show_trace() {
         eprintln!("[libtt_shim] tt_message_send called");
@@ -503,7 +503,7 @@ pub extern "C" fn tt_message_send(m: *mut c_void) -> TtStatus {
 
 // ...
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn tt_message_op_set(m: *mut c_void, op: *const c_char) -> TtStatus {
     if !m.is_null() {
         let msg = unsafe { &mut *(m as *mut TtMessage) };
@@ -512,7 +512,7 @@ pub extern "C" fn tt_message_op_set(m: *mut c_void, op: *const c_char) -> TtStat
     TT_OK
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn tt_message_arg_add(
     m: *mut c_void,
     mode: TtMode,
@@ -530,7 +530,7 @@ fn show_trace() -> bool {
     std::env::var("TT_TRACE_SCRIPT").is_ok()
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn tt_message_op(m: *mut c_void) -> *mut c_char {
     // Return the op string registered with this message, or an empty string.
     // The pointer is owned by the shim and will be freed by tt_free().
@@ -541,7 +541,7 @@ pub extern "C" fn tt_message_op(m: *mut c_void) -> *mut c_char {
     alloc_cstring(&msg.op)
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn tt_message_file(_m: *mut c_void) -> *mut c_char {
     ptr::null_mut()
 }
@@ -557,13 +557,13 @@ fn patterns() -> &'static Mutex<Vec<Box<TtPattern>>> {
     PATTERNS.get_or_init(|| Mutex::new(Vec::new()))
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn tt_pattern_create() -> *mut c_void {
     let pat = Box::new(TtPattern::new());
     Box::into_raw(pat) as *mut c_void
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn tt_pattern_destroy(p: *mut c_void) -> TtStatus {
     if !p.is_null() {
         unsafe {
@@ -573,7 +573,7 @@ pub extern "C" fn tt_pattern_destroy(p: *mut c_void) -> TtStatus {
     TT_OK
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn tt_pattern_register(p: *mut c_void) -> TtStatus {
     if p.is_null() {
         return TT_WRN_NOTFOUND;
@@ -598,13 +598,13 @@ pub extern "C" fn tt_pattern_register(p: *mut c_void) -> TtStatus {
     TT_OK
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn tt_pattern_unregister(p: *mut c_void) -> TtStatus {
     eprintln!("[libtt_shim] Unregistered pattern {:?}", p);
     TT_OK
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn tt_pattern_category_set(p: *mut c_void, c: TtCategory) -> TtStatus {
     if !p.is_null() {
         let pat = unsafe { &mut *(p as *mut TtPattern) };
@@ -613,7 +613,7 @@ pub extern "C" fn tt_pattern_category_set(p: *mut c_void, c: TtCategory) -> TtSt
     TT_OK
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn tt_pattern_scope_add(p: *mut c_void, s: TtScope) -> TtStatus {
     if !p.is_null() {
         let pat = unsafe { &mut *(p as *mut TtPattern) };
@@ -622,7 +622,7 @@ pub extern "C" fn tt_pattern_scope_add(p: *mut c_void, s: TtScope) -> TtStatus {
     TT_OK
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn tt_pattern_op_add(p: *mut c_void, op: *const c_char) -> TtStatus {
     if !p.is_null() {
         let pat = unsafe { &mut *(p as *mut TtPattern) };
@@ -631,7 +631,7 @@ pub extern "C" fn tt_pattern_op_add(p: *mut c_void, op: *const c_char) -> TtStat
     TT_OK
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn tt_pattern_callback_add(p: *mut c_void, cb: TtCallback) -> TtStatus {
     if !p.is_null() {
         let pat = unsafe { &mut *(p as *mut TtPattern) };
@@ -640,42 +640,42 @@ pub extern "C" fn tt_pattern_callback_add(p: *mut c_void, cb: TtCallback) -> TtS
     TT_OK
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn tt_host_file_netfile(_host: *const c_char, _file: *const c_char) -> *mut c_char {
     ptr::null_mut()
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn tt_netfile_file(_netfile: *const c_char) -> *mut c_char {
     ptr::null_mut()
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn tt_message_class_set(_m: *mut c_void, _c: TtClass) -> TtStatus {
     TT_OK
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn tt_message_scope_set(_m: *mut c_void, _s: TtScope) -> TtStatus {
     TT_OK
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn tt_message_address_set(_m: *mut c_void, _a: c_int) -> TtStatus {
     TT_OK
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn tt_message_session_set(_m: *mut c_void, _s: *const c_char) -> TtStatus {
     TT_OK
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn tt_message_handler(_m: *mut c_void) -> *mut c_char {
     ptr::null_mut()
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn tt_message_file_set(m: *mut c_void, f: *const c_char) -> TtStatus {
     if !m.is_null() {
         let msg = unsafe { &mut *(m as *mut TtMessage) };
@@ -684,14 +684,14 @@ pub extern "C" fn tt_message_file_set(m: *mut c_void, f: *const c_char) -> TtSta
     TT_OK
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn tt_default_procid() -> *mut c_char {
     // Must go through alloc_cstring so the pointer is registered in
     // ALLOC_REGISTRY and tt_free() can reclaim it without leaking.
     alloc_cstring("12345")
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn tt_int_error(_i: c_int) -> TtStatus {
     TT_OK
 }
@@ -736,7 +736,7 @@ fn dispatch_message(msg: TtMessage) {
     }
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn tttk_Xt_input_handler(_p: *mut c_void, _s: *mut c_int, _id: *mut c_int) {
     // 1. Drain pipe
     let fd = PIPE_READ.load(Ordering::SeqCst);
@@ -761,17 +761,17 @@ pub extern "C" fn tttk_Xt_input_handler(_p: *mut c_void, _s: *mut c_int, _id: *m
     }
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn tt_pattern_state_add(_p: *mut c_void, _s: c_int) -> TtStatus {
     TT_OK
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn tt_pattern_session_add(_p: *mut c_void, _s: *const c_char) -> TtStatus {
     TT_OK
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn tt_pattern_arg_add(
     _p: *mut c_void,
     _m: TtMode,
@@ -781,57 +781,57 @@ pub extern "C" fn tt_pattern_arg_add(
     TT_OK
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn tt_pattern_user_set(_p: *mut c_void, _u: c_int, _v: *const c_char) -> TtStatus {
     TT_OK
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn tt_message_state(_m: *mut c_void) -> c_int {
     3 // TT_CREATED or similar
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn tttk_message_destroy(_m: *mut c_void) -> TtStatus {
     TT_OK
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn tt_pnotice_create(_scope: TtScope, _op: *const c_char) -> *mut c_void {
     ptr::null_mut()
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn tt_file_netfile(_m: *mut c_void, _f: *const c_char) -> *mut c_char {
     ptr::null_mut()
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn tt_malloc(s: usize) -> *mut c_void {
     unsafe { libc::malloc(s) }
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn tt_host_netfile_file(_h: *const c_char, _n: *const c_char) -> *mut c_char {
     ptr::null_mut()
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn tt_message_sender(_m: *mut c_void) -> *mut c_char {
     ptr::null_mut()
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn tt_message_user(_m: *mut c_void, _i: c_int, _key: *const c_char) -> *mut c_void {
     ptr::null_mut()
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn tt_status_message(_s: TtStatus) -> *mut c_char {
     CString::new("Success").unwrap().into_raw()
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn tttk_message_create(
     _m: *mut c_void,
     _c: TtClass,
@@ -843,52 +843,52 @@ pub extern "C" fn tttk_message_create(
     ptr::null_mut()
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn tt_message_callback_add(_m: *mut c_void, _cb: TtCallback) -> TtStatus {
     TT_OK
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn tt_pattern_user(_p: *mut c_void, _i: c_int, _key: *const c_char) -> *mut c_void {
     ptr::null_mut()
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn tt_pattern_class_add(_p: *mut c_void, _c: TtClass) -> TtStatus {
     TT_OK
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn tt_message_arg_ival(_m: *mut c_void, _n: c_int, _val: *mut c_int) -> TtStatus {
     TT_OK
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn tt_message_arg_ival_set(_m: *mut c_void, _n: c_int, _val: c_int) -> TtStatus {
     TT_OK
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn tt_message_status(_m: *mut c_void) -> c_int {
     TT_OK
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn tt_message_status_string(_m: *mut c_void) -> *mut c_char {
     ptr::null_mut()
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn tt_message_arg_type(_m: *mut c_void, _n: c_int) -> TtMode {
     0 // TT_IN/OUT/etc
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn tt_message_args_count(_m: *mut c_void) -> c_int {
     0
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn tt_message_arg_bval(
     _m: *mut c_void,
     _n: c_int,
@@ -898,17 +898,17 @@ pub extern "C" fn tt_message_arg_bval(
     TT_OK
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn tttk_message_abandon(_m: *mut c_void) -> TtStatus {
     TT_OK
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn tttk_string_op(_op: *const c_char) -> c_int {
     0
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn ttmedia_load(
     _m: *mut c_void,
     _cb: TtCallback,
@@ -917,12 +917,12 @@ pub extern "C" fn ttmedia_load(
     TT_OK
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn tt_message_user_set(_m: *mut c_void, _u: c_int) -> TtStatus {
     TT_OK
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn ttdt_subcontract_manage(
     _m: *mut c_void,
     _cb: TtCallback,
@@ -932,7 +932,7 @@ pub extern "C" fn ttdt_subcontract_manage(
     ptr::null_mut()
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn tt_message_iarg_add(
     _m: *mut c_void,
     _mode: TtMode,
@@ -942,7 +942,7 @@ pub extern "C" fn tt_message_iarg_add(
     TT_OK
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn tt_message_barg_add(
     _m: *mut c_void,
     _mode: TtMode,
@@ -953,7 +953,7 @@ pub extern "C" fn tt_message_barg_add(
     TT_OK
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn tt_message_arg_bval_set(
     _m: *mut c_void,
     _n: c_int,
@@ -963,12 +963,12 @@ pub extern "C" fn tt_message_arg_bval_set(
     TT_OK
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn tt_message_fail(_m: *mut c_void) -> TtStatus {
     TT_OK
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn tttk_message_fail(
     _m: *mut c_void,
     _s: TtStatus,
@@ -982,7 +982,7 @@ use libc::c_uchar;
 
 // --- Missing ToolTalk Desktop Services (ttdt_*) Stubs ---
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn ttdt_file_join(
     _f: *const c_char,
     _scope: TtScope,
@@ -994,7 +994,7 @@ pub extern "C" fn ttdt_file_join(
     ptr::null_mut()
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn ttdt_message_accept(
     _m: *mut c_void,
     _cb: TtCallback,
@@ -1010,13 +1010,13 @@ pub extern "C" fn ttdt_message_accept(
     ptr::null_mut()
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn ttdt_file_quit(_patterns: *mut *mut c_void, _quit: c_int) -> TtStatus {
     eprintln!("[libtt_shim] ttdt_file_quit stub called");
     TT_OK
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn ttdt_session_quit(
     _sess: *const c_char,
     _patterns: *mut *mut c_void,
@@ -1026,7 +1026,7 @@ pub extern "C" fn ttdt_session_quit(
     TT_OK
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn ttdt_close(
     _procid: *const c_char,
     _new_procid: *const c_char,
@@ -1036,7 +1036,7 @@ pub extern "C" fn ttdt_close(
     TT_OK
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn ttdt_open(
     _procid: *mut *const c_char,
     _toolname: *const c_char,
@@ -1050,7 +1050,7 @@ pub extern "C" fn ttdt_open(
     CString::new("12345").unwrap().into_raw()
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn ttdt_session_join(
     _sess: *const c_char,
     _cb: TtCallback,
@@ -1065,17 +1065,17 @@ pub extern "C" fn ttdt_session_join(
 
 // --- Missing standard TT Stubs ---
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn tt_message_contexts_count(_m: *mut c_void) -> c_int {
     0
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn tt_message_context_val(_m: *mut c_void, _c: c_int) -> *mut c_char {
     ptr::null_mut()
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn ttmedia_ptype_declare(
     _ptype: *const c_char,
     _base_opnum: c_int,
@@ -1087,7 +1087,7 @@ pub extern "C" fn ttmedia_ptype_declare(
     TT_OK
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn tt_ptype_opnum_callback_add(
     _ptype: *const c_char,
     _opnum: c_int,
@@ -1096,7 +1096,7 @@ pub extern "C" fn tt_ptype_opnum_callback_add(
     TT_OK
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn tttk_block_while(
     _f: *const c_void, // XtInputMask or similar condition? (const XtInputMask * )
     _t: c_int,
@@ -1110,22 +1110,22 @@ pub extern "C" fn tttk_block_while(
 
 // --- Restored and New Stubs ---
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn tt_message_status_set(_m: *mut c_void, _s: c_int) -> TtStatus {
     TT_OK
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn tt_ptype_undeclare(_ptype: *const c_char) -> TtStatus {
     TT_OK
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn tt_message_reject(_m: *mut c_void) -> TtStatus {
     TT_OK
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn tt_message_arg_val_set(
     _m: *mut c_void,
     _n: c_int,
@@ -1134,27 +1134,27 @@ pub extern "C" fn tt_message_arg_val_set(
     TT_OK
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn tt_message_handler_set(_m: *mut c_void, _handler: *const c_char) -> TtStatus {
     TT_OK
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn tt_message_id(_m: *mut c_void) -> *mut c_char {
     ptr::null_mut()
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn tt_X_session(_xdisplay: *const c_char) -> *mut c_char {
     ptr::null_mut()
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn tt_default_session_set(_sess: *const c_char) -> TtStatus {
     TT_OK
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn ttmedia_Deposit(
     _m: *mut c_void,
     _pkey: *const c_char,
@@ -1167,7 +1167,7 @@ pub extern "C" fn ttmedia_Deposit(
     TT_OK
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn ttmedia_load_reply(
     _contract: *mut c_void,
     _new_contents: *const c_uchar,
@@ -1177,17 +1177,17 @@ pub extern "C" fn ttmedia_load_reply(
     TT_OK
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn tt_error_pointer(_e: TtStatus) -> *mut c_void {
     ptr::null_mut()
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn tt_pattern_file_add(_p: *mut c_void, _f: *const c_char) -> TtStatus {
     TT_OK
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn ttmedia_ptype_declare_b(
     _ptype: *const c_char,
     _base_opnum: c_int,
@@ -1198,7 +1198,7 @@ pub extern "C" fn ttmedia_ptype_declare_b(
     TT_OK
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn ttdt_file_notice(
     _f: *const c_char,
     _scope: TtScope,
@@ -1209,12 +1209,12 @@ pub extern "C" fn ttdt_file_notice(
     ptr::null_mut()
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn tt_message_handler_ptype_set(_m: *mut c_void, _ptype: *const c_char) -> TtStatus {
     TT_OK
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn tt_message_context_set(
     _m: *mut c_void,
     _c: *const c_char,
@@ -1225,20 +1225,20 @@ pub extern "C" fn tt_message_context_set(
 
 // Additional Stubs for dtcreate
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn tt_prequest_create(_scope: TtScope, _op: *const c_char) -> *mut c_void {
     // Returns a TtMessage pointer
     eprintln!("[libtt_shim] tt_prequest_create stub called");
     tt_message_create()
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn tt_pattern_address_add(_p: *mut c_void, _a: c_int) -> TtStatus {
     eprintln!("[libtt_shim] tt_pattern_address_add stub called");
     TT_OK
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn tt_ptype_declare(_ptype: *const c_char) -> TtStatus {
     eprintln!("[libtt_shim] tt_ptype_declare stub called");
     TT_OK
@@ -1246,19 +1246,19 @@ pub extern "C" fn tt_ptype_declare(_ptype: *const c_char) -> TtStatus {
 
 // Additional Stubs for dtexec / dtdbcache
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn tt_message_address(_m: *mut c_void) -> c_int {
     eprintln!("[libtt_shim] tt_message_address stub called");
     0 // TT_PROCEDURE
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn tt_message_class(_m: *mut c_void) -> TtClass {
     eprintln!("[libtt_shim] tt_message_class stub called");
     0 // TT_REQUEST
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn tt_session_quit(
     _sess: *const c_char,
     _sessid: *const c_char,
@@ -1271,13 +1271,13 @@ pub extern "C" fn tt_session_quit(
     TT_OK
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn tt_message_receive() -> *mut c_void {
     eprintln!("[libtt_shim] tt_message_receive stub called");
     ptr::null_mut()
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn tt_session_join(_sess: *const c_char) -> TtStatus {
     eprintln!("[libtt_shim] tt_session_join stub called");
     TT_OK

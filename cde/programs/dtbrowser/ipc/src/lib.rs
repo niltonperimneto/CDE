@@ -16,12 +16,12 @@ pub struct IpcCommand {
     pub url: *mut c_char,
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn dtbrowser_ipc_init() {
     eprintln!("[Rust-IPC] Initialized safety layer.");
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn dtbrowser_ipc_parse(op: *const c_char, arg: *const c_char) -> IpcCommand {
     if op.is_null() {
         return IpcCommand {
@@ -56,7 +56,7 @@ pub extern "C" fn dtbrowser_ipc_parse(op: *const c_char, arg: *const c_char) -> 
     }
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn dtbrowser_ipc_free_command(cmd: IpcCommand) {
     if !cmd.url.is_null() {
         unsafe {
