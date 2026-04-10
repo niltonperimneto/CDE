@@ -3,7 +3,7 @@ name = "cde_xdr"
 version = "0.1.0"
 edition = "2021"
 description = "RFC 4506 XDR codec — drop-in replacement for the unmaintained xdr-codec 0.2"
-license = "LGPL-2.0"
+license = "LGPL-2.1-or-later"
 
 [dependencies]
 byteorder = "1.5"

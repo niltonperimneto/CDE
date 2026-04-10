@@ -82,9 +82,12 @@ static ALLOC_REGISTRY: LazyLock<Mutex<HashSet<usize>>> =
 
 /// Record a `CString::into_raw()` pointer so `tt_free` can reclaim it.
 fn register_alloc(ptr: *mut c_char) {
-    if let Ok(mut reg) = ALLOC_REGISTRY.lock() {
-        reg.insert(ptr as usize);
-    }
+    // unwrap_or_else recovers the inner data from a poisoned mutex rather
+    // than silently dropping the registration (which would cause a memory leak).
+    ALLOC_REGISTRY
+        .lock()
+        .unwrap_or_else(|e| e.into_inner())
+        .insert(ptr as usize);
 }
 
 /// Allocate a new C string, register it for later `tt_free`, and return
@@ -355,10 +358,13 @@ pub extern "C" fn tt_free(p: *mut c_void) {
     // Only reclaim pointers that were produced by Rust (registered in ALLOC_REGISTRY).
     // Pointers allocated by C code must not be freed here to avoid double-free UB.
     let addr = p as usize;
+    // unwrap_or_else recovers from a poisoned mutex; without this, a panic in
+    // any other thread holding the lock would cause tt_free to silently skip
+    // the deregistration, leaking the allocation permanently.
     let owned = ALLOC_REGISTRY
         .lock()
-        .map(|mut reg| reg.remove(&addr))
-        .unwrap_or(false);
+        .unwrap_or_else(|e| e.into_inner())
+        .remove(&addr);
     if owned {
         // SAFETY: `addr` was inserted by `register_alloc` which was called
         // immediately after `CString::into_raw()`, so the pointer is a valid,
