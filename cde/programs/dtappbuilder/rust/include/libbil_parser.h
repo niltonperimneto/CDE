@@ -41,7 +41,7 @@ struct BilHandle *cde_bil_parse(const char *input);
 void cde_bil_free(struct BilHandle *handle);
 
 /**
- * Return the major version from `:bil-version`, or 0 if absent.
+ * Return the major version from `:bil-version`, or 0 if absent or on error.
  *
  * # Safety
  * `handle` must be valid.
@@ -49,7 +49,7 @@ void cde_bil_free(struct BilHandle *handle);
 uint32_t cde_bil_version_major(const struct BilHandle *handle);
 
 /**
- * Return the minor version from `:bil-version`, or 0 if absent.
+ * Return the minor version from `:bil-version`, or 0 if absent or on error.
  *
  * # Safety
  * `handle` must be valid.
@@ -57,7 +57,7 @@ uint32_t cde_bil_version_major(const struct BilHandle *handle);
 uint32_t cde_bil_version_minor(const struct BilHandle *handle);
 
 /**
- * Return the number of top-level items in the file.
+ * Return the number of top-level items in the file, or 0 on error.
  *
  * # Safety
  * `handle` must be valid.
@@ -66,20 +66,19 @@ uintptr_t cde_bil_item_count(const struct BilHandle *handle);
 
 /**
  * Return the keyword of the `idx`-th top-level item as a NUL-terminated
- * string, or NULL if `idx` is out of range.
+ * interned string, or NULL if `idx` is out of range or on error.
  *
  * # Safety
- * `handle` must be valid. Returned pointer is borrowed from the handle and
- * must not outlive it.
+ * `handle` must be valid. The returned pointer lives as long as the handle.
  */
 const char *cde_bil_item_keyword(const struct BilHandle *handle, uintptr_t idx);
 
 /**
- * Return the name (first atom arg) of the `idx`-th top-level item, or NULL
- * if the item has no atom first argument.
+ * Return the name (first atom arg) of the `idx`-th top-level item as a
+ * NUL-terminated interned string, or NULL if none or on error.
  *
  * # Safety
- * `handle` must be valid. Returned pointer is borrowed from the handle.
+ * `handle` must be valid. The returned pointer lives as long as the handle.
  */
 const char *cde_bil_item_name(const struct BilHandle *handle, uintptr_t idx);
 
