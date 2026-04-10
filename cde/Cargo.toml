@@ -17,14 +17,18 @@ members = [
     "lib/DtHelp/rust/engine",
     "lib/DtHelp/rust/sgml2md",
     "lib/DtSearch/rust",
+    "lib/DtSvc/rust",
     "lib/csa/cde_xdr",
+    "lib/csa/recurrence",
     "lib/csa/rust",
     "lib/tt/libtt_shim",
     "lib/tt/rust/tt_type_comp",
     "lib/tt/rust/ttsession",
+    "programs/dtappbuilder/rust",
     "programs/dtbrowser/ipc",
     "programs/dtbrowser/server",
     "programs/dtterm_shim",
+    "programs/dtwm/rust",
 ]
 exclude = [
     # cargo-fuzz must operate in its own workspace
@@ -41,15 +45,22 @@ exclude = [
 [workspace.dependencies]
 anyhow      = "1.0"
 byteorder   = "1.5"
+cbindgen    = "0.26"
 clap        = { version = "4.4", features = ["derive"] }
 env_logger  = "0.11"
 futures     = "0.3"
 libc        = "0.2"
 log         = "0.4"
+miette      = { version = "5", features = ["fancy"] }
+nom         = "7.1"
+pest        = "2.7"
+pest_derive = "2.7"
+rayon       = "1.10"
 serde       = { version = "1.0", features = ["derive"] }
 serde_json  = "1.0"
 thiserror   = "1.0"
 tokio       = { version = "1.28", features = ["full"] }
+walkdir     = "2"
 zbus        = "5"
 
 # Workspace-level profile tuning

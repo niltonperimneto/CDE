@@ -1,0 +1,55 @@
+// ==========================================================================
+// dtwmrc.pest — PEG grammar for the CDE window manager resource file
+//
+// Replaces the manual C tokenizer spread across WmParse.c, WmResParse.c and
+// Parse.c. The grammar only captures the *top-level* structure (top-level
+// declarations and their brace-delimited bodies). Body content is returned
+// verbatim to the Rust side which interprets it with rule-specific
+// combinators — this mirrors how the legacy C code first splits declarations
+// then hands the body lines to a second pass.
+//
+// Top-level declarations understood by the legacy parser (WmParseP.h):
+//
+//   Menu NAME      { items... }
+//   Keys NAME      { bindings... }
+//   Buttons NAME   { bindings... }
+//   PANEL NAME     { boxes... }    (front panel syntax; WmParseP.h:92-96)
+//   BOX NAME       { controls... }
+//   CONTROL NAME   { attrs... }
+//   SWITCH NAME    { attrs... }
+//
+// Comments are `#`-prefixed in dtwmrc (XCOMM is a cpp macro applied before
+// dtwm sees the file; by the time we parse it the comments are real `#`
+// lines or plain strippable text).
+// ==========================================================================
+
+WHITESPACE = _{ " " | "\t" | ("\\" ~ NEWLINE) }
+COMMENT    = _{ "#" ~ (!NEWLINE ~ ANY)* }
+
+file = { SOI ~ (NEWLINE | declaration)* ~ EOI }
+
+declaration = {
+      menu_decl
+    | keys_decl
+    | buttons_decl
+    | panel_decl
+    | box_decl
+    | control_decl
+    | switch_decl
+}
+
+menu_decl    = { ^"Menu"    ~ identifier ~ NEWLINE* ~ body }
+keys_decl    = { ^"Keys"    ~ identifier ~ NEWLINE* ~ body }
+buttons_decl = { ^"Buttons" ~ identifier ~ NEWLINE* ~ body }
+panel_decl   = { ^"PANEL"   ~ identifier ~ NEWLINE* ~ body }
+box_decl     = { ^"BOX"     ~ identifier ~ NEWLINE* ~ body }
+control_decl = { ^"CONTROL" ~ identifier ~ NEWLINE* ~ body }
+switch_decl  = { ^"SWITCH"  ~ identifier ~ NEWLINE* ~ body }
+
+// Body is everything between matching braces, preserving nested braces so
+// `nls-%|...|` quoted sections that contain `{` or `}` survive.
+body = { "{" ~ body_inner ~ "}" }
+body_inner = @{ ( nested | ( !( "{" | "}" ) ~ ANY ) )* }
+nested = _{ "{" ~ body_inner ~ "}" }
+
+identifier = @{ (ASCII_ALPHA | "_") ~ (ASCII_ALPHANUMERIC | "_" | "-")* }

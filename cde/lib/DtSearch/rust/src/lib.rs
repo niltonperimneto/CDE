@@ -3,6 +3,7 @@
 
 pub mod format;
 pub mod parser;
+pub mod query;
 pub mod raima;
 pub mod search;
 

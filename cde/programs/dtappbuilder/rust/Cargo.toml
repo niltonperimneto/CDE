@@ -1,0 +1,19 @@
+[package]
+name    = "libbil_parser"
+version = "0.1.0"
+edition = "2021"
+description = "Memory-safe replacement for CDE's dtappbuilder BIL parser (bil_parse.y)"
+license = "LGPL-2.0-or-later"
+
+[lib]
+name       = "bil_parser"
+crate-type = ["staticlib", "rlib"]
+
+[dependencies]
+libc      = { workspace = true }
+miette    = { workspace = true }
+nom       = { workspace = true }
+thiserror = { workspace = true }
+
+[build-dependencies]
+cbindgen = { workspace = true }

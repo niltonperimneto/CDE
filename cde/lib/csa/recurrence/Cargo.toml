@@ -1,0 +1,18 @@
+[package]
+name = "libcsa_recurrence"
+version = "0.1.0"
+edition = "2021"
+description = "Memory-safe replacement for CDE's CSA Calendar recurrence rule parser (reparser.y)"
+license = "LGPL-2.0-or-later"
+
+[lib]
+name = "csa_recurrence"
+crate-type = ["staticlib", "rlib"]
+
+[dependencies]
+libc      = { workspace = true }
+miette    = { workspace = true }
+thiserror = { workspace = true }
+
+[build-dependencies]
+cbindgen = { workspace = true }
