@@ -126,7 +126,7 @@ unsafe extern "C" fn xdr_cms_create_args_pack(xdrs: *mut XDR, objp: *mut c_void)
     }
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub unsafe extern "C" fn cms_create_calendar_5(
     arg: *mut cms_create_args,
     conn: *mut _DtCm_Connection,
@@ -164,7 +164,7 @@ unsafe extern "C" fn xdr_cms_delete_args_pack(xdrs: *mut XDR, objp: *mut c_void)
         Err(_) => 0,
     }
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub unsafe extern "C" fn cms_delete_entry_5(
     arg: *mut crate::xdr_c_bindings::cms_delete_args,
     conn: *mut _DtCm_Connection,
@@ -213,7 +213,7 @@ unsafe extern "C" fn xdr_cms_open_res_unpack(xdrs: *mut XDR, objp: *mut c_void) 
         Err(_) => 0,
     }
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub unsafe extern "C" fn cms_open_calendar_5(
     arg: *mut crate::xdr_c_bindings::cms_open_args,
     conn: *mut _DtCm_Connection,
@@ -264,7 +264,7 @@ unsafe extern "C" fn xdr_cms_entry_res_unpack(xdrs: *mut XDR, objp: *mut c_void)
         Err(_) => 0,
     }
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub unsafe extern "C" fn cms_update_entry_5(
     arg: *mut crate::xdr_c_bindings::cms_update_args,
     conn: *mut _DtCm_Connection,
@@ -303,7 +303,7 @@ unsafe extern "C" fn xdr_cms_insert_args_pack(xdrs: *mut XDR, objp: *mut c_void)
         Err(_) => 0,
     }
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub unsafe extern "C" fn cms_insert_entry_5(
     arg: *mut crate::xdr_c_bindings::cms_insert_args,
     conn: *mut _DtCm_Connection,
@@ -342,7 +342,7 @@ unsafe extern "C" fn xdr_cms_remove_args_pack(xdrs: *mut XDR, objp: *mut c_void)
         Err(_) => 0,
     }
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub unsafe extern "C" fn cms_remove_calendar_5(
     arg: *mut crate::xdr_c_bindings::cms_remove_args,
     conn: *mut _DtCm_Connection,
@@ -391,7 +391,7 @@ unsafe extern "C" fn xdr_cms_archive_res_unpack(xdrs: *mut XDR, objp: *mut c_voi
         Err(_) => 0,
     }
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub unsafe extern "C" fn cms_archive_5(
     arg: *mut crate::xdr_c_bindings::cms_archive_args,
     conn: *mut _DtCm_Connection,
@@ -430,7 +430,7 @@ unsafe extern "C" fn xdr_cms_restore_args_pack(xdrs: *mut XDR, objp: *mut c_void
         Err(_) => 0,
     }
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub unsafe extern "C" fn cms_restore_5(
     arg: *mut crate::xdr_c_bindings::cms_restore_args,
     conn: *mut _DtCm_Connection,
@@ -492,7 +492,7 @@ unsafe extern "C" fn xdr_cms_reminder_res_unpack(xdrs: *mut XDR, objp: *mut c_vo
         Err(_) => 0,
     }
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub unsafe extern "C" fn cms_lookup_reminder_5(
     arg: *mut crate::xdr_c_bindings::cms_reminder_args,
     conn: *mut _DtCm_Connection,
@@ -531,7 +531,7 @@ unsafe extern "C" fn xdr_cms_lookup_entries_args_pack(xdrs: *mut XDR, objp: *mut
         Err(_) => 0,
     }
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub unsafe extern "C" fn cms_lookup_entries_5(
     arg: *mut crate::xdr_c_bindings::cms_lookup_entries_args,
     conn: *mut _DtCm_Connection,
@@ -582,7 +582,7 @@ unsafe extern "C" fn xdr_cms_get_cal_attr_res_unpack(xdrs: *mut XDR, objp: *mut 
         Err(_) => 0,
     }
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub unsafe extern "C" fn cms_get_calendar_attr_5(
     arg: *mut crate::xdr_c_bindings::cms_get_cal_attr_args,
     conn: *mut _DtCm_Connection,
@@ -621,7 +621,7 @@ unsafe extern "C" fn xdr_cms_set_cal_attr_args_pack(xdrs: *mut XDR, objp: *mut c
         Err(_) => 0,
     }
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub unsafe extern "C" fn cms_set_calendar_attr_5(
     arg: *mut crate::xdr_c_bindings::cms_set_cal_attr_args,
     conn: *mut _DtCm_Connection,
@@ -673,7 +673,7 @@ unsafe extern "C" fn xdr_cms_get_entry_attr_res_unpack(
         Err(_) => 0,
     }
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub unsafe extern "C" fn cms_get_entry_attr_5(
     arg: *mut crate::xdr_c_bindings::cms_get_entry_attr_args,
     conn: *mut _DtCm_Connection,
@@ -712,7 +712,7 @@ unsafe extern "C" fn xdr_cms_register_args_pack(xdrs: *mut XDR, objp: *mut c_voi
         Err(_) => 0,
     }
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub unsafe extern "C" fn cms_register_5(
     arg: *mut crate::xdr_c_bindings::cms_register_args,
     conn: *mut _DtCm_Connection,
@@ -749,7 +749,7 @@ unsafe extern "C" fn xdr_cms_unregister_args_pack(xdrs: *mut XDR, objp: *mut c_v
         Err(_) => 0,
     }
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub unsafe extern "C" fn cms_unregister_5(
     arg: *mut crate::xdr_c_bindings::cms_register_args,
     conn: *mut _DtCm_Connection,
@@ -789,7 +789,7 @@ unsafe extern "C" fn xdr_cms_enumerate_sequence_args_pack(
         Err(_) => 0,
     }
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub unsafe extern "C" fn cms_enumerate_sequence_5(
     arg: *mut crate::xdr_c_bindings::cms_enumerate_args,
     conn: *mut _DtCm_Connection,
@@ -851,7 +851,7 @@ unsafe extern "C" fn xdr_cms_enumerate_calendar_attr_res_unpack(
         Err(_) => 0,
     }
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub unsafe extern "C" fn cms_enumerate_calendar_attr_5(
     arg: *mut *mut c_char,
     conn: *mut _DtCm_Connection,
@@ -897,7 +897,7 @@ unsafe extern "C" fn xdr_cms_list_calendars_res_unpack(
         Err(_) => 0,
     }
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub unsafe extern "C" fn cms_list_calendars_5(
     _arg: *mut c_void,
     conn: *mut _DtCm_Connection,

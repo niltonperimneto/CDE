@@ -7,26 +7,24 @@ libcsa_xdr_target = custom_target('libcsa_xdr',
   output : 'liblibcsa_xdr.a',
   # Use sh -c to chain commands: build via cargo, then copy artifact to @OUTPUT@
   # We assume rust_dir / Cargo.toml exists.
-  command : ['sh', '-c', 'cargo build --release --manifest-path @0@/Cargo.toml && cp @0@/target/release/liblibcsa_xdr.a @OUTPUT@'.format(rust_dir)],
+  command : ['sh', '-c', 'cargo build --release --manifest-path @0@/Cargo.toml --target-dir @0@/target && cp @0@/target/release/liblibcsa_xdr.a @OUTPUT@'.format(rust_dir)],
   build_by_default : true
 )
 
 libcsa_xdr_inc = include_directories('rust/include')
 
-# Reparser generation (yacc)
+# Reparser generation (bison)
+# Use bison's built-in api.prefix to rename yy→_DtCm_yy instead of
+# the fragile sed pipeline that broke with modern bison output.
 yacc = find_program('yacc', 'bison')
-sed = find_program('sed')
 
 reparser = custom_target('reparser',
   input : 'reparser.y',
   output : ['reparser.c', 'reparser.h'],
   command : [
-    'sh', '-c', 
-    '@0@ -d @INPUT@ && '.format(yacc.full_path()) +
-    'sed -e s/yyparse/_DtCm_rule_parser/g -e s/yy/_DtCm_yy/g y.tab.c > $1 && ' +
-    'sed s/yy/_DtCm_yy/g y.tab.h > $2 && ' +
-    'rm y.tab.c y.tab.h',
-    'sh', '@OUTPUT0@', '@OUTPUT1@'
+    'sh', '-c',
+    '@0@ -Dapi.prefix={_DtCm_yy} -Dparse.error=verbose '.format(yacc.full_path()) +
+    '-d -o @OUTPUT0@ --defines=@OUTPUT1@ @INPUT@'
   ]
 )
 

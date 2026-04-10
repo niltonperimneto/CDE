@@ -11,7 +11,7 @@ libc = "0.2"
 cde_xdr = { path = "../cde_xdr" }
 
 [build-dependencies]
-cbindgen = "0.26"
+cbindgen = "0.29"
 bindgen = "0.69"
 # We assume xdrgen is installed as a binary tool (cargo install xdrgen)
 

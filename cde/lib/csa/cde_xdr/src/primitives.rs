@@ -41,7 +41,7 @@ fn read_padding<R: Read>(r: &mut R, data_len: usize) -> Result<usize> {
 // i32 — XDR `int` (§4.1)
 // ---------------------------------------------------------------------------
 
-impl Pack for i32 {
+impl<Out: Write> Pack<Out> for i32 {
     fn pack<W: Write>(&self, w: &mut W) -> Result<usize> {
         w.write_i32::<BigEndian>(*self)?;
         Ok(4)
@@ -58,7 +58,7 @@ impl Unpack for i32 {
 // u32 — XDR `unsigned int` (§4.2)
 // ---------------------------------------------------------------------------
 
-impl Pack for u32 {
+impl<Out: Write> Pack<Out> for u32 {
     fn pack<W: Write>(&self, w: &mut W) -> Result<usize> {
         w.write_u32::<BigEndian>(*self)?;
         Ok(4)
@@ -75,7 +75,7 @@ impl Unpack for u32 {
 // i64 — XDR `hyper` (§4.5)
 // ---------------------------------------------------------------------------
 
-impl Pack for i64 {
+impl<Out: Write> Pack<Out> for i64 {
     fn pack<W: Write>(&self, w: &mut W) -> Result<usize> {
         w.write_i64::<BigEndian>(*self)?;
         Ok(8)
@@ -92,7 +92,7 @@ impl Unpack for i64 {
 // u64 — XDR `unsigned hyper` (§4.5)
 // ---------------------------------------------------------------------------
 
-impl Pack for u64 {
+impl<Out: Write> Pack<Out> for u64 {
     fn pack<W: Write>(&self, w: &mut W) -> Result<usize> {
         w.write_u64::<BigEndian>(*self)?;
         Ok(8)
@@ -109,7 +109,7 @@ impl Unpack for u64 {
 // bool — XDR `bool` (§4.4): encoded as int32 (0 = FALSE, 1 = TRUE)
 // ---------------------------------------------------------------------------
 
-impl Pack for bool {
+impl<Out: Write> Pack<Out> for bool {
     fn pack<W: Write>(&self, w: &mut W) -> Result<usize> {
         (*self as i32).pack(w)
     }
@@ -126,7 +126,7 @@ impl Unpack for bool {
 // f32 — XDR `float` (§4.6)
 // ---------------------------------------------------------------------------
 
-impl Pack for f32 {
+impl<Out: Write> Pack<Out> for f32 {
     fn pack<W: Write>(&self, w: &mut W) -> Result<usize> {
         w.write_f32::<BigEndian>(*self)?;
         Ok(4)
@@ -143,7 +143,7 @@ impl Unpack for f32 {
 // f64 — XDR `double` (§4.7)
 // ---------------------------------------------------------------------------
 
-impl Pack for f64 {
+impl<Out: Write> Pack<Out> for f64 {
     fn pack<W: Write>(&self, w: &mut W) -> Result<usize> {
         w.write_f64::<BigEndian>(*self)?;
         Ok(8)
@@ -160,7 +160,7 @@ impl Unpack for f64 {
 // () — XDR `void`: encodes to zero bytes (§4.16)
 // ---------------------------------------------------------------------------
 
-impl Pack for () {
+impl<Out: Write> Pack<Out> for () {
     fn pack<W: Write>(&self, _w: &mut W) -> Result<usize> {
         Ok(0)
     }
@@ -180,10 +180,15 @@ impl Unpack for () {
 // application-level constraints before calling pack().
 // ---------------------------------------------------------------------------
 
-/// Default maximum string length (4 MiB) — sanity cap for decode.
-const MAX_STRING_LEN: usize = 4 * 1024 * 1024;
+/// Default maximum string length (64 MiB) — sanity cap for decode.
+///
+/// CSA `buffer<>` payloads (e.g. `cms_archive_res.data`) can reach tens of
+/// megabytes; the old 4 MiB cap caused spurious `SizeLimit` errors on large
+/// archive responses.  64 MiB is still well below the 4 GiB XDR wire limit and
+/// prevents run-away allocation from malformed data.
+const MAX_STRING_LEN: usize = 64 * 1024 * 1024;
 
-impl Pack for String {
+impl<Out: Write> Pack<Out> for String {
     fn pack<W: Write>(&self, w: &mut W) -> Result<usize> {
         let bytes = self.as_bytes();
         let len = bytes.len();
@@ -222,7 +227,7 @@ impl Unpack for String {
 /// Maximum opaque field length (16 MiB) — sanity cap for decode.
 const MAX_OPAQUE_LEN: usize = 16 * 1024 * 1024;
 
-impl Pack for Vec<u8> {
+impl<Out: Write> Pack<Out> for Vec<u8> {
     fn pack<W: Write>(&self, w: &mut W) -> Result<usize> {
         let len = self.len();
         // XDR opaque length field is 4 bytes; reject oversized inputs.

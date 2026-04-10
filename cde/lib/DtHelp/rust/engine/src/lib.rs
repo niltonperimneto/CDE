@@ -13,7 +13,7 @@ pub struct DtHelpEngine {
     buffer: Buffer,
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn dthelp_engine_new() -> *mut DtHelpEngine {
     let mut font_system = FontSystem::new();
     let swash_cache = SwashCache::new();
@@ -28,7 +28,7 @@ pub extern "C" fn dthelp_engine_new() -> *mut DtHelpEngine {
     Box::into_raw(engine)
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn dthelp_engine_free(engine: *mut DtHelpEngine) {
     if !engine.is_null() {
         unsafe {
@@ -37,7 +37,7 @@ pub extern "C" fn dthelp_engine_free(engine: *mut DtHelpEngine) {
     }
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn dthelp_engine_set_text(engine: *mut DtHelpEngine, text: *const c_char) {
     if engine.is_null() || text.is_null() {
         return;
@@ -55,7 +55,7 @@ pub extern "C" fn dthelp_engine_set_text(engine: *mut DtHelpEngine, text: *const
     }
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn dthelp_engine_render(
     engine: *mut DtHelpEngine,
     width: u32,
@@ -136,7 +136,7 @@ pub extern "C" fn dthelp_engine_render(
     }
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn dthelp_engine_get_height(
     engine: *mut DtHelpEngine,
     width: libc::c_int,
