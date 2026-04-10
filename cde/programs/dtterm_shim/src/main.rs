@@ -95,8 +95,20 @@ fn parse_geometry(s: &str) -> Option<Geometry> {
     let rows_str = pos_start.map(|i| &rest[..i]).unwrap_or(rest);
     let pos_str = pos_start.map(|i| &rest[i..]).unwrap_or("");
 
-    let cols: Option<u32> = cols_str.parse().ok();
-    let rows: Option<u32> = rows_str.parse().ok();
+    // Empty component means "not specified" (allowed).  Non-empty but
+    // non-numeric means the geometry string is malformed → return None so
+    // the caller emits a warning rather than silently producing a zero-size
+    // window from an unwrap_or(0) default.
+    let cols: Option<u32> = if cols_str.is_empty() {
+        None
+    } else {
+        Some(cols_str.parse().ok()?)
+    };
+    let rows: Option<u32> = if rows_str.is_empty() {
+        None
+    } else {
+        Some(rows_str.parse().ok()?)
+    };
 
     // Parse optional +X+Y or -X-Y (sign is part of the token)
     let (x, y) = if pos_str.is_empty() {

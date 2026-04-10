@@ -7,7 +7,7 @@ use std::net::{SocketAddr, TcpListener, TcpStream};
 use std::os::raw::c_char;
 use std::path::Path;
 use std::sync::atomic::{AtomicBool, Ordering};
-use std::sync::OnceLock;
+use std::sync::{LazyLock, Mutex};
 use std::thread;
 
 // AtomicBool eliminates the data race that `static mut bool` caused.
@@ -15,7 +15,12 @@ static SERVER_RUNNING: AtomicBool = AtomicBool::new(false);
 
 // Bound address stored so dtbrowser_server_stop() can connect-to-self to
 // unblock listener.incoming() / accept().
-static LISTEN_ADDR: OnceLock<SocketAddr> = OnceLock::new();
+//
+// `Mutex<Option<…>>` (rather than `OnceLock`) allows the address to be
+// cleared on stop() and re-populated on the next start(), supporting
+// multiple start/stop cycles within the same process lifetime.
+static LISTEN_ADDR: LazyLock<Mutex<Option<SocketAddr>>> =
+    LazyLock::new(|| Mutex::new(None));
 
 #[no_mangle]
 pub extern "C" fn dtbrowser_server_start(root: *const c_char) -> u16 {
@@ -23,22 +28,34 @@ pub extern "C" fn dtbrowser_server_start(root: *const c_char) -> u16 {
     if root.is_null() {
         return 0;
     }
+
+    // Prevent duplicate servers: if one is already running, return 0.
+    // swap(true) atomically sets the flag and returns the old value.
+    if SERVER_RUNNING.swap(true, Ordering::SeqCst) {
+        return 0;
+    }
+
     let root_path = unsafe { CStr::from_ptr(root) }.to_string_lossy().to_string();
 
     let listener = match TcpListener::bind("127.0.0.1:0") {
         Ok(l) => l,
-        Err(_) => return 0,
+        Err(_) => {
+            SERVER_RUNNING.store(false, Ordering::SeqCst);
+            return 0;
+        }
     };
 
     let addr = match listener.local_addr() {
         Ok(a) => a,
-        Err(_) => return 0,
+        Err(_) => {
+            SERVER_RUNNING.store(false, Ordering::SeqCst);
+            return 0;
+        }
     };
 
     let port = addr.port();
     // Record the bound address before spawning so stop() can find it.
-    let _ = LISTEN_ADDR.set(addr);
-    SERVER_RUNNING.store(true, Ordering::SeqCst);
+    *LISTEN_ADDR.lock().unwrap_or_else(|e| e.into_inner()) = Some(addr);
 
     thread::spawn(move || {
         eprintln!("[Rust-Server] Listening on http://127.0.0.1:{}", port);
@@ -62,10 +79,12 @@ pub extern "C" fn dtbrowser_server_start(root: *const c_char) -> u16 {
 #[no_mangle]
 pub extern "C" fn dtbrowser_server_stop() {
     SERVER_RUNNING.store(false, Ordering::SeqCst);
+    // Take the address out so a subsequent start() gets a fresh slot.
+    let addr = LISTEN_ADDR.lock().unwrap_or_else(|e| e.into_inner()).take();
     // Unblock the listener thread, which is blocked inside accept().
     // A dummy connection to self causes accept() to return, the loop checks
     // SERVER_RUNNING, finds it false, and exits cleanly.
-    if let Some(addr) = LISTEN_ADDR.get() {
+    if let Some(addr) = addr {
         let _ = TcpStream::connect(addr);
     }
 }

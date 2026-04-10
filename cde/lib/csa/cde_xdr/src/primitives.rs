@@ -180,8 +180,13 @@ impl Unpack for () {
 // application-level constraints before calling pack().
 // ---------------------------------------------------------------------------
 
-/// Default maximum string length (4 MiB) — sanity cap for decode.
-const MAX_STRING_LEN: usize = 4 * 1024 * 1024;
+/// Default maximum string length (64 MiB) — sanity cap for decode.
+///
+/// CSA `buffer<>` payloads (e.g. `cms_archive_res.data`) can reach tens of
+/// megabytes; the old 4 MiB cap caused spurious `SizeLimit` errors on large
+/// archive responses.  64 MiB is still well below the 4 GiB XDR wire limit and
+/// prevents run-away allocation from malformed data.
+const MAX_STRING_LEN: usize = 64 * 1024 * 1024;
 
 impl Pack for String {
     fn pack<W: Write>(&self, w: &mut W) -> Result<usize> {
