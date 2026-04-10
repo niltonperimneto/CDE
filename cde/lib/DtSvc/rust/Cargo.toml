@@ -1,0 +1,25 @@
+[package]
+name = "libdt_parser"
+version = "0.1.0"
+edition = "2021"
+description = "Memory-safe replacement for CDE's C-based Action/DataType (.dt) parser"
+license = "LGPL-2.0-or-later"
+
+[lib]
+name = "dt_parser"
+crate-type = ["staticlib", "rlib"]
+
+[dependencies]
+libc       = { workspace = true }
+miette     = { workspace = true }
+pest       = { workspace = true }
+pest_derive = { workspace = true }
+rayon      = { workspace = true }
+thiserror  = { workspace = true }
+walkdir    = { workspace = true }
+
+[build-dependencies]
+cbindgen = { workspace = true }
+
+[dev-dependencies]
+insta = "1.34"

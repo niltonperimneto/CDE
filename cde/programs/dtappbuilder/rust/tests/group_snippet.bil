@@ -1,0 +1,28 @@
+
+// Derived from programs/dtappbuilder/src/ab/group.bil (first element only)
+// Used as a fixture by the lib.rs integration test.
+
+:bil-version 1 0
+:module group
+(
+
+:element prop_dialog
+(
+	:type			:dialog
+	:bg-color		"white"
+	:label			"Group Property Editor"
+	:resizable		:true
+	:visible		:false
+	:default-button		apply_button
+	:help-button		help_button
+	:help-volume		"AppBuilder"
+	:help-location		"ABPropsEditor"
+	:help-text		"This Property Editor allows Group object attributes to be examined.\n"
+	:children		(
+		objlist_panel
+		attrs_ctrlpanel
+		activate_panel
+	)
+)
+
+)

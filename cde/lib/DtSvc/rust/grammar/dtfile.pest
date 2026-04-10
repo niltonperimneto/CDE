@@ -1,0 +1,55 @@
+// ==========================================================================
+// dtfile.pest — PEG grammar for CDE Action/DataType (.dt) configuration files
+//
+// Replaces the manual C tokenizer in lib/DtSvc/DtUtil1/ActionDb.c.
+//
+// A .dt file contains one or more ACTION / DATA_ATTRIBUTES / DATA_CRITERIA
+// records. Each record is a keyword followed by an identifier and a
+// brace-delimited block of field + value pairs. Values may be quoted strings
+// or unquoted tokens; either way they run to end-of-line.
+//
+// Example:
+//   ACTION Edit
+//   {
+//     LABEL           Edit
+//     TYPE            COMMAND
+//     WINDOW_TYPE     PERM_TERMINAL
+//     EXEC_STRING     /usr/bin/vi "%Arg_1%"
+//     DESCRIPTION     "Opens the file in vi."
+//   }
+//
+// Field names come from ActionDb.h:49-130.
+// ==========================================================================
+
+// Horizontal whitespace only — newlines are structural and handled explicitly.
+WHITESPACE = _{ " " | "\t" | ("\\" ~ NEWLINE) }
+COMMENT    = _{ "#" ~ (!NEWLINE ~ ANY)* }
+
+file = { SOI ~ (NEWLINE | record)* ~ EOI }
+
+record = { action_record | data_attributes | data_criteria | set_record }
+
+action_record   = { ^"ACTION"          ~ identifier ~ NEWLINE* ~ block }
+data_attributes = { ^"DATA_ATTRIBUTES" ~ identifier ~ NEWLINE* ~ block }
+data_criteria   = { ^"DATA_CRITERIA"   ~ identifier ~ NEWLINE* ~ block }
+// SET defines reusable variable sets (used by some legacy .dt files).
+set_record      = { ^"SET"             ~ identifier ~ NEWLINE* ~ block }
+
+block = { "{" ~ (NEWLINE | field)* ~ "}" }
+
+// A field is: KEY<hs>VALUE<eol>. We make this compound-atomic (`${...}`) so
+// pest does NOT eat whitespace inside the value capture.
+field = ${ identifier ~ hs+ ~ value ~ field_end }
+field_end = _{ NEWLINE | &"}" }
+hs = _{ " " | "\t" }
+
+// Value runs to end-of-line, stopping at a closing brace or a line-final
+// comment. Quoted strings are handled inline so embedded `#` is preserved.
+value = @{ value_item ~ (hs+ ~ value_item)* }
+value_item = _{ quoted | unquoted_token }
+quoted = _{ "\"" ~ ( "\\" ~ ANY | !"\"" ~ ANY )* ~ "\"" }
+unquoted_token = _{ ( !( "\n" | "\r" | "#" | " " | "\t" ) ~ ANY )+ }
+
+// Identifiers allow hyphens (e.g. "file-roller", "DATA_ATTRIBUTES_NAME") to
+// match real-world .dt files in-tree such as programs/types/file-roller.dt.
+identifier = @{ (ASCII_ALPHA | "_") ~ (ASCII_ALPHANUMERIC | "_" | "-")* }

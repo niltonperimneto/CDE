@@ -8,6 +8,14 @@ pub enum Query {
     And(Box<Query>, Box<Query>),
     Or(Box<Query>, Box<Query>),
     Not(Box<Query>),
+    /// `word1 @n word2` — proximity/collocation search: word1 must occur
+    /// within `distance` words of word2. Matches the `COLLOC_TOKEN`
+    /// production in `lib/DtSearch/boolyac.y:127`.
+    Collocated {
+        left: String,
+        distance: u32,
+        right: String,
+    },
 }
 
 pub struct Searcher {
@@ -47,6 +55,19 @@ impl Searcher {
                 let l = self.search(left);
                 let r = self.search(right);
                 l.union(&r).cloned().collect()
+            }
+            Query::Collocated { left, right, .. } => {
+                // Collocation search: intersection of term results is the
+                // correct upper bound — true proximity checking requires
+                // positional index data that the current DtSearchParser
+                // does not expose. When that index lands we can refine
+                // this here without changing the AST.
+                let l = self.search_term(left);
+                if l.is_empty() {
+                    return l;
+                }
+                let r = self.search_term(right);
+                l.intersection(&r).cloned().collect()
             }
             Query::Not(operand) => {
                 // Warning: Pure NOT queries are expensive as they return "Everything else"
@@ -104,10 +125,11 @@ pub struct QueryParser {
 impl QueryParser {
     pub fn new(input: &str) -> Self {
         let mut tokens = Vec::new();
-        // Naive tokenizer: extract specialized chars AND OR NOT ( )
-        // and words.
+        // Tokenizer: boolean operators (& | ~), grouping ( ), collocation
+        // `@n` (n a positive integer) from boolyac.y, and word tokens.
         let mut current_word = String::new();
-        for c in input.chars() {
+        let mut chars = input.chars().peekable();
+        while let Some(c) = chars.next() {
             match c {
                 '&' | '|' | '~' | '(' | ')' => {
                     if !current_word.is_empty() {
@@ -115,6 +137,24 @@ impl QueryParser {
                         current_word.clear();
                     }
                     tokens.push(c.to_string());
+                }
+                '@' => {
+                    if !current_word.is_empty() {
+                        tokens.push(current_word.clone());
+                        current_word.clear();
+                    }
+                    // Collect the integer after '@' — matches the yylex
+                    // behaviour in boolpars.c:659-694 (`@n` where n > 0).
+                    let mut tok = String::from('@');
+                    while let Some(&nc) = chars.peek() {
+                        if nc.is_ascii_digit() {
+                            tok.push(nc);
+                            chars.next();
+                        } else {
+                            break;
+                        }
+                    }
+                    tokens.push(tok);
                 }
                 ' ' | '\t' | '\n' => {
                     if !current_word.is_empty() {
@@ -133,7 +173,17 @@ impl QueryParser {
     }
 
     pub fn parse(&mut self) -> Result<Query, String> {
-        self.parse_expression()
+        if self.tokens.is_empty() {
+            return Err("empty query".to_string());
+        }
+        let q = self.parse_expression()?;
+        // Enforce full consumption: any leftover tokens indicate a malformed
+        // expression (e.g. a dangling `)` or stray `@n`).
+        if self.pos < self.tokens.len() {
+            let leftover = &self.tokens[self.pos];
+            return Err(format!("unexpected token '{leftover}' after query expression"));
+        }
+        Ok(q)
     }
 
     fn peek(&self) -> Option<&String> {
@@ -196,8 +246,33 @@ impl QueryParser {
                 }
                 Ok(expr)
             } else {
-                // Identifier
+                // Must be a plain identifier — reject stray operators.
+                let t = self.peek().unwrap();
+                if !self.is_identifier(t) {
+                    return Err(format!("unexpected token '{t}' — expected a word"));
+                }
                 let t = self.consume().unwrap();
+                // Lookahead for `@n WORD` — matches boolyac.y:127
+                //   `WORD_TOKEN COLLOC_TOKEN WORD_TOKEN`
+                if let Some(next) = self.peek() {
+                    if let Some(distance) = parse_colloc_token(next) {
+                        self.consume(); // eat `@n`
+                        match self.consume() {
+                            Some(right) if self.is_identifier(&right) => {
+                                return Ok(Query::Collocated {
+                                    left: t,
+                                    distance,
+                                    right,
+                                });
+                            }
+                            _ => {
+                                return Err(format!(
+                                    "collocation operator '@{distance}' must be followed by a word"
+                                ));
+                            }
+                        }
+                    }
+                }
                 Ok(Query::Term(t))
             }
         } else {
@@ -206,7 +281,21 @@ impl QueryParser {
     }
 
     fn is_identifier(&self, s: &str) -> bool {
-        !matches!(s, "&" | "|" | "~" | "(" | ")")
+        !matches!(s, "&" | "|" | "~" | "(" | ")") && !s.starts_with('@')
+    }
+}
+
+/// Parses a `@n` token produced by the tokenizer into its integer distance.
+/// Returns `None` if the token is not a collocation marker or the distance
+/// is not strictly positive (matching the `yylval.int_val <= 0` guard at
+/// `boolpars.c:683`).
+fn parse_colloc_token(tok: &str) -> Option<u32> {
+    let digits = tok.strip_prefix('@')?;
+    let n: u32 = digits.parse().ok()?;
+    if n == 0 {
+        None
+    } else {
+        Some(n)
     }
 }
 
