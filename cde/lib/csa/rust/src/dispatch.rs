@@ -146,7 +146,7 @@ extern "C" {
 ///
 /// This function handles the modern (v5) protocol path in Rust,
 /// while falling back to C for legacy versions (v2-v4).
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub unsafe extern "C" fn rs_rpc_open_calendar(cal: *mut Calendar) -> CSA_return_code {
     if cal.is_null() {
         return CSA_E_INVALID_PARAMETER;
@@ -212,7 +212,7 @@ pub unsafe extern "C" fn rs_rpc_open_calendar(cal: *mut Calendar) -> CSA_return_
 }
 
 /// Rust implementation of the v5 RPC create calendar logic
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub unsafe extern "C" fn rs_rpc_create_calendar(
     cal: *mut Calendar,
     num_attrs: c_ulong,

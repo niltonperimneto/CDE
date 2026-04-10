@@ -20,7 +20,7 @@ const EV_CODE_END: c_int = 10;
 const EV_LINK_START: c_int = 11;
 const EV_LINK_END: c_int = 12;
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn dthelp_parse_markdown(
     buffer: *const c_char,
     ctx: *mut c_void,
@@ -92,7 +92,7 @@ fn send_text_callback(ctx: *mut c_void, callback: ParseCallback, text: &str) {
 }
 
 // Added missing function from SetList.c
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn dthelp_engine_get_height(_engine: *mut c_void, _width: c_int) -> c_int {
     // Stub implementation
     // In real implementation, this would layout the text and return height.

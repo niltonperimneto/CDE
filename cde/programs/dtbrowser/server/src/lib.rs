@@ -17,7 +17,7 @@ static SERVER_RUNNING: AtomicBool = AtomicBool::new(false);
 // unblock listener.incoming() / accept().
 static LISTEN_ADDR: OnceLock<SocketAddr> = OnceLock::new();
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn dtbrowser_server_start(root: *const c_char) -> u16 {
     // Guard against null pointer before any dereference.
     if root.is_null() {
@@ -59,7 +59,7 @@ pub extern "C" fn dtbrowser_server_start(root: *const c_char) -> u16 {
     port
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn dtbrowser_server_stop() {
     SERVER_RUNNING.store(false, Ordering::SeqCst);
     // Unblock the listener thread, which is blocked inside accept().

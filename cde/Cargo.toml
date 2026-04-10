@@ -25,6 +25,7 @@ members = [
     "programs/dtbrowser/ipc",
     "programs/dtbrowser/server",
     "programs/dtterm_shim",
+    "programs/dtxdgbridge",
 ]
 exclude = [
     # cargo-fuzz must operate in its own workspace

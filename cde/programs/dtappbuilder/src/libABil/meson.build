@@ -4,9 +4,7 @@ bil_parse_c = custom_target('bil_parse.c',
   input : 'bil_parse.y',
   output : ['bil_parse.c', 'bil_parse.h'],
   command : [
-    'sh', '-c', 
-    yacc.full_path() + ' -d @INPUT@ && mv y.tab.c $1 && mv y.tab.h $2', 
-    'sh', '@OUTPUT0@', '@OUTPUT1@'
+    yacc, '-d', '-o', '@OUTPUT0@', '--defines=@OUTPUT1@', '@INPUT@'
   ]
 )
 

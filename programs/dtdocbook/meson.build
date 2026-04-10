@@ -47,7 +47,7 @@ install_subdir('sgml', install_dir: dtdocbook_datadir)
 install_subdir('spec', install_dir: dtdocbook_datadir)
 install_subdir('tcl', install_dir: dtdocbook_datadir)
 install_subdir('tpt', install_dir: dtdocbook_datadir)
-install_subdir('doc_utils', install_dir: dtdocbook_datadir)
+install_emptydir(join_paths(dtdocbook_datadir, 'doc_utils'))
 
 install_data('catalog.sh', install_dir: dtdocbook_datadir)
 install_data('env.sh', install_dir: dtdocbook_datadir)

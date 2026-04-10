@@ -11,17 +11,13 @@ dtsearch_sources = [
   'strupr.c', 'userint.c', 'vedelete.c', 'vestatis.c', 'vstfunct.c'
 ]
 
-# Handle boolyac.y
+# Handle boolyac.y — use bison's -o/--defines to write directly to output
 yacc = find_program('yacc', 'bison')
 boolyac_c_h = custom_target('boolyac',
   input : 'boolyac.y',
   output : ['boolyac.c', 'boolyac.h'],
   command : [
-    'sh', '-c', 
-    yacc.full_path() + ' -d @INPUT@ && ' +
-    'mv y.tab.c $1 && ' +
-    'mv y.tab.h $2',
-    'sh', '@OUTPUT0@', '@OUTPUT1@'
+    yacc, '-d', '-o', '@OUTPUT0@', '--defines=@OUTPUT1@', '@INPUT@'
   ]
 )
 

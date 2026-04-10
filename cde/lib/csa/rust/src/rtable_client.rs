@@ -110,7 +110,7 @@ pub struct Registration_Status_2 {
 }
 
 // Implement xdr_CSA_return_code shim
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub unsafe extern "C" fn xdr_CSA_return_code(xdrs: *mut XDR, objp: *mut CSA_return_code) -> bool_t {
     xdr_u_int(xdrs, objp as *mut u_int)
 }
@@ -124,7 +124,7 @@ macro_rules! xdr_call {
 
 // ... RPC Stubs ...
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub unsafe extern "C" fn _DtCm_rtable_change_4(
     _arg: *mut Table_Args_4,
     conn: *mut _DtCm_Connection,
@@ -148,7 +148,7 @@ pub unsafe extern "C" fn _DtCm_rtable_change_4(
 // Note: Omitted detailed implementation of change_3/2 for brevity, they should follow same pattern if needed.
 // For now shims:
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub unsafe extern "C" fn _DtCm_rtable_create_4(
     _arg: *mut Table_Op_Args_4,
     _conn: *mut _DtCm_Connection,
@@ -157,7 +157,7 @@ pub unsafe extern "C" fn _DtCm_rtable_create_4(
     &mut RES as *mut Bind_Table_Status_4 as *mut Table_Status_4
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub unsafe extern "C" fn _DtCm_rtable_lookup_4(
     _arg: *mut Table_Args_4,
     _conn: *mut _DtCm_Connection,
@@ -174,7 +174,7 @@ pub unsafe extern "C" fn _DtCm_rtable_lookup_4(
     &mut RES as *mut Bind_Table_Res_4 as *mut Table_Res_4
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub unsafe extern "C" fn _DtCm_rtable_lookup_range_4(
     _arg: *mut Table_Args_4,
     _conn: *mut _DtCm_Connection,
@@ -191,7 +191,7 @@ pub unsafe extern "C" fn _DtCm_rtable_lookup_range_4(
     &mut RES as *mut Bind_Table_Res_4 as *mut Table_Res_4
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub unsafe extern "C" fn _DtCm_rtable_insert_4(
     _arg: *mut Table_Args_4,
     _conn: *mut _DtCm_Connection,
@@ -208,7 +208,7 @@ pub unsafe extern "C" fn _DtCm_rtable_insert_4(
     &mut RES as *mut Bind_Table_Res_4 as *mut Table_Res_4
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub unsafe extern "C" fn _DtCm_rtable_abbreviated_lookup_key_range_4(
     _arg: *mut Table_Args_4,
     _conn: *mut _DtCm_Connection,
@@ -225,7 +225,7 @@ pub unsafe extern "C" fn _DtCm_rtable_abbreviated_lookup_key_range_4(
     &mut RES as *mut Bind_Table_Res_4 as *mut Table_Res_4
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub unsafe extern "C" fn _DtCm_rtable_set_access_4(
     _arg: *mut Access_Args_4,
     _conn: *mut _DtCm_Connection,
@@ -234,7 +234,7 @@ pub unsafe extern "C" fn _DtCm_rtable_set_access_4(
     &mut RES as *mut Bind_Access_Status_4 as *mut Access_Status_4
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub unsafe extern "C" fn _DtCm_rtable_get_access_4(
     _arg: *mut Access_Args_4,
     _conn: *mut _DtCm_Connection,
@@ -248,56 +248,56 @@ pub unsafe extern "C" fn _DtCm_rtable_get_access_4(
 
 // Shims for V2/V3 that just return null for now/noop
 // Shims for V2/V3 explicitly typed to match headers
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub unsafe extern "C" fn _DtCm_rtable_lookup_3(
     _arg: *mut Table_Args_3,
     _conn: *mut _DtCm_Connection,
 ) -> *mut Table_Res_3 {
     ptr::null_mut()
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub unsafe extern "C" fn _DtCm_rtable_lookup_2(
     _arg: *mut Table_Args_2,
     _conn: *mut _DtCm_Connection,
 ) -> *mut Table_Res_2 {
     ptr::null_mut()
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub unsafe extern "C" fn _DtCm_rtable_lookup_range_3(
     _arg: *mut Table_Args_3,
     _conn: *mut _DtCm_Connection,
 ) -> *mut Table_Res_3 {
     ptr::null_mut()
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub unsafe extern "C" fn _DtCm_rtable_lookup_range_2(
     _arg: *mut Table_Args_2,
     _conn: *mut _DtCm_Connection,
 ) -> *mut Table_Res_2 {
     ptr::null_mut()
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub unsafe extern "C" fn _DtCm_rtable_get_access_3(
     _arg: *mut Access_Args_3,
     _conn: *mut _DtCm_Connection,
 ) -> *mut Access_Args_3 {
     ptr::null_mut()
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub unsafe extern "C" fn _DtCm_rtable_get_access_2(
     _arg: *mut Access_Args_2,
     _conn: *mut _DtCm_Connection,
 ) -> *mut Access_Args_2 {
     ptr::null_mut()
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub unsafe extern "C" fn _DtCm_rtable_set_access_3(
     _arg: *mut Access_Args_3,
     _conn: *mut _DtCm_Connection,
 ) -> *mut Access_Status_3 {
     ptr::null_mut()
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub unsafe extern "C" fn _DtCm_rtable_set_access_2(
     _arg: *mut Access_Args_2,
     _conn: *mut _DtCm_Connection,
@@ -305,112 +305,112 @@ pub unsafe extern "C" fn _DtCm_rtable_set_access_2(
     ptr::null_mut()
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub unsafe extern "C" fn _DtCm_rtable_change_3(
     _arg: *mut Table_Args_3,
     _conn: *mut _DtCm_Connection,
 ) -> *mut Table_Res_3 {
     ptr::null_mut()
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub unsafe extern "C" fn _DtCm_rtable_change_2(
     _arg: *mut Table_Args_2,
     _conn: *mut _DtCm_Connection,
 ) -> *mut Table_Res_2 {
     ptr::null_mut()
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub unsafe extern "C" fn _DtCm_rtable_delete_4(
     _arg: *mut Table_Args_4,
     _conn: *mut _DtCm_Connection,
 ) -> *mut Table_Res_4 {
     ptr::null_mut()
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub unsafe extern "C" fn _DtCm_rtable_delete_3(
     _arg: *mut Table_Args_3,
     _conn: *mut _DtCm_Connection,
 ) -> *mut Table_Res_3 {
     ptr::null_mut()
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub unsafe extern "C" fn _DtCm_rtable_delete_2(
     _arg: *mut Table_Args_2,
     _conn: *mut _DtCm_Connection,
 ) -> *mut Table_Res_2 {
     ptr::null_mut()
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub unsafe extern "C" fn _DtCm_rtable_size_4(
     _arg: *mut Table_Args_4,
     _conn: *mut _DtCm_Connection,
 ) -> *mut c_int {
     ptr::null_mut()
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub unsafe extern "C" fn _DtCm_rtable_size_3(
     _arg: *mut Table_Args_3,
     _conn: *mut _DtCm_Connection,
 ) -> *mut c_int {
     ptr::null_mut()
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub unsafe extern "C" fn _DtCm_rtable_size_2(
     _arg: *mut Table_Args_2,
     _conn: *mut _DtCm_Connection,
 ) -> *mut c_int {
     ptr::null_mut()
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub unsafe extern "C" fn _DtCm_rtable_lookup_next_reminder_4(
     _arg: *mut Table_Args_4,
     _conn: *mut _DtCm_Connection,
 ) -> *mut Table_Res_4 {
     ptr::null_mut()
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub unsafe extern "C" fn _DtCm_rtable_lookup_next_reminder_3(
     _arg: *mut Table_Args_3,
     _conn: *mut _DtCm_Connection,
 ) -> *mut Table_Res_3 {
     ptr::null_mut()
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub unsafe extern "C" fn _DtCm_rtable_lookup_next_reminder_2(
     _arg: *mut Table_Args_2,
     _conn: *mut _DtCm_Connection,
 ) -> *mut Table_Res_2 {
     ptr::null_mut()
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub unsafe extern "C" fn _DtCm_rtable_check_4(
     _arg: *mut Table_Args_4,
     _conn: *mut _DtCm_Connection,
 ) -> *mut Table_Status_4 {
     ptr::null_mut()
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub unsafe extern "C" fn _DtCm_rtable_check_3(
     _arg: *mut Table_Args_3,
     _conn: *mut _DtCm_Connection,
 ) -> *mut Table_Status_3 {
     ptr::null_mut()
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub unsafe extern "C" fn _DtCm_rtable_check_2(
     _arg: *mut Table_Args_2,
     _conn: *mut _DtCm_Connection,
 ) -> *mut Table_Status_2 {
     ptr::null_mut()
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub unsafe extern "C" fn _DtCm_rtable_flush_table_4(
     _arg: *mut Table_Args_4,
     _conn: *mut _DtCm_Connection,
 ) -> *mut Table_Status_4 {
     ptr::null_mut()
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub unsafe extern "C" fn _DtCm_rtable_garbage_collect_4(
     _arg: *mut Table_Op_Args_4,
     _conn: *mut _DtCm_Connection,
@@ -419,21 +419,21 @@ pub unsafe extern "C" fn _DtCm_rtable_garbage_collect_4(
 }
 
 // Instance Wrappers
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub unsafe extern "C" fn _DtCm_rtable_change_instance_4(
     arg: *mut Table_Args_4,
     conn: *mut _DtCm_Connection,
 ) -> *mut Table_Res_4 {
     _DtCm_rtable_change_4(arg, conn)
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub unsafe extern "C" fn _DtCm_rtable_change_instance_3(
     arg: *mut Table_Args_3,
     conn: *mut _DtCm_Connection,
 ) -> *mut Table_Res_3 {
     _DtCm_rtable_change_3(arg, conn)
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub unsafe extern "C" fn _DtCm_rtable_change_instance_2(
     arg: *mut Table_Args_2,
     conn: *mut _DtCm_Connection,
@@ -441,7 +441,7 @@ pub unsafe extern "C" fn _DtCm_rtable_change_instance_2(
     _DtCm_rtable_change_2(arg, conn)
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub unsafe extern "C" fn _DtCm_rtable_delete_instance_4(
     arg: *mut Table_Args_4,
     conn: *mut _DtCm_Connection,
@@ -449,14 +449,14 @@ pub unsafe extern "C" fn _DtCm_rtable_delete_instance_4(
     _DtCm_rtable_delete_4(arg, conn)
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub unsafe extern "C" fn _DtCm_rtable_delete_instance_3(
     arg: *mut Table_Args_3,
     conn: *mut _DtCm_Connection,
 ) -> *mut Table_Res_3 {
     _DtCm_rtable_delete_3(arg, conn)
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub unsafe extern "C" fn _DtCm_rtable_delete_instance_2(
     arg: *mut Table_Args_2,
     conn: *mut _DtCm_Connection,
@@ -464,21 +464,21 @@ pub unsafe extern "C" fn _DtCm_rtable_delete_instance_2(
     _DtCm_rtable_delete_2(arg, conn)
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub unsafe extern "C" fn _DtCm_rtable_insert_3(
     _arg: *mut Table_Args_3,
     _conn: *mut _DtCm_Connection,
 ) -> *mut Table_Res_3 {
     ptr::null_mut()
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub unsafe extern "C" fn _DtCm_rtable_insert_2(
     _arg: *mut Table_Args_2,
     _conn: *mut _DtCm_Connection,
 ) -> *mut Table_Res_2 {
     ptr::null_mut()
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub unsafe extern "C" fn _DtCm_rtable_abbreviated_lookup_key_range_3(
     _arg: *mut Table_Args_3,
     _conn: *mut _DtCm_Connection,
@@ -489,7 +489,7 @@ pub unsafe extern "C" fn _DtCm_rtable_abbreviated_lookup_key_range_3(
 // XDR routines are now provided by xdr_stubs.rs via xdrgen
 
 // Registration Callbacks
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub unsafe extern "C" fn _DtCm_register_callback_4(
     _arg: *mut Registration_4,
     _conn: *mut _DtCm_Connection,
@@ -498,14 +498,14 @@ pub unsafe extern "C" fn _DtCm_register_callback_4(
         crate::xdr_c_bindings::Registration_Status_4_failed_4;
     &mut RES as *mut Bind_Registration_Status_4 as *mut Registration_Status_4
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub unsafe extern "C" fn _DtCm_register_callback_3(
     _arg: *mut Registration_3,
     _conn: *mut _DtCm_Connection,
 ) -> *mut Registration_Status_3 {
     ptr::null_mut()
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub unsafe extern "C" fn _DtCm_register_callback_2(
     _arg: *mut Registration_2,
     _conn: *mut _DtCm_Connection,
@@ -513,7 +513,7 @@ pub unsafe extern "C" fn _DtCm_register_callback_2(
     ptr::null_mut()
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub unsafe extern "C" fn _DtCm_deregister_callback_4(
     _arg: *mut Registration_4,
     _conn: *mut _DtCm_Connection,
@@ -522,14 +522,14 @@ pub unsafe extern "C" fn _DtCm_deregister_callback_4(
         crate::xdr_c_bindings::Registration_Status_4_failed_4;
     &mut RES as *mut Bind_Registration_Status_4 as *mut Registration_Status_4
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub unsafe extern "C" fn _DtCm_deregister_callback_3(
     _arg: *mut Registration_3,
     _conn: *mut _DtCm_Connection,
 ) -> *mut Registration_Status_3 {
     ptr::null_mut()
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub unsafe extern "C" fn _DtCm_deregister_callback_2(
     _arg: *mut Registration_2,
     _conn: *mut _DtCm_Connection,

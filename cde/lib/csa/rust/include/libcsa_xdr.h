@@ -198,4 +198,4 @@ Registration_Status_3 *_DtCm_deregister_callback_3(Registration_3 *_arg, _DtCm_C
 
 Registration_Status_2 *_DtCm_deregister_callback_2(Registration_2 *_arg, _DtCm_Connection *_conn);
 
-#endif /* LIBCSA_XDR_H */
+#endif  /* LIBCSA_XDR_H */
