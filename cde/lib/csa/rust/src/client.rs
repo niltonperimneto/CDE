@@ -20,20 +20,24 @@ const RPC_SYSTEMERROR: clnt_stat = 12;
 // as_xdrproc! — cast a concrete XDR callback to the C variadic xdrproc_t.
 //
 // xdrproc_t is `Option<unsafe extern "C" fn(*mut XDR, ...) -> bool_t>` (from
-// bindgen).  Our callbacks match the first two parameters, which is all ONC
-// RPC ever passes.  We transmute through a raw function pointer to satisfy
-// Rust's strict type checking while preserving the C ABI.
+// bindgen). Our callbacks match the first two parameters, which is all ONC
+// RPC ever passes. We transmute directly between function-pointer types with
+// the same C ABI prefix and then wrap the result in `Some(...)`.
 // ---------------------------------------------------------------------------
 macro_rules! as_xdrproc {
     ($fn:expr) => {{
-        // SAFETY: xdrproc_t is Option<unsafe extern "C" fn(...)>.  All our
-        // callbacks use the same calling convention and parameter layout.
-        // The variadic suffix is never populated by the ONC RPC runtime for
-        // these two-argument callbacks. We cast through usize to erase the
-        // concrete parameter types.
+        // SAFETY: `xdrproc_t` is `Option<unsafe extern "C" fn(*mut XDR, ...) -> bool_t>`.
+        // All our callbacks use the same `extern "C"` calling convention and
+        // the same first two parameters. The ONC RPC runtime only uses those
+        // two arguments for these callbacks, so converting directly between
+        // the concrete and variadic function-pointer types preserves the ABI
+        // without going through an integer representation.
         unsafe {
             let f: unsafe extern "C" fn(*mut XDR, *mut c_void) -> bool_t = $fn;
-            std::mem::transmute::<usize, xdrproc_t>(f as usize)
+            Some(std::mem::transmute::<
+                unsafe extern "C" fn(*mut XDR, *mut c_void) -> bool_t,
+                unsafe extern "C" fn(*mut XDR, ...) -> bool_t,
+            >(f))
         }
     }};
 }
