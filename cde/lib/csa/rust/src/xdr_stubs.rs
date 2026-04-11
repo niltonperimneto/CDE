@@ -28,20 +28,17 @@ macro_rules! impl_xdr_func {
                 },
                 bindings::xdr_op_XDR_FREE => {
                     // XDR_FREE means "release any heap data that the XDR decode
-                    // step allocated inside *obj".  The surrounding struct itself
+                    // step allocated inside *obj". The surrounding struct itself
                     // belongs to the C caller and must NOT be freed here.
                     //
                     // drop_in_place runs Rust Drop glue, freeing inner
-                    // Vec/String/Box heap buffers.  Then we zero the memory
-                    // so the C caller sees a clean, empty struct.
-                    //
-                    // SAFETY: These are xdrgen-generated C-like structs.
-                    // After drop_in_place, zeroing is safe because the caller
-                    // will either re-decode into the buffer or free the outer
-                    // allocation.
+                    // Vec/String/Box heap buffers. After that, the object
+                    // storage must be reinitialized with a valid value rather
+                    // than zeroed, because an all-zero bit pattern is not
+                    // necessarily a valid Rust value for these generated types.
                     unsafe {
                         std::ptr::drop_in_place(obj);
-                        std::ptr::write_bytes(obj as *mut u8, 0, std::mem::size_of::<$type_path>());
+                        std::ptr::write(obj, Default::default());
                     }
                     1
                 }
