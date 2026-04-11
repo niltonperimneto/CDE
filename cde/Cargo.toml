@@ -34,6 +34,8 @@ members = [
 exclude = [
     # cargo-fuzz must operate in its own workspace
     "lib/csa/cde_xdr/fuzz",
+    "lib/tt/libtt_shim/fuzz",
+    "lib/DtSearch/rust/fuzz",
 ]
 
 # ---------------------------------------------------------------------------
@@ -46,21 +48,21 @@ exclude = [
 [workspace.dependencies]
 anyhow      = "1.0"
 byteorder   = "1.5"
-cbindgen    = "0.26"
-clap        = { version = "4.4", features = ["derive"] }
+cbindgen    = "0.29"
+clap        = { version = "4.6", features = ["derive"] }
 env_logger  = "0.11"
 futures     = "0.3"
 libc        = "0.2"
 log         = "0.4"
-miette      = { version = "5", features = ["fancy"] }
-nom         = "7.1"
-pest        = "2.7"
-pest_derive = "2.7"
-rayon       = "1.10"
+miette      = { version = "7", features = ["fancy"] }
+nom         = "8.0"
+pest        = "2.8"
+pest_derive = "2.8"
+rayon       = "1.11"
 serde       = { version = "1.0", features = ["derive"] }
 serde_json  = "1.0"
-thiserror   = "1.0"
-tokio       = { version = "1.28", features = ["full"] }
+thiserror   = "2.0"
+tokio       = { version = "1.51", features = ["full"] }
 walkdir     = "2"
 zbus        = "5"
 

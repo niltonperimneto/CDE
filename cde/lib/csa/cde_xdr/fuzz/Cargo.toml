@@ -23,3 +23,6 @@ name = "fuzz_roundtrip"
 path = "fuzz_targets/fuzz_roundtrip.rs"
 test = false
 doc = false
+
+[workspace]
+
