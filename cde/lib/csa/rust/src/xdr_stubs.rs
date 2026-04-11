@@ -20,7 +20,7 @@ macro_rules! impl_xdr_func {
                 bindings::xdr_op_XDR_DECODE => match xdr_codec::unpack(&mut stream) {
                     Ok((val, _sz)) => {
                         unsafe {
-                            *obj = val;
+                            std::ptr::write(obj, val);
                         }
                         1
                     }
