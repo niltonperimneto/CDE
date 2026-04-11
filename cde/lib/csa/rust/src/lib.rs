@@ -1,4 +1,7 @@
-#![deny(unsafe_op_in_unsafe_fn)]
+// FFI shim crate: many public functions are `unsafe extern "C"` and operate
+// on raw C pointers. Scope any `unsafe_op_in_unsafe_fn` relaxation to the
+// generated/include-based modules that need it, so the rest of the crate
+// still benefits from the repo-wide safety check.
 
 // Alias cde_xdr as xdr_codec so xdrgen-generated code and existing imports work unchanged.
 extern crate cde_xdr as xdr_codec;
@@ -8,12 +11,14 @@ pub mod agent {
     #![allow(non_snake_case)]
     #![allow(non_camel_case_types)]
     #![allow(unused)]
+    #![allow(unsafe_op_in_unsafe_fn)]
     include!(concat!(env!("OUT_DIR"), "/agent.rs"));
 }
 pub mod rtable4 {
     #![allow(non_snake_case)]
     #![allow(non_camel_case_types)]
     #![allow(unused)]
+    #![allow(unsafe_op_in_unsafe_fn)]
     use crate::cm::*; // Import common types
     type time_t = i64;
     type u_long = u64; // Linux long is 64-bit
@@ -25,6 +30,7 @@ mod bindings {
     #![allow(non_camel_case_types)]
     #![allow(non_snake_case)]
     #![allow(unused)]
+    #![allow(unsafe_op_in_unsafe_fn)]
     include!(concat!(env!("OUT_DIR"), "/tirpc_bindings.rs"));
 }
 
@@ -33,6 +39,7 @@ mod xdr_c_bindings {
     #![allow(non_camel_case_types)]
     #![allow(non_snake_case)]
     #![allow(unused)]
+    #![allow(unsafe_op_in_unsafe_fn)]
     include!(concat!(env!("OUT_DIR"), "/xdr_c_bindings.rs"));
 }
 pub mod client;
@@ -46,6 +53,7 @@ pub mod rtable3 {
     #![allow(non_snake_case)]
     #![allow(non_camel_case_types)]
     #![allow(unused)]
+    #![allow(unsafe_op_in_unsafe_fn)]
     use crate::cm::*; // Import common types
     type time_t = i64;
     type u_long = u64;
@@ -56,6 +64,7 @@ pub mod rtable2 {
     #![allow(non_snake_case)]
     #![allow(non_camel_case_types)]
     #![allow(unused)]
+    #![allow(unsafe_op_in_unsafe_fn)]
     use crate::cm::*; // Import common types
     type time_t = i64;
     type u_long = u64;
@@ -66,6 +75,7 @@ pub mod cm {
     #![allow(non_snake_case)]
     #![allow(non_camel_case_types)]
     #![allow(unused)]
+    #![allow(unsafe_op_in_unsafe_fn)]
     pub type CSA_return_code = u64; // c_ulong on 64-bit Linux
                                     // other CSA types are generated in cm.rs
 

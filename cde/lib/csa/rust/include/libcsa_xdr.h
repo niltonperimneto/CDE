@@ -23,8 +23,6 @@ typedef enum Update_Status {
 
 int32_t xdr_Update_Status(void *_xdrs, enum Update_Status *_obj);
 
-extern bool_t xdr_CSA_return_code(XDR *xdrs, CSA_return_code *objp);
-
 CSA_return_code *cms_create_calendar_5(cms_create_args *arg, _DtCm_Connection *conn);
 
 CSA_return_code *cms_delete_entry_5(cms_delete_args *arg, _DtCm_Connection *conn);

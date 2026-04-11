@@ -14,3 +14,6 @@ arbitrary = { version = "1", features = ["derive"] }
 [[bin]]
 name = "fuzz_message_encoding"
 path = "fuzz_targets/fuzz_message_encoding.rs"
+
+[workspace]
+

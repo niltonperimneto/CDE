@@ -16,29 +16,43 @@ const CMS_CREATE_CALENDAR: u32 = 3;
 // Matches <rpc/clnt.h>: RPC_SYSTEMERROR = 12.
 const RPC_SYSTEMERROR: clnt_stat = 12;
 
-extern "C" {
-    // Manually declare if missing from bindings
-    pub fn xdr_CSA_return_code(xdrs: *mut XDR, objp: *mut CSA_return_code) -> bool_t;
-}
-
 // ---------------------------------------------------------------------------
-// as_xdrproc! — safe-as-possible transmute from a concrete XDR callback type
-// to the C variadic xdrproc_t.
+// as_xdrproc! — cast a concrete XDR callback to the C variadic xdrproc_t.
 //
-// xdrproc_t is `typedef bool_t (*xdrproc_t)(XDR *, void *, ...)` in C.
-// Our callbacks match the first two parameters, which is all ONC RPC ever
-// passes.  Transmuting *through a concrete source type* (rather than an
-// opaque *const ()) lets the compiler verify ABI compatibility of the source
-// signature and catches future mismatches at compile time.
+// xdrproc_t is `Option<unsafe extern "C" fn(*mut XDR, ...) -> bool_t>` (from
+// bindgen). Our callbacks match the first two parameters, which is all ONC
+// RPC ever passes. We transmute directly between function-pointer types with
+// the same C ABI prefix and then wrap the result in `Some(...)`.
 // ---------------------------------------------------------------------------
 macro_rules! as_xdrproc {
     ($fn:expr) => {{
-        type Src = unsafe extern "C" fn(*mut XDR, *mut c_void) -> bool_t;
-        // SAFETY: xdrproc_t and Src share the same calling convention on all
-        // supported platforms.  The variadic suffix is never used by the ONC
-        // RPC runtime for these two-argument callbacks.
-        unsafe { std::mem::transmute::<Src, xdrproc_t>($fn) }
+        // SAFETY: `xdrproc_t` is `Option<unsafe extern "C" fn(*mut XDR, ...) -> bool_t>`.
+        // All our callbacks use the same `extern "C"` calling convention and
+        // the same first two parameters. The ONC RPC runtime only uses those
+        // two arguments for these callbacks, so converting directly between
+        // the concrete and variadic function-pointer types preserves the ABI
+        // without going through an integer representation.
+        unsafe {
+            let f: unsafe extern "C" fn(*mut XDR, *mut c_void) -> bool_t = $fn;
+            Some(std::mem::transmute::<
+                unsafe extern "C" fn(*mut XDR, *mut c_void) -> bool_t,
+                unsafe extern "C" fn(*mut XDR, ...) -> bool_t,
+            >(f))
+        }
     }};
+}
+
+// ---------------------------------------------------------------------------
+// XDR callback wrappers with *mut c_void signature.
+//
+// as_xdrproc! requires `fn(*mut XDR, *mut c_void) -> bool_t`.  The underlying
+// C routines use typed pointers, so these thin wrappers cast accordingly.
+// ---------------------------------------------------------------------------
+unsafe extern "C" fn xdr_CSA_return_code_cv(xdrs: *mut XDR, objp: *mut c_void) -> bool_t {
+    unsafe { crate::rtable_client::xdr_CSA_return_code(xdrs, objp as *mut CSA_return_code) }
+}
+unsafe extern "C" fn xdr_void_cv(_xdrs: *mut XDR, _objp: *mut c_void) -> bool_t {
+    unsafe { crate::xdr_c_bindings::xdr_void() }
 }
 
 // ---------------------------------------------------------------------------
@@ -141,9 +155,9 @@ pub unsafe extern "C" fn cms_create_calendar_5(
     let status = clnt_call(
         clnt,
         CMS_CREATE_CALENDAR as rpcproc_t,
-        Some(as_xdrproc!(xdr_cms_create_args_pack)), // P1-2: typed transmute
+        as_xdrproc!(xdr_cms_create_args_pack), // P1-2: typed transmute
         arg as *mut c_void,
-        Some(as_xdrproc!(xdr_CSA_return_code)),
+        as_xdrproc!(xdr_CSA_return_code_cv),
         res_ptr as *mut c_void,
         timeout,
     );
@@ -178,9 +192,9 @@ pub unsafe extern "C" fn cms_delete_entry_5(
     let status = clnt_call(
         clnt,
         CMS_DELETE_ENTRY as rpcproc_t,
-        Some(as_xdrproc!(xdr_cms_delete_args_pack)),
+        as_xdrproc!(xdr_cms_delete_args_pack),
         arg as *mut c_void,
-        Some(as_xdrproc!(xdr_CSA_return_code)),
+        as_xdrproc!(xdr_CSA_return_code_cv),
         res_ptr as *mut c_void,
         timeout,
     );
@@ -229,9 +243,9 @@ pub unsafe extern "C" fn cms_open_calendar_5(
     let status = clnt_call(
         clnt,
         CMS_OPEN_CALENDAR as rpcproc_t,
-        Some(as_xdrproc!(xdr_cms_open_args_pack)),
+        as_xdrproc!(xdr_cms_open_args_pack),
         arg as *mut c_void,
-        Some(as_xdrproc!(xdr_cms_open_res_unpack)),
+        as_xdrproc!(xdr_cms_open_res_unpack),
         res_ptr as *mut c_void,
         timeout,
     );
@@ -280,9 +294,9 @@ pub unsafe extern "C" fn cms_update_entry_5(
     let status = clnt_call(
         clnt,
         CMS_UPDATE_ENTRY as rpcproc_t,
-        Some(as_xdrproc!(xdr_cms_update_args_pack)),
+        as_xdrproc!(xdr_cms_update_args_pack),
         arg as *mut c_void,
-        Some(as_xdrproc!(xdr_cms_entry_res_unpack)),
+        as_xdrproc!(xdr_cms_entry_res_unpack),
         res_ptr as *mut c_void,
         timeout,
     );
@@ -319,9 +333,9 @@ pub unsafe extern "C" fn cms_insert_entry_5(
     let status = clnt_call(
         clnt,
         CMS_INSERT_ENTRY as rpcproc_t,
-        Some(as_xdrproc!(xdr_cms_insert_args_pack)),
+        as_xdrproc!(xdr_cms_insert_args_pack),
         arg as *mut c_void,
-        Some(as_xdrproc!(xdr_cms_entry_res_unpack)),
+        as_xdrproc!(xdr_cms_entry_res_unpack),
         res_ptr as *mut c_void,
         timeout,
     );
@@ -356,9 +370,9 @@ pub unsafe extern "C" fn cms_remove_calendar_5(
     let status = clnt_call(
         clnt,
         CMS_REMOVE_CALENDAR as rpcproc_t,
-        Some(as_xdrproc!(xdr_cms_remove_args_pack)),
+        as_xdrproc!(xdr_cms_remove_args_pack),
         arg as *mut c_void,
-        Some(as_xdrproc!(xdr_CSA_return_code)),
+        as_xdrproc!(xdr_CSA_return_code_cv),
         res_ptr as *mut c_void,
         timeout,
     );
@@ -407,9 +421,9 @@ pub unsafe extern "C" fn cms_archive_5(
     let status = clnt_call(
         clnt,
         CMS_ARCHIVE as rpcproc_t,
-        Some(as_xdrproc!(xdr_cms_archive_args_pack)),
+        as_xdrproc!(xdr_cms_archive_args_pack),
         arg as *mut c_void,
-        Some(as_xdrproc!(xdr_cms_archive_res_unpack)),
+        as_xdrproc!(xdr_cms_archive_res_unpack),
         res_ptr as *mut c_void,
         timeout,
     );
@@ -444,9 +458,9 @@ pub unsafe extern "C" fn cms_restore_5(
     let status = clnt_call(
         clnt,
         CMS_RESTORE as rpcproc_t,
-        Some(as_xdrproc!(xdr_cms_restore_args_pack)),
+        as_xdrproc!(xdr_cms_restore_args_pack),
         arg as *mut c_void,
-        Some(as_xdrproc!(xdr_CSA_return_code)),
+        as_xdrproc!(xdr_CSA_return_code_cv),
         res_ptr as *mut c_void,
         timeout,
     );
@@ -508,9 +522,9 @@ pub unsafe extern "C" fn cms_lookup_reminder_5(
     let status = clnt_call(
         clnt,
         CMS_LOOKUP_REMINDER as rpcproc_t,
-        Some(as_xdrproc!(xdr_cms_reminder_args_pack)),
+        as_xdrproc!(xdr_cms_reminder_args_pack),
         arg as *mut c_void,
-        Some(as_xdrproc!(xdr_cms_reminder_res_unpack)),
+        as_xdrproc!(xdr_cms_reminder_res_unpack),
         res_ptr as *mut c_void,
         timeout,
     );
@@ -547,9 +561,9 @@ pub unsafe extern "C" fn cms_lookup_entries_5(
     let status = clnt_call(
         clnt,
         CMS_LOOKUP_ENTRIES as rpcproc_t,
-        Some(as_xdrproc!(xdr_cms_lookup_entries_args_pack)),
+        as_xdrproc!(xdr_cms_lookup_entries_args_pack),
         arg as *mut c_void,
-        Some(as_xdrproc!(xdr_cms_entries_res_unpack)),
+        as_xdrproc!(xdr_cms_entries_res_unpack),
         res_ptr as *mut c_void,
         timeout,
     );
@@ -598,9 +612,9 @@ pub unsafe extern "C" fn cms_get_calendar_attr_5(
     let status = clnt_call(
         clnt,
         CMS_GET_CALENDAR_ATTR as rpcproc_t,
-        Some(as_xdrproc!(xdr_cms_get_cal_attr_args_pack)),
+        as_xdrproc!(xdr_cms_get_cal_attr_args_pack),
         arg as *mut c_void,
-        Some(as_xdrproc!(xdr_cms_get_cal_attr_res_unpack)),
+        as_xdrproc!(xdr_cms_get_cal_attr_res_unpack),
         res_ptr as *mut c_void,
         timeout,
     );
@@ -635,9 +649,9 @@ pub unsafe extern "C" fn cms_set_calendar_attr_5(
     let status = clnt_call(
         clnt,
         CMS_SET_CALENDAR_ATTR as rpcproc_t,
-        Some(as_xdrproc!(xdr_cms_set_cal_attr_args_pack)),
+        as_xdrproc!(xdr_cms_set_cal_attr_args_pack),
         arg as *mut c_void,
-        Some(as_xdrproc!(xdr_CSA_return_code)),
+        as_xdrproc!(xdr_CSA_return_code_cv),
         res_ptr as *mut c_void,
         timeout,
     );
@@ -689,9 +703,9 @@ pub unsafe extern "C" fn cms_get_entry_attr_5(
     let status = clnt_call(
         clnt,
         CMS_GET_ENTRY_ATTR as rpcproc_t,
-        Some(as_xdrproc!(xdr_cms_get_entry_attr_args_pack)),
+        as_xdrproc!(xdr_cms_get_entry_attr_args_pack),
         arg as *mut c_void,
-        Some(as_xdrproc!(xdr_cms_get_entry_attr_res_unpack)),
+        as_xdrproc!(xdr_cms_get_entry_attr_res_unpack),
         res_ptr as *mut c_void,
         timeout,
     );
@@ -726,9 +740,9 @@ pub unsafe extern "C" fn cms_register_5(
     if clnt_call(
         clnt,
         CMS_REGISTER as rpcproc_t,
-        Some(as_xdrproc!(xdr_cms_register_args_pack)),
+        as_xdrproc!(xdr_cms_register_args_pack),
         arg as *mut c_void,
-        Some(as_xdrproc!(xdr_CSA_return_code)),
+        as_xdrproc!(xdr_CSA_return_code_cv),
         res_ptr as *mut c_void,
         timeout,
     ) != 0
@@ -763,9 +777,9 @@ pub unsafe extern "C" fn cms_unregister_5(
     if clnt_call(
         clnt,
         CMS_UNREGISTER as rpcproc_t,
-        Some(as_xdrproc!(xdr_cms_unregister_args_pack)),
+        as_xdrproc!(xdr_cms_unregister_args_pack),
         arg as *mut c_void,
-        Some(as_xdrproc!(xdr_CSA_return_code)),
+        as_xdrproc!(xdr_CSA_return_code_cv),
         res_ptr as *mut c_void,
         timeout,
     ) != 0
@@ -805,9 +819,9 @@ pub unsafe extern "C" fn cms_enumerate_sequence_5(
     if clnt_call(
         clnt,
         CMS_ENUMERATE_SEQUENCE as rpcproc_t,
-        Some(as_xdrproc!(xdr_cms_enumerate_sequence_args_pack)),
+        as_xdrproc!(xdr_cms_enumerate_sequence_args_pack),
         arg as *mut c_void,
-        Some(as_xdrproc!(xdr_cms_entries_res_unpack)),
+        as_xdrproc!(xdr_cms_entries_res_unpack),
         res_ptr as *mut c_void,
         timeout,
     ) != 0
@@ -868,9 +882,9 @@ pub unsafe extern "C" fn cms_enumerate_calendar_attr_5(
     if clnt_call(
         clnt,
         CMS_ENUMERATE_CALENDAR_ATTR as rpcproc_t,
-        Some(as_xdrproc!(xdr_cms_name_pack)),
+        as_xdrproc!(xdr_cms_name_pack),
         arg as *mut c_void,
-        Some(as_xdrproc!(xdr_cms_enumerate_calendar_attr_res_unpack)),
+        as_xdrproc!(xdr_cms_enumerate_calendar_attr_res_unpack),
         res_ptr as *mut c_void,
         timeout,
     ) != 0
@@ -913,9 +927,9 @@ pub unsafe extern "C" fn cms_list_calendars_5(
     if clnt_call(
         clnt,
         CMS_LIST_CALENDARS as rpcproc_t,
-        Some(as_xdrproc!(crate::xdr_c_bindings::xdr_void)),
+        as_xdrproc!(xdr_void_cv),
         ptr::null_mut(),
-        Some(as_xdrproc!(xdr_cms_list_calendars_res_unpack)),
+        as_xdrproc!(xdr_cms_list_calendars_res_unpack),
         res_ptr as *mut c_void,
         timeout,
     ) != 0

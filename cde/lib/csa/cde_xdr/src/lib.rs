@@ -97,15 +97,39 @@ pub fn unpack_flex<T: Unpack<In>, In: std::io::Read>(input: &mut In, _max_len: O
 }
 
 /// Pack an opaque flexible array `Vec<u8>`.
-#[inline]
-pub fn pack_opaque_flex<W: std::io::Write>(v: &Vec<u8>, _max_len: Option<usize>, out: &mut W) -> Result<usize> {
-    v.pack(out)
+///
+/// Opaque data is encoded as: 4-byte length + raw bytes + padding to 4-byte
+/// boundary.  This is distinct from a generic `Vec<T>` array where each
+/// element is individually XDR-encoded.
+pub fn pack_opaque_flex<W: std::io::Write>(v: &[u8], _max_len: Option<usize>, out: &mut W) -> Result<usize> {
+    let len = v.len();
+    let len32 = u32::try_from(len)
+        .map_err(|_| XdrError::size_limit(len, u32::MAX as usize))?;
+    len32.pack(out)?;
+    out.write_all(v)?;
+    let pad_len = (4 - (len % 4)) % 4;
+    if pad_len > 0 {
+        out.write_all(&[0u8; 3][..pad_len])?;
+    }
+    Ok(4 + len + pad_len)
 }
 
 /// Unpack an opaque flexible array `Vec<u8>`.
-#[inline]
 pub fn unpack_opaque_flex<In: std::io::Read>(input: &mut In, _max_len: Option<usize>) -> Result<(Vec<u8>, usize)> {
-    Vec::<u8>::unpack(input)
+    const MAX_OPAQUE_LEN: usize = 16 * 1024 * 1024;
+    let (len, _) = u32::unpack(input)?;
+    let len = len as usize;
+    if len > MAX_OPAQUE_LEN {
+        return Err(XdrError::size_limit(len, MAX_OPAQUE_LEN));
+    }
+    let mut buf = vec![0u8; len];
+    input.read_exact(&mut buf)?;
+    let pad_len = (4 - (len % 4)) % 4;
+    if pad_len > 0 {
+        let mut sink = [0u8; 3];
+        input.read_exact(&mut sink[..pad_len])?;
+    }
+    Ok((buf, 4 + len + pad_len))
 }
 
 // ---------------------------------------------------------------------------
@@ -126,7 +150,7 @@ mod tests {
 
     fn roundtrip<T>(value: T) -> T
     where
-        T: Pack + Unpack + std::fmt::Debug + PartialEq + Clone,
+        T: Pack<Vec<u8>> + for<'a> Unpack<Cursor<&'a Vec<u8>>> + std::fmt::Debug + PartialEq + Clone,
     {
         let mut buf = Vec::new();
         let encoded = pack(&value, &mut buf).expect("pack failed");
@@ -213,7 +237,14 @@ mod tests {
 
     #[test]
     fn roundtrip_bytes_empty() {
-        roundtrip(Vec::<u8>::new());
+        let v = Vec::<u8>::new();
+        let mut buf = Vec::new();
+        let n = pack_opaque_flex(&v, None, &mut buf).unwrap();
+        assert_eq!(n, 4); // just the length field
+        let mut cur = Cursor::new(&buf[..]);
+        let (decoded, consumed) = unpack_opaque_flex(&mut cur, None).unwrap();
+        assert_eq!(consumed, 4);
+        assert_eq!(decoded, v);
     }
 
     #[test]
@@ -221,9 +252,13 @@ mod tests {
         // 3 bytes → 1 byte of padding
         let v: Vec<u8> = vec![0xCA, 0xFE, 0xBA];
         let mut buf = Vec::new();
-        let n = pack(&v, &mut buf).unwrap();
+        let n = pack_opaque_flex(&v, None, &mut buf).unwrap();
         assert_eq!(n, 8); // 4 (len) + 3 (data) + 1 (pad)
-        roundtrip(v);
+        assert_eq!(buf.len(), 8);
+        let mut cur = Cursor::new(&buf[..]);
+        let (decoded, consumed) = unpack_opaque_flex(&mut cur, None).unwrap();
+        assert_eq!(consumed, 8);
+        assert_eq!(decoded, v);
     }
 
     // --- variable arrays ----------------------------------------------------
@@ -332,8 +367,8 @@ mod tests {
     #[test]
     fn invalidenum_and_invalidcase_constructors() {
         // Verify the constructors exist and are usable (mirrors xdr-codec API)
-        let e1 = XdrError::invalidenum();
-        let e2 = XdrError::invalidcase();
+        let e1 = XdrError::invalidenum(0i32);
+        let e2 = XdrError::invalidcase(0i32);
         // Both must be displayable without panicking
         let _ = e1.to_string();
         let _ = e2.to_string();

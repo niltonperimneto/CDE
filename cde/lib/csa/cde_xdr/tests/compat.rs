@@ -8,7 +8,7 @@
 // If any assertion here fails after a change to primitives.rs it means a
 // wire-format regression — the network peer (dtcm) will reject our encoding.
 
-use cde_xdr::{pack, unpack};
+use cde_xdr::{pack, pack_opaque_flex, unpack};
 use std::io::Cursor;
 
 // ---------------------------------------------------------------------------
@@ -220,7 +220,7 @@ fn golden_string_roundtrip_preserves_content() {
 #[test]
 fn golden_opaque_empty() {
     let mut buf = Vec::new();
-    pack(&Vec::<u8>::new(), &mut buf).unwrap();
+    pack_opaque_flex(&Vec::<u8>::new(), None, &mut buf).unwrap();
     assert_eq!(buf, [0x00, 0x00, 0x00, 0x00]);
 }
 
@@ -229,7 +229,7 @@ fn golden_opaque_3_bytes() {
     // 3 bytes → length=3, data=[CA FE BA], pad=[00]
     let data: Vec<u8> = vec![0xCA, 0xFE, 0xBA];
     let mut buf = Vec::new();
-    pack(&data, &mut buf).unwrap();
+    pack_opaque_flex(&data, None, &mut buf).unwrap();
     assert_eq!(buf, [0x00, 0x00, 0x00, 0x03, 0xCA, 0xFE, 0xBA, 0x00]);
     assert_eq!(buf.len(), 8);
 }
@@ -238,7 +238,7 @@ fn golden_opaque_3_bytes() {
 fn golden_opaque_4_bytes_no_pad() {
     let data: Vec<u8> = vec![0x01, 0x02, 0x03, 0x04];
     let mut buf = Vec::new();
-    pack(&data, &mut buf).unwrap();
+    pack_opaque_flex(&data, None, &mut buf).unwrap();
     assert_eq!(buf, [0x00, 0x00, 0x00, 0x04, 0x01, 0x02, 0x03, 0x04]);
 }
 

@@ -42,15 +42,15 @@ fn read_padding<R: Read>(r: &mut R, data_len: usize) -> Result<usize> {
 // ---------------------------------------------------------------------------
 
 impl<Out: Write> Pack<Out> for i32 {
-    fn pack<W: Write>(&self, w: &mut W) -> Result<usize> {
-        w.write_i32::<BigEndian>(*self)?;
+    fn pack(&self, out: &mut Out) -> Result<usize> {
+        out.write_i32::<BigEndian>(*self)?;
         Ok(4)
     }
 }
 
-impl Unpack for i32 {
-    fn unpack<R: Read>(r: &mut R) -> Result<(Self, usize)> {
-        Ok((r.read_i32::<BigEndian>()?, 4))
+impl<In: Read> Unpack<In> for i32 {
+    fn unpack(input: &mut In) -> Result<(Self, usize)> {
+        Ok((input.read_i32::<BigEndian>()?, 4))
     }
 }
 
@@ -59,15 +59,15 @@ impl Unpack for i32 {
 // ---------------------------------------------------------------------------
 
 impl<Out: Write> Pack<Out> for u32 {
-    fn pack<W: Write>(&self, w: &mut W) -> Result<usize> {
-        w.write_u32::<BigEndian>(*self)?;
+    fn pack(&self, out: &mut Out) -> Result<usize> {
+        out.write_u32::<BigEndian>(*self)?;
         Ok(4)
     }
 }
 
-impl Unpack for u32 {
-    fn unpack<R: Read>(r: &mut R) -> Result<(Self, usize)> {
-        Ok((r.read_u32::<BigEndian>()?, 4))
+impl<In: Read> Unpack<In> for u32 {
+    fn unpack(input: &mut In) -> Result<(Self, usize)> {
+        Ok((input.read_u32::<BigEndian>()?, 4))
     }
 }
 
@@ -76,15 +76,15 @@ impl Unpack for u32 {
 // ---------------------------------------------------------------------------
 
 impl<Out: Write> Pack<Out> for i64 {
-    fn pack<W: Write>(&self, w: &mut W) -> Result<usize> {
-        w.write_i64::<BigEndian>(*self)?;
+    fn pack(&self, out: &mut Out) -> Result<usize> {
+        out.write_i64::<BigEndian>(*self)?;
         Ok(8)
     }
 }
 
-impl Unpack for i64 {
-    fn unpack<R: Read>(r: &mut R) -> Result<(Self, usize)> {
-        Ok((r.read_i64::<BigEndian>()?, 8))
+impl<In: Read> Unpack<In> for i64 {
+    fn unpack(input: &mut In) -> Result<(Self, usize)> {
+        Ok((input.read_i64::<BigEndian>()?, 8))
     }
 }
 
@@ -93,15 +93,15 @@ impl Unpack for i64 {
 // ---------------------------------------------------------------------------
 
 impl<Out: Write> Pack<Out> for u64 {
-    fn pack<W: Write>(&self, w: &mut W) -> Result<usize> {
-        w.write_u64::<BigEndian>(*self)?;
+    fn pack(&self, out: &mut Out) -> Result<usize> {
+        out.write_u64::<BigEndian>(*self)?;
         Ok(8)
     }
 }
 
-impl Unpack for u64 {
-    fn unpack<R: Read>(r: &mut R) -> Result<(Self, usize)> {
-        Ok((r.read_u64::<BigEndian>()?, 8))
+impl<In: Read> Unpack<In> for u64 {
+    fn unpack(input: &mut In) -> Result<(Self, usize)> {
+        Ok((input.read_u64::<BigEndian>()?, 8))
     }
 }
 
@@ -110,14 +110,14 @@ impl Unpack for u64 {
 // ---------------------------------------------------------------------------
 
 impl<Out: Write> Pack<Out> for bool {
-    fn pack<W: Write>(&self, w: &mut W) -> Result<usize> {
-        (*self as i32).pack(w)
+    fn pack(&self, out: &mut Out) -> Result<usize> {
+        (*self as i32).pack(out)
     }
 }
 
-impl Unpack for bool {
-    fn unpack<R: Read>(r: &mut R) -> Result<(Self, usize)> {
-        let (v, sz) = i32::unpack(r)?;
+impl<In: Read> Unpack<In> for bool {
+    fn unpack(input: &mut In) -> Result<(Self, usize)> {
+        let (v, sz) = i32::unpack(input)?;
         Ok((v != 0, sz))
     }
 }
@@ -127,15 +127,15 @@ impl Unpack for bool {
 // ---------------------------------------------------------------------------
 
 impl<Out: Write> Pack<Out> for f32 {
-    fn pack<W: Write>(&self, w: &mut W) -> Result<usize> {
-        w.write_f32::<BigEndian>(*self)?;
+    fn pack(&self, out: &mut Out) -> Result<usize> {
+        out.write_f32::<BigEndian>(*self)?;
         Ok(4)
     }
 }
 
-impl Unpack for f32 {
-    fn unpack<R: Read>(r: &mut R) -> Result<(Self, usize)> {
-        Ok((r.read_f32::<BigEndian>()?, 4))
+impl<In: Read> Unpack<In> for f32 {
+    fn unpack(input: &mut In) -> Result<(Self, usize)> {
+        Ok((input.read_f32::<BigEndian>()?, 4))
     }
 }
 
@@ -144,15 +144,15 @@ impl Unpack for f32 {
 // ---------------------------------------------------------------------------
 
 impl<Out: Write> Pack<Out> for f64 {
-    fn pack<W: Write>(&self, w: &mut W) -> Result<usize> {
-        w.write_f64::<BigEndian>(*self)?;
+    fn pack(&self, out: &mut Out) -> Result<usize> {
+        out.write_f64::<BigEndian>(*self)?;
         Ok(8)
     }
 }
 
-impl Unpack for f64 {
-    fn unpack<R: Read>(r: &mut R) -> Result<(Self, usize)> {
-        Ok((r.read_f64::<BigEndian>()?, 8))
+impl<In: Read> Unpack<In> for f64 {
+    fn unpack(input: &mut In) -> Result<(Self, usize)> {
+        Ok((input.read_f64::<BigEndian>()?, 8))
     }
 }
 
@@ -161,13 +161,13 @@ impl Unpack for f64 {
 // ---------------------------------------------------------------------------
 
 impl<Out: Write> Pack<Out> for () {
-    fn pack<W: Write>(&self, _w: &mut W) -> Result<usize> {
+    fn pack(&self, _out: &mut Out) -> Result<usize> {
         Ok(0)
     }
 }
 
-impl Unpack for () {
-    fn unpack<R: Read>(_r: &mut R) -> Result<(Self, usize)> {
+impl<In: Read> Unpack<In> for () {
+    fn unpack(_input: &mut In) -> Result<(Self, usize)> {
         Ok(((), 0))
     }
 }
@@ -189,68 +189,32 @@ impl Unpack for () {
 const MAX_STRING_LEN: usize = 64 * 1024 * 1024;
 
 impl<Out: Write> Pack<Out> for String {
-    fn pack<W: Write>(&self, w: &mut W) -> Result<usize> {
+    fn pack(&self, out: &mut Out) -> Result<usize> {
         let bytes = self.as_bytes();
         let len = bytes.len();
         // XDR length field is 4 bytes (u32). Strings longer than u32::MAX
         // cannot be represented; return an error rather than silently truncate.
         let len32 = u32::try_from(len)
             .map_err(|_| XdrError::size_limit(len, u32::MAX as usize))?;
-        len32.pack(w)?;
-        w.write_all(bytes)?;
-        let pad = write_padding(w, len)?;
+        len32.pack(out)?;
+        out.write_all(bytes)?;
+        let pad = write_padding(out, len)?;
         Ok(4 + len + pad)
     }
 }
 
-impl Unpack for String {
-    fn unpack<R: Read>(r: &mut R) -> Result<(Self, usize)> {
-        let (len, _) = u32::unpack(r)?;
+impl<In: Read> Unpack<In> for String {
+    fn unpack(input: &mut In) -> Result<(Self, usize)> {
+        let (len, _) = u32::unpack(input)?;
         let len = len as usize;
         if len > MAX_STRING_LEN {
             return Err(XdrError::size_limit(len, MAX_STRING_LEN));
         }
         let mut buf = vec![0u8; len];
-        r.read_exact(&mut buf)?;
-        let pad = read_padding(r, len)?;
+        input.read_exact(&mut buf)?;
+        let pad = read_padding(input, len)?;
         let s = String::from_utf8(buf)?;
         Ok((s, 4 + len + pad))
-    }
-}
-
-// ---------------------------------------------------------------------------
-// Vec<u8> — XDR variable-length opaque data `opaque<>` (§4.10)
-//
-// Distinct from Vec<T>: encodes raw bytes, not XDR-encoded elements.
-// ---------------------------------------------------------------------------
-
-/// Maximum opaque field length (16 MiB) — sanity cap for decode.
-const MAX_OPAQUE_LEN: usize = 16 * 1024 * 1024;
-
-impl<Out: Write> Pack<Out> for Vec<u8> {
-    fn pack<W: Write>(&self, w: &mut W) -> Result<usize> {
-        let len = self.len();
-        // XDR opaque length field is 4 bytes; reject oversized inputs.
-        let len32 = u32::try_from(len)
-            .map_err(|_| XdrError::size_limit(len, u32::MAX as usize))?;
-        len32.pack(w)?;
-        w.write_all(self)?;
-        let pad = write_padding(w, len)?;
-        Ok(4 + len + pad)
-    }
-}
-
-impl Unpack for Vec<u8> {
-    fn unpack<R: Read>(r: &mut R) -> Result<(Self, usize)> {
-        let (len, _) = u32::unpack(r)?;
-        let len = len as usize;
-        if len > MAX_OPAQUE_LEN {
-            return Err(XdrError::size_limit(len, MAX_OPAQUE_LEN));
-        }
-        let mut buf = vec![0u8; len];
-        r.read_exact(&mut buf)?;
-        let pad = read_padding(r, len)?;
-        Ok((buf, 4 + len + pad))
     }
 }
 
@@ -261,29 +225,29 @@ impl Unpack for Vec<u8> {
 /// Maximum element count for variable arrays — sanity cap for decode.
 const MAX_ARRAY_ELEMS: usize = 1_000_000;
 
-impl<T: Pack> Pack for Vec<T> {
-    fn pack<W: Write>(&self, w: &mut W) -> Result<usize> {
+impl<T: Pack<Out>, Out: Write> Pack<Out> for Vec<T> {
+    fn pack(&self, out: &mut Out) -> Result<usize> {
         // XDR array count field is 4 bytes; reject oversized inputs.
         let count32 = u32::try_from(self.len())
             .map_err(|_| XdrError::size_limit(self.len(), u32::MAX as usize))?;
-        let mut sz = count32.pack(w)?;
+        let mut sz = count32.pack(out)?;
         for item in self {
-            sz += item.pack(w)?;
+            sz += item.pack(out)?;
         }
         Ok(sz)
     }
 }
 
-impl<T: Unpack> Unpack for Vec<T> {
-    fn unpack<R: Read>(r: &mut R) -> Result<(Self, usize)> {
-        let (count, mut sz) = u32::unpack(r)?;
+impl<T: Unpack<In>, In: Read> Unpack<In> for Vec<T> {
+    fn unpack(input: &mut In) -> Result<(Self, usize)> {
+        let (count, mut sz) = u32::unpack(input)?;
         let count = count as usize;
         if count > MAX_ARRAY_ELEMS {
             return Err(XdrError::size_limit(count, MAX_ARRAY_ELEMS));
         }
         let mut vec = Vec::with_capacity(count);
         for _ in 0..count {
-            let (item, item_sz) = T::unpack(r)?;
+            let (item, item_sz) = T::unpack(input)?;
             sz += item_sz;
             vec.push(item);
         }
@@ -298,25 +262,25 @@ impl<T: Unpack> Unpack for Vec<T> {
 // This matches how xdr_pointer() works in libtirpc.
 // ---------------------------------------------------------------------------
 
-impl<T: Pack> Pack for Option<T> {
-    fn pack<W: Write>(&self, w: &mut W) -> Result<usize> {
+impl<T: Pack<Out>, Out: Write> Pack<Out> for Option<T> {
+    fn pack(&self, out: &mut Out) -> Result<usize> {
         match self {
-            None => false.pack(w),
+            None => false.pack(out),
             Some(v) => {
-                let sz = true.pack(w)?;
-                Ok(sz + v.pack(w)?)
+                let sz = true.pack(out)?;
+                Ok(sz + v.pack(out)?)
             }
         }
     }
 }
 
-impl<T: Unpack> Unpack for Option<T> {
-    fn unpack<R: Read>(r: &mut R) -> Result<(Self, usize)> {
-        let (present, sz) = bool::unpack(r)?;
+impl<T: Unpack<In>, In: Read> Unpack<In> for Option<T> {
+    fn unpack(input: &mut In) -> Result<(Self, usize)> {
+        let (present, sz) = bool::unpack(input)?;
         if !present {
             return Ok((None, sz));
         }
-        let (v, vsz) = T::unpack(r)?;
+        let (v, vsz) = T::unpack(input)?;
         Ok((Some(v), sz + vsz))
     }
 }
@@ -325,15 +289,15 @@ impl<T: Unpack> Unpack for Option<T> {
 // Box<T> — transparent wrapper (used by xdrgen for recursive struct pointers)
 // ---------------------------------------------------------------------------
 
-impl<T: Pack> Pack for Box<T> {
-    fn pack<W: Write>(&self, w: &mut W) -> Result<usize> {
-        self.as_ref().pack(w)
+impl<T: Pack<Out>, Out: Write> Pack<Out> for Box<T> {
+    fn pack(&self, out: &mut Out) -> Result<usize> {
+        self.as_ref().pack(out)
     }
 }
 
-impl<T: Unpack> Unpack for Box<T> {
-    fn unpack<R: Read>(r: &mut R) -> Result<(Self, usize)> {
-        let (v, sz) = T::unpack(r)?;
+impl<T: Unpack<In>, In: Read> Unpack<In> for Box<T> {
+    fn unpack(input: &mut In) -> Result<(Self, usize)> {
+        let (v, sz) = T::unpack(input)?;
         Ok((Box::new(v), sz))
     }
 }
