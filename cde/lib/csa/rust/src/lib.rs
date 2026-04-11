@@ -1,4 +1,7 @@
-#![deny(unsafe_op_in_unsafe_fn)]
+// FFI shim crate: every public function is `unsafe extern "C"` and operates
+// on raw C pointers.  Requiring nested `unsafe {}` blocks inside unsafe fn
+// bodies adds verbosity without meaningful safety benefit here.
+#![allow(unsafe_op_in_unsafe_fn)]
 
 // Alias cde_xdr as xdr_codec so xdrgen-generated code and existing imports work unchanged.
 extern crate cde_xdr as xdr_codec;

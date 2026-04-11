@@ -28,10 +28,10 @@ impl XdrError {
     /// Construct an "invalid enum discriminant" error.
     ///
     /// Called by xdrgen-generated union match arms when the discriminant does
-    /// not correspond to any declared case.  The API is identical to the
-    /// `xdr_codec::Error::invalidenum()` constructor so generated code
-    /// compiles without modification.
-    pub fn invalidenum() -> Self {
+    /// not correspond to any declared case.  Accepts an optional discriminant
+    /// value for diagnostics — the generated code passes the unrecognised
+    /// value, e.g. `Error::invalidenum(e)`.
+    pub fn invalidenum<T>(_discriminant: T) -> Self {
         Self { kind: XdrErrorKind::InvalidEnum }
     }
 
@@ -39,7 +39,7 @@ impl XdrError {
     ///
     /// Called by xdrgen-generated code when the case value within a known
     /// discriminant arm cannot be decoded.
-    pub fn invalidcase() -> Self {
+    pub fn invalidcase<T>(_discriminant: T) -> Self {
         Self { kind: XdrErrorKind::InvalidCase }
     }
 
