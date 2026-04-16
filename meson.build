@@ -1,10 +1,28 @@
 project('cde', ['c', 'cpp'],
   version : '2.5.3',
   meson_version: '>= 1.0.0',
-  default_options : ['warning_level=1', 'c_std=gnu23', 'cpp_std=gnu++98'])
+  default_options : ['warning_level=2', 'c_std=gnu23', 'cpp_std=gnu++98', 'b_pie=true'])
 
 
 cc = meson.get_compiler('c')
+
+if get_option('with_hardening')
+  add_project_arguments(
+    '-fstack-protector-strong',
+    '-D_FORTIFY_SOURCE=2',
+    language : ['c', 'cpp']
+  )
+  add_project_link_arguments(
+    '-Wl,-z,relro',
+    '-Wl,-z,now',
+    '-Wl,-z,defs',
+    language : ['c', 'cpp']
+  )
+endif
+
+if get_option('with_lto')
+  add_project_link_arguments('-flto', language : ['c', 'cpp'])
+endif
 
 # Global defines from configure.ac
 add_project_arguments('-DANSICPP', '-DMULTIBYTE', '-DNLS16', '-D_GNU_SOURCE', '-DTT_VERSION_STRING="2.5.3"', '-DHAVE_POLL_H', language : ['c', 'cpp'])
