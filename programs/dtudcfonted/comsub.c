@@ -44,10 +44,13 @@
 #include "ufontrsrc.h"
 
 static void writePtn(char *ptn, int width, int height, FILE *fp);
-static void sig_receive(void);
+static void sig_receive(int sig);
 char	*get_cmd_path(char *path, char *cmd) ;
 
 extern Resource resource;
+extern void Error_message2(Widget widget, char *message);
+extern int fal_code_to_glyph(char *locale, unsigned long codepoint, FalGIInf **gi, int *num_gi);
+extern int FalFreeGI(FalGIInf *ginf, int num);
 
 /***********************************************************************
  manage the character patterns
@@ -1363,7 +1366,7 @@ static int	sig_flg = 0;		/* flag for signal		*/
  * contents : 	write character patterns to the specified SNF file
  * values   : 	0  : terminated normally
  *		-1 : terminated abnormally
- *	      1xxx : process is not completed ¡Êxxx:persents finished¡Ë
+ *	      1xxx : process is not completed ï¿½ï¿½xxx:persents finishedï¿½ï¿½
  *
  *
  */
@@ -1522,8 +1525,9 @@ int		*err)		/* errors : 			*/
  */
 
 static void
-sig_receive(void)
+sig_receive(int sig)
 {
+    (void)sig;
     sig_flg = 1;
     return;
 }

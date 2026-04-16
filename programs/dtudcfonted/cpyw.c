@@ -32,6 +32,7 @@
 
 
 #include <stdio.h>
+#include <stdint.h>
 
 #include <X11/Intrinsic.h>
 
@@ -41,6 +42,8 @@
 
 extern Resource resource ;
 extern Widget	cpyDialog;
+extern int RelToAbsSq(int start, int offset);
+extern int AbsSqToRel(int start, int end);
 
 /**
  **  create and display the "User defined character ecitor :Copy" window
@@ -79,7 +82,7 @@ InitCpyPtn(void)
 void
 CpyPtnCB(void)
 {
-    extern void CpyPtnXLFD();
+    extern void CpyPtnXLFD(void);
     CpyPtnXLFD();
 }
 
@@ -153,7 +156,7 @@ PopupCpyNotice( String message )
 void
 CpyCB(Widget w, XtPointer cdata)
 {
-    extern Boolean BeforeCpyCheck();
+    extern Boolean BeforeCpyCheck(XtPointer cdata);
     if (BeforeCpyCheck(cdata)){
 	PopdownCpyPtn();
 	DoCpyProc();
@@ -187,8 +190,8 @@ static void
 AddCB(void)
 {
     int s_code, e_code;
-    extern Boolean BeforeMngCheck();
-    extern void DoAddProc();
+    extern Boolean BeforeMngCheck(int *s_code, int *e_code);
+    extern void DoAddProc(int s_code, int e_code);
 
     if (BeforeMngCheck(&s_code, &e_code)){
 	DoAddProc(s_code, e_code);
@@ -205,8 +208,8 @@ static void
 DelCB(void)
 {
     int s_code, e_code;
-    extern void DoDelProc();
-    extern Boolean BeforeMngCheck();
+    extern void DoDelProc(int s_code, int e_code);
+    extern Boolean BeforeMngCheck(int *s_code, int *e_code);
 
     if (BeforeMngCheck(&s_code, &e_code)){
 	DoDelProc(s_code, e_code);
@@ -269,12 +272,12 @@ MngCodeTfValue(void)
  ** ===================================================================
  **/
 
-static Widget	CreateDelNotice();
-static void	drawDelPtn();
-static void	drawDelCode();
-static void	CBdnOblB_del();
-static void	EHdnBulB_disp();
-void	EHStaT_disp();			/* add 1995.09.20 */
+static Widget	CreateDelNotice(Widget owner);
+static void	drawDelPtn(int i);
+static void	drawDelCode(int i);
+static void	CBdnOblB_del(void);
+static void	EHdnBulB_disp(Widget widget, XtPointer client_data, XEvent *event, Boolean *cont);
+void	EHStaT_disp(Widget widget, XtPointer client_data, XEvent *event, Boolean *cont);
 
 static	Widget	dnStaT_code[D_MAX], dnBulB_disp[D_MAX], dnPopW;
 
@@ -344,7 +347,6 @@ static void
 delScProc( int value )
 {
     int		i;
-    extern int RelToAbsSq();
 
     dn.sq_top = RelToAbsSq( dn.sq_start, value - dn.sq_start);
     for ( i=0 ; i < dn.disp_num ; i++ ) {
@@ -366,8 +368,7 @@ CreateDelNotice(Widget owner)
     char buf[64];
     int	i, val, min, max;
     int c ;
-    extern int AbsSqToRel();
-    extern void AddDestroyProc();
+    extern void AddDestroyProc(Widget w, XtCallbackProc destroycb);
 
     static NoticeButton buttons[] = {
 	NBTNARGS( (void(*)(struct _WidgetRec*,void*,void*)) DelOkCB, NULL, NULL, True, False ),
@@ -386,7 +387,7 @@ CreateDelNotice(Widget owner)
     SetItemLabel(&BTN, 1, resource.l_cancel);
     form = CreateTemplateDialog( owner, buf, D_QUESTION, &BTN,
 		resource.l_question_title, &dnPopW);
-    AddDestroyProc(dnPopW, dstrypaneDelNotice);
+    AddDestroyProc(dnPopW, (XtCallbackProc)dstrypaneDelNotice);
 
     if ( dn.disp_num < (AbsSqToRel( dn.sq_start, dn.sq_end) + 1)) {
 
@@ -442,7 +443,7 @@ CBdnOblB_del(void)
     int		ncode;	/* sequential number in the codeset system area */
     int		sq_now;	/* sequential number in the editor */
     char	mode;	/* notify the modification of the edit list */
-    extern void chgEdCode();
+    extern void chgEdCode(int code, char mode);
 
     XtSetSensitive( dnPopW, FALSE );
     mode = OFF;
@@ -550,8 +551,10 @@ drawDelCode( int i /* window number */)
 
 /*ARGSUSED*/
 static void
-EHdnBulB_disp( Widget widget, int i /* widget that have some ivent */ )
+EHdnBulB_disp( Widget widget, XtPointer client_data, XEvent *event, Boolean *cont )
 {
+    int i = (int)(intptr_t)client_data;
+    (void)widget; (void)event; (void)cont;
     drawDelPtn( i );
 }
 

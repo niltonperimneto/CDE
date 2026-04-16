@@ -142,7 +142,8 @@ static Boolean NewAllocColor( XtPointer shell) ;
 static Boolean NewBottomColor( XtPointer shell) ;
 static Boolean NewCreateButtons( XtPointer shell) ;
 
-extern void WaitChildDeath(void);
+static void WaitChildDeath(int signo);
+static void ExitSignalHandler(int signo);
 
 /*++++++++++++++++++++++++++++++++++++++*/
 /* Internal Variables                   */
@@ -603,11 +604,11 @@ malloc_trace(0);
       GetDefaultPal(style.shell);
     }
     
-    signal(SIGINT,(void (*)())activateCB_exitBtn); 
-    signal(SIGTERM,(void (*)())activateCB_exitBtn); 
+    signal(SIGINT, ExitSignalHandler);
+    signal(SIGTERM, ExitSignalHandler);
 
     /* to avoid defunct screen saver processes */    
-    signal(SIGCHLD, (void (*)())WaitChildDeath);
+    signal(SIGCHLD, WaitChildDeath);
 
     /* backdrop dialog  needs to know when the workspace changes to recolor 
        the bitmap displayed in the dialog */
@@ -1072,13 +1073,22 @@ NewCreateButtons(
  *  --------
  * 
  *************************************<->***********************************/
+static void
+ExitSignalHandler(int signo)
+{
+  (void)signo;
+  activateCB_exitBtn(NULL, NULL, NULL);
+}
+
 void
-WaitChildDeath( void )
+WaitChildDeath(int signo)
 {
   int   stat_loc;
   pid_t pid;
-  
-  pid = wait(&stat_loc);
-  signal(SIGCHLD,(void (*)())WaitChildDeath);
+
+  (void)signo;
+  while ((pid = waitpid(-1, &stat_loc, WNOHANG)) > 0) {
+  }
+  signal(SIGCHLD, WaitChildDeath);
 
 }

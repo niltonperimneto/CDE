@@ -45,6 +45,10 @@
 #include <strings.h>		/* need to get bzero defined */
 #endif /* _AIX */
 
+#ifndef KORNSHELL
+#define KORNSHELL "/bin/ksh"
+#endif
+
 const int BUFFER_SIZE = 512;
 
 Invoke::Invoke(const char *command,   // Command to Run

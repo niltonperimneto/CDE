@@ -44,13 +44,13 @@
 #include "xoakufont.h"
 #include "util.h"
 
-void CBeOblB_aEnd(Widget widget, caddr_t clientData, caddr_t callData);
-void EHeStaT_list(Widget widget, int select, XEvent *e);
-void CBeScro(Widget widget, caddr_t clientData, caddr_t callData);
-void EHeBulB_eMEv(Widget widget, caddr_t clientData, XEvent *e);
-void EHeBulB_eExp(Widget widget, caddr_t clientData, XEvent *e);
-void EHeBulB_dExp(Widget widget, caddr_t clientData);
-static void EHStaT_disp(Widget widget, int i);
+void CBeOblB_aEnd(Widget widget, XtPointer clientData, XtPointer callData);
+void EHeStaT_list(Widget widget, XtPointer client_data, XEvent *event, Boolean *cont);
+void CBeScro(Widget widget, XtPointer clientData, XtPointer callData);
+void EHeBulB_eMEv(Widget widget, XtPointer client_data, XEvent *event, Boolean *cont);
+void EHeBulB_eExp(Widget widget, XtPointer client_data, XEvent *event, Boolean *cont);
+void EHeBulB_dExp(Widget widget, XtPointer client_data, XEvent *event, Boolean *cont);
+static void EHStaT_disp(Widget widget, XtPointer client_data, XEvent *event, Boolean *cont);
 
 extern Resource resource;
 
@@ -229,8 +229,10 @@ ListSetGlyphImage( int i )
 
 /*ARGSUSED*/
 static void
-EHStaT_disp( Widget widget, int i /* widget that have some ivent */ )
+EHStaT_disp( Widget widget, XtPointer client_data, XEvent *event, Boolean *cont )
 {
+    int i = (int)(intptr_t)client_data;
+    (void)widget; (void)event; (void)cont;
     ListSetGlyphImage( i );
 }
 
@@ -245,7 +247,7 @@ EHStaT_disp( Widget widget, int i /* widget that have some ivent */ )
  ** ===================================================================
  **/
 
-static void _create_editptn_after();
+static void _create_editptn_after(void);
 
 static Widget FooterMessage;
 static Widget codeLabel;
@@ -384,8 +386,8 @@ CreateEditPtn(Widget owner)
     Widget	baseForm, pop, font_menu, edit_menu, char_menu, info_menu;
     Widget	listBase, listFrame, rc, editFrame, figure_w;
     Widget	imageFrame, imageForm, editPane, image;
-    extern Widget CreateFrame();
-    extern Widget CreatePixButton();
+    extern Widget CreateFrame(Widget owner, String name, int type, int thickness);
+    extern Widget CreatePixButton(Widget owner, String name, RadioButt *data);
 
     Arg arg[1];
 
@@ -587,7 +589,7 @@ _create_editptn_after(void)
 {
     int		slctloc;
     static char	dashPtn[] = {1,1};	/* Editing pane's border pattern */
-    extern void chgEdList();
+    extern void chgEdList(int statloc, int slctloc, char mode);
 
 
     /*

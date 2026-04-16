@@ -44,6 +44,7 @@
 #include "FaLib.h"
 
 extern Widget toplevel;
+extern int _DtEnvControl(int mode);
 
 typedef void (*XtCallbackProc)( Widget   widget, XtPointer closure, XtPointer call_data);
 
@@ -223,7 +224,7 @@ focus(Widget w)
 static void
 code_input(void)
 {
-    extern void CodeWindow();
+    extern void CodeWindow(Widget widget, char *font_name, Boolean load_font);
     CodeWindow(focus_widget, fullFontData.xlfdname, False);
 }
 
@@ -370,7 +371,7 @@ Widget
 CreateDialogAndButtons(
 Widget owner,
 String name,
-void (*delcb)(),
+XtCallbackProc delcb,
 Button *btns,
 int btns_cnt,
 Widget *pop)
@@ -467,7 +468,7 @@ Widget owner,
 String name,
 int width,
 int height,
-void (*proc)(),
+XtEventHandler proc,
 int val)
 {
 	int n = 0;
@@ -820,7 +821,7 @@ Widget *pop)
 
 
 void
-AddDeleteProc(Widget w, void (*delcb)())
+AddDeleteProc(Widget w, XtCallbackProc delcb)
 {
 	Atom del = DeleteWindowAtom();
 	XmAddWMProtocols( w, &del, 1);
@@ -828,13 +829,13 @@ AddDeleteProc(Widget w, void (*delcb)())
 }
 
 void
-AddPopupProc(Widget w, void (*popupcb)())
+AddPopupProc(Widget w, XtCallbackProc popupcb)
 {
     XtAddCallback(XtParent(w), XmNpopupCallback, popupcb, 0);
 }
 
 void
-AddDestroyProc(Widget w, void (*destroycb)())
+AddDestroyProc(Widget w, XtCallbackProc destroycb)
 {
     XtAddCallback(XtParent(w), XmNdestroyCallback, destroycb, 0);
 }
@@ -1017,7 +1018,7 @@ int height,
 int val,
 int min,
 int max,
-void (*proc)())
+XtCallbackProc proc)
 {
     Widget sc;
     int n = 0;
@@ -1036,7 +1037,7 @@ void (*proc)())
 
 /*ARGSUSED*/
 static void
-_scbase_cb( Widget w, void (*proc)(), XmScrollBarCallbackStruct *calldata )
+_scbase_cb( Widget w, void (*proc)(int), XmScrollBarCallbackStruct *calldata )
 {
     (*proc)(calldata->value);
 }
@@ -1049,7 +1050,7 @@ int min,
 int max,
 int val,
 int vcnt,
-void (*sbproc)())
+void (*sbproc)(int))
 {
     int n = 0;
     Arg arg[16];

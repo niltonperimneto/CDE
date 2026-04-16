@@ -817,23 +817,32 @@ static int moveErrorCallback(char *fname, int errnum) {
   return ErrorHandler(op_delete, fname, errnum);
 }
 
-if (app_args.source_name == NULL && i < argc)
-  app_args.source_name = argv[i++];
+/*--------------------------------------------------------------------
+ * Get command line arguments
+ *------------------------------------------------------------------*/
 
-if (app_args.target_name == NULL && i < argc)
-  app_args.target_name = argv[i++];
+static int get_command_line(int argc, char *argv[]) {
+  int i = 1;
 
-/*
- * There should be no more arguments left, and
- * source & target directory should be set
- */
+#define USAGE "Usage: %s [options ...] source target\n"
 
-if (i < argc || app_args.source_name == NULL || app_args.target_name == NULL) {
-  fprintf(stderr, GETMESSAGE(2, 10, USAGE), argv[0]);
-  exit(1);
-}
+  /* get source & target directory, if not yet set */
+  if (app_args.source_name == NULL && i < argc)
+    app_args.source_name = argv[i++];
 
-return (0);
+  if (app_args.target_name == NULL && i < argc)
+    app_args.target_name = argv[i++];
+
+  /*
+   * There should be no more arguments left, and
+   * source & target directory should be set
+   */
+  if (i < argc || app_args.source_name == NULL || app_args.target_name == NULL) {
+    fprintf(stderr, GETMESSAGE(2, 10, USAGE), argv[0]);
+    exit(1);
+  }
+
+  return (0);
 }
 
 /*--------------------------------------------------------------------
@@ -854,7 +863,7 @@ static void InitNlsMessage(void) {
  * Main
  *------------------------------------------------------------------*/
 
-int int int main(int argc, char *argv[]) {
+int main(int argc, char *argv[]) {
   char msg[1024];
   XEvent event;
   Arg args[3];

@@ -23,6 +23,8 @@
 
 #pragma once
 
+#include <X11/Intrinsic.h>
+
 /* event.c */
 void ProcessTabletEvent(Widget w, XEvent *xptr, String *params, Cardinal num_params);
 void Do_ButtonOp(XEvent *xptr);

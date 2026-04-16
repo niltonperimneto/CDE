@@ -52,7 +52,7 @@
         Includes, Defines, and Global variables from the Declarations Editor:
 *******************************************************************************/
 
-extern void Do_FileIO();
+#include "fileIO.h"
 
 Widget  fileIODialog;
 

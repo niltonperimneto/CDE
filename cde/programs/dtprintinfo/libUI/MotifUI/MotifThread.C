@@ -37,6 +37,10 @@
 #include <fcntl.h>
 #include <errno.h>
 
+#ifndef KORNSHELL
+#define KORNSHELL "/bin/ksh"
+#endif
+
 
 MotifThread::MotifThread(MotifUI *obj, const char *cmd,
                          MotifThreadCallback cb, ThreadCallback cb1,

@@ -205,9 +205,10 @@ typedef struct {
     Widget exitBtn;
 } FileWidgets;
 
+typedef void (*DtPadCallbackProc)(Widget, caddr_t, caddr_t);
 typedef struct {
-    void (*pendingFileFunc)();
-    void (*pendingFileHelpFunc)();
+    DtPadCallbackProc pendingFileFunc;
+    DtPadCallbackProc pendingFileHelpFunc;
     Boolean fileExists,
 	    saveWithNewlines,
 	    readOnly;

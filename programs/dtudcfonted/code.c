@@ -143,7 +143,7 @@ DrawCode(Widget w, int low_code)
 }
 
 static void
-SetPixmap(start_code)
+SetPixmap(int start_code)
 {
     int hi_code, low_code;
     char *f = NULL;

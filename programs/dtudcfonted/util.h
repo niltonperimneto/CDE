@@ -130,12 +130,12 @@ typedef struct _MButton {
 
 typedef struct _NoticeButton {
 	char	*label;
-	void	(*cb)();
+	XtCallbackProc	cb;
 } NoticeButton;
 
 #define NBTNARGS( cb, clientdata, mnumonic, sensitive, deflt) { \
 	"",    \
-	cb,    \
+	(XtCallbackProc) cb,    \
 }
 
 typedef struct _NButton {
@@ -210,11 +210,11 @@ extern Widget CreateDrawingArea(Widget owner,
 				String name,
 				int width,
 				int height,
-				void (*proc)(),
+				XtEventHandler proc,
 				int val);
 extern Widget CreateDialogAndButtons(Widget owner,
 				     String name,
-				     void (*delcb)(),
+				     XtCallbackProc delcb,
 				     Button *btns,
 				     int btns_cnt,
 				     Widget *pop);
@@ -231,7 +231,7 @@ extern Widget CreateScrollBase(Widget owner,
 			       int max,
 			       int val,
 			       int vcnt,
-			       void (*sbproc)());
+			       void (*sbproc)(int));
 
 Widget	CreateCaptionFrame(Widget owner,
 			   String name,
@@ -266,7 +266,7 @@ void	PopupNotice(Widget owner,
 		    NButton *button,
 		    Boolean do_format,
 		    String title);
-void	AddDeleteProc(Widget w, void (*delcb)());
+void	AddDeleteProc(Widget w, XtCallbackProc delcb);
 Widget	CreateMenuBarAndFooterMessageForm(Widget owner,
 					  String name,
 					  MButton *buttons,
@@ -292,5 +292,5 @@ Widget	CreateScrollBar(Widget owner,
 			int val,
 			int min,
 			int max,
-			void (*proc)());
+			XtCallbackProc proc);
 
