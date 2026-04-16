@@ -83,8 +83,11 @@ make_find(Calendar *c)
 	Tick		 cursor, begin_range, end_range;
 	char		 buffer[50];
 	int		 i;
-	void 		 find_appts(), show_appt(), f_cancel_cb(), 
-			 f_searchrange_cb(), f_searchall_cb();
+	void		 find_appts(Widget, XtPointer, XtPointer);
+	void		 show_appt(Widget, XtPointer, XtPointer);
+	void		 f_cancel_cb(Widget, XtPointer, XtPointer);
+	void		 f_searchrange_cb(Widget, XtPointer, XtPointer);
+	void		 f_searchall_cb(Widget, XtPointer, XtPointer);
 	Arg		 args[3];
 	Dimension	 highest;
 	Widget	 	 highest_label;
@@ -559,7 +562,7 @@ fmt_time_what(
 }
 
 void
-find_appts(Widget widget, XtPointer client_data, XmPushButtonCallbackStruct *cbs)
+find_appts(Widget widget, XtPointer client_data, XtPointer call_data)
 {
 	Calendar *c = calendar;
 	Props *p = (Props*)c->properties;
@@ -767,7 +770,7 @@ find_appts(Widget widget, XtPointer client_data, XmPushButtonCallbackStruct *cbs
 }
 
 void
-show_appt(Widget widget, XtPointer client_data, XmPushButtonCallbackStruct *cbs)
+show_appt(Widget widget, XtPointer client_data, XtPointer call_data)
 {
 	Calendar *c = calendar;
 
@@ -814,7 +817,7 @@ void
 f_cancel_cb(
         Widget  widget,
         XtPointer client_data,
-        XmPushButtonCallbackStruct *cbs)
+        XtPointer call_data)
 {
         Calendar *c = calendar;
         Find      *f;

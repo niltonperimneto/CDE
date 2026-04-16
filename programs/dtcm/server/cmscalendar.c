@@ -172,12 +172,12 @@ _DtCmsMakeCalendar(char *owner, char *name)
 		_DtCm_get_attribute_types(_DtCm_entry_name_tbl->size,
 			cal->types);
 
-	if (!(cal->tree = rb_create(_DtCmsGetEntryKey, _DtCmsCompareEntry))) {
+	if (!(cal->tree = rb_create(_DtCmsGetEntryKey, (_DtCmsCompareProc)_DtCmsCompareEntry))) {
 		_DtCmsFreeCalendar(cal);
 		return (NULL);
 	}
 
-	if (!(cal->list = hc_create(_DtCmsGetEntryKey, _DtCmsCompareRptEntry)))
+	if (!(cal->list = hc_create(_DtCmsGetEntryKey, (_DtCmsCompareProc)_DtCmsCompareRptEntry)))
 	{
 		_DtCmsFreeCalendar(cal);
 		return (NULL);
@@ -269,22 +269,22 @@ _DtCmsSetFileVersion(_DtCmsCalendar *cal, int version)
 
 	if (version == 1) {
 		if (!(cal->tree = rb_create(_DtCmsGetApptKey,
-		    _DtCmsCompareAppt))) {
+		    (_DtCmsCompareProc)_DtCmsCompareAppt))) {
 			return (CSA_E_INSUFFICIENT_MEMORY);
 		}
 
 		if (!(cal->list = hc_create(_DtCmsGetApptKey,
-		    _DtCmsCompareRptAppt))) {
+		    (_DtCmsCompareProc)_DtCmsCompareRptAppt))) {
 			return (CSA_E_INSUFFICIENT_MEMORY);
 		}
 	} else {
 		if (!(cal->tree = rb_create(_DtCmsGetEntryKey,
-		    _DtCmsCompareEntry))) {
+		    (_DtCmsCompareProc)_DtCmsCompareEntry))) {
 			return (CSA_E_INSUFFICIENT_MEMORY);
 		}
 
 		if (!(cal->list = hc_create(_DtCmsGetEntryKey,
-		    _DtCmsCompareRptEntry))) {
+		    (_DtCmsCompareProc)_DtCmsCompareRptEntry))) {
 			return (CSA_E_INSUFFICIENT_MEMORY);
 		}
 
@@ -614,8 +614,9 @@ _DtCmsRbToCsaStat(Rb_Status rb_stat)
 }
 
 extern void
-garbage_collect(void)
+garbage_collect(int sig)
 {
+	(void)sig;
 	unsigned remain;
 	_DtCmsCalendar *clist = calendar_list;
 
@@ -646,8 +647,9 @@ garbage_collect(void)
 }
 
 extern void
-debug_switch(void)
+debug_switch(int sig)
 {
+	(void)sig;
 	_DtCmsCalendar *clist = calendar_list;
 	Access_Entry_4 *l;
 

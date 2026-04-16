@@ -66,7 +66,7 @@ static 	char sccsid[] = "@(#)cmtt.c 1.13 95/05/01 Copyr 1993 Sun Microsystems, I
 #include "debug.h"
 
 
-static Tt_message load_cb();
+static Tt_message load_cb(Tt_message msg, void *clientdata, Tttk_op op, Tt_status diagnosis, unsigned char *contents, int len, char *file, char *docname);
 
 #ifdef FNS_DEMO
 static const char *ptype = "Sun_DtCm";

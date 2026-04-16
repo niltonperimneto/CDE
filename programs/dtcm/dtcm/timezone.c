@@ -71,8 +71,11 @@ make_timezone(Calendar *c)
 	Arg args[10];
 	char buf[BUFSIZ], tmp_buf[BUFSIZ] = "";
 	char *title;
-	void tz_customtime_cb(), tz_mytime_cb(), 
-			tz_apply_cb(), tz_cancel_cb(), tz_ok_cb();
+	void tz_customtime_cb(Widget, XtPointer, XtPointer);
+	void tz_mytime_cb(Widget, XtPointer, XtPointer);
+	void tz_apply_cb(Widget, XtPointer, XtPointer);
+	void tz_cancel_cb(Widget, XtPointer, XtPointer);
+	void tz_ok_cb(Widget, XtPointer, XtPointer);
 
 	if (c->timezone == NULL) {
                 c->timezone = (caddr_t)ckalloc(sizeof(Timezone));

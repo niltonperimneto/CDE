@@ -64,6 +64,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #if defined(HAVE_CONFIG_H)
 # include <cde_config.h>
 #endif
@@ -109,7 +110,7 @@ extern void ProxyMain(Display *dpy, XEvent *event);
 
 #define PROXY 1
 #ifdef PROXY
-extern Window GetAtomWindow();
+extern Window GetAtomWindow(Display *dpy, Window win, Atom atom);
 extern Atom ATOM_MOTIF_RECEIVER_INFO;
 Window proxy_win;
 #endif
@@ -121,7 +122,7 @@ Atom ATOM_WM_STATE;
 Atom ATOM_SITE_RECTS;
 
 
-int (*DefaultErrorHandler)();
+XErrorHandler DefaultErrorHandler;
 
 typedef struct _site {
     int screen;
@@ -137,7 +138,7 @@ drop_site_t **NextSite;
 int SitesFound = 0;
 
 
-Bool SearchChildren();
+Bool SearchChildren(Display *dpy, Window root, Window win, Window *pwin, void **psite, unsigned long *plen, int *px, int *py, Bool from_FindRec);
 
 /*
  * Region stuff.  Stolen from region.h.

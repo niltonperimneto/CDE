@@ -85,7 +85,8 @@ make_goto(Calendar *c)
 	Goto 		*g;
 	XmString 	xmstr;
 	Widget		separator, button_form;
-	void 		goto_date(), g_cancel_cb();
+	void 		goto_date(Widget, XtPointer, XtPointer);
+	void		g_cancel_cb(Widget, XtPointer, XtPointer);
 	char		*title;
 
 	if (c->goTo == NULL) {
@@ -240,7 +241,7 @@ make_goto(Calendar *c)
 }
 
 void
-goto_date(Widget widget, XtPointer client_data, XmPushButtonCallbackStruct *cbs)
+goto_date(Widget widget, XtPointer client_data, XtPointer call_data)
 {
         Calendar *c = calendar;
         Props *p;
@@ -323,7 +324,7 @@ void
 g_cancel_cb(
         Widget  widget,
         XtPointer client_data,
-        XmPushButtonCallbackStruct *cbs)
+        XtPointer call_data)
 {
         Calendar *c = calendar;
         Goto      *g;
