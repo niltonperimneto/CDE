@@ -1,0 +1,19 @@
+# Fixture used by parser_corpus.rs
+Menu DtRootMenu
+{
+    "Shuffle Up"    f.circle_up
+    "Refresh"       f.refresh
+    no-label        f.separator
+    "Exit..."       f.exit
+}
+
+Keys DtKeyBindings
+{
+    Alt<Key>F4      window      f.kill
+    Alt<Key>space   icon|window f.post_wmenu
+}
+
+Buttons DtButtonBindings
+{
+    <Btn3Down>      root        f.menu  DtRootMenu
+}

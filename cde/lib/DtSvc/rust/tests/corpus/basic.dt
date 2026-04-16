@@ -1,0 +1,16 @@
+# Fixture used by parser_corpus.rs
+ACTION Edit
+{
+    LABEL           Edit
+    TYPE            COMMAND
+    WINDOW_TYPE     PERM_TERMINAL
+    EXEC_STRING     /usr/bin/vi "%Arg_1%"
+    DESCRIPTION     "Opens the file in vi."
+}
+
+DATA_ATTRIBUTES TEXTFILE
+{
+    DESCRIPTION     "Plain text files"
+    ICON            Dttext
+    IS_TEXT         True
+}
