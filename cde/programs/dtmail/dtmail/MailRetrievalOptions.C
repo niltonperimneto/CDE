@@ -80,17 +80,17 @@
 #include <Dt/PrintOptionsP.h>
 
 #include <DtMail/IO.hh>
-#include "CheckBoxUiItem.hh"
-#include "DtMail.hh"
-#include "DtMailError.hh"
-#include "InboxTextFieldUiItem.hh"
-#include "IndexedOptionMenuUiItem.hh"
+#include <DtMail/CheckBoxUiItem.hh>
+#include <DtMail/DtMail.hh>
+#include <DtMail/DtMailError.hh>
+#include <DtMail/InboxTextFieldUiItem.hh>
+#include <DtMail/IndexedOptionMenuUiItem.hh>
 #include "MailMsg.h"
 #include "MailRetrievalOptions.h"
 #include "RoamApp.h"
-#include "CheckForMailUiItem.hh"
-#include "SpinBoxUiItem.hh"
-#include "TextFieldUiItem.hh"
+#include <DtMail/CheckForMailUiItem.hh>
+#include <DtMail/SpinBoxUiItem.hh>
+#include <DtMail/TextFieldUiItem.hh>
 #include "dtmailopts.h"
 
 #define MR_ARRAY_SIZE(ary)	(sizeof((ary))/sizeof((ary)[0]))

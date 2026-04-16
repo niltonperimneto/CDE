@@ -53,7 +53,7 @@ private:
 
   public:
     
-    AttachAddCmd ( AttachArea *, Widget, Widget, char *, int );
+    AttachAddCmd ( AttachArea *, Widget, Widget, char *, char *, int );
 
     virtual const char *const className () { return "AttachAddCmd"; }
 };
@@ -76,7 +76,7 @@ private:
 
   public:
     
-    AttachFetchCmd ( AttachArea *, char *, int );
+    AttachFetchCmd ( AttachArea *, char *, char *, int );
 
     virtual const char *const className () { return "AttachFetchCmd"; }
 };
@@ -99,7 +99,7 @@ private:
 
   public:
     
-    AttachDeleteCmd ( AttachArea *, char *, int );
+    AttachDeleteCmd ( AttachArea *, char *, char *, int );
 
     virtual const char *const className () { return "AttachDeleteCmd"; }
 };
@@ -128,7 +128,7 @@ private:
 
   public:
     
-    AttachOpenCmd ( AttachArea *, char *, int );
+    AttachOpenCmd ( AttachArea *, char *, char *, int );
 
     virtual const char *const className () { return "AttachOpenCmd"; }
 };
@@ -155,7 +155,7 @@ private:
 
   public:
     
-    AttachRenameCmd ( AttachArea *, Widget, char *, int );
+    AttachRenameCmd ( AttachArea *, Widget, char *, char *, int );
 
     virtual const char *const className () { return "AttachRenameCmd"; }
 };
@@ -181,7 +181,7 @@ private:
 
   public:
     
-    AttachDescriptionCmd ( AttachArea *, Widget, char *, int );
+    AttachDescriptionCmd ( AttachArea *, Widget, char *, char *, int );
 
     virtual const char *const className () { return "AttachDescriptionCmd"; }
 };
@@ -211,7 +211,7 @@ private:
 
   public:
     
-    AttachSaveAsCmd ( AttachArea *, Widget, Widget, char *, int );
+    AttachSaveAsCmd ( AttachArea *, Widget, Widget, char *, char *, int );
 
     virtual const char *const className () { return "AttachSaveAsCmd"; }
 };
@@ -234,7 +234,7 @@ private:
 
   public:
     
-    AttachSelectAllCmd ( AttachArea *, char *, int );
+    AttachSelectAllCmd ( AttachArea *, char *, char *, int );
 
     virtual const char *const className () { return "AttachSelectAllCmd"; }
 };
@@ -257,7 +257,7 @@ private:
 
   public:
     
-    AttachUndeleteCmd ( AttachArea *, char *, int );
+    AttachUndeleteCmd ( AttachArea *, char *, char *, int );
 
     virtual const char *const className () { return "AttachUndeleteCmd"; }
 };
@@ -280,7 +280,7 @@ private:
 
   public:
     
-    AttachUnselectAllCmd ( AttachArea *, char *, int );
+    AttachUnselectAllCmd ( AttachArea *, char *, char *, int );
 
     virtual const char *const className () { return "AttachUnselectAllCmd"; }
 };
@@ -304,7 +304,7 @@ private:
 
   public:
     
-    AttachInfoCmd ( AttachArea *, char *, int );
+    AttachInfoCmd ( AttachArea *, char *, char *, int );
     ~AttachInfoCmd();
 
     virtual const char *const className () { return "AttachInfoCmd"; }

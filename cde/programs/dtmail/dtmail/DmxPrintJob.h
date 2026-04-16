@@ -83,9 +83,9 @@
 #include "DmxPrintOptions.h"
 #include "DmxPrintOutput.h"
 #include "DmxPrintSetup.h"
-#include "DtMailTypes.h"
+#include <DtMail/DtMailTypes.h>
 #include "MainWindow.h"
-#include "OptCmd.h"
+#include <DtMail/OptCmd.h>
 #include "UIComponent.h"
 
 typedef struct _dmx_msg_info 

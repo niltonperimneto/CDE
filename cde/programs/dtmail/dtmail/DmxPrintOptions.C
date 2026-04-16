@@ -80,13 +80,13 @@
 
 #include "Dmx.h"
 #include "DmxPrintOptions.h"
-#include "DtMail.hh"
-#include "DtMailError.hh"
+#include <DtMail/DtMail.hh>
+#include <DtMail/DtMailError.hh>
 #include "dtmailopts.h"
-#include "IndexedOptionMenuUiItem.hh"
+#include <DtMail/IndexedOptionMenuUiItem.hh>
 #include "MailMsg.h"
 #include "RoamApp.h"
-#include "TextFieldUiItem.hh"
+#include <DtMail/TextFieldUiItem.hh>
 
 #define DMX_ARRAY_SIZE(ary)	(sizeof((ary))/sizeof((ary)[0]))
 

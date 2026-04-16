@@ -78,7 +78,7 @@
 
 #include "Application.h"
 #include "DtMail/DtMail.hh"
-#include "DtMailTypes.h"
+#include <DtMail/DtMailTypes.h>
 #include "MailSession.hh"
 #include "RoamApp.h"
 #include "str_utils.h"
@@ -612,4 +612,3 @@ DmxMsg::parse (void)
 		part = nextpart;
 	}
 }
-

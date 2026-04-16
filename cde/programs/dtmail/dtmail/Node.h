@@ -91,7 +91,7 @@ class Node {
 
 	void			set_homep(
 				);
-	boolean			is_home(
+	DtMailBoolean		is_home(
 				);
 	Node*			get_home(
 				);
@@ -138,15 +138,14 @@ class Node {
 	DtMailMessageHandle		my_message_handle;
         char*			my_message_header;
 	int			bogus_number;
-	boolean			homep;
-	boolean			deleted_p;
+	DtMailBoolean		homep;
+	DtMailBoolean		deleted_p;
 	Node*			my_previous_node;
 	Node*			my_next_node;
 };
 
 
 #endif			//__NODESERVANT_HH
-
 
 
 

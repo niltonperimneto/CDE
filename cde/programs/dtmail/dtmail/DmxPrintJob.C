@@ -93,7 +93,7 @@
 #include "DtMailGenDialog.hh"
 #include "DtMailDialogCallbackData.hh"
 #include "MailMsg.h"
-#include "OptCmd.h"
+#include <DtMail/OptCmd.h>
 #include "RoamApp.h"
 
 

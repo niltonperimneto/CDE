@@ -54,7 +54,7 @@
 #include "RoamCmds.h"
 #include "RoamMenuWindow.h"
 #include "DtMailGenDialog.hh"
-#include "DtVirtArray.hh"
+#include <DtMail/DtVirtArray.hh>
 
 class MailBox;
 class Cmd;
@@ -485,5 +485,4 @@ extern int started_by_tt;
 #endif
 
 #endif
-
 

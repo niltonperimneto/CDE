@@ -115,13 +115,13 @@ class Notifier {
     static void eventProc(XtPointer client_data, int * fd, XtInputId *);
     static void timerProc(XtPointer, XtIntervalId *);
 
-    static int deleteTimerEvent(ObjectKey &, TimerEvent *, void *);
+    static int deleteTimerEvent(ObjectKey &, void *, void *);
 
     struct TimerSearch {
 	TimerEvent *	srch_event;
 	EventKey *	key;
     };
-    static int searchTimer(ObjectKey &, TimerEvent *, void *);
+    static int searchTimer(ObjectKey &, void *, void *);
 };
 
 #endif

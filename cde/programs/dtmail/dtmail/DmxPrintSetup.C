@@ -84,7 +84,7 @@
 #include "DmxPrintSetup.h"
 #include "DtMailHelp.hh"
 #include "MailMsg.h"
-#include "OptCmd.h"
+#include <DtMail/OptCmd.h>
 #include "RoamApp.h"
 #include "RoamMenuWindow.h"
 

@@ -82,7 +82,7 @@
 #include <ctype.h>
 
 #include <Dt/PrintOptionsP.h>
-#include "DtMailTypes.h"
+#include <DtMail/DtMailTypes.h>
 #include "UIComponent.h"
 
 class DmxPrintOutput : public UIComponent

@@ -69,6 +69,7 @@ Notifier::EventKey::~EventKey(void)
 {
 }
 
+int
 Notifier::EventKey::operator==(ObjectKey & other)
 {
     EventKey * ok = (EventKey *)&other;
@@ -76,6 +77,7 @@ Notifier::EventKey::operator==(ObjectKey & other)
     return(_key == ok->_key);
 }
 
+int
 Notifier::EventKey::operator!=(ObjectKey & other)
 {
     EventKey * ok = (EventKey *)&other;
@@ -83,6 +85,7 @@ Notifier::EventKey::operator!=(ObjectKey & other)
     return(_key != ok->_key);
 }
 
+int
 Notifier::EventKey::operator<(ObjectKey & other)
 {
     EventKey * ok = (EventKey *)&other;
@@ -90,6 +93,7 @@ Notifier::EventKey::operator<(ObjectKey & other)
     return(_key < ok->_key);
 }
 
+int
 Notifier::EventKey::operator>(ObjectKey & other)
 {
     EventKey * ok = (EventKey *)&other;
@@ -97,6 +101,7 @@ Notifier::EventKey::operator>(ObjectKey & other)
     return(_key > ok->_key);
 }
 
+int
 Notifier::EventKey::operator<=(ObjectKey & other)
 {
     EventKey * ok = (EventKey *)&other;
@@ -104,6 +109,7 @@ Notifier::EventKey::operator<=(ObjectKey & other)
     return(_key <= ok->_key);
 }
 
+int
 Notifier::EventKey::operator>=(ObjectKey & other)
 {
     EventKey * ok = (EventKey *)&other;
@@ -144,8 +150,9 @@ Notifier::Notifier(XtAppContext context)
 }
 
 int
-Notifier::deleteTimerEvent(ObjectKey &, TimerEvent * event, void *)
+Notifier::deleteTimerEvent(ObjectKey &, void *event_ptr, void *)
 {
+    TimerEvent * event = (TimerEvent *)event_ptr;
     XtRemoveTimeOut(event->id);
     delete event->event;
     delete event;
@@ -299,8 +306,9 @@ Notifier::timerProc(XtPointer client_data, XtIntervalId *id)
 }
 
 int
-Notifier::searchTimer(ObjectKey & key, TimerEvent * event, void * client_data)
+Notifier::searchTimer(ObjectKey & key, void *event_ptr, void * client_data)
 {
+    TimerEvent * event = (TimerEvent *)event_ptr;
     TimerSearch * srch = (TimerSearch *)client_data;
 
     if (event == srch->srch_event) {

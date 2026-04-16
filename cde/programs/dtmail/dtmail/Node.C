@@ -88,7 +88,7 @@ Node::set_homep(
     homep = DTM_TRUE;
 }
 
-boolean
+DtMailBoolean
 Node::is_home(
 )
 {
@@ -294,7 +294,6 @@ Node::get_number()
 {
     return(bogus_number);
 }
-
 
 
 
