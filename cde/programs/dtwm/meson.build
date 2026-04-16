@@ -80,3 +80,11 @@ executable('dtfplist',
   c_args : dtwm_c_args, # Reuse args?
   install : true
 )
+
+executable('dtwmrc_legacy_json',
+  ['tools/dtwmrc_legacy_json.c', 'WmParse.c'],
+  include_directories : inc,
+  dependencies : [dep_x11, dep_xt, dep_xm, libDtWidget_dep, libDtSvc_dep, dep_tirpc],
+  c_args : dtwm_c_args,
+  install : false
+)

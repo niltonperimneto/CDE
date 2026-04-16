@@ -22,6 +22,7 @@ libmini_isam = static_library('mini_isam',
 
 mini_isam_inc = include_directories('mini_isam')
 
-# subdir('lib')
-subdir('libtt_shim')
+subdir('lib')
+# libtt_shim builds an incomplete replacement; keep it disabled for now.
+# subdir('libtt_shim')
 # subdir('bin') # later

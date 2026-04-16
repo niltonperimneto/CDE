@@ -41,7 +41,7 @@ csa_sources = [
   'convert4-5.c', 'convert5-4.c', 'debug.c', 'entry.c', 'free.c',
   'hash.c', 'iso8601.c', 'laccess.c', 'lutil.c', 'match.c',
   'nametbl.c', 'refree.c', 'rescan.c', 'rpccalls.c', 'table.c',
-  'updateattrs.c', 'xtclient.c', 'ansi_c.c'
+  'updateattrs.c', 'xtclient.c', 'ansi_c.c', 'reparser_compat.c'
 ]
 
 # Link with Rust static lib

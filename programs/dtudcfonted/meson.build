@@ -54,7 +54,8 @@ executable('dtudcfonted',
   dtudcfonted_sources,
   include_directories : include_directories('include', 'libfal', 'libfuty', '../../cde/include'),
   dependencies : [
-    dep_x11, dep_xt, dep_xm,
+    dep_x11, dep_xt, dep_xm, dep_xpm, libm,
+    libDtSvc_dep,
     dtudcfonted_fal_dep, dtudcfonted_futy_dep
   ],
   c_args : ['-DANSICPP', '-DMULTIBYTE', '-DNLS16'],

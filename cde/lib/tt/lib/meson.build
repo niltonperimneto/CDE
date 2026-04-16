@@ -1,4 +1,6 @@
-tt_inc = include_directories('.')
+tt_lib_src_root = join_paths(meson.project_source_root(), 'lib/tt/lib')
+tt_lib_src_root_rel = join_paths('..', '..', '..', '..', 'lib', 'tt', 'lib')
+tt_inc = include_directories('.', tt_lib_src_root_rel)
 
 subdir('api/c')
 subdir('api/dnd')
@@ -17,5 +19,10 @@ libtt = shared_library('tt',
     dep_x11, dep_xt, dep_ice, dep_sm, dep_tirpc
     # Add other external deps if needed
   ],
+  include_directories : [inc, include_directories('../../..')]
+)
+
+libtt_dep = declare_dependency(
+  link_with : libtt,
   include_directories : [inc, include_directories('../../..')]
 )

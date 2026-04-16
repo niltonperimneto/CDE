@@ -9,7 +9,7 @@ executable('dtpdmd',
   dtpdmd_src,
   include_directories : [inc],
   dependencies : [
-    dep_x11, dep_xt, dep_xm,
+    dep_x11, dep_xt, dep_xm, dep_xau,
     libDtSvc_dep, libDtWidget_dep, dep_tirpc,
     libtt_dep
   ],

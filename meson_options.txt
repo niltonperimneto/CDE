@@ -6,3 +6,5 @@ option('with_x11', type: 'boolean', value: true,
   description: 'Build X11-dependent components')
 option('with_pedantic_warnings', type: 'boolean', value: false,
   description: 'Escalate selected warning classes for migration work')
+option('with_alacritty', type: 'boolean', value: true,
+  description: 'Build bundled Alacritty submodule for dtterm_shim')

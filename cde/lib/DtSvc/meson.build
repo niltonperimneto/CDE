@@ -81,3 +81,10 @@ libDtSvc_dep = declare_dependency(
 )
 
 meson.override_dependency('DtSvc', libDtSvc_dep)
+
+executable('dt_legacy_json',
+  ['tools/dt_legacy_json.c'],
+  include_directories : [inc, dtsvc_inc],
+  dependencies : [libDtSvc_dep, dep_x11],
+  install : false
+)

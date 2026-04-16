@@ -10,7 +10,7 @@ executable('dtpdm',
   include_directories : [inc],
   dependencies : [
     dep_x11, dep_xt, dep_xm,
-    libDtSvc_dep, libDtWidget_dep, dep_tirpc,
+    libDtSvc_dep, libDtWidget_dep, libDtPrint_dep, dep_tirpc,
     libtt_dep
   ],
   c_args : [common_c_args, '-DCDE_INSTALLATION_TOP="/usr/dt"', '-DI18N_MSG'],

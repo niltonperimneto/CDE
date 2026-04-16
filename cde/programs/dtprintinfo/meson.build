@@ -69,7 +69,7 @@ executable('dtprintinfo',
   dtprintinfo_sources,
   include_directories : [inc, dtprintinfo_inc],
   dependencies : [
-    dep_x11, dep_xt, dep_xm,
+    dep_x11, dep_xt, dep_xm, dep_xpm,
     libDtSvc_dep, libDtWidget_dep, libtt_dep, dep_tirpc
   ],
   c_args : [common_c_args, '-DKORNSHELL="/usr/dt/bin/dtksh"'],

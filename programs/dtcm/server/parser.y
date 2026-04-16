@@ -31,7 +31,7 @@
 
 extern char *pgname;
 extern _DtCmsCalendar *currentCalendar;
-extern int yylineno;
+extern int yyylineno;
 extern void yyerror(char*);
 extern void report_err(char*);
 extern char *str_to_cr(char*);
@@ -155,8 +155,8 @@ add		: OPENPAREN ADD appointmentBody CLOSEPAREN
 						_DtCm_free_appt4((Appt_4 *)$3);
 
 						fprintf(stderr,
-							"Failed to insert appt at line %d\n",
-							yylineno);
+								   "Failed to insert appt at line %d\n",
+								   yyylineno);
 						return (-1);
 					}
 				} else {
@@ -165,7 +165,7 @@ add		: OPENPAREN ADD appointmentBody CLOSEPAREN
 					    != CSA_SUCCESS) {
 
 						fprintf(stderr, "Failed to insert entry at line %d\n",
-							yylineno);
+								   yyylineno);
 						return (-1);
 					}
 					_DtCm_free_cms_attributes(
@@ -237,7 +237,7 @@ name_type_item	: OPENPAREN number quotedString quotedString CLOSEPAREN
 			{
 				if (extend_entry_table($2, $3, $4)) {
 					fprintf(stderr, "Failed to parse entry table at line # %d\n",
-						yylineno);
+								   yyylineno);
 					return (-1);
 				}
 			}
@@ -650,7 +650,7 @@ void
 yyerror(char *s)
 {
         (void)fprintf (stderr, "%s: %s\n", pgname, s);
-        (void)fprintf (stderr, "at line %d\n", yylineno);
+	(void)fprintf (stderr, "at line %d\n", yyylineno);
 }
  
 void
