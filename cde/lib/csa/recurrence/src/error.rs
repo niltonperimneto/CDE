@@ -50,8 +50,10 @@ impl std::error::Error for LexError {}
     help("recurrence rules follow the grammar documented in rerule.h — see `csa_recurrence::RepeatEvent`")
 )]
 pub struct ParseError {
+    // miette 7 made `NamedSource` generic over its backing `SourceCode`; we
+    // always own a `String`, so spell the type parameter explicitly.
     #[source_code]
-    pub src: NamedSource,
+    pub src: NamedSource<String>,
     #[label("here")]
     pub span: SourceSpan,
     pub message: String,

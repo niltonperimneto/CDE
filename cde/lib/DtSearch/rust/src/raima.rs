@@ -1,4 +1,4 @@
-use libc::{c_char, c_int, c_long, c_void};
+use libc::{c_char, c_int, c_void};
 
 // Status codes from vista.h
 pub const S_OKAY: c_int = 0;

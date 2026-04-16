@@ -1,4 +1,3 @@
-use crate::format::or_hwordrec;
 use crate::parser::DtSearchParser;
 use std::collections::HashSet;
 

@@ -1,7 +1,43 @@
+//! Build script for `libcsa_xdr`.
+//!
+//! Responsibilities:
+//! 1. Preprocess each `.x` schema (drop `%`/`#` meta-lines, patch legacy
+//!    pointer+count array pairs to XDR variable-length syntax) and run
+//!    `xdrgen` to emit Rust-side packers/unpackers.
+//! 2. Run `cbindgen` to produce a C header surfacing the crate's public
+//!    FFI so the legacy C library can link against it.
+//! 3. Run `bindgen` twice — once against the generated XDR headers plus the
+//!    hand-written CSA headers, once against `<rpc/rpc.h>` — to expose the
+//!    C-side type surface to Rust.
+//!
+//! # System prerequisites
+//!
+//! * `libtirpc-dev` — provides `<rpc/rpc.h>` and friends.  On modern glibc
+//!   the Sun RPC headers were removed; all invocations below assume
+//!   `/usr/include/tirpc` as the include root.
+//! * `xdrgen` — the crate's XDR compiler.  Install via
+//!   `cargo install xdrgen --git https://github.com/jsgf/rust-xdrgen`.
+//!
+//! The script intentionally emits a clear diagnostic (via `cargo:warning=…`)
+//! before panicking on missing prerequisites so maintainers understand which
+//! system package or tool is missing.
+
 use std::env;
 use std::fs;
 use std::path::Path;
 use std::process::Command;
+
+/// Abort the build with a prominent, maintainer-friendly message that is
+/// also captured by `cargo` as a warning line.  Using `cargo:warning=` keeps
+/// the guidance visible even when stderr is elided by the caller.
+fn fail(context: &str, detail: &str) -> ! {
+    println!("cargo:warning=libcsa_xdr build failed: {context}");
+    println!("cargo:warning={detail}");
+    println!(
+        "cargo:warning=hint: install `libtirpc-dev` and `xdrgen` (see lib/csa/rust/build.rs for details)"
+    );
+    panic!("{context}: {detail}");
+}
 
 fn main() {
     let out_dir = env::var("OUT_DIR").unwrap();
@@ -231,7 +267,7 @@ fn main() {
 
     // Generate C bindings for XDR-generated headers
     // Use ../cm.h to avoid picking up local include/cm.h if it exists
-    let xdr_c_bindings = bindgen::Builder::default()
+    let xdr_c_bindings = match bindgen::Builder::default()
         .header_contents(
             "wrapper_xdr.h",
             "#include \"../cm.h\"\n#include \"../connection.h\"\n#include \"../rtable2.h\"\n#include \"../rtable3.h\"\n#include \"../rtable4.h\"\n#include <csa.h>",
@@ -254,31 +290,42 @@ fn main() {
         .allowlist_function("xdr_.*")
         .derive_default(true)
         .generate()
-        .expect("Unable to generate XDR C bindings");
+    {
+        Ok(b) => b,
+        Err(e) => fail(
+            "unable to generate XDR C bindings",
+            &format!("bindgen error: {e}. Are libtirpc-dev headers installed under /usr/include/tirpc?"),
+        ),
+    };
 
     xdr_c_bindings
         .write_to_file(Path::new(&out_dir).join("xdr_c_bindings.rs"))
         .expect("Couldn't write XDR C bindings!");
 
-    // Generate libtirpc bindings using bindgen
-    let bindings = bindgen::Builder::default()
+    // Generate libtirpc bindings using bindgen.
+    //
+    // The duplicate `.allowlist_*` calls in the previous revision were harmless
+    // but noisy; the cleaned list below captures the unique surface we want:
+    // just CLIENT/XDR plumbing plus every `xdr_*` helper (`xdr_int`,
+    // `xdr_u_int`, `xdr_pointer`, etc.).
+    let bindings = match bindgen::Builder::default()
         .header_contents("wrapper.h", "#include <rpc/rpc.h>")
         .clang_arg("-I/usr/include/tirpc")
         .derive_default(true)
-        // Whitelist what we need to minimize content
         .allowlist_type("CLIENT")
         .allowlist_type("XDR")
         .allowlist_type("bool_t")
         .allowlist_type("enum_t")
         .allowlist_function("clnt_call")
-        .allowlist_type("CLIENT")
-        .allowlist_type("XDR")
-        .allowlist_type("bool_t")
-        .allowlist_type("enum_t")
-        .allowlist_function("clnt_call")
-        .allowlist_function("xdr_.*") // Allow all xdr helper functions (xdr_int, xdr_u_int, xdr_pointer, etc)
+        .allowlist_function("xdr_.*")
         .generate()
-        .expect("Unable to generate libtirpc bindings");
+    {
+        Ok(b) => b,
+        Err(e) => fail(
+            "unable to generate libtirpc bindings",
+            &format!("bindgen error: {e}. Install libtirpc-dev (provides <rpc/rpc.h>)."),
+        ),
+    };
 
     let out_path = Path::new(&out_dir).join("tirpc_bindings.rs");
     bindings

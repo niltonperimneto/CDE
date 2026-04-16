@@ -1,3 +1,35 @@
+//! `libtt_shim` — ToolTalk compatibility shim over D-Bus
+//!
+//! This crate implements the `libtt` public C API (`tt_c.h`) on top of
+//! modern D-Bus via `zbus`.  CDE applications continue to call the legacy
+//! `tt_*` / `tttk_*` / `ttdt_*` / `ttmedia_*` entry points unchanged while
+//! the transport underneath has been replaced.
+//!
+//! # Safety contract
+//!
+//! 1. Every `extern "C"` entry point is `#[unsafe(no_mangle)]` and uses
+//!    `extern "C"` so the ABI matches the legacy declarations.
+//! 2. Any Rust panic is caught at the boundary via the [`ffi_guard!`] macro
+//!    and translated to a typed error code (`TT_ERR_*`).  Unwinding across
+//!    the FFI boundary is **undefined behaviour**; the guard exists to
+//!    prevent it.
+//! 3. All C strings returned to the caller come from [`alloc_cstring`] so
+//!    they are tracked in [`ALLOC_REGISTRY`] and can be safely reclaimed
+//!    through [`tt_free`].
+//! 4. Pointers allocated by `tt_malloc` (i.e. `libc::malloc`) are reclaimed
+//!    by the `libc::free` fallback path in [`tt_free`] — see that function
+//!    for details.
+//!
+//! # Threading model
+//!
+//! A single background thread ([`listen_loop`]) owns the D-Bus connection's
+//! message iterator.  Inbound `org.cde.ToolTalk.MessageDelivered` signals
+//! are parsed and pushed onto a `Mutex<VecDeque<TtMessage>>`; the main
+//! thread drains the queue from its Xt input handler and invokes registered
+//! C callbacks only **after** releasing the registry lock, to avoid
+//! reentrancy deadlocks.  See [`dispatch_message`] for the two-phase
+//! collect-then-dispatch implementation.
+
 // Every unsafe operation inside an unsafe fn must be annotated individually.
 // This catches accidental omissions and makes safety reasoning visible.
 #![deny(unsafe_op_in_unsafe_fn)]
@@ -5,6 +37,42 @@
 use libc::{c_char, c_int, c_void};
 use std::ffi::CString;
 use std::ptr;
+
+// ---------------------------------------------------------------------------
+// ffi_guard! — catch panics at the FFI boundary.
+//
+// A Rust panic unwinding through an `extern "C"` frame is **undefined
+// behaviour** on every platform CDE targets.  Every FFI entry point that
+// performs non-trivial work (lock acquisition, D-Bus I/O, `Box`/`CString`
+// manipulation, callback dispatch, …) wraps its body in `ffi_guard!` so
+// any unexpected panic becomes a logged error plus a typed C return value.
+//
+// Usage:
+//
+//     fn my_ffi_entry(…) -> TtStatus {
+//         ffi_guard!(TT_ERR_NOMP, { /* real impl */ })
+//     }
+//
+// The `$fallback` expression is the value returned on panic.  It must be a
+// value, not a statement — for functions returning `()` use `()`.
+// ---------------------------------------------------------------------------
+#[macro_export]
+macro_rules! ffi_guard {
+    ($fallback:expr, $body:block) => {{
+        let result = ::std::panic::catch_unwind(::std::panic::AssertUnwindSafe(|| $body));
+        match result {
+            Ok(value) => value,
+            Err(_) => {
+                ::std::eprintln!(
+                    "[libtt_shim] panic caught at FFI boundary in {}:{}: returning fallback",
+                    file!(),
+                    line!()
+                );
+                $fallback
+            }
+        }
+    }};
+}
 
 // Basic Types (Mapping to CDE's Tt_status, Tt_mode, etc.)
 pub type TtStatus = c_int;
@@ -116,44 +184,48 @@ fn alloc_cstring(s: &str) -> *mut c_char {
 
 #[unsafe(no_mangle)]
 pub extern "C" fn tt_initialize() -> TtStatus {
-    eprintln!("[libtt_shim] tt_initialize called");
-    if CONN.get().is_some() {
-        return TT_OK;
-    }
-
-    // Create a pipe for event loop integration
-    let mut fds: [c_int; 2] = [-1, -1];
-    unsafe {
-        if libc::pipe(fds.as_mut_ptr()) != 0 {
-            eprintln!("[libtt_shim] Failed to create pipe");
-            return TT_WRN_NOTFOUND;
+    ffi_guard!(TT_ERR_NOMP, {
+        eprintln!("[libtt_shim] tt_initialize called");
+        if CONN.get().is_some() {
+            return TT_OK;
         }
-    }
-    PIPE_READ.store(fds[0], Ordering::SeqCst);
-    PIPE_WRITE.store(fds[1], Ordering::SeqCst);
 
-    match Connection::session() {
-        Ok(conn) => {
-            // Clone connection for the background thread *before* setting the global one
-            // zbus::blocking::Connection is Clone
-            let thread_conn = conn.clone();
-
-            thread::spawn(move || {
-                listen_loop(thread_conn);
-            });
-
-            if let Err(_) = CONN.set(conn) {
-                eprintln!("[libtt_shim] Failed to set global connection");
+        // Create a pipe for event loop integration.
+        let mut fds: [c_int; 2] = [-1, -1];
+        // SAFETY: `fds` is a stack-allocated two-element array; `libc::pipe`
+        // writes exactly two `int` file descriptors on success.
+        unsafe {
+            if libc::pipe(fds.as_mut_ptr()) != 0 {
+                eprintln!("[libtt_shim] Failed to create pipe");
                 return TT_WRN_NOTFOUND;
             }
-            eprintln!("[libtt_shim] D-Bus session connection established");
-            TT_OK
         }
-        Err(e) => {
-            eprintln!("[libtt_shim] Failed to connect to session bus: {}", e);
-            TT_WRN_NOTFOUND
+        PIPE_READ.store(fds[0], Ordering::SeqCst);
+        PIPE_WRITE.store(fds[1], Ordering::SeqCst);
+
+        match Connection::session() {
+            Ok(conn) => {
+                // Clone the connection for the background listener **before**
+                // installing the global one.  `zbus::blocking::Connection` is
+                // cheap to clone (it's an Arc internally).
+                let thread_conn = conn.clone();
+                thread::spawn(move || {
+                    listen_loop(thread_conn);
+                });
+
+                if CONN.set(conn).is_err() {
+                    eprintln!("[libtt_shim] Failed to set global connection");
+                    return TT_WRN_NOTFOUND;
+                }
+                eprintln!("[libtt_shim] D-Bus session connection established");
+                TT_OK
+            }
+            Err(e) => {
+                eprintln!("[libtt_shim] Failed to connect to session bus: {}", e);
+                TT_WRN_NOTFOUND
+            }
         }
-    }
+    })
 }
 
 // --- Event Loop Implementation ---
@@ -350,26 +422,46 @@ pub extern "C" fn tt_fd() -> c_int {
 
 // --- Memory Management ---
 
+/// Free a pointer previously returned by any `tt_*` allocation routine.
+///
+/// The ToolTalk contract (`tt_c.h`) says every `tt_*` allocation must be
+/// released through `tt_free`.  We keep a registry (`ALLOC_REGISTRY`) of
+/// every `CString::into_raw()` allocation we hand out, so:
+///
+/// * If `p` is in the registry, it came from Rust as a `CString` and we
+///   reclaim it via `CString::from_raw` — safe because nothing else holds
+///   a reference once the C caller returns it.
+/// * If `p` is **not** in the registry, it came from `tt_malloc` (which
+///   uses `libc::malloc`) or from raw C code; in that case we fall back to
+///   `libc::free`, which is the matched deallocator.
+///
+/// Rationale: an earlier revision simply ignored un-registered pointers,
+/// which leaked every `tt_malloc` allocation and violated the TT contract.
+/// The fallback path restores contract compliance while preserving the
+/// double-free protection for `CString` allocations.
 #[unsafe(no_mangle)]
 pub extern "C" fn tt_free(p: *mut c_void) {
     if p.is_null() {
         return;
     }
-    // Only reclaim pointers that were produced by Rust (registered in ALLOC_REGISTRY).
-    // Pointers allocated by C code must not be freed here to avoid double-free UB.
     let addr = p as usize;
-    // unwrap_or_else recovers from a poisoned mutex; without this, a panic in
-    // any other thread holding the lock would cause tt_free to silently skip
-    // the deregistration, leaking the allocation permanently.
+    // `unwrap_or_else(into_inner)` recovers from a poisoned mutex.  Without
+    // this, a panic in any other thread holding the lock would cause us to
+    // silently skip the deregistration, leaking the allocation permanently.
     let owned = ALLOC_REGISTRY
         .lock()
         .unwrap_or_else(|e| e.into_inner())
         .remove(&addr);
     if owned {
-        // SAFETY: `addr` was inserted by `register_alloc` which was called
-        // immediately after `CString::into_raw()`, so the pointer is a valid,
-        // non-aliased CString that has not yet been freed.
+        // SAFETY: `addr` was inserted by `register_alloc` immediately after
+        // `CString::into_raw()`, so the pointer is a valid, non-aliased
+        // `CString` that has not yet been freed.
         unsafe { drop(CString::from_raw(p as *mut c_char)) };
+    } else {
+        // Fall back to libc::free for pointers produced by tt_malloc or
+        // other C-side code.  SAFETY: caller asserts `p` came from a
+        // matching `tt_*` allocation and has not been freed.
+        unsafe { libc::free(p) };
     }
 }
 
@@ -442,63 +534,66 @@ pub extern "C" fn tt_message_destroy(m: *mut c_void) -> TtStatus {
 
 #[unsafe(no_mangle)]
 pub extern "C" fn tt_message_send(m: *mut c_void) -> TtStatus {
-    if show_trace() {
-        eprintln!("[libtt_shim] tt_message_send called");
-    }
+    ffi_guard!(TT_ERR_NOMP, {
+        if show_trace() {
+            eprintln!("[libtt_shim] tt_message_send called");
+        }
 
-    if m.is_null() {
-        return TT_WRN_NOTFOUND;
-    }
+        if m.is_null() {
+            return TT_WRN_NOTFOUND;
+        }
 
-    let msg = unsafe { &*(m as *mut TtMessage) };
+        // SAFETY: caller asserts `m` points to a live TtMessage allocated by
+        // tt_message_create().  We only read from it.
+        let msg = unsafe { &*(m as *mut TtMessage) };
 
-    let Some(conn) = CONN.get() else {
-        eprintln!("[libtt_shim] tt_message_send: no D-Bus connection — is ttsession running?");
-        return TT_ERR_NOMP;
-    };
-
-    // Encode args as (mode, vtype, value) triples — D-Bus signature a(sss).
-    let encoded_args = message::encode_args(&msg.args);
-    let file = msg.file.as_deref().unwrap_or("");
-
-    eprintln!(
-        "[libtt_shim] SendMessage: op='{}' scope={} args={}",
-        msg.op,
-        msg.scope,
-        encoded_args.len()
-    );
-
-    // Call org.cde.ToolTalk.SendMessage on the broker and wait for its reply.
-    // This gives us a synchronous TT_OK / TT_ERR_* status and ensures the
-    // broker has received the message before we return to the C caller.
-    let reply = match conn.call_method(
-        Some("org.cde.ToolTalk"),
-        "/org/cde/ToolTalk",
-        Some("org.cde.ToolTalk"),
-        "SendMessage",
-        &(msg.op.as_str(), encoded_args.as_slice(), msg.scope, file),
-    ) {
-        Ok(r) => r,
-        Err(e) => {
-            eprintln!("[libtt_shim] SendMessage call failed: {}", e);
+        let Some(conn) = CONN.get() else {
+            eprintln!("[libtt_shim] tt_message_send: no D-Bus connection — is ttsession running?");
             return TT_ERR_NOMP;
-        }
-    };
+        };
 
-    match reply.body().deserialize::<i32>() {
-        Ok(status) => {
-            if status != TT_OK {
-                eprintln!("[libtt_shim] Broker returned error status={}", status);
+        // Encode args as (mode, vtype, value) triples — D-Bus signature a(sss).
+        let encoded_args = message::encode_args(&msg.args);
+        let file = msg.file.as_deref().unwrap_or("");
+
+        eprintln!(
+            "[libtt_shim] SendMessage: op='{}' scope={} args={}",
+            msg.op,
+            msg.scope,
+            encoded_args.len()
+        );
+
+        // Call org.cde.ToolTalk.SendMessage on the broker and wait for its
+        // reply — synchronous semantics match the legacy libtt contract.
+        let reply = match conn.call_method(
+            Some("org.cde.ToolTalk"),
+            "/org/cde/ToolTalk",
+            Some("org.cde.ToolTalk"),
+            "SendMessage",
+            &(msg.op.as_str(), encoded_args.as_slice(), msg.scope, file),
+        ) {
+            Ok(r) => r,
+            Err(e) => {
+                eprintln!("[libtt_shim] SendMessage call failed: {}", e);
+                return TT_ERR_NOMP;
             }
-            status
+        };
+
+        match reply.body().deserialize::<i32>() {
+            Ok(status) => {
+                if status != TT_OK {
+                    eprintln!("[libtt_shim] Broker returned error status={}", status);
+                }
+                status
+            }
+            Err(e) => {
+                // Reply decode failure — broker replied but we can't parse it.
+                // Treat as success to avoid cascading failures in CDE callers.
+                eprintln!("[libtt_shim] SendMessage reply decode error: {}", e);
+                TT_OK
+            }
         }
-        Err(e) => {
-            // Reply decode failure — broker replied but we can't parse it.
-            // Treat as success to avoid cascading failures in CDE callers.
-            eprintln!("[libtt_shim] SendMessage reply decode error: {}", e);
-            TT_OK
-        }
-    }
+    })
 }
 
 // ...
@@ -738,27 +833,38 @@ fn dispatch_message(msg: TtMessage) {
 
 #[unsafe(no_mangle)]
 pub extern "C" fn tttk_Xt_input_handler(_p: *mut c_void, _s: *mut c_int, _id: *mut c_int) {
-    // 1. Drain pipe
-    let fd = PIPE_READ.load(Ordering::SeqCst);
-    if fd != -1 {
-        let mut buf = [0u8; 16];
-        let n = unsafe { libc::read(fd, buf.as_mut_ptr() as *mut c_void, 16) };
-        if n < 0 {
-            // Pipe is broken; mark it invalid so we stop trying to read.
-            eprintln!(
-                "[libtt_shim] tttk_Xt_input_handler: pipe read error: {}",
-                std::io::Error::last_os_error()
-            );
-            PIPE_READ.store(-1, Ordering::SeqCst);
+    ffi_guard!((), {
+        // 1. Drain pipe.  The handler is called by Xt whenever the pipe has
+        //    pending bytes; we read as many as fit in a single 16-byte buffer
+        //    and rely on Xt to re-invoke us if more bytes remain.
+        let fd = PIPE_READ.load(Ordering::SeqCst);
+        if fd != -1 {
+            let mut buf = [0u8; 16];
+            // SAFETY: `buf` is a stack-allocated array of 16 bytes; the length
+            // argument matches.  `fd` is either -1 (handled above) or a valid
+            // descriptor registered in `tt_initialize`.
+            let n = unsafe { libc::read(fd, buf.as_mut_ptr() as *mut c_void, 16) };
+            if n < 0 {
+                eprintln!(
+                    "[libtt_shim] tttk_Xt_input_handler: pipe read error: {}",
+                    std::io::Error::last_os_error()
+                );
+                // Broken pipe — stop advertising the FD so callers deselect it.
+                PIPE_READ.store(-1, Ordering::SeqCst);
+            }
         }
-    }
 
-    // 2. Process Queue
-    if let Ok(mut q) = MSG_QUEUE.lock() {
+        // 2. Process queue.  A poisoned mutex is recovered via `into_inner`
+        //    so a panic in the producer does not permanently stall delivery.
+        let mut q = MSG_QUEUE.lock().unwrap_or_else(|e| e.into_inner());
         while let Some(msg) = q.pop_front() {
+            // Drop the lock before we dispatch so callbacks can push new
+            // messages back onto the queue without deadlocking.
+            drop(q);
             dispatch_message(msg);
+            q = MSG_QUEUE.lock().unwrap_or_else(|e| e.into_inner());
         }
-    }
+    })
 }
 
 #[unsafe(no_mangle)]
@@ -828,7 +934,11 @@ pub extern "C" fn tt_message_user(_m: *mut c_void, _i: c_int, _key: *const c_cha
 
 #[unsafe(no_mangle)]
 pub extern "C" fn tt_status_message(_s: TtStatus) -> *mut c_char {
-    CString::new("Success").unwrap().into_raw()
+    // Route through alloc_cstring so the pointer is tracked in
+    // ALLOC_REGISTRY; otherwise tt_free() on this pointer would be a no-op
+    // and the allocation would leak for every call (ToolTalk applications
+    // call this frequently during error reporting).
+    alloc_cstring("Success")
 }
 
 #[unsafe(no_mangle)]
@@ -1044,10 +1154,10 @@ pub extern "C" fn ttdt_open(
     _version: *const c_char,
     _send_started: c_int,
 ) -> *mut c_char {
-    // Returns procid
     eprintln!("[libtt_shim] ttdt_open stub called");
-    // Return a dummy procid
-    CString::new("12345").unwrap().into_raw()
+    // Must be reclaimable by tt_free(); use alloc_cstring rather than a raw
+    // CString::into_raw() so the registry tracks the allocation.
+    alloc_cstring("12345")
 }
 
 #[unsafe(no_mangle)]

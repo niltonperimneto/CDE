@@ -1,6 +1,6 @@
 use crate::format::{DBREC, OR_DBREC};
-use crate::raima::{d_close, d_open, d_recfrst, d_recread, d_setpages, S_DBOPEN, S_OKAY};
-use libc::{c_char, c_int, c_void};
+use crate::raima::{d_close, d_open, d_recfrst, d_recread, d_setpages, S_OKAY};
+use libc::c_void;
 use std::ffi::CString;
 
 pub struct DtSearchParser {
@@ -58,8 +58,7 @@ impl DtSearchParser {
     }
 
     pub fn read_objrec(&self, lock: bool) -> Result<crate::format::or_objrec, String> {
-        use crate::format::{or_objrec, OR_OBJREC};
-        use libc::c_void;
+        use crate::format::or_objrec;
 
         unsafe {
             let mut obj: or_objrec = std::mem::zeroed();
