@@ -23,3 +23,5 @@ cbindgen = { workspace = true }
 
 [dev-dependencies]
 insta = "1.47"
+serde = { workspace = true }
+serde_json = { workspace = true }

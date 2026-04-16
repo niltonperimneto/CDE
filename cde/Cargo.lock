@@ -1259,6 +1259,8 @@ dependencies = [
  "pest",
  "pest_derive",
  "rayon",
+ "serde",
+ "serde_json",
  "thiserror",
  "walkdir",
 ]
@@ -1272,6 +1274,8 @@ dependencies = [
  "miette",
  "pest",
  "pest_derive",
+ "serde",
+ "serde_json",
  "thiserror",
 ]
 

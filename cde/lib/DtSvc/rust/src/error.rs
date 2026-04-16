@@ -13,7 +13,7 @@ use std::path::PathBuf;
 )]
 pub struct ParseError {
     #[source_code]
-    pub src: NamedSource,
+    pub src: NamedSource<String>,
 
     #[label("here")]
     pub span: SourceSpan,

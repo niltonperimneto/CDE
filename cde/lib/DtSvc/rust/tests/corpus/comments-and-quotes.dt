@@ -1,0 +1,9 @@
+# This is a comment-only line
+ACTION OpenFile
+{
+    # inline comment
+    LABEL           "Open \"File\""
+    TYPE            COMMAND
+    EXEC_STRING     /usr/bin/xdg-open "%Arg_1%"
+    DESCRIPTION     "Uses the default viewer."
+}

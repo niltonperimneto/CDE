@@ -1,0 +1,25 @@
+Menu DtRootMenu
+{
+    "File"          f.menu  FileMenu
+    "Edit"          f.menu  EditMenu
+    "Help"          f.menu  HelpMenu
+    no-label        f.separator
+    "Exit"          f.exit
+}
+
+Menu FileMenu
+{
+    "New"           f.exec  xcalc
+    "Open"          f.exec  xterm
+}
+
+Menu EditMenu
+{
+    "Cut"           f.exec  xterm
+    "Copy"          f.exec  xterm
+}
+
+Menu HelpMenu
+{
+    "Contents"      f.exec  xterm
+}
