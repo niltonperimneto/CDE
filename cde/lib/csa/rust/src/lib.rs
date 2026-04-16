@@ -105,7 +105,7 @@ pub enum Update_Status {
 }
 
 
-#[allow(unsafe_attributes, unused_attributes)]
+#[allow(unused_attributes)]
 #[no_mangle]
 pub extern "C" fn xdr_Update_Status(_xdrs: *mut c_void, _obj: *mut Update_Status) -> i32 {
     1 // TRUE

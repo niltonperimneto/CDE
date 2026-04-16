@@ -66,4 +66,4 @@ const char *cde_dtwm_decl_name(const struct CdeDtwmHandle *handle, uintptr_t ind
  */
 const char *cde_dtwm_decl_body(const struct CdeDtwmHandle *handle, uintptr_t index);
 
-#endif /* CDE_LIBDTWM_PARSER_H */
+#endif  /* CDE_LIBDTWM_PARSER_H */

@@ -32,13 +32,14 @@ macro_rules! impl_xdr_func {
                     // belongs to the C caller and must NOT be freed here.
                     //
                     // drop_in_place runs Rust Drop glue, freeing inner
-                    // Vec/String/Box heap buffers. After that, the object
-                    // storage must be reinitialized with a valid value rather
-                    // than zeroed, because an all-zero bit pattern is not
-                    // necessarily a valid Rust value for these generated types.
+                    // String/Box heap buffers. Unlike C structs, many generated
+                    // Rust types do not implement Default and cannot be safely
+                    // reset with a synthetic placeholder value here.
+                    //
+                    // As with traditional xdr_free(3), callers must treat *obj
+                    // as no longer holding a valid value after free.
                     unsafe {
                         std::ptr::drop_in_place(obj);
-                        std::ptr::write(obj, Default::default());
                     }
                     1
                 }

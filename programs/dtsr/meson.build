@@ -1,6 +1,7 @@
 
 # Common defines
 dtsr_c_args = ['-DMAIN_PROGRAM', '-DNO_XLIB', '-DANSICPP', '-DMULTIBYTE', '-DNLS16']
+dtsr_inc = include_directories('../../cde/lib/DtSearch', '../../cde/lib/DtSearch/raima', '../../cde/include/Dt', '../../cde/include', '../..')
 dtsearch_dep = dependency('dtsearch')
 
 # MsgCat.c generation (similar to legacy Makefile)
@@ -39,7 +40,7 @@ executable('dtsrcreate',
   ['dtsrcreate.c', '../../cde/lib/DtSvc/DtUtil2/MsgCat.c'],
   dependencies : [dtsearch_dep, libm],
   c_args : dtsr_c_args,
-  include_directories : include_directories('../../cde/lib/DtSearch', '../../cde/lib/DtSearch/raima', '../../cde/include/Dt', '../../cde/include'),
+  include_directories : dtsr_inc,
   install : true,
   install_dir : join_paths(get_option('prefix'), 'bin')
 )
@@ -49,7 +50,7 @@ executable('dtsrdbrec',
   ['dtsrdbrec.c', '../../cde/lib/DtSvc/DtUtil2/MsgCat.c'],
   dependencies : [dtsearch_dep, libm],
   c_args : dtsr_c_args,
-  include_directories : include_directories('../../cde/lib/DtSearch', '../../cde/lib/DtSearch/raima', '../../cde/include/Dt', '../../cde/include'),
+  include_directories : dtsr_inc,
   install : true,
   install_dir : join_paths(get_option('prefix'), 'bin')
 )
@@ -59,7 +60,7 @@ executable('dtsrhan',
   ['dtsrhan.c', '../../cde/lib/DtSvc/DtUtil2/MsgCat.c'],
   dependencies : [dtsearch_dep, libm],
   c_args : dtsr_c_args,
-  include_directories : include_directories('../../cde/lib/DtSearch', '../../cde/lib/DtSearch/raima', '../../cde/include/Dt', '../../cde/include'),
+  include_directories : dtsr_inc,
   install : true,
   install_dir : join_paths(get_option('prefix'), 'bin')
 )
@@ -69,7 +70,7 @@ executable('dtsrload',
   ['dtsrload.c', '../../cde/lib/DtSvc/DtUtil2/MsgCat.c'],
   dependencies : [dtsearch_dep, libm],
   c_args : dtsr_c_args,
-  include_directories : include_directories('../../cde/lib/DtSearch', '../../cde/lib/DtSearch/raima', '../../cde/include/Dt', '../../cde/include'),
+  include_directories : dtsr_inc,
   install : true,
   install_dir : join_paths(get_option('prefix'), 'bin')
 )
@@ -79,7 +80,7 @@ executable('dtsrindex',
   ['dtsrindex.c', '../../cde/lib/DtSvc/DtUtil2/MsgCat.c'],
   dependencies : [dtsearch_dep, libm],
   c_args : dtsr_c_args,
-  include_directories : include_directories('../../cde/lib/DtSearch', '../../cde/lib/DtSearch/raima', '../../cde/include/Dt', '../../cde/include'),
+  include_directories : dtsr_inc,
   install : true,
   install_dir : join_paths(get_option('prefix'), 'bin')
 )
@@ -89,7 +90,7 @@ executable('dtsrdelete',
   ['tomita.c', '../../cde/lib/DtSvc/DtUtil2/MsgCat.c'],
   dependencies : [dtsearch_dep, libm],
   c_args : dtsr_c_args,
-  include_directories : include_directories('../../cde/lib/DtSearch', '../../cde/lib/DtSearch/raima', '../../cde/include/Dt', '../../cde/include'),
+  include_directories : dtsr_inc,
   install : true,
   install_dir : join_paths(get_option('prefix'), 'bin')
 )
@@ -99,7 +100,7 @@ executable('huffcode',
   ['huffcode.c', '../../cde/lib/DtSvc/DtUtil2/MsgCat.c'],
   dependencies : [dtsearch_dep, libm],
   c_args : dtsr_c_args,
-  include_directories : include_directories('../../cde/lib/DtSearch', '../../cde/lib/DtSearch/raima', '../../cde/include/Dt', '../../cde/include'),
+  include_directories : dtsr_inc,
   install : true,
   install_dir : join_paths(get_option('prefix'), 'bin')
 )
@@ -109,7 +110,7 @@ executable('dtsrkdump',
   ['dtsrkdump.c', '../../cde/lib/DtSvc/DtUtil2/MsgCat.c'],
   dependencies : [dtsearch_dep, libm],
   c_args : dtsr_c_args,
-  include_directories : include_directories('../../cde/lib/DtSearch', '../../cde/lib/DtSearch/raima', '../../cde/include/Dt', '../../cde/include'),
+  include_directories : dtsr_inc,
   install : true,
   install_dir : join_paths(get_option('prefix'), 'bin')
 )
@@ -119,7 +120,7 @@ executable('dtsrclean',
   ['dtsrclean.c', '../../cde/lib/DtSvc/DtUtil2/MsgCat.c'],
   dependencies : [dtsearch_dep, libm],
   c_args : dtsr_c_args,
-  include_directories : include_directories('../../cde/lib/DtSearch', '../../cde/lib/DtSearch/raima', '../../cde/include/Dt', '../../cde/include'),
+  include_directories : dtsr_inc,
   install : true,
   install_dir : join_paths(get_option('prefix'), 'bin')
 )

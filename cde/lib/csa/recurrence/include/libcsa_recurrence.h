@@ -63,4 +63,4 @@ uint32_t csa_recurrence_interval(const struct CsaRecurrenceHandle *handle);
  */
 int64_t csa_recurrence_duration(const struct CsaRecurrenceHandle *handle);
 
-#endif /* CDE_LIBCSA_RECURRENCE_H */
+#endif  /* CDE_LIBCSA_RECURRENCE_H */

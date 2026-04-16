@@ -49,8 +49,9 @@ pub extern "C" fn dthelp_engine_set_text(engine: *mut DtHelpEngine, text: *const
         engine.buffer.set_text(
             &mut engine.font_system,
             s,
-            Attrs::new(),
+            &Attrs::new(),
             cosmic_text::Shaping::Advanced,
+            None,
         );
     }
 }
@@ -71,12 +72,16 @@ pub extern "C" fn dthelp_engine_render(
     // Update buffer size
     engine
         .buffer
-        .set_size(&mut engine.font_system, width as f32, height as f32);
+        .set_size(
+            &mut engine.font_system,
+            Some(width as f32),
+            Some(height as f32),
+        );
 
     // Set scroll
     engine
         .buffer
-        .set_scroll(cosmic_text::Scroll::new(0, scroll_y as i32));
+        .set_scroll(cosmic_text::Scroll::new(0, scroll_y as f32, 0.0));
 
     engine
         .buffer
@@ -149,7 +154,7 @@ pub extern "C" fn dthelp_engine_get_height(
     // Set size to trigger shaping and height calculation
     engine
         .buffer
-        .set_size(&mut engine.font_system, width as f32, 10000.0);
+        .set_size(&mut engine.font_system, Some(width as f32), Some(10000.0));
     engine
         .buffer
         .shape_until_scroll(&mut engine.font_system, false);

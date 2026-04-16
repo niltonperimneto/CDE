@@ -3,7 +3,7 @@
 #![deny(unsafe_op_in_unsafe_fn)]
 
 use libc::{c_char, c_int, c_void};
-use std::ffi::{CStr, CString};
+use std::ffi::CString;
 use std::ptr;
 
 // Basic Types (Mapping to CDE's Tt_status, Tt_mode, etc.)
@@ -56,7 +56,7 @@ pub static Tttk_message_id: SyncConstPtr = SyncConstPtr(b"messageID\0".as_ptr() 
 
 use std::collections::{HashSet, VecDeque};
 use std::sync::atomic::{AtomicI32, Ordering};
-use std::sync::{Arc, LazyLock, Mutex, OnceLock};
+use std::sync::{LazyLock, Mutex, OnceLock};
 use std::thread;
 use std::time::Duration;
 use zbus::blocking::Connection;
@@ -586,7 +586,7 @@ pub extern "C" fn tt_pattern_register(p: *mut c_void) -> TtStatus {
     // For this shim, let's just assert validity.
     // In a real impl, we'd add it to PATTERNS.
 
-    if let Ok(mut list) = patterns().lock() {
+    if let Ok(list) = patterns().lock() {
         // The C caller retains ownership of `p` until tt_pattern_destroy;
         // we record its address as a handle for matching in the pattern list.
         // In a full implementation this would store a clone of the pattern data;

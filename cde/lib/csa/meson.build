@@ -22,9 +22,13 @@ reparser = custom_target('reparser',
   input : 'reparser.y',
   output : ['reparser.c', 'reparser.h'],
   command : [
-    'sh', '-c',
-    '@0@ -Dapi.prefix={_DtCm_yy} -Dparse.error=verbose '.format(yacc.full_path()) +
-    '-d -o @OUTPUT0@ --defines=@OUTPUT1@ @INPUT@'
+    yacc,
+    '-Dapi.prefix={_DtCm_yy}',
+    '-Dparse.error=verbose',
+    '-d',
+    '-o', '@OUTPUT0@',
+    '--defines=@OUTPUT1@',
+    '@INPUT@',
   ]
 )
 

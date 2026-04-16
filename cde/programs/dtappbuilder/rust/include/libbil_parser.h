@@ -82,4 +82,4 @@ const char *cde_bil_item_keyword(const struct BilHandle *handle, uintptr_t idx);
  */
 const char *cde_bil_item_name(const struct BilHandle *handle, uintptr_t idx);
 
-#endif /* CDE_LIBBIL_PARSER_H */
+#endif  /* CDE_LIBBIL_PARSER_H */

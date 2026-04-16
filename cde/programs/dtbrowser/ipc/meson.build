@@ -6,6 +6,7 @@ dtbrowser_ipc_lib = custom_target(
     command: [
         'cargo', 'build',
         '--release',
+        '--target-dir', meson.current_source_dir() / 'target',
         '--manifest-path', meson.current_source_dir() / 'Cargo.toml',
         '&&',
         'cp', meson.current_source_dir() / 'target/release/libdtbrowser_ipc.a', '@OUTPUT@'

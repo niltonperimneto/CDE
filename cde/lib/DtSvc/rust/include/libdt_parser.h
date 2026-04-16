@@ -80,4 +80,4 @@ const char *cde_dt_action_get_label(const struct CdeDtHandle *handle, const char
  */
 int32_t cde_dt_load_file(struct CdeDtHandle *handle, const char *file);
 
-#endif /* CDE_LIBDT_PARSER_H */
+#endif  /* CDE_LIBDT_PARSER_H */

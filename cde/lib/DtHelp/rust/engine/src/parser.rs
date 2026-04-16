@@ -1,5 +1,5 @@
 use libc::{c_char, c_int, c_void};
-use pulldown_cmark::{Event, Parser, Tag};
+use pulldown_cmark::{Event, Parser, Tag, TagEnd};
 use std::ffi::CStr;
 
 // Callback types
@@ -43,29 +43,29 @@ pub extern "C" fn dthelp_parse_markdown(
 
     for event in parser {
         match event {
-            Event::Start(Tag::Heading(_level, _, _)) => {
+            Event::Start(Tag::Heading { .. }) => {
                 // Pass level as text if needed
                 (callback)(ctx, EV_HEADER_START, std::ptr::null());
             }
-            Event::End(Tag::Heading(_, _, _)) => {
+            Event::End(TagEnd::Heading(_)) => {
                 (callback)(ctx, EV_HEADER_END, std::ptr::null());
             }
             Event::Start(Tag::Paragraph) => {
                 (callback)(ctx, EV_PARA_START, std::ptr::null());
             }
-            Event::End(Tag::Paragraph) => {
+            Event::End(TagEnd::Paragraph) => {
                 (callback)(ctx, EV_PARA_END, std::ptr::null());
             }
             Event::Start(Tag::Emphasis) => {
                 (callback)(ctx, EV_ITALIC_START, std::ptr::null());
             }
-            Event::End(Tag::Emphasis) => {
+            Event::End(TagEnd::Emphasis) => {
                 (callback)(ctx, EV_ITALIC_END, std::ptr::null());
             }
             Event::Start(Tag::Strong) => {
                 (callback)(ctx, EV_BOLD_START, std::ptr::null());
             }
-            Event::End(Tag::Strong) => {
+            Event::End(TagEnd::Strong) => {
                 (callback)(ctx, EV_BOLD_END, std::ptr::null());
             }
             Event::Code(text) => {
@@ -76,11 +76,11 @@ pub extern "C" fn dthelp_parse_markdown(
             Event::Text(text) => {
                 send_text_callback(ctx, callback, &text);
             }
-            Event::Start(Tag::Link(_, url, _title)) => {
-                send_text_callback(ctx, callback, &url);
+            Event::Start(Tag::Link { dest_url, .. }) => {
+                send_text_callback(ctx, callback, &dest_url);
                 (callback)(ctx, EV_LINK_START, std::ptr::null());
             }
-            Event::End(Tag::Link(_, _, _)) => {
+            Event::End(TagEnd::Link) => {
                 (callback)(ctx, EV_LINK_END, std::ptr::null());
             }
             _ => {}

@@ -39,7 +39,7 @@ use miette::{Diagnostic, NamedSource, SourceSpan};
 )]
 pub struct QueryError {
     #[source_code]
-    pub src: NamedSource,
+    pub src: NamedSource<String>,
     #[label("here")]
     pub span: SourceSpan,
     pub message: String,

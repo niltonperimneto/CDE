@@ -1,5 +1,5 @@
-use crate::{TtCallback, TtCategory, TtScope, TtStatus, TT_OK};
-use libc::{c_char, c_void};
+use crate::{TtCallback, TtCategory, TtScope};
+use libc::c_char;
 use std::ffi::CStr;
 
 #[derive(Debug)]

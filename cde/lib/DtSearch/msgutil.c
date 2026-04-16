@@ -113,13 +113,13 @@ char* nowstring(time_t* now) {
   static char buf[128];
   time_t mynow;
   struct tm* time_ptr;
-  /* _Xltimeparams   localtime_buf; -- Unused */
+  _Xltimeparams localtime_buf;
 
   if (now == NULL) {
     now = &mynow;
     time(now);
   }
-  time_ptr = _XLocaltime(now);
+  time_ptr = _XLocaltime(now, localtime_buf);
   strftime(buf, sizeof(buf), CATGETS(dtsearch_catd, MS_misc, 2, "%Y/%m/%d,%H:%M:%S"), time_ptr);
   return buf;
 } /* nowstring() */
