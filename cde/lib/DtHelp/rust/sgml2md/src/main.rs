@@ -1,3 +1,17 @@
+//! `sgml2md` — Convert CDE's SGML/SDL help sources into Markdown.
+//!
+//! This utility walks an input tree of SGML files (extensions `.sgm`, `.sgml`,
+//! `.sdl`) and emits an equivalent `.md` file per input into the output
+//! directory.  It is a best-effort converter for the legacy CDE help corpus
+//! and deliberately does not aim for full DocBook fidelity.
+//!
+//! # XML parser version
+//!
+//! Pinned to `quick-xml = "0.39"`.  The 0.30 -> 0.39 migration moved reader
+//! configuration onto [`Reader::config_mut`] and removed the short-hand
+//! `unescape()` method on `BytesText`; we now decode via [`BytesText::decode`]
+//! and swallow the (expected) unknown-entity errors common in legacy SGML.
+
 // This crate has no FFI obligations; forbid all unsafe code.
 #![forbid(unsafe_code)]
 #![deny(unsafe_op_in_unsafe_fn)]
@@ -55,9 +69,15 @@ fn main() -> anyhow::Result<()> {
 
 fn convert_file(input: &std::path::Path, output: &std::path::Path) -> anyhow::Result<()> {
     let mut reader = Reader::from_file(input)?;
-    reader.trim_text(true);
-    reader.check_end_names(false);
-    reader.check_comments(false);
+    // quick-xml 0.39: configuration is set through `config_mut()`.  Legacy
+    // SGML commonly has mismatched end-tag names (e.g. `<Para>` closed by
+    // `</para>`) and stray DOCTYPE comments; be permissive about both.
+    {
+        let cfg = reader.config_mut();
+        cfg.trim_text(true);
+        cfg.check_end_names = false;
+        cfg.check_comments = false;
+    }
 
     let mut buf = Vec::new();
     let mut markdown = String::new();
@@ -101,13 +121,13 @@ fn convert_file(input: &std::path::Path, output: &std::path::Path) -> anyhow::Re
                 }
             }
             Ok(Event::Text(e)) => {
-                // Try to unescape, fallback to raw string if it fails (likely due to custom entities)
-                match e.unescape() {
-                    Ok(text) => markdown.push_str(&text),
+                // quick-xml 0.39 no longer exposes `BytesText::unescape`; we
+                // decode to UTF-8 and fall back to a lossy raw view if the
+                // buffer is not valid UTF-8 (rare but possible in the legacy
+                // ISO-8859-1 SGML sources).
+                match e.decode() {
+                    Ok(text) => markdown.push_str(text.as_ref()),
                     Err(_) => {
-                        // If standard unescape fails, we might have custom entities.
-                        // For now, let's just interpret as utf8 lossy and hope for the best,
-                        // or manually replace common ones.
                         let text = String::from_utf8_lossy(e.as_ref());
                         markdown.push_str(&text);
                     }

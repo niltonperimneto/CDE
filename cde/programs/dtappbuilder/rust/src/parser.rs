@@ -21,11 +21,11 @@
 use crate::ast::{Arg, BilFile, Item};
 use crate::error::BilError;
 use nom::{
-    IResult,
+    IResult, Parser,
     branch::alt,
-    bytes::complete::{escaped_transform, is_not, tag, take_while, take_while1},
+    bytes::complete::{escaped_transform, is_not, tag, take_while1},
     character::complete::{anychar, char, digit1, multispace0, multispace1},
-    combinator::{map, map_res, opt, recognize, value},
+    combinator::{map, opt, recognize, value},
     multi::many0,
     sequence::{delimited, preceded},
 };
@@ -87,7 +87,8 @@ fn keyword(input: &str) -> IResult<&str, &str> {
     recognize(preceded(
         char(':'),
         take_while1(|c: char| c.is_ascii_alphanumeric() || c == '-' || c == '_' || c == '.'),
-    ))(input)
+    ))
+    .parse(input)
 }
 
 /// A bare atom (no leading `:`): identifier, boolean, version number part, etc.
@@ -95,7 +96,8 @@ fn bare_atom(input: &str) -> IResult<&str, &str> {
     let (input, _) = ws(input)?;
     take_while1(|c: char| {
         c.is_ascii_alphanumeric() || c == '_' || c == '-' || c == '.' || c == '/'
-    })(input)
+    })
+    .parse(input)
 }
 
 // ---------------------------------------------------------------------------
@@ -104,7 +106,7 @@ fn bare_atom(input: &str) -> IResult<&str, &str> {
 
 fn integer(input: &str) -> IResult<&str, i64> {
     let (input, _) = ws(input)?;
-    let (rest, s) = recognize(preceded(opt(char('-')), digit1))(input)?;
+    let (rest, s) = recognize(preceded(opt(char('-')), digit1)).parse(input)?;
     // Make sure the number isn't immediately followed by more ident chars
     // (that would make it a bare atom like "1st", not a number).
     if rest.starts_with(|c: char| c.is_ascii_alphabetic() || c == '_') {
@@ -121,10 +123,9 @@ fn integer(input: &str) -> IResult<&str, i64> {
 
 fn float(input: &str) -> IResult<&str, f64> {
     let (input, _) = ws(input)?;
-    let (rest, s) = recognize(preceded(
-        opt(char('-')),
-        nom::sequence::tuple((digit1, char('.'), digit1)),
-    ))(input)?;
+    // nom 8 removed `sequence::tuple`; a bare tuple of parsers implements
+    // `Parser` directly, so we just nest them here.
+    let (rest, s) = recognize(preceded(opt(char('-')), (digit1, char('.'), digit1))).parse(input)?;
     let f: f64 = s.parse().map_err(|_| {
         nom::Err::Error(nom::error::Error::new(input, nom::error::ErrorKind::Float))
     })?;
@@ -149,19 +150,19 @@ fn string_lit(input: &str) -> IResult<&str, String> {
                     value("\n", tag("n")),
                     value("\t", tag("t")),
                     value("\r", tag("r")),
-                    // Unknown escape: consume the next character so parsing
-                    // always makes progress (avoids infinite loop in
-                    // `escaped_transform` when encountering e.g. `\x`).
-                    map_res(anychar, |c: char| -> Result<&'static str, ()> {
-                        let _ = c; // discard — we can't easily return an owned
-                        Ok("")     // string here; drop the escape sequence
-                    }),
+                    // Unknown escape: eat the next character so parsing always
+                    // makes progress (avoids infinite loop on e.g. `\x`).  The
+                    // original character is dropped because `escaped_transform`
+                    // requires a `&'static str`-like output; this matches the
+                    // legacy Yacc scanner, which also silently discarded them.
+                    value("", anychar),
                 )),
             )),
             |opt_s: Option<String>| opt_s.unwrap_or_default(),
         ),
         char('"'),
-    )(input)
+    )
+    .parse(input)
 }
 
 // ---------------------------------------------------------------------------
@@ -180,13 +181,14 @@ fn arg(input: &str) -> IResult<&str, Arg> {
         // Keyword atom (":something") — may appear inside lists.
         map(keyword, |s: &str| Arg::Atom(s.to_owned())),
         map(bare_atom, |s: &str| Arg::Atom(s.to_owned())),
-    ))(input)
+    ))
+    .parse(input)
 }
 
 /// A parenthesised list of arguments.
 fn list(input: &str) -> IResult<&str, Vec<Arg>> {
     let (input, _) = ws(input)?;
-    delimited(char('('), many0(arg), preceded(ws, char(')')))(input)
+    delimited(char('('), many0(arg), preceded(ws, char(')'))).parse(input)
 }
 
 // ---------------------------------------------------------------------------
@@ -224,7 +226,7 @@ fn item(input: &str) -> IResult<&str, Item> {
 
 fn bil_version(input: &str) -> IResult<&str, (u32, u32)> {
     let (input, _) = ws(input)?;
-    let (input, _) = tag(":bil-version")(input)?;
+    let (input, _) = tag(":bil-version").parse(input)?;
     let (input, _) = multispace1(input)?;
     let (input, major_s) = digit1(input)?;
     let (input, _) = multispace1(input)?;
@@ -236,8 +238,8 @@ fn bil_version(input: &str) -> IResult<&str, (u32, u32)> {
 
 fn parse_file(input: &str) -> IResult<&str, BilFile> {
     let (input, _) = ws(input)?;
-    let (input, version) = opt(bil_version)(input)?;
-    let (input, items) = many0(item)(input)?;
+    let (input, version) = opt(bil_version).parse(input)?;
+    let (input, items) = many0(item).parse(input)?;
     let (input, _) = ws(input)?;
     Ok((input, BilFile { version, items }))
 }

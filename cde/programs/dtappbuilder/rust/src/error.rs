@@ -9,8 +9,10 @@ use miette::{Diagnostic, NamedSource, SourceSpan};
     help("BIL files are `:keyword value` lists produced by dtappbuilder — see `programs/dtappbuilder/src/libABil/bil_parse.y`")
 )]
 pub struct BilError {
+    // miette 7 made `NamedSource` generic over its backing `SourceCode`; we
+    // always own the full file contents as a `String`, so pin the parameter.
     #[source_code]
-    pub src: NamedSource,
+    pub src: NamedSource<String>,
     #[label("here")]
     pub span: SourceSpan,
     pub message: String,
