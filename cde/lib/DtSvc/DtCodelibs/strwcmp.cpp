@@ -63,7 +63,7 @@ static int match_class(const char *, char);
 
 /* INLINE */
 static int
-next_char(const char *pattern, const char **cpp = NULL)
+next_char(const char *pattern, const char **cpp = nullptr)
 {
     int ret;
     wchar_t __nlh_char[1];
@@ -78,7 +78,7 @@ next_char(const char *pattern, const char **cpp = NULL)
 	    ret = QUOTE | (int)CHARADV(pattern);
     }
 
-    if (cpp != NULL)
+    if (cpp != nullptr)
 	*cpp = pattern;
     return ret;
 }
@@ -123,7 +123,7 @@ strwpat(const char *pattern)
 	prev_pattern = (char *)pattern;
     }
 
-    return NULL;
+    return nullptr;
 }
 
 /*
@@ -288,10 +288,10 @@ MAIN()
     {
 	putchar('\n');
 	printf("pattern:  ");
-	if (fgets(pattern, sizeof(pattern)-1, stdin) == NULL)
+	if (fgets(pattern, sizeof(pattern)-1, stdin) == nullptr)
 	    break;
 	printf("string:   ");
-	if (fgets(string, sizeof(pattern)-1, stdin) == NULL)
+	if (fgets(string, sizeof(pattern)-1, stdin) == nullptr)
 	    break;
 	printf("MATCH is %s\n",
 		((strwcmp(pattern, string) == 0) ? "SUCCEEDED" : "FAILED"));

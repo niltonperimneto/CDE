@@ -89,7 +89,7 @@ static PropDefaults static_defaults[] ={
 { DMX_PROPKEY_PRINT_HEADERS,	DMX_PROPVAL_STANDARD },
 { DMX_PROPKEY_MESSAGE_SEPARATOR,DMX_PROPVAL_PAGE_BREAK },
 { DMX_PROPKEY_SEPARATOR_STRING,	"-" },
-{ NULL,				NULL }
+{ nullptr,				nullptr }
 };
 
 DtVirtArray<PropDefaults*> *PropSource::_dynamic_defaults =
@@ -113,7 +113,7 @@ PropSource::setDefaultValue(char *key, char *value)
 	df = (PropDefaults*) (*_dynamic_defaults)[i];
 	if (0 == strcmp(key, df->key))
 	{
-	    if (NULL != df->value) free((void*) df->value);
+	    if (nullptr != df->value) free((void*) df->value);
 	    df->value = strdup(value);
 	    return;
 	}
@@ -147,12 +147,12 @@ PropSource::getDefaultValue(void)
 /////////////////////////////////////////////////////////////////
 const char *MailRcSource::getValue(DtMailBoolean decrypt)
 {
-  const char *value = NULL;
+  const char *value = nullptr;
   DtMailEnv error;
 
   _mail_rc->getValue(error, _key , &value, decrypt);
 
-  if (value == NULL || error.isSet())
+  if (value == nullptr || error.isSet())
   {
       value = getDefaultValue();
       return value;

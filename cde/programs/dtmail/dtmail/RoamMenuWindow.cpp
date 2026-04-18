@@ -129,7 +129,7 @@ extern nl_catd	DtMailMsgCat;
 #define MAXIMUM_PATH_LENGTH	2048
 
 #define		RMW_CONCAT_MAILRC_KEY(buf, pfx, key) \
-{ if (NULL==(pfx)) (void) sprintf((buf), "%s", (key)); \
+{ if (nullptr==(pfx)) (void) sprintf((buf), "%s", (key)); \
   else (void) sprintf((buf), "%s_%s", (pfx), (key)); }
 
 char *
@@ -159,7 +159,7 @@ RoamMenuWindow::_resources[] =
     sizeof( XtRString ),
     XtOffset ( RoamMenuWindow *, _mailbox_name_resource ),
     XtRString,
-    ( XtPointer ) NULL,
+    ( XtPointer ) nullptr,
   },
 
   {
@@ -169,7 +169,7 @@ RoamMenuWindow::_resources[] =
     sizeof( XtRString ),
     XtOffset ( RoamMenuWindow *, _mail_files_resource ),
     XtRString,
-    ( XtPointer ) NULL,
+    ( XtPointer ) nullptr,
   },
 
 };
@@ -199,26 +199,26 @@ RoamMenuWindow::RoamMenuWindow (char *name) : MenuWindow ("dtmail", True)
     mail_error.clear();
     
     // Get a handle to the Inbox.
-    char		*mail_file = NULL;
+    char		*mail_file = nullptr;
     DtMailObjectSpace	space;
     DtMail::Session	*d_session = theRoamApp.session()->session();
     DtMail::MailRc	*mailrc = d_session->mailRc(mail_error);
-    const char		*value = NULL;
-    char		*buffer = NULL;
+    const char		*value = nullptr;
+    char		*buffer = nullptr;
 
-    _forward_filename = NULL;
+    _forward_filename = nullptr;
     // Set the _mailbox_name here.  
     // In the absence of the RMW's title being set via title(),
     // the _mailbox_name is what will be used in initialize().
-    _mailbox_name = NULL;
+    _mailbox_name = nullptr;
     if (name)
       mailboxName(name);
     else
       mailboxName("");
-    _mailbox_fullpath = NULL;
+    _mailbox_fullpath = nullptr;
 
-    _mailbox_name_resource = NULL;
-    _mail_files_resource = NULL;
+    _mailbox_name_resource = nullptr;
+    _mail_files_resource = nullptr;
     _full_header_resource = FALSE;
 
     _required_conversion = FALSE;
@@ -226,9 +226,9 @@ RoamMenuWindow::RoamMenuWindow (char *name) : MenuWindow ("dtmail", True)
     _delete_on_quit = FALSE;
     _we_called_newmail = FALSE;
 
-    _dialogs = NULL;
+    _dialogs = nullptr;
     _numDialogs = 0;
-    _findDialog = NULL;
+    _findDialog = nullptr;
 
     //
     // ContainerList
@@ -236,175 +236,175 @@ RoamMenuWindow::RoamMenuWindow (char *name) : MenuWindow ("dtmail", True)
     _display_cached_list = FALSE;
     _max_cached_list_size = 0;
     _first_cached_item = 0;
-    _user_containerlist = NULL;
-    _cached_containerlist = NULL;
-    _filemenu2 = NULL;
+    _user_containerlist = nullptr;
+    _cached_containerlist = nullptr;
+    _filemenu2 = nullptr;
 
     //
     // File Menu
     //
-    _file_cmdlist = NULL;
-    _file_separator = NULL;
-    _file_check_new_mail = NULL;
-    _file_open_inbox	= NULL;
-    _file_new_container = NULL;
-    _file_open	= NULL;
-    _file_destroy_deleted_msgs = NULL;
-    _file_quit	= NULL;
+    _file_cmdlist = nullptr;
+    _file_separator = nullptr;
+    _file_check_new_mail = nullptr;
+    _file_open_inbox	= nullptr;
+    _file_new_container = nullptr;
+    _file_open	= nullptr;
+    _file_destroy_deleted_msgs = nullptr;
+    _file_quit	= nullptr;
 
-    _file_cascade = NULL;
+    _file_cascade = nullptr;
 
     //
     // OpenContainer Cascade Menu
     //
-    _open_container_cmdlist = NULL;
-    _open_container_separator = NULL;
-    _open_container_inbox = NULL;
-    _open_container_other = NULL;
+    _open_container_cmdlist = nullptr;
+    _open_container_separator = nullptr;
+    _open_container_inbox = nullptr;
+    _open_container_other = nullptr;
 
-    _open_container_containerlist = NULL;
-    _open_container_containerlist_cached = NULL;
-    _opencontainerMenu = NULL;
+    _open_container_containerlist = nullptr;
+    _open_container_containerlist_cached = nullptr;
+    _opencontainerMenu = nullptr;
 
     //
     // Message Menu
     //
-    _msg_cmdlist = NULL;
-    _msg_separator = NULL;
-    _msg_open = NULL;
-    _msg_save_as = NULL;
-    _msg_print = NULL;
-    _msg_find = NULL;
-    _msg_select_all = NULL;
-    _msg_delete = NULL;
-    _msg_undelete_last = NULL;
-    _msg_undelete_from_list = NULL;
+    _msg_cmdlist = nullptr;
+    _msg_separator = nullptr;
+    _msg_open = nullptr;
+    _msg_save_as = nullptr;
+    _msg_print = nullptr;
+    _msg_find = nullptr;
+    _msg_select_all = nullptr;
+    _msg_delete = nullptr;
+    _msg_undelete_last = nullptr;
+    _msg_undelete_from_list = nullptr;
     
 
     //
     // CopyTo Cascade Menu
     //
-    _copyto_cmdlist = NULL;
-    _copyto_separator = NULL;
-    _copyto_inbox = NULL;
-    _copyto_other = NULL;
+    _copyto_cmdlist = nullptr;
+    _copyto_separator = nullptr;
+    _copyto_inbox = nullptr;
+    _copyto_other = nullptr;
 
-    _copyto_containerlist = NULL;
-    _copyto_containerlist_cached = NULL;
-    _copytoMenu = NULL;
-    _message_cascade = NULL;
+    _copyto_containerlist = nullptr;
+    _copyto_containerlist_cached = nullptr;
+    _copytoMenu = nullptr;
+    _message_cascade = nullptr;
     
 
     //
     // Edit Menu
     //
-    _edit_cmdlist = NULL;
-    _edit_copy = NULL;
-    _edit_select_all = NULL;
+    _edit_cmdlist = nullptr;
+    _edit_copy = nullptr;
+    _edit_select_all = nullptr;
 
 
     //
     // Attachment menu
     //
-    _att_cmdlist = NULL;
-    _att_save = NULL;
-    _att_select_all = NULL;
+    _att_cmdlist = nullptr;
+    _att_save = nullptr;
+    _att_select_all = nullptr;
 
     //
     // View Menu
     //
-    _view_cmdlist = NULL;
-    _view_separator = NULL;
-    _view_next = NULL;
-    _view_previous = NULL;
-    _view_abbrev_headers = NULL;
-    _view_sortTD = NULL;
-    _view_sortSender = NULL;	
-    _view_sortSubject = NULL;	
-    _view_sortSize = NULL;	
-    _view_sortStatus = NULL;
+    _view_cmdlist = nullptr;
+    _view_separator = nullptr;
+    _view_next = nullptr;
+    _view_previous = nullptr;
+    _view_abbrev_headers = nullptr;
+    _view_sortTD = nullptr;
+    _view_sortSender = nullptr;	
+    _view_sortSubject = nullptr;	
+    _view_sortSize = nullptr;	
+    _view_sortStatus = nullptr;
     
     //
     // Compose Menu
     //
-    _comp_cmdlist = NULL;
-    _comp_separator = NULL;
-    _comp_new = NULL;
-    _comp_new_include = NULL;
-    _comp_forward = NULL;
-    _comp_replySender = NULL;
-    _comp_replyAll = NULL;
-    _comp_replySinclude = NULL;
-    _comp_replyAinclude = NULL;
+    _comp_cmdlist = nullptr;
+    _comp_separator = nullptr;
+    _comp_new = nullptr;
+    _comp_new_include = nullptr;
+    _comp_forward = nullptr;
+    _comp_replySender = nullptr;
+    _comp_replyAll = nullptr;
+    _comp_replySinclude = nullptr;
+    _comp_replyAinclude = nullptr;
     
     
     //
     // Move Menu
     //
-    _move_cmdlist = NULL;
-    _move_separator = NULL;
-    _move_inbox = NULL;
-    _move_other = NULL;
+    _move_cmdlist = nullptr;
+    _move_separator = nullptr;
+    _move_inbox = nullptr;
+    _move_other = nullptr;
 
-    _move_containerlist = NULL;
-    _move_containerlist_cached = NULL;
-    _moveMenu = NULL;
-    _move_cascade = NULL;
+    _move_containerlist = nullptr;
+    _move_containerlist_cached = nullptr;
+    _moveMenu = nullptr;
+    _move_cascade = nullptr;
 
 
     // Help Menu
-    _help_cmdlist = NULL;
-    _help_separator = NULL;
-    _help_overview = NULL;
-    _help_tasks = NULL;
-    _help_reference = NULL;
-    _help_on_item = NULL;
-    _help_using_help = NULL;
-    _help_about_mailer = NULL;
+    _help_cmdlist = nullptr;
+    _help_separator = nullptr;
+    _help_overview = nullptr;
+    _help_tasks = nullptr;
+    _help_reference = nullptr;
+    _help_on_item = nullptr;
+    _help_using_help = nullptr;
+    _help_about_mailer = nullptr;
     
     //
     // Message Popup
     //
-    _msgsPopup_cmdlist = NULL;
-    _msgsPopup_separator = NULL;
+    _msgsPopup_cmdlist = nullptr;
+    _msgsPopup_separator = nullptr;
 
-    _menuPopupMsgs = NULL;
-    _msgsPopupMenu = NULL;
-    _msgsPopupMoveMenu = NULL;
+    _menuPopupMsgs = nullptr;
+    _msgsPopupMenu = nullptr;
+    _msgsPopupMoveMenu = nullptr;
     
     //
     // Text Popup
     //
-    _textPopup_cmdlist = NULL;
-    _textPopup_separator = NULL;
+    _textPopup_cmdlist = nullptr;
+    _textPopup_separator = nullptr;
     
     //
     // Attachment Popup
     //
-    _attPopup_cmdlist = NULL;
-    _attPopup_separator = NULL;
-    _attActions_cmdlist = NULL;
+    _attPopup_cmdlist = nullptr;
+    _attPopup_separator = nullptr;
+    _attActions_cmdlist = nullptr;
 
-    _attachmentMenu = NULL;
+    _attachmentMenu = nullptr;
 
     //
     // ConvertContainerCmd
     //
-    _convertContainerCmd = NULL;
-    _openContainerCmd = NULL;
+    _convertContainerCmd = nullptr;
+    _openContainerCmd = nullptr;
 
     //
     // Message view pane buttons
     //
-    _delete_button = NULL;
-    _next_button = NULL;
-    _previous_button = NULL;
-    _replySender_button = NULL;
-    _print_button = NULL;
-    _move_copy_button = NULL;
+    _delete_button = nullptr;
+    _next_button = nullptr;
+    _previous_button = nullptr;
+    _replySender_button = nullptr;
+    _print_button = nullptr;
+    _move_copy_button = nullptr;
 
     
-    _mailbox    = NULL;
+    _mailbox    = nullptr;
     d_session->queryImpl(mail_error,
 			 d_session->getDefaultImpl(mail_error),
 			 DtMailCapabilityInboxName,
@@ -417,8 +417,8 @@ RoamMenuWindow::RoamMenuWindow (char *name) : MenuWindow ("dtmail", True)
 
     free((void*)mail_file);
 
-    _list	= NULL;
-    _genDialog  = NULL;
+    _list	= nullptr;
+    _genDialog  = nullptr;
 
     //
     // Initialize private variables
@@ -426,12 +426,12 @@ RoamMenuWindow::RoamMenuWindow (char *name) : MenuWindow ("dtmail", True)
     _mbox_image = 0;
     _mbox_mask  = 0;
 
-    _my_editor = NULL;
-    _message = NULL;
-    _message_summary = NULL;
-    _rowOfLabels = NULL;
-    _rowOfButtons = NULL;
-    _rowOfMessageStatus = NULL;
+    _my_editor = nullptr;
+    _message = nullptr;
+    _message_summary = nullptr;
+    _rowOfLabels = nullptr;
+    _rowOfButtons = nullptr;
+    _rowOfMessageStatus = nullptr;
 
     _quitWorkprocID = 0;
     _clear_message_p = FALSE;
@@ -453,7 +453,7 @@ RoamMenuWindow::RoamMenuWindow (char *name) : MenuWindow ("dtmail", True)
     
     mail_error.clear();
     mailrc->getValue(mail_error, buffer, &value);
-    if (mail_error.isSet() || NULL == value)
+    if (mail_error.isSet() || nullptr == value)
       _last_sorted_by = SortTimeDate;
     else
       _last_sorted_by = (SortBy) atoi(value);
@@ -475,25 +475,25 @@ RoamMenuWindow::~RoamMenuWindow()
 	// exit(0)??
     }
     
-    if (NULL != _forward_filename)
+    if (nullptr != _forward_filename)
       free(_forward_filename);
     if (_mailbox_name)
         free((void*) _mailbox_name);
     if (_mailbox_fullpath)
         free((void*) _mailbox_fullpath);
 
-    if (NULL != _dialogs)
+    if (nullptr != _dialogs)
 	delete []_dialogs;
-    if (NULL != _findDialog)
+    if (nullptr != _findDialog)
       delete _findDialog;
 
 
     // ContainerLists
-    if (NULL != _user_containerlist)
+    if (nullptr != _user_containerlist)
       delete _user_containerlist;
-    if (NULL != _cached_containerlist)
+    if (nullptr != _cached_containerlist)
       delete _cached_containerlist;
-    if (NULL != _filemenu2)
+    if (nullptr != _filemenu2)
       free((void*) _filemenu2);
 
     // File Menu
@@ -514,9 +514,9 @@ RoamMenuWindow::~RoamMenuWindow()
     delete	_open_container_inbox;
     delete	_open_container_other;
 
-    if (NULL != _open_container_containerlist)
+    if (nullptr != _open_container_containerlist)
       delete _open_container_containerlist;
-    if (NULL != _open_container_containerlist_cached)
+    if (nullptr != _open_container_containerlist_cached)
       delete _open_container_containerlist_cached;
 
 
@@ -537,9 +537,9 @@ RoamMenuWindow::~RoamMenuWindow()
     delete	_copyto_inbox;
     delete	_copyto_other;
 
-    if (NULL != _copyto_containerlist)
+    if (nullptr != _copyto_containerlist)
       delete _copyto_containerlist;
-    if (NULL != _copyto_containerlist_cached)
+    if (nullptr != _copyto_containerlist_cached)
       delete _copyto_containerlist_cached;
 
     // Edit Menu
@@ -581,9 +581,9 @@ RoamMenuWindow::~RoamMenuWindow()
     delete	_move_inbox;
     delete	_move_other;
 
-    if (NULL != _move_containerlist)
+    if (nullptr != _move_containerlist)
       delete _move_containerlist;
-    if (NULL != _move_containerlist_cached)
+    if (nullptr != _move_containerlist_cached)
       delete _move_containerlist_cached;
 
     // Help Menu
@@ -712,8 +712,8 @@ RoamMenuWindow::createWorkArea(Widget parent)
     Dimension x, y, width, height, bwid;
     VacationCmd *vacation_cmd = theRoamApp.vacation();
 
-    form1 = XmCreateForm(parent, "Work_Area",  NULL, 0);
-    XtVaSetValues(form1, XmNresizePolicy, XmRESIZE_NONE, NULL);
+    form1 = XmCreateForm(parent, "Work_Area",  nullptr, 0);
+    XtVaSetValues(form1, XmNresizePolicy, XmRESIZE_NONE, nullptr);
 
     printHelpId("form1", form1);
     /* add help callback */
@@ -721,7 +721,7 @@ RoamMenuWindow::createWorkArea(Widget parent)
     XtAddCallback(form1, XmNhelpCallback, HelpCB, (void *)DTMAILWINDOWID);
 
     panedW = XtCreateManagedWidget("panedW", xmPanedWindowWidgetClass,
-				   form1, NULL, 0);
+				   form1, nullptr, 0);
     printHelpId ("panedW", panedW);
     /* add help callback */
     // XtAddCallback(panedW, XmNhelpCallback, HelpCB, helpId);
@@ -734,17 +734,17 @@ RoamMenuWindow::createWorkArea(Widget parent)
 	XmNsashIndent, -30,
 	XmNsashWidth, 18,
 	XmNsashHeight, 12,
-	NULL );
+	nullptr );
 
 
-    form2 = XtCreateManagedWidget("form2", xmFormWidgetClass, panedW, NULL, 0);
-    XtVaSetValues(form2, XmNallowResize, True, NULL);
+    form2 = XtCreateManagedWidget("form2", xmFormWidgetClass, panedW, nullptr, 0);
+    XtVaSetValues(form2, XmNallowResize, True, nullptr);
     printHelpId ("form2", form2);
     /* add help callback */
     // XtAddCallback(form2, XmNhelpCallback, HelpCB, helpId);
 
     _rowOfLabels =
-      XtCreateManagedWidget("RowOfLabels", xmFormWidgetClass, form2, NULL, 0);
+      XtCreateManagedWidget("RowOfLabels", xmFormWidgetClass, form2, nullptr, 0);
 
     printHelpId("rowOfLabels", _rowOfLabels);
     /* add help callback */
@@ -761,7 +761,7 @@ RoamMenuWindow::createWorkArea(Widget parent)
 		  XmNspacing, 120,
 		  XmNmarginWidth, 10,
 		  XmNentryAlignment, XmALIGNMENT_CENTER,
-		  NULL);
+		  nullptr);
 
     _list = new MsgScrollingList( this, form2, "Message_List");
     msgListDragSetup();
@@ -769,17 +769,17 @@ RoamMenuWindow::createWorkArea(Widget parent)
     DtMailEnv error;
     DtMail::Session *d_session = theRoamApp.session()->session();
     DtMail::MailRc  *mailrc = d_session->mailRc(error);
-    const char      *value = NULL;
+    const char      *value = nullptr;
     int		    msgnums = False;
 
     this->addToRowOfLabels(_list);
 
     // See if the header size has changed.
-    value = NULL;
+    value = nullptr;
     mailrc->getValue(error, "headerlines", &value);
     if (error.isSet()) value = strdup("15");
 
-    int header_lines = (int) strtol(value, NULL, 10);
+    int header_lines = (int) strtol(value, nullptr, 10);
     _list->visibleItems(header_lines);
     free((void*) value);
 
@@ -787,9 +787,9 @@ RoamMenuWindow::createWorkArea(Widget parent)
 	_list->get_scrolling_list(), XmNhelpCallback, 
 	HelpCB, (void *)DTMAILMSGLISTID);
 
-    XtVaSetValues(_list->get_scrolling_list(), XmNuserData, this, NULL);
+    XtVaSetValues(_list->get_scrolling_list(), XmNuserData, this, nullptr);
     _rowOfButtons =
-      XtCreateManagedWidget("RowColumn", xmFormWidgetClass, form2, NULL, 0);
+      XtCreateManagedWidget("RowColumn", xmFormWidgetClass, form2, nullptr, 0);
     printHelpId ("rowOfButtons", _rowOfButtons);
     // Add help callback
     // XtAddCallback(_rowOfButtons, XmNhelpCallback, HelpCB, helpId);
@@ -806,19 +806,19 @@ RoamMenuWindow::createWorkArea(Widget parent)
 		XmNbottomAttachment, XmATTACH_WIDGET,
 		XmNbottomWidget, _rowOfButtons,
 		XmNbottomOffset, 7,
-		NULL );
+		nullptr );
 
     XtVaSetValues(_rowOfButtons,
 		  XmNrightAttachment,XmATTACH_FORM, 
 		  XmNleftAttachment,XmATTACH_FORM, 
 		  XmNbottomAttachment, XmATTACH_FORM,
 		  XmNresizable, FALSE, 
-		  NULL );
+		  nullptr );
 
     this->addToRowOfButtons();
 
-    form3 = XtCreateManagedWidget("form3", xmFormWidgetClass, panedW, NULL, 0);
-    XtVaSetValues(form3, XmNallowResize, True, NULL);
+    form3 = XtCreateManagedWidget("form3", xmFormWidgetClass, panedW, nullptr, 0);
+    XtVaSetValues(form3, XmNallowResize, True, nullptr);
     printHelpId ("form3", form3);
     // Add help callback
     // XtAddCallback(form3, XmNhelpCallback, HelpCB, helpId);
@@ -828,18 +828,18 @@ RoamMenuWindow::createWorkArea(Widget parent)
 	XmNrightAttachment,XmATTACH_FORM, 
 	XmNleftAttachment,XmATTACH_FORM, 
 	XmNtopAttachment,XmATTACH_FORM, 
-	NULL );
+	nullptr );
 #endif
 
     _rowOfMessageStatus =
-      XtCreateManagedWidget("Message_Status", xmFormWidgetClass, form3, NULL,0);
+      XtCreateManagedWidget("Message_Status", xmFormWidgetClass, form3, nullptr,0);
 
      XtVaSetValues(_rowOfMessageStatus,
   	XmNrightAttachment,XmATTACH_FORM, 
   	XmNleftAttachment,XmATTACH_FORM, 
   	XmNtopAttachment,XmATTACH_FORM,
  	XmNtopOffset, 5,
- 	NULL );
+ 	nullptr );
 
     this->addToRowOfMessageStatus();
 
@@ -862,7 +862,7 @@ RoamMenuWindow::createWorkArea(Widget parent)
 	XmNtopAttachment,XmATTACH_WIDGET, 
 	XmNtopWidget, _rowOfMessageStatus,
 	XmNbottomAttachment, XmATTACH_FORM,
-	NULL );
+	nullptr );
 
     DtMailEnv mail_error;
 
@@ -871,14 +871,14 @@ RoamMenuWindow::createWorkArea(Widget parent)
     mailboxFullpath(mailboxName());
 
     // Set the appShell's title to be _mailbox_fullpath
-    if (vacation_cmd != NULL && vacation_cmd->priorVacationRunning())
+    if (vacation_cmd != nullptr && vacation_cmd->priorVacationRunning())
       setVacationTitle();
     else
-      setTitle(NULL);
+      setTitle(nullptr);
 
     // Set the icon name to the folder name.  Extract foldername from full path.
     char *fname = strrchr(_mailbox_fullpath, '/');
-    if (fname == NULL)
+    if (fname == nullptr)
       setIconTitle(_mailbox_fullpath);
     else
     {
@@ -890,18 +890,18 @@ RoamMenuWindow::createWorkArea(Widget parent)
     XtManageChild(_list->baseWidget());
     XtManageChild(form1);
     
-    value = NULL;
+    value = nullptr;
     mailrc->getValue(error, "retrieveinterval", &value);
     if (error.isNotSet() && value && *value != '\0')
     {
-	long ping = (time_t) strtol(value, NULL, 10);
+	long ping = (time_t) strtol(value, nullptr, 10);
 	if (ping <= 0)
 	  _checkformail_when_mapped = FALSE;
 	else
 	  _checkformail_when_mapped = TRUE;
     }
     error.clear();
-    if (NULL != value) free((void*) value);
+    if (nullptr != value) free((void*) value);
 
     XtVaGetValues(_main,
 		  XmNx, &x,
@@ -909,7 +909,7 @@ RoamMenuWindow::createWorkArea(Widget parent)
 		  XmNwidth, &width,
 		  XmNheight, &height,
 		  XmNborderWidth, &bwid,
-		  NULL);
+		  nullptr);
     _x = x;
     _y = y;
     _width = width;
@@ -1007,7 +1007,7 @@ RoamMenuWindow::msgListTransferCallback(
 		// Convert the buffer into a mailbox object.
 		tmpmbox = session->session()->mailBoxConstruct(mail_error,
 						DtMailBufferObject, &buf,
-						openCallback, NULL);
+						openCallback, nullptr);
 
 		// Reject the drop if we weren't able to convert it to a mailbox
 		if (!tmpmbox || mail_error.isSet()) {
@@ -1043,7 +1043,7 @@ void
 RoamMenuWindow::msgListDropRegister()
 {
     static XtCallbackRec transferCBRec[] = { 
-	{&RoamMenuWindow::msgListTransferCallback, NULL}, {NULL, NULL} };
+	{&RoamMenuWindow::msgListTransferCallback, nullptr}, {nullptr, nullptr} };
 
     // Pass the RoamMenuWindow object (this) as clientData.
     transferCBRec[0].closure = this;
@@ -1052,7 +1052,7 @@ RoamMenuWindow::msgListDropRegister()
 	    DtDND_FILENAME_TRANSFER | DtDND_BUFFER_TRANSFER,
 	    (unsigned char)(XmDROP_MOVE | XmDROP_COPY), transferCBRec,
 	    DtNtextIsBuffer, True,
-	    NULL);
+	    nullptr);
 }
 
 // msgListDropEnable
@@ -1215,7 +1215,7 @@ RoamMenuWindow::getDragIcon(
     if (_mbox_image && _mbox_mask) {
 	return DtDndCreateSourceIcon(widget, _mbox_image, _mbox_mask);
     } else {
-	return NULL;
+	return nullptr;
     }
 }
 
@@ -1231,10 +1231,10 @@ RoamMenuWindow::msgListDragStart(
 	Cardinal	* /* numParams */)
 {
     static XtCallbackRec convertCBRec[] = { 
-	{&RoamMenuWindow::msgListConvertCallback, NULL},{NULL, NULL} };
+	{&RoamMenuWindow::msgListConvertCallback, nullptr},{nullptr, nullptr} };
     static XtCallbackRec dragFinishCBRec[] = {
-	{&RoamMenuWindow::msgListDragFinishCallback, NULL}, {NULL, NULL} };
-    RoamMenuWindow 	*rmw = NULL;
+	{&RoamMenuWindow::msgListDragFinishCallback, nullptr}, {nullptr, nullptr} };
+    RoamMenuWindow 	*rmw = nullptr;
     unsigned char	operations;
     Widget 		drag_icon;
     DtMailEnv 		mail_error;
@@ -1243,10 +1243,10 @@ RoamMenuWindow::msgListDragStart(
 
     mail_error.clear();
 
-    XtVaGetValues(widget, XmNuserData, &rmw, NULL);
+    XtVaGetValues(widget, XmNuserData, &rmw, nullptr);
 
-    if (rmw == NULL)
-	return NULL;
+    if (rmw == nullptr)
+	return nullptr;
 
     drag_icon = rmw->getDragIcon(widget);
     //drag_icon = NULL;
@@ -1271,11 +1271,11 @@ RoamMenuWindow::msgListDragStart(
     if (DtDndVaDragStart(widget, event, DtDND_BUFFER_TRANSFER, 1,
 			operations, convertCBRec, dragFinishCBRec,
 			DtNsourceIcon, drag_icon,
-			NULL) == NULL) {
+			nullptr) == nullptr) {
 	DebugPrintf(3, "DragStart returned NULL.\n");
     }
 
-    return NULL;
+    return nullptr;
 }
 
 /* ARGSUSED */
@@ -1337,7 +1337,7 @@ RoamMenuWindow::msgListProcessPress(
         XtVaGetValues(w,
 		XmNselectedPositions, &selected_positions,
 		XmNselectedPositionCount, &nselected_positions,
-		NULL);
+		nullptr);
 
 	for (i=0; i<nselected_positions; i++)
 	{
@@ -1412,7 +1412,7 @@ RoamMenuWindow::msgListDragSetup()
     XtVaGetValues(
 	(Widget)XmGetXmDisplay(XtDisplayOfObject(msgList)),
 	"enableBtn1Transfer", &btn1_transfer,
-	NULL);
+	nullptr);
     
     if (btn1_transfer != True) {
 	new_translations = XtParseTranslationTable(btn2_translations);
@@ -1437,7 +1437,7 @@ RoamMenuWindow::open_and_load(
     // If it did succeed, then its _mailbox should be set by now.
     // If its not set, then either open() failed somewhere or it was
     // cancelled by the user.  We now have an error condition.
-    if ((!_required_conversion) && (_mailbox == NULL))
+    if ((!_required_conversion) && (_mailbox == nullptr))
     {
 	error.setError(DTME_NoMailBox);
 	return;
@@ -1488,7 +1488,7 @@ RoamMenuWindow::open(
 		  XmNwidth, &win_wid,
 		  XmNheight, &win_ht,
 		  XmNborderWidth, &win_bwid,
-		  NULL);
+		  nullptr);
     _x = win_x;
     _y = win_y;
     _width = win_wid;
@@ -1499,9 +1499,9 @@ RoamMenuWindow::open(
     // simply make sure it's displayed in the current workspace.
     if (ses->isMboxOpen(_mailbox_fullpath))
     {
-	RoamMenuWindow *rmw = NULL;
+	RoamMenuWindow *rmw = nullptr;
 	rmw = ses->getRMW(_mailbox_fullpath);
-	if (NULL != rmw)
+	if (nullptr != rmw)
 	{
 	    ses->activateRMW(rmw);
 	    rmw->displayInCurrentWorkspace();
@@ -1518,7 +1518,7 @@ RoamMenuWindow::open(
         if((DTMailError_t) error == DTME_OutOfSpace )
         {
               ShowErrMsg((char *)error.getClient(),FALSE,(void*)this );
-              error.setClient(NULL);
+              error.setClient(nullptr);
     	      delete [] buf;
 	      return;
         }
@@ -1674,7 +1674,7 @@ is incorrectly set."));
  
            // there is no help message for this error
            // open a defect and put helpId later
-           helpId = NULL;
+           helpId = nullptr;
            answer = _genDialog->post_and_return(CATGETS(DT_catd, 3, 11, "OK"),
                                                 helpId);
            delete [] buf;
@@ -1756,8 +1756,8 @@ RoamMenuWindow::propsChanged(void)
     DtMail::Session	*d_session = ses->session();
     DtMail::MailRc 	*mailrc = get_mail_rc();
     DtMailEnv		 error;
-    const char		*value = NULL;
-    char		*inbox_path = NULL;
+    const char		*value = nullptr;
+    char		*inbox_path = nullptr;
     DtMailObjectSpace	 space;
     Boolean	 	 should_be_inbox;
 
@@ -1772,8 +1772,8 @@ RoamMenuWindow::propsChanged(void)
 			&inbox_path);
     should_be_inbox = (inbox_path && 0 == strcmp(inbox_path, mailboxName()));
 
-    RoamMenuWindow	*rmw = NULL;
-    char		*password = NULL;
+    RoamMenuWindow	*rmw = nullptr;
+    char		*password = nullptr;
     password = MailRetrievalOptions::getPassword(DTMAS_INBOX);
 
     if (_inbox != should_be_inbox)
@@ -1810,7 +1810,7 @@ RoamMenuWindow::propsChanged(void)
 
 	    if (answer == 1)
 	    {
-	        if (NULL != rmw)
+	        if (nullptr != rmw)
 		  rmw->displayInCurrentWorkspace();
 		else
 	          view_mail_file(inbox_path, DTM_FALSE);
@@ -1852,7 +1852,7 @@ RoamMenuWindow::propsChanged(void)
 	error.clear();
     }
 
-    int header_lines = (int) strtol(value, NULL, 10);
+    int header_lines = (int) strtol(value, nullptr, 10);
     if (header_lines != _list->visibleItems())
 	_list->visibleItems(header_lines);
 
@@ -1861,9 +1861,9 @@ RoamMenuWindow::propsChanged(void)
     _list->checkDisplayProp();
     _my_editor->textEditor()->update_display_from_props();
 
-    value = NULL;
+    value = nullptr;
     mailrc->getValue(error, "dontdisplaycachedfiles", &value);
-    if (error.isNotSet() && value != NULL)
+    if (error.isNotSet() && value != nullptr)
     {
         if (_display_cached_list)
 	  // They just turned off the Display Up To prop so
@@ -1877,13 +1877,13 @@ RoamMenuWindow::propsChanged(void)
     else
     {
         error.clear();
-	value = NULL;
+	value = nullptr;
         mailrc->getValue(error, "cachedfilemenusize", &value);
-        if (error.isNotSet() && value != NULL && *value != '\0')
+        if (error.isNotSet() && value != nullptr && *value != '\0')
 	{
 	    int new_size;
 
-	    new_size = (int) strtol(value, NULL, 10);
+	    new_size = (int) strtol(value, nullptr, 10);
 	    if (new_size != _max_cached_list_size && new_size >=0)
 	    {
 		// They just changed the display number so chop the 
@@ -1894,16 +1894,16 @@ RoamMenuWindow::propsChanged(void)
 		_max_cached_list_size = new_size;
 	    }
 	}
-	if (NULL != value)
+	if (nullptr != value)
 	  free((void*) value);
     }
 
     error.clear(); 
-    value = NULL;
+    value = nullptr;
     mailrc->getValue(error, "filemenu2", &value);
-    if  ( (value == NULL && _filemenu2 != NULL) ||
-	  (value != NULL && _filemenu2 == NULL) ||
-	  (value != NULL && _filemenu2 != NULL &&
+    if  ( (value == nullptr && _filemenu2 != nullptr) ||
+	  (value != nullptr && _filemenu2 == nullptr) ||
+	  (value != nullptr && _filemenu2 != nullptr &&
 	   strcmp(value, _filemenu2) != 0) )
     {
 	// Recreate the containter list
@@ -1921,21 +1921,21 @@ RoamMenuWindow::propsChanged(void)
 	// Recreate the Message popup menu
 	this->construct_message_popup();	
     }
-    if (NULL != value)
+    if (nullptr != value)
       free((void*) value);
 
-    value = NULL;
+    value = nullptr;
     mailrc->getValue(error, "retrieveinterval", &value);
     if (error.isNotSet() && value && *value != '\0')
     {
-	long ping = (time_t) strtol(value, NULL, 10);
+	long ping = (time_t) strtol(value, nullptr, 10);
 	if (ping <= 0)
 	  _checkformail_when_mapped = FALSE;
 	else
 	  _checkformail_when_mapped = TRUE;
     }
     error.clear();
-    if (NULL != value) free((void*) value);
+    if (nullptr != value) free((void*) value);
 
     disableWorkAreaResize();
 }
@@ -2041,7 +2041,7 @@ RoamMenuWindow::structurenotify(
                  DtMailEnv        error;
                  DtMail::Session *m_session = theRoamApp.session()->session(); 
                  DtMail::MailRc  *mailrc = m_session->mailRc(error);
-    		 const char      *value = NULL;
+    		 const char      *value = nullptr;
 
     		 mailrc->getValue(error, "retrievemailonmapnotify", &value);
     		 if (error.isNotSet()) rmw->checkForMail(error);
@@ -2114,9 +2114,9 @@ RoamMenuWindow::mapnotify()
 		_msg_undelete_from_list->deactivate();
 		_delete_button->deactivate();
 		_file_destroy_deleted_msgs->deactivate();
-		if (NULL != _move_cascade)
+		if (nullptr != _move_cascade)
 		  XtSetSensitive(_move_cascade, FALSE);
-		if (NULL != _msgsPopupMoveMenu)
+		if (nullptr != _msgsPopupMoveMenu)
 		  XtSetSensitive(_msgsPopupMoveMenu, FALSE);
 		
 		char * readonly = CATGETS(DT_catd, 20, 3, "Read Only");
@@ -2143,7 +2143,7 @@ void
 RoamMenuWindow::last_sorted_by(SortBy type)
 {
     char	 	 id[16];
-    char		*buffer = NULL;
+    char		*buffer = nullptr;
     DtMailEnv		 error;
     DtMail::Session	*m_session = theRoamApp.session()->session(); 
     DtMail::MailRc 	*mailrc = m_session->mailRc(error);
@@ -2156,10 +2156,10 @@ RoamMenuWindow::last_sorted_by(SortBy type)
     ((SortCmd*)_view_sortSize)->setButtonState(FALSE, FALSE);
     ((SortCmd*)_view_sortStatus)->setButtonState(FALSE, FALSE);
 
-    XtVaSetValues(_sender_lbl, XmNlabelString, _sender_xms, NULL);
-    XtVaSetValues(_subject_lbl, XmNlabelString, _subject_xms, NULL);
-    XtVaSetValues(_date_lbl, XmNlabelString, _date_xms, NULL);
-    XtVaSetValues(_size_lbl, XmNlabelString, _size_xms, NULL);
+    XtVaSetValues(_sender_lbl, XmNlabelString, _sender_xms, nullptr);
+    XtVaSetValues(_subject_lbl, XmNlabelString, _subject_xms, nullptr);
+    XtVaSetValues(_date_lbl, XmNlabelString, _date_xms, nullptr);
+    XtVaSetValues(_size_lbl, XmNlabelString, _size_xms, nullptr);
 
     buffer = XtMalloc(BUFSIZ);
     if (buffer)
@@ -2177,24 +2177,24 @@ RoamMenuWindow::last_sorted_by(SortBy type)
     switch (_last_sorted_by)
     {
 	case SortTimeDate:
-	    XtVaSetValues(_date_lbl, XmNlabelString, _date_key_xms, NULL);
+	    XtVaSetValues(_date_lbl, XmNlabelString, _date_key_xms, nullptr);
 	    ((SortCmd*)_view_sortTD)->setButtonState(TRUE,FALSE);
 	    if (buffer) mailrc->removeValue(error, buffer);
 	    break;
         case SortSender:
-	    XtVaSetValues(_sender_lbl, XmNlabelString, _sender_key_xms, NULL);
+	    XtVaSetValues(_sender_lbl, XmNlabelString, _sender_key_xms, nullptr);
 	    ((SortCmd*)_view_sortSender)->setButtonState(TRUE,FALSE);
 	    sprintf(id, "%d", SortSender);
 	    if (buffer) mailrc->setValue(error, buffer, id);
 	    break;
         case SortSubject:
-	    XtVaSetValues(_subject_lbl, XmNlabelString, _subject_key_xms, NULL);
+	    XtVaSetValues(_subject_lbl, XmNlabelString, _subject_key_xms, nullptr);
 	    ((SortCmd*)_view_sortSubject)->setButtonState(TRUE,FALSE);
 	    sprintf(id, "%d", SortSubject);
 	    if (buffer) mailrc->setValue(error, buffer, id);
 	    break;
         case SortSize:	
-	    XtVaSetValues(_size_lbl, XmNlabelString, _size_key_xms, NULL);
+	    XtVaSetValues(_size_lbl, XmNlabelString, _size_key_xms, nullptr);
 	    ((SortCmd*)_view_sortSize)->setButtonState(TRUE,FALSE);
 	    sprintf(id, "%d", SortSize);
 	    if (buffer) mailrc->setValue(error, buffer, id);
@@ -2205,7 +2205,7 @@ RoamMenuWindow::last_sorted_by(SortBy type)
 	    if (buffer) mailrc->setValue(error, buffer, id);
 	    break;
         default:
-	    XtVaSetValues(_date_lbl, XmNlabelString, _date_key_xms, NULL);
+	    XtVaSetValues(_date_lbl, XmNlabelString, _date_key_xms, nullptr);
 	    ((SortCmd*)_view_sortTD)->setButtonState(TRUE,FALSE);
 	    if (buffer) mailrc->removeValue(error, buffer);
 	    break;
@@ -2237,7 +2237,7 @@ RoamMenuWindow::message( char *text )
 	_clear_message_p = FALSE;
     }
     
-    XtVaSetValues(_message, XmNlabelString, labelStr, NULL);
+    XtVaSetValues(_message, XmNlabelString, labelStr, nullptr);
     XmUpdateDisplay(this->baseWidget());
 
     XmStringFree(labelStr); 
@@ -2279,7 +2279,7 @@ RoamMenuWindow::message_summary(
     int num_live_msgs = num_msgs - num_deleted;  // Undeleted msgs
     DtMail::MailRc * mailrc = get_mail_rc();
     DtMailEnv error;
-    const char * value = NULL;
+    const char * value = nullptr;
 
     mailrc->getValue(error, "nerdmode", &value);
     if (error.isSet()) {
@@ -2288,7 +2288,7 @@ RoamMenuWindow::message_summary(
     else {
 	str = "Message 0x%x of 0x%x, ignoring 0x%x, 0x%x forgotten";
     }
-    if (NULL != value)
+    if (nullptr != value)
       free((void*) value);
 
     buf = new char[strlen(str) + 100];
@@ -2296,7 +2296,7 @@ RoamMenuWindow::message_summary(
 
     labelStr = XmStringCreateLocalized(buf);
     
-    XtVaSetValues(_message_summary, XmNlabelString, labelStr, NULL);
+    XtVaSetValues(_message_summary, XmNlabelString, labelStr, nullptr);
     XmUpdateDisplay(this->baseWidget());
 
     XmStringFree(labelStr);
@@ -2325,7 +2325,7 @@ RoamMenuWindow::message_selected(
     
     labelStr = XmStringCreateLocalized(buf);
 
-    XtVaSetValues(_message_summary, XmNlabelString, labelStr, NULL);
+    XtVaSetValues(_message_summary, XmNlabelString, labelStr, nullptr);
     XmUpdateDisplay(this->baseWidget());
 
     XmStringFree(labelStr);
@@ -2393,7 +2393,7 @@ RoamMenuWindow::queryExpunge()
     DtMailEnv error;
     int i = 0;
 
-    if (NULL != _mailbox && _mailbox->mailBoxWritable(error) == DTM_TRUE)
+    if (nullptr != _mailbox && _mailbox->mailBoxWritable(error) == DTM_TRUE)
     {
       theRoamApp.busyAllWindows(CATGETS(DT_catd, 3, 15, "Saving..."));
 
@@ -2412,19 +2412,19 @@ RoamMenuWindow::queryExpunge()
 	// second option.
 	//
 	DtMail::MailRc * mailrc = get_mail_rc();
-	const char * value = NULL;
+	const char * value = nullptr;
 
 	error.clear();
 	mailrc->getValue(error, "keepdeleted", &value);
 	if (error.isSet())
 	{
-	    if (NULL != value)
+	    if (nullptr != value)
 	      free((void*) value);
 
 	    // The user wants to expunge on close. See if they want
 	    // to be asked first.
 	    //
-	    value = NULL;
+	    value = nullptr;
 	    error.clear();
 	    mailrc->getValue(error, "quietdelete", &value);
 	    if (error.isSet() && !theRoamApp.quitSilently())
@@ -2469,7 +2469,7 @@ RoamMenuWindow::queryExpunge()
 				(char *)error.getClient(),
 				FALSE,
 				(void*)this);
-                        error.setClient(NULL);
+                        error.setClient(nullptr);
     		    }
 
 	            if (_msg_undelete_from_list->dialog())
@@ -2496,7 +2496,7 @@ RoamMenuWindow::queryExpunge()
                 if ((DTMailError_t) error == DTME_OutOfSpace)
 		{
        		   ShowErrMsg((char *)error.getClient(),FALSE,(void*)this );
-                   error.setClient(NULL);
+                   error.setClient(nullptr);
     	        }
 
 	        if (_msg_undelete_from_list->dialog())
@@ -2508,7 +2508,7 @@ RoamMenuWindow::queryExpunge()
 		    postErrorDialog(error);
 	    }
 	}
-	if (NULL != value)
+	if (nullptr != value)
 	  free((void*) value);
       }
     }
@@ -2561,7 +2561,7 @@ RoamMenuWindow::quit(Boolean delete_win)
 void 
 RoamMenuWindow::panicQuit()
 {
-    if (_mailbox != NULL)
+    if (_mailbox != nullptr)
     	_mailbox->unlock();
 }
 
@@ -2589,7 +2589,7 @@ RoamMenuWindow::quit_silently()
 	// second option.
 	//
 	DtMail::MailRc * mailrc = get_mail_rc();
-	const char * value = NULL;
+	const char * value = nullptr;
 
 	error.clear();
 	mailrc->getValue(error, "keepdeleted", &value);
@@ -2600,7 +2600,7 @@ RoamMenuWindow::quit_silently()
 		this->postErrorDialog(error);
 	    }
  	}
-        if (NULL != value)
+        if (nullptr != value)
           free((void*) value);
 
       }
@@ -2644,7 +2644,7 @@ RoamMenuWindow::quit_silently()
 void
 RoamMenuWindow::file_selection_callback(void *client_data, char *selection)
 {
-    if (NULL == selection || 0 == strlen(selection)) return;
+    if (nullptr == selection || 0 == strlen(selection)) return;
 
     RoamMenuWindow *obj=(RoamMenuWindow *) client_data;
     obj->view_mail_file(selection, DTM_FALSE);
@@ -2675,10 +2675,10 @@ void RoamMenuWindow::view_mail_file(char *filename, DtMailBoolean create)
     DtMailEnv		mail_error;
     MailSession		*ses = theRoamApp.session();
     DtMail::Session	*d_session = ses->session();
-    RoamMenuWindow	*roamwin = NULL;
-    char		*expanded_filename = NULL;
-    char		*plus_filename = NULL;
-    char		*relative_filename = NULL;
+    RoamMenuWindow	*roamwin = nullptr;
+    char		*expanded_filename = nullptr;
+    char		*plus_filename = nullptr;
+    char		*relative_filename = nullptr;
 
     theRoamApp.busyAllWindows(CATGETS(DT_catd, 3, 20, "Opening mailbox..."));
 
@@ -2701,7 +2701,7 @@ void RoamMenuWindow::view_mail_file(char *filename, DtMailBoolean create)
     {
 	roamwin = ses->getRMW(expanded_filename);
 	ses->activateRMW(roamwin);
-	if (NULL != roamwin) roamwin->displayInCurrentWorkspace();
+	if (nullptr != roamwin) roamwin->displayInCurrentWorkspace();
     }
     else
     {
@@ -2838,7 +2838,7 @@ RoamMenuWindow::ifViewExists(DtMailMessageHandle msg_num)
 	    return(a_view);
 	}
     }
-    return(NULL);
+    return(nullptr);
 }
 
 	
@@ -2862,7 +2862,7 @@ RoamMenuWindow::addToRowOfButtons()
 	XmNbottomAttachment, XmATTACH_FORM,
 	XmNmarginLeft, offset,
 	XmNmarginRight, offset,
- 	NULL );
+ 	nullptr );
     ci->manage();
     prev_widget = w;
 
@@ -2881,7 +2881,7 @@ RoamMenuWindow::addToRowOfButtons()
 	XmNbottomAttachment, XmATTACH_FORM,
 	XmNmarginLeft, offset,
 	XmNmarginRight, offset,
- 	NULL );
+ 	nullptr );
     ci->manage();
     prev_widget = w;
 
@@ -2900,7 +2900,7 @@ RoamMenuWindow::addToRowOfButtons()
 	XmNbottomAttachment, XmATTACH_FORM,
 	XmNmarginLeft, offset,
 	XmNmarginRight, offset,
- 	NULL );
+ 	nullptr );
     ci->manage();
     prev_widget = w;
 
@@ -2921,7 +2921,7 @@ RoamMenuWindow::addToRowOfButtons()
 	XmNbottomAttachment, XmATTACH_FORM,
 	XmNmarginLeft, offset,
 	XmNmarginRight, offset,
- 	NULL );
+ 	nullptr );
     ci->manage();
     prev_widget = w;
 
@@ -2939,7 +2939,7 @@ RoamMenuWindow::addToRowOfButtons()
 	XmNbottomAttachment, XmATTACH_FORM,
 	XmNmarginLeft, offset,
 	XmNmarginRight, offset,
- 	NULL );
+ 	nullptr );
     ci->manage();
     prev_widget = w;
 }
@@ -2963,8 +2963,8 @@ RoamMenuWindow::addToRowOfLabels(MsgScrollingList *msglist)
     xfs = XLoadQueryFont(XtDisplay(_rowOfLabels), glyph_font);
     xmfle = XmFontListEntryCreate("arrow", XmFONT_IS_FONT, (XtPointer) xfs);
 
-    lbl = XtVaCreateManagedWidget("t", xmLabelGadgetClass, _rowOfLabels, NULL);
-    XtVaGetValues(lbl, XmNfontList, &xmfl_old, NULL);
+    lbl = XtVaCreateManagedWidget("t", xmLabelGadgetClass, _rowOfLabels, nullptr);
+    XtVaGetValues(lbl, XmNfontList, &xmfl_old, nullptr);
     xmfl = XmFontListAppendEntry(xmfl_old, xmfle);
 #else
 //  Pixel		foreground, background;
@@ -3014,16 +3014,16 @@ RoamMenuWindow::addToRowOfLabels(MsgScrollingList *msglist)
 #endif
 				XmNlabelString, _sender_xms,
 				XmNalignment, XmALIGNMENT_BEGINNING,
-				NULL);
+				nullptr);
 
     XtSetArg(args[nargs], XmNfontName, glyph_font); nargs++;
     XtSetArg(args[nargs], XmNfontType, XmFONT_IS_FONT); nargs++;
     rend = XmRenditionCreate(_rowOfLabels, "arrow", args, nargs);
 
-    XtVaGetValues(_sender_lbl, XmNrenderTable, &rt_old, NULL);
-    rt = XmRenderTableCopy(rt_old, NULL, 0);
+    XtVaGetValues(_sender_lbl, XmNrenderTable, &rt_old, nullptr);
+    rt = XmRenderTableCopy(rt_old, nullptr, 0);
     rt = XmRenderTableAddRenditions(rt, &rend, 1, XmMERGE_REPLACE);
-    XtVaSetValues(_sender_lbl, XmNrenderTable, rt, NULL);
+    XtVaSetValues(_sender_lbl, XmNrenderTable, rt, nullptr);
 
     // Add help callback
     // printHelpId("Sender", _sender_lbl);
@@ -3043,16 +3043,16 @@ RoamMenuWindow::addToRowOfLabels(MsgScrollingList *msglist)
 #endif
 				XmNlabelString, _subject_xms,
 				XmNalignment, XmALIGNMENT_BEGINNING,
-				NULL);
+				nullptr);
 
     XtSetArg(args[nargs], XmNfontName, glyph_font); nargs++;
     XtSetArg(args[nargs], XmNfontType, XmFONT_IS_FONT); nargs++;
     rend = XmRenditionCreate(_rowOfLabels, "arrow", args, nargs);
 
-    XtVaGetValues(_subject_lbl, XmNrenderTable, &rt_old, NULL);
-    rt = XmRenderTableCopy(rt_old, NULL, 0);
+    XtVaGetValues(_subject_lbl, XmNrenderTable, &rt_old, nullptr);
+    rt = XmRenderTableCopy(rt_old, nullptr, 0);
     rt = XmRenderTableAddRenditions(rt, &rend, 1, XmMERGE_REPLACE);
-    XtVaSetValues(_subject_lbl, XmNrenderTable, rt, NULL);
+    XtVaSetValues(_subject_lbl, XmNrenderTable, rt, nullptr);
 
     // Add help callback
     // printHelpId("Subject", _subject_lbl);
@@ -3072,16 +3072,16 @@ RoamMenuWindow::addToRowOfLabels(MsgScrollingList *msglist)
 #endif
 				XmNlabelString, _date_xms,
 				XmNalignment, XmALIGNMENT_BEGINNING,
-				NULL);
+				nullptr);
 
     XtSetArg(args[nargs], XmNfontName, glyph_font); nargs++;
     XtSetArg(args[nargs], XmNfontType, XmFONT_IS_FONT); nargs++;
     rend = XmRenditionCreate(_rowOfLabels, "arrow", args, nargs);
 
-    XtVaGetValues(_date_lbl, XmNrenderTable, &rt_old, NULL);
-    rt = XmRenderTableCopy(rt_old, NULL, 0);
+    XtVaGetValues(_date_lbl, XmNrenderTable, &rt_old, nullptr);
+    rt = XmRenderTableCopy(rt_old, nullptr, 0);
     rt = XmRenderTableAddRenditions(rt, &rend, 1, XmMERGE_REPLACE);
-    XtVaSetValues(_date_lbl, XmNrenderTable, rt, NULL);
+    XtVaSetValues(_date_lbl, XmNrenderTable, rt, nullptr);
 
     // Add help callback
     // printHelpId("DateTime", _subject_lbl);
@@ -3101,16 +3101,16 @@ RoamMenuWindow::addToRowOfLabels(MsgScrollingList *msglist)
 #endif
 				XmNlabelString, _size_xms,
 				XmNalignment, XmALIGNMENT_BEGINNING,
-				NULL);
+				nullptr);
 
     XtSetArg(args[nargs], XmNfontName, glyph_font); nargs++;
     XtSetArg(args[nargs], XmNfontType, XmFONT_IS_FONT); nargs++;
     rend = XmRenditionCreate(_rowOfLabels, "arrow", args, nargs);
 
-    XtVaGetValues(_size_lbl, XmNrenderTable, &rt_old, NULL);
-    rt = XmRenderTableCopy(rt_old, NULL, 0);
+    XtVaGetValues(_size_lbl, XmNrenderTable, &rt_old, nullptr);
+    rt = XmRenderTableCopy(rt_old, nullptr, 0);
     rt = XmRenderTableAddRenditions(rt, &rend, 1, XmMERGE_REPLACE);
-    XtVaSetValues(_size_lbl, XmNrenderTable, rt, NULL);
+    XtVaSetValues(_size_lbl, XmNrenderTable, rt, nullptr);
 
     // Add help callback
     // printHelpId("Size", _size_lbl);
@@ -3140,7 +3140,7 @@ RoamMenuWindow::addToRowOfMessageStatus()
 
     _message = XtCreateManagedWidget(
 			"Message_Status_Text", xmLabelWidgetClass,
-			_rowOfMessageStatus, NULL, 0);
+			_rowOfMessageStatus, nullptr, 0);
     printHelpId("_message", _message);
     /* add help callback */
     // XtAddCallback(_message, XmNhelpCallback, HelpCB, helpId);
@@ -3152,22 +3152,22 @@ RoamMenuWindow::addToRowOfMessageStatus()
 	XmNtopAttachment, XmATTACH_FORM,
 	XmNbottomAttachment, XmATTACH_FORM,
  	XmNlabelString, labelStr1,
- 	NULL );
+ 	nullptr );
     
     _message_summary = XtCreateManagedWidget("Message_Summary", 
 					xmLabelWidgetClass,
-				        _rowOfMessageStatus, NULL, 0);
+				        _rowOfMessageStatus, nullptr, 0);
      XtVaSetValues(_message_summary,
 	XmNalignment, XmALIGNMENT_END,
  	XmNlabelString, labelStr2,
  	XmNrightAttachment, XmATTACH_FORM,
- 	NULL );
+ 	nullptr );
 
      XtVaSetValues(_message,
 	 XmNrightAttachment, XmATTACH_WIDGET,
 	 XmNrightWidget, _message_summary,
 	 XmNrightOffset, 10,
-	 NULL);
+	 nullptr);
 
      XmStringFree(labelStr1);
      XmStringFree(labelStr2);
@@ -3179,26 +3179,26 @@ RoamMenuWindow::createContainerList()
 {
     FORCE_SEGV_DECL(DtMail::Session, m_session);
     DtMailEnv		error;
-    const char		*val = NULL;
-    const char		*cached_containerlist_size = NULL;
-    const char		*display_cfs = NULL;
+    const char		*val = nullptr;
+    const char		*cached_containerlist_size = nullptr;
+    const char		*display_cfs = nullptr;
     DtMailBoolean	user_list = DTM_FALSE;
 
     //
     // Get names for permanent containers from .mailrc.
     // We get the items from the "filemenu2" variable.
-    if (_filemenu2 != NULL) free (_filemenu2);
+    if (_filemenu2 != nullptr) free (_filemenu2);
 
     m_session = theRoamApp.session()->session();
     m_session->mailRc(error)->getValue(error, "filemenu2", &val);
-    if (error.isNotSet() && val != NULL && *val != '\0')
+    if (error.isNotSet() && val != nullptr && *val != '\0')
     {
 	user_list = DTM_TRUE;
         _filemenu2 = strdup(val);
     }
-    else _filemenu2 = NULL;
+    else _filemenu2 = nullptr;
 
-    if (NULL != val)
+    if (nullptr != val)
       free((void*) val);
 
     // We will use _user_containerlist to keep track of the static set of
@@ -3207,7 +3207,7 @@ RoamMenuWindow::createContainerList()
     // which get cached from "Other Mailboxes... operations from the
     // Open, CopyTo, and Move menus.
 
-    if (_user_containerlist != NULL)
+    if (_user_containerlist != nullptr)
 	delete (_user_containerlist);
     _user_containerlist = new DtVirtArray<ContainerMenuCmd*> (3);
 
@@ -3216,7 +3216,7 @@ RoamMenuWindow::createContainerList()
 				"dontdisplaycachedfiles",
 				&display_cfs);
 
-    if (error.isNotSet() && display_cfs != NULL) 
+    if (error.isNotSet() && display_cfs != nullptr) 
       _max_cached_list_size = 0;
     else
     {
@@ -3229,14 +3229,14 @@ RoamMenuWindow::createContainerList()
 	    cached_containerlist_size && 
 	    *cached_containerlist_size)
 	  _max_cached_list_size = 
-	    (int) strtol(cached_containerlist_size, NULL, 10);
+	    (int) strtol(cached_containerlist_size, nullptr, 10);
 	else 
 	  _max_cached_list_size = 10;
     }
 
-    if (NULL != display_cfs)
+    if (nullptr != display_cfs)
       free((void*) display_cfs);
-    if (NULL != cached_containerlist_size)
+    if (nullptr != cached_containerlist_size)
       free((void*) cached_containerlist_size);
 
     int size = (_max_cached_list_size ? _max_cached_list_size : 1);
@@ -3244,7 +3244,7 @@ RoamMenuWindow::createContainerList()
 
     if (user_list == DTM_TRUE) {
     	char *expanded_list = m_session->expandPath(error, _filemenu2);
-    	char *token = NULL;
+    	char *token = nullptr;
 
 	//
 	// Create arrays to hold the user defined container list and the
@@ -3261,7 +3261,7 @@ RoamMenuWindow::createContainerList()
 						this,
 						DTM_NONE);
 	    _user_containerlist->append(null_container);
-	    while (token = (char *) strtok(NULL, " "))
+	    while (token = (char *) strtok(nullptr, " "))
 	    {
 	        null_container= new ContainerMenuCmd(
 						strdup(token),
@@ -3314,7 +3314,7 @@ RoamMenuWindow::createOpenContainerList(CmdList * open_container)
     //
     ncontainers = _user_containerlist->length();
 
-    if (_open_container_containerlist != NULL)
+    if (_open_container_containerlist != nullptr)
       delete (_open_container_containerlist);
     _open_container_containerlist =
       new DtVirtArray<ContainerMenuCmd*>(ncontainers);
@@ -3322,7 +3322,7 @@ RoamMenuWindow::createOpenContainerList(CmdList * open_container)
     for (i=0; i<ncontainers; i++)
     {
 	container_name = (*_user_containerlist)[i]->containerName();
-	if (NULL != container_name)
+	if (nullptr != container_name)
 	{
 	    container_cmd = new ContainerMenuCmd(
 						strdup(container_name),
@@ -3349,7 +3349,7 @@ RoamMenuWindow::createOpenContainerList(CmdList * open_container)
 
     ncontainers =  (_max_cached_list_size ? _max_cached_list_size : 1);
 
-    if (_open_container_containerlist_cached != NULL)
+    if (_open_container_containerlist_cached != nullptr)
       delete (_open_container_containerlist_cached);
     _open_container_containerlist_cached =
       new DtVirtArray<ContainerMenuCmd*> (ncontainers);
@@ -3358,7 +3358,7 @@ RoamMenuWindow::createOpenContainerList(CmdList * open_container)
     for (i=0; i<ncontainers; i++)
     {
 	container_name = (*_cached_containerlist)[i]->containerName();
-	if (NULL != container_name)
+	if (nullptr != container_name)
 	{
 	    container_cmd = new ContainerMenuCmd(
 						strdup(container_name),
@@ -3469,12 +3469,12 @@ RoamMenuWindow::construct_file_menu()
 		_opencontainerMenu, 
 		XmNpacking, XmPACK_COLUMN, 
 		XmNorientation, XmVERTICAL,
-		NULL);
+		nullptr);
 
     XtAddCallback(
 		_opencontainerMenu,
 		XmNmapCallback, &RoamMenuWindow::map_menu,
-		NULL);
+		nullptr);
 
     XtSetSensitive(_opencontainerMenu, TRUE);
 }
@@ -3502,7 +3502,7 @@ RoamMenuWindow::createCopyList(CmdList * copy_to)
     DtMailEnv error;
     DtMail::Session * d_session = theRoamApp.session()->session();
     DtMail::MailRc * mailrc = d_session->mailRc(error);
-    const char *value = NULL;
+    const char *value = nullptr;
     DtMailBoolean only_show_mailboxes = DTM_FALSE;
 
     mailrc->getValue(error, "movecopytomailboxesonly", &value);
@@ -3537,7 +3537,7 @@ RoamMenuWindow::createCopyList(CmdList * copy_to)
     //
     ncontainers = _user_containerlist->length();
 
-    if (_copyto_containerlist != NULL)
+    if (_copyto_containerlist != nullptr)
       delete (_copyto_containerlist);
     _copyto_containerlist =
       new DtVirtArray<ContainerMenuCmd *> (ncontainers);
@@ -3545,7 +3545,7 @@ RoamMenuWindow::createCopyList(CmdList * copy_to)
     for (i=0; i<ncontainers; i++)
     {
 	container_name = (*_user_containerlist)[i]->containerName();
-	if (NULL != container_name)
+	if (nullptr != container_name)
 	{
 	    container_cmd = new ContainerMenuCmd(
 						strdup(container_name),
@@ -3572,7 +3572,7 @@ RoamMenuWindow::createCopyList(CmdList * copy_to)
 
     ncontainers = (_max_cached_list_size ? _max_cached_list_size : 1);
 
-    if (_copyto_containerlist_cached != NULL)
+    if (_copyto_containerlist_cached != nullptr)
       delete (_copyto_containerlist_cached);
     _copyto_containerlist_cached =
       new DtVirtArray<ContainerMenuCmd *> (ncontainers);
@@ -3581,7 +3581,7 @@ RoamMenuWindow::createCopyList(CmdList * copy_to)
     for (i=0; i<ncontainers; i++)
     {
 	container_name = (*_cached_containerlist)[i]->containerName();
-	if (NULL != container_name)
+	if (nullptr != container_name)
 	{
 	    container_cmd = new ContainerMenuCmd(
 						strdup(container_name),
@@ -3676,9 +3676,9 @@ RoamMenuWindow::construct_message_menu()
     XtVaSetValues(_copytoMenu, 
 		  XmNpacking, XmPACK_COLUMN, 
 		  XmNorientation, XmVERTICAL,
-		  NULL);
+		  nullptr);
 
-    XtAddCallback(_copytoMenu, XmNmapCallback, &RoamMenuWindow::map_menu, NULL);
+    XtAddCallback(_copytoMenu, XmNmapCallback, &RoamMenuWindow::map_menu, nullptr);
 
     XtSetSensitive(_copytoMenu, TRUE);
 }
@@ -3714,8 +3714,8 @@ RoamMenuWindow::construct_message_popup(void)
    XtVaSetValues(_msgsPopupMoveMenu, 
 		 XmNpacking, XmPACK_COLUMN, 
 		 XmNorientation, XmVERTICAL,
-		 NULL);
-   XtAddCallback(_msgsPopupMoveMenu, XmNmapCallback, &RoamMenuWindow::map_menu, NULL);
+		 nullptr);
+   XtAddCallback(_msgsPopupMoveMenu, XmNmapCallback, &RoamMenuWindow::map_menu, nullptr);
 
    XtSetSensitive(_msgsPopupMoveMenu, TRUE);
  
@@ -3927,7 +3927,7 @@ RoamMenuWindow::construct_move_menu()
     ContainerMenuCmd	*container_cmd;
 
 
-    if (_move_cmdlist != NULL)
+    if (_move_cmdlist != nullptr)
       delete _move_cmdlist;
     _move_cmdlist = new CmdList( "Move", CATGETS(DT_catd, 1, 64, "Move") );
 
@@ -3955,14 +3955,14 @@ RoamMenuWindow::construct_move_menu()
     //
     ncontainers = _user_containerlist->length();
 
-    if (_move_containerlist != NULL)
+    if (_move_containerlist != nullptr)
       delete _move_containerlist;
     _move_containerlist = new DtVirtArray<ContainerMenuCmd *> (ncontainers);
 
     for (i=0; i<ncontainers; i++)
     {
 	container_name = (*_user_containerlist)[i]->containerName();
-	if (NULL != container_name)
+	if (nullptr != container_name)
 	{
 	    container_cmd = new ContainerMenuCmd(
 						strdup(container_name),
@@ -3991,7 +3991,7 @@ RoamMenuWindow::construct_move_menu()
 
     ncontainers = (_max_cached_list_size ? _max_cached_list_size : 1 );
 
-    if (_move_containerlist_cached != NULL)
+    if (_move_containerlist_cached != nullptr)
       delete _move_containerlist_cached;
     _move_containerlist_cached =
       new DtVirtArray<ContainerMenuCmd *> (ncontainers);
@@ -4000,7 +4000,7 @@ RoamMenuWindow::construct_move_menu()
     for (i=0; i<ncontainers; i++)
     {
 	container_name = (*_cached_containerlist)[i]->containerName();
-	if (NULL != container_name)
+	if (nullptr != container_name)
 	{
 	    container_cmd = new ContainerMenuCmd(
 						strdup(container_name),
@@ -4020,8 +4020,8 @@ RoamMenuWindow::construct_move_menu()
     XtVaSetValues(_moveMenu, 
 		  XmNpacking, XmPACK_COLUMN, 
 		  XmNorientation, XmVERTICAL,
-		  NULL);
-    XtAddCallback(_moveMenu, XmNmapCallback, &RoamMenuWindow::map_menu, NULL);
+		  nullptr);
+    XtAddCallback(_moveMenu, XmNmapCallback, &RoamMenuWindow::map_menu, nullptr);
 }
 
 
@@ -4129,10 +4129,10 @@ RoamMenuWindow::construct_help_menu()
 void
 RoamMenuWindow::syncCachedContainerList(void)
 {
-    RoamMenuWindow	*rmw = NULL;
+    RoamMenuWindow	*rmw = nullptr;
 
-    rmw = theRoamApp.nextRoamMenuWindow(NULL);
-    if (NULL == rmw)
+    rmw = theRoamApp.nextRoamMenuWindow(nullptr);
+    if (nullptr == rmw)
       return;
 
     // Sync the cached lists to an existing RoamMenuWindow.
@@ -4147,7 +4147,7 @@ RoamMenuWindow::get_mail_rc()
 {
     DtMailEnv error;
 
-    if (NULL == _mailbox) return NULL;
+    if (nullptr == _mailbox) return nullptr;
     return _mailbox->session()->mailRc(error);
 }
 
@@ -4337,12 +4337,12 @@ RoamMenuWindow::syncViewAndStore(
 	    delete [] buffer;
 	    if (answer == 1)
 	    {
-		char		*password = NULL;
+		char		*password = nullptr;
                 DtMailEnv	mail_error;
 		password = _genDialog->getTextFieldValue();
 		_mailbox->updateMailRetrievalPassword(password);
 		_mailbox->checkForMail(error);
-		if (NULL != password) free(password);
+		if (nullptr != password) free(password);
 	        return(DTM_TRUE);
 	    }
 	    else
@@ -4747,7 +4747,7 @@ RoamMenuWindow::manage()
 		  XmNwidth, &win_wid,
 		  XmNheight, &win_ht,
 		  XmNborderWidth, &win_bwid,
-		  NULL);
+		  nullptr);
 
     _x = win_x;
     _y = win_y;
@@ -4778,7 +4778,7 @@ RoamMenuWindow::expunge(void)
     {
        stopAutoSave();
        ShowErrMsg((char *)error.getClient(),FALSE,(void *)this );
-       error.setClient(NULL);
+       error.setClient(nullptr);
        startAutoSave();
        theRoamApp.unbusyAllWindows();
        return;
@@ -4814,12 +4814,12 @@ RoamMenuWindow::all_attachments_selected()
 {
     _att_save->deactivate();
 
-    if (_attActions_cmdlist != NULL) {
+    if (_attActions_cmdlist != nullptr) {
 	_menuBar->removeCommands(_attachmentMenu, _attActions_cmdlist);
 	_menuPopupAtt->removeCommands(_attachmentPopupMenu, 
 			_attActions_cmdlist);
 	delete _attActions_cmdlist;
-	_attActions_cmdlist = NULL;
+	_attActions_cmdlist = nullptr;
     }
 }
 
@@ -4828,12 +4828,12 @@ RoamMenuWindow::all_attachments_deselected()
 {
     _att_save->deactivate();
 
-    if (_attActions_cmdlist != NULL) {
+    if (_attActions_cmdlist != nullptr) {
 	_menuBar->removeCommands(_attachmentMenu, _attActions_cmdlist);
 	_menuPopupAtt->removeCommands(_attachmentPopupMenu, 
 				_attActions_cmdlist);
 	delete _attActions_cmdlist;
-	_attActions_cmdlist = NULL;
+	_attActions_cmdlist = nullptr;
     }
 }
 
@@ -4894,20 +4894,20 @@ RoamMenuWindow::newMailIndicators(void)
 	// See if we are supposed to ring the bell.
 	//
 	DtMailEnv error;
-	const char * val = NULL;
+	const char * val = nullptr;
 	DtMail::Session * m_session = theRoamApp.session()->session(); 
 	m_session->mailRc(error)->getValue(error, "flash", &val);
 	if (error.isNotSet()) {
-	    int flashes = (int) strtol(val, NULL, 10);
+	    int flashes = (int) strtol(val, nullptr, 10);
 	    flash(flashes);
 	}
-        if (NULL != val)
+        if (nullptr != val)
           free((void*) val);
 
-	val = NULL;
+	val = nullptr;
 	m_session->mailRc(error)->getValue(error, "bell", &val);
 	if (error.isNotSet()) {
-	    int beeps = (int) strtol(val, NULL, 10);
+	    int beeps = (int) strtol(val, nullptr, 10);
 	    while(beeps > 0) {
 		XBell(XtDisplay(baseWidget()), 0);
 		beeps -= 1;
@@ -4916,10 +4916,10 @@ RoamMenuWindow::newMailIndicators(void)
 	else // Default to 1 beep
 	    XBell(XtDisplay(baseWidget()), 0);
 
-        if (NULL != val)
+        if (nullptr != val)
           free((void*) val);
 
-	val = NULL;
+	val = nullptr;
 	m_session->mailRc(error)->getValue(error, "realsound", &val);
 	if (error.isNotSet()) {
 	    struct stat stat;
@@ -4931,7 +4931,7 @@ RoamMenuWindow::newMailIndicators(void)
 	    }
 	}
 
-        if (NULL != val)
+        if (nullptr != val)
           free((void*) val);
     }
 
@@ -4964,10 +4964,10 @@ RoamMenuWindow::save_selected_attachment(
     Attachment *attachment = attacharea->getSelectedAttachment();
 
    // Get selected attachment, if none selected, then return.
-   if ( attachment == NULL ) {
+   if ( attachment == nullptr ) {
 	  // Let User know that no attachment has been selected???
 	  int answer = 0;
-	  char *helpId = NULL;
+	  char *helpId = nullptr;
 
 
 	  _genDialog->setToErrorDialog(
@@ -4998,7 +4998,7 @@ RoamMenuWindow::addAttachmentActions(
     char *anAction;
     AttachmentActionCmd *attachActionCmd;
     
-    if (_attActions_cmdlist == NULL) { 
+    if (_attActions_cmdlist == nullptr) { 
 	_attActions_cmdlist = new CmdList("AttachmentActions", "AttachmentActions");
     }
     else {
@@ -5071,7 +5071,7 @@ RoamMenuWindow::inList(char *filename, DtVirtArray<ContainerMenuCmd *> *list)
 {
     ContainerMenuCmd *cmd;
 
-    if (list == NULL) return(-1);
+    if (list == nullptr) return(-1);
 
     if (filename &&
 	*filename != '/' &&
@@ -5083,7 +5083,7 @@ RoamMenuWindow::inList(char *filename, DtVirtArray<ContainerMenuCmd *> *list)
 	DtMail::Session * d_session = theRoamApp.session()->session();
     	DtMailEnv error;
     	DtMail::MailRc * mailrc = d_session->mailRc(error);
-    	const char *value = NULL;
+    	const char *value = nullptr;
 	char *newname;
 
     	mailrc->getValue(error, "folder", &value);
@@ -5102,7 +5102,7 @@ RoamMenuWindow::inList(char *filename, DtVirtArray<ContainerMenuCmd *> *list)
 	    free((void*) newname);
 	}
 
-        if (NULL != value)
+        if (nullptr != value)
           free((void*) value);
     }
 
@@ -5124,7 +5124,7 @@ RoamMenuWindow::addToCachedContainerList(char *filename)
     ContainerMenuCmd	*move_container, *copy_container;
     char		*name;
 
-    if (filename != NULL &&
+    if (filename != nullptr &&
 	*filename != '\0' &&
 	(_max_cached_list_size > 0))
     {
@@ -5132,7 +5132,7 @@ RoamMenuWindow::addToCachedContainerList(char *filename)
         DtMailObjectSpace space;
 	DtMailEnv	mail_error;
 	int		is_inbox;
-	char		*mail_file = NULL;
+	char		*mail_file = nullptr;
 
 	// Is the file in the user defined list?
 	if ((index = inList(filename, _user_containerlist)) != -1)
@@ -5370,7 +5370,7 @@ RoamMenuWindow::map_menu(
         XmNwidth, &w,
         XmNy, &y,
         XmNnumColumns, &columns,
-        NULL);
+        nullptr);
  
  
         if ((int) (h + fudgefact) > ((int) screenheight / 2)) {
@@ -5384,7 +5384,7 @@ RoamMenuWindow::map_menu(
                 if (newcols > maxcols)
                         newcols = maxcols;
  
-                XtVaSetValues(menu, XmNnumColumns, newcols, NULL);
+                XtVaSetValues(menu, XmNnumColumns, newcols, nullptr);
 
         }
  
@@ -5399,7 +5399,7 @@ RoamMenuWindow::setTitle(char *suffix)
     MailSession		*ses = theRoamApp.session();
     DtMail::Session	*d_session = ses->session();
     char *prefix = CATGETS(DT_catd, 1, 6, "Mailer");
-    char *path = NULL;
+    char *path = nullptr;
     char *new_title;
     char *format;
     int   len;
@@ -5442,14 +5442,14 @@ void
 RoamMenuWindow::removeVacationTitle()
 {
     // Reset the title on the roam menu window; take out "[Vacation]"
-    setTitle(NULL);
+    setTitle(nullptr);
 }
 
 void
 RoamMenuWindow::ShowErrMsg(char * fsname,Boolean compose,void *client_data)
 {
-Widget parent=NULL;
-  assert((NULL != fsname));
+Widget parent=nullptr;
+  assert((nullptr != fsname));
   if(!compose)
   {
     RoamMenuWindow * self = (RoamMenuWindow *)client_data;
@@ -5477,7 +5477,7 @@ Widget parent=NULL;
 
             genDialog->post_and_return(
                                 CATGETS(DT_catd, 3, 9, "OK"),
-                                NULL);
+                                nullptr);
             delete genDialog;
 }
 void
@@ -5498,13 +5498,13 @@ RoamMenuWindow::sync_work_area_size(void)
 {
     Dimension width, height;
 
-    XtVaGetValues(_workArea, XmNwidth, &width, XmNheight, &height, NULL);
+    XtVaGetValues(_workArea, XmNwidth, &width, XmNheight, &height, nullptr);
 
     if (_workarea_width && _workarea_height &&
 	(_workarea_width!=width || _workarea_height!=height))
     {
 	enableWorkAreaResize();
-	XtVaSetValues(_workArea, XmNwidth, width, XmNheight, height, NULL);
+	XtVaSetValues(_workArea, XmNwidth, width, XmNheight, height, nullptr);
 	disableWorkAreaResize();
     }
     _workarea_width = width;

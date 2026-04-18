@@ -55,10 +55,10 @@ PrintJob::PrintJob(BaseObj *parent,
 	: BaseObj(parent, JobName)
 {
    AddAction(&PrintJob::CancelJob, CANCEL_PRINT_JOB, MESSAGE(CancelChoiceL),
-	     MESSAGE(CancelMnemonicL), NULL, NULL, true,
+	     MESSAGE(CancelMnemonicL), nullptr, nullptr, true,
 	     MESSAGE(CancelAcceleratorL), "<Key>osfDelete");
 
-   char *Help = NULL, *ContextualHelp = NULL, *Listing = NULL;
+   char *Help = nullptr, *ContextualHelp = nullptr, *Listing = nullptr;
    Characteristics Mask = OPTIONAL;
    ValueList ValueListType = NO_LIST;
    int n = 0;
@@ -123,5 +123,5 @@ int PrintJob::CancelJob(BaseObj *obj, char **output, BaseObj * /*requestor*/)
 #else
    sprintf(command, "cancel %s-%s", me->Parent()->Name(), me->_jobNumber);
 #endif
-   return me->RunCommand(command, NULL, output);
+   return me->RunCommand(command, nullptr, output);
 }

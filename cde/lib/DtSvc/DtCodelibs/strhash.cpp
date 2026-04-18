@@ -61,7 +61,7 @@ unsigned strhash(const char *p)
 	unsigned g;
 	wchar_t __nlh_char[1];
 
-	if (p != NULL)
+	if (p != nullptr)
 		while (*p != '\0')
 		{
 			h = (h << 4) + (unsigned)CHARADV(p);
@@ -83,7 +83,7 @@ unsigned strhashi(const char *p)
 	unsigned g;
 	wchar_t __nlh_char[1];
 
-	if (p != NULL)
+	if (p != nullptr)
 		while (*p != '\0')
 		{
 			if (mblen(p, MB_CUR_MAX) > 1)

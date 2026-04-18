@@ -62,8 +62,8 @@
 #include "Help.hh"
 #include "MailMsg.h"
 
-static const char	*ABOUT_TITLE = NULL;
-static char		*DTMAIL_VERSION = NULL;
+static const char	*ABOUT_TITLE = nullptr;
+static char		*DTMAIL_VERSION = nullptr;
 static const char	*credits = "Dtmail was brought to you by: ";
 static int 		doCredits = 0;
 
@@ -71,8 +71,8 @@ DtMailGenDialog::DtMailGenDialog(char *name, Widget parent, int style)
 : UIComponent(name)
 {
     
-    _w = XmCreateMessageDialog(parent, name, NULL, 0);
-    XtVaSetValues(_w, XmNdialogStyle, style, NULL);
+    _w = XmCreateMessageDialog(parent, name, nullptr, 0);
+    XtVaSetValues(_w, XmNdialogStyle, style, nullptr);
 
     // Disable the frame menu from all dialogs.  We don't want 
     // the user to be able to dismiss dialogs through the frame
@@ -81,13 +81,13 @@ DtMailGenDialog::DtMailGenDialog(char *name, Widget parent, int style)
     XtVaSetValues(
 		XtParent(_w),
 		XmNmwmDecorations, MWM_DECOR_ALL | MWM_DECOR_MENU,
-		NULL);
+		nullptr);
 
     _info_dialog = 0;
-    _otherWidget = (Widget) NULL;
-    _textField = (Widget) NULL;
+    _otherWidget = (Widget) nullptr;
+    _textField = (Widget) nullptr;
     _maxTextlen = 0;
-    _clearText = NULL;
+    _clearText = nullptr;
     _shroudText = 0;
 
     _parentshell = parent;
@@ -111,7 +111,7 @@ DtMailGenDialog::post(void *clientData,
     // Make sure the dialog exists, and that it is an XmMessageBox
     // or subclass, since the callbacks assume this widget type
     
-    assert (dialog != NULL);
+    assert (dialog != nullptr);
 
     // Make sure the dialog buttons are managed
     Widget ok_button = XmMessageBoxGetChild(dialog, XmDIALOG_OK_BUTTON);
@@ -177,7 +177,7 @@ DtMailGenDialog::post(void *clientData,
     // Make sure the parent dialog is popped up and occupying the
     // current workspace.
     //
-    if (NULL != _parentshell)
+    if (nullptr != _parentshell)
     {
         XtPopup(_parentshell, XtGrabNone);
 	displayInCurrentWorkspace(_parentshell);
@@ -186,7 +186,7 @@ DtMailGenDialog::post(void *clientData,
     // Post the dialog.
     XtManageChild(dialog);
 
-    if (NULL != _textField && XtIsManaged(_textField))
+    if (nullptr != _textField && XtIsManaged(_textField))
       XmProcessTraversal(_textField, XmTRAVERSE_CURRENT);
     return dialog;
 }
@@ -202,7 +202,7 @@ DtMailGenDialog::okCallback(Widget w, XtPointer clientData, XtPointer cbs)
     
     // If caller specified an ok callback, call the function
     
-    if ((callback=dcd->ok()) != NULL) (*callback)(dcd->clientData());
+    if ((callback=dcd->ok()) != nullptr) (*callback)(dcd->clientData());
 
     // If the help widget was popped up, destroy it.
     Widget helpWidget = getErrorHelpWidget();
@@ -216,7 +216,7 @@ DtMailGenDialog::okCallback(Widget w, XtPointer clientData, XtPointer cbs)
     // Reset for the next time
     
     Widget ow = dcd->other_w();
-    if (ow != NULL)
+    if (ow != nullptr)
     	XtRemoveCallback(
 			ow, 
 		      	XmNactivateCallback, 
@@ -235,7 +235,7 @@ DtMailGenDialog::okCallback(Widget w, XtPointer clientData, XtPointer cbs)
 	doCredits = 0;
 	obj->setToAboutDialog();
 	// char * helpId = "About";
-	char * helpId = NULL;
+	char * helpId = nullptr;
 	int answer = obj->post_and_return(CATGETS(DT_catd, 1, 180, "OK"),
 					  helpId);
     }
@@ -247,7 +247,7 @@ void DtMailGenDialog::cancelCallback(Widget w, XtPointer clientData, XtPointer)
     DtMailGenDialog      *obj = (DtMailGenDialog *) dcd->dialog();
     DialogCallback      callback;
     
-    if ((callback=dcd->cancel()) != NULL) (*callback)(dcd->clientData());
+    if ((callback=dcd->cancel()) != nullptr) (*callback)(dcd->clientData());
     
     // If the help widget was popped up, destroy it.
     Widget helpWidget = getErrorHelpWidget();
@@ -260,7 +260,7 @@ void DtMailGenDialog::cancelCallback(Widget w, XtPointer clientData, XtPointer)
 
 
     Widget ow = dcd->other_w();
-    if (ow != NULL)
+    if (ow != nullptr)
     	XtRemoveCallback ( ow, 
 		      XmNactivateCallback, 
 		      &DtMailGenDialog::otherCallback,
@@ -275,7 +275,7 @@ void DtMailGenDialog::otherCallback(Widget w, XtPointer clientData, XtPointer)
     DtMailGenDialog      *obj = (DtMailGenDialog *) dcd->dialog();
     DialogCallback      callback;
     
-    if ((callback=dcd->other()) != NULL) (*callback)(dcd->clientData());
+    if ((callback=dcd->other()) != nullptr) (*callback)(dcd->clientData());
 
     XtRemoveCallback(
 		w, 
@@ -293,7 +293,7 @@ void DtMailGenDialog::helpCallback(Widget, XtPointer clientData, XtPointer)
     DtMailGenDialog      *obj = (DtMailGenDialog *) dcd->dialog();
     DialogCallback      callback;
 
-    if ((callback=dcd->help()) != NULL) (*callback)(dcd->clientData());
+    if ((callback=dcd->help()) != nullptr) (*callback)(dcd->clientData());
 }
 
 void DtMailGenDialog::verifyCallback(Widget, XtPointer clientD, XtPointer callD)
@@ -340,7 +340,7 @@ void DtMailGenDialog::verify(XmTextVerifyPtr cbs)
     {
 	_maxTextlen *= 2;
 	_clearText = (char*) realloc((void*) _clearText, (size_t) _maxTextlen);
-	assert(NULL!=_clearText);
+	assert(nullptr!=_clearText);
     }
     strcpy(_clearText, buffer);
 
@@ -372,7 +372,7 @@ void DtMailGenDialog::cleanup(Widget w, DtMailDialogCallbackData *dcd)
     if (XtHasCallbacks(w, XmNhelpCallback) == XtCallbackHasSome)
       XtRemoveAllCallbacks(w, XmNhelpCallback);
     
-    if (NULL != _textField && XtIsManaged(_textField))
+    if (nullptr != _textField && XtIsManaged(_textField))
       XtUnmanageChild(_textField);
     
     // Delete the DtMailDialogCallbackData instance for this posting
@@ -447,12 +447,12 @@ DtMailGenDialog::post_and_return(char *helpId)
     // Make sure the dialog exists, and that it is an XmMessageBox
     // or subclass, since the callbacks assume this widget type
     
-    assert ( _w != NULL );
+    assert ( _w != nullptr );
 
     XtVaSetValues(_w,
 		  XmNokLabelString, okLabel,
 		  XmNcancelLabelString, cancelLabel,
-		  NULL);
+		  nullptr);
     XmStringFree( okLabel);
     XmStringFree( cancelLabel);
 
@@ -462,7 +462,7 @@ DtMailGenDialog::post_and_return(char *helpId)
 	    this->post((void *) &answer,
 		   ( DialogCallback ) &genDialogOKCallback,
 		   ( DialogCallback ) &genDialogCancelCallback,
-		   ( DialogCallback ) NULL,
+		   ( DialogCallback ) nullptr,
 		   ( DialogCallback ) &HelpErrorCB,
 		   helpId
 		   );
@@ -471,9 +471,9 @@ DtMailGenDialog::post_and_return(char *helpId)
 	    this->post((void *) &answer,
 		   ( DialogCallback ) &genDialogOKCallback,
 		   ( DialogCallback ) &genDialogCancelCallback,
-		   ( DialogCallback ) NULL,
-		   ( DialogCallback ) NULL,
-		   NULL
+		   ( DialogCallback ) nullptr,
+		   ( DialogCallback ) nullptr,
+		   nullptr
 		   );
     }
 
@@ -507,29 +507,29 @@ DtMailGenDialog::post_and_return(
     // Make sure the dialog exists, and that it is an XmMessageBox
     // or subclass, since the callbacks assume this widget type
     
-    assert ( _w != NULL );
+    assert ( _w != nullptr );
 
     XtVaSetValues(_w,
 		  XmNokLabelString, okLabel,
-		  NULL);
+		  nullptr);
     XmStringFree( okLabel);
 
     Widget dialog;
     if (helpId) {
 	dialog = this->post((void *) &answer,
 			       ( DialogCallback ) &genDialogOKCallback,
-			       ( DialogCallback ) NULL,
-			       ( DialogCallback ) NULL,
+			       ( DialogCallback ) nullptr,
+			       ( DialogCallback ) nullptr,
 			       ( DialogCallback ) &HelpErrorCB,
 			       helpId
 			       );
     } else {
 	dialog = this->post((void *) &answer,
 			       ( DialogCallback ) &genDialogOKCallback,
-			       ( DialogCallback ) NULL,
-			       ( DialogCallback ) NULL,
-			       ( DialogCallback ) NULL,
-			       NULL
+			       ( DialogCallback ) nullptr,
+			       ( DialogCallback ) nullptr,
+			       ( DialogCallback ) nullptr,
+			       nullptr
 			       );
     }
 
@@ -564,21 +564,21 @@ DtMailGenDialog::post_and_return(
     // Make sure the dialog exists, and that it is an XmMessageBox
     // or subclass, since the callbacks assume this widget type
     
-    assert ( _w != NULL );
+    assert ( _w != nullptr );
 
     XtVaSetValues(_w,
 		  XmNokLabelString, okLabel,
 		  XmNcancelLabelString, cancelLabel,
-		  NULL);
+		  nullptr);
     XmStringFree( okLabel);
     XmStringFree( cancelLabel);
 
-    Widget dialog = NULL;
+    Widget dialog = nullptr;
     if (helpId) {
 	dialog = this->post((void *) &answer,
 			       ( DialogCallback ) &genDialogOKCallback,
 			       ( DialogCallback ) &genDialogCancelCallback,
-			       ( DialogCallback ) NULL,
+			       ( DialogCallback ) nullptr,
 			       ( DialogCallback ) &HelpErrorCB,
 			       helpId
 			       );
@@ -586,9 +586,9 @@ DtMailGenDialog::post_and_return(
 	dialog = this->post((void *) &answer,
 			       ( DialogCallback ) &genDialogOKCallback,
 			       ( DialogCallback ) &genDialogCancelCallback,
-			       ( DialogCallback ) NULL,
-			       ( DialogCallback ) NULL,
-			       NULL
+			       ( DialogCallback ) nullptr,
+			       ( DialogCallback ) nullptr,
+			       nullptr
 			       );
     }
 
@@ -624,18 +624,18 @@ DtMailGenDialog::post_and_return(
     // Make sure the dialog exists, and that it is an XmMessageBox
     // or subclass, since the callbacks assume this widget type
     
-    assert ( _w != NULL );
+    assert ( _w != nullptr );
 
-    Widget dialog = NULL;
+    Widget dialog = nullptr;
     Widget cancel_w = XmMessageBoxGetChild ( _w, XmDIALOG_CANCEL_BUTTON );
 
-    if (_otherWidget == NULL) {
+    if (_otherWidget == nullptr) {
 	_otherWidget = XtVaCreateWidget(otherLabelString,
 				xmPushButtonGadgetClass, _w,
 				XmNleftAttachment, XmMessageBoxGetChild ( _w,
 					  XmDIALOG_OK_BUTTON ),
 				XmNrightAttachment, cancel_w,
-				NULL);
+				nullptr);
 	XtManageChild (_otherWidget);
     }
 
@@ -649,10 +649,10 @@ DtMailGenDialog::post_and_return(
     XtVaSetValues(_w,
 		  XmNokLabelString, okLabel,
 		  XmNcancelLabelString, cancelLabel,
-		  NULL);
+		  nullptr);
     XtVaSetValues(_otherWidget,
 		  XmNlabelString, otherLabel,
-		  NULL);
+		  nullptr);
     XmStringFree( okLabel);
     XmStringFree( cancelLabel);
     XmStringFree( otherLabel);
@@ -671,8 +671,8 @@ DtMailGenDialog::post_and_return(
                    ( DialogCallback ) &genDialogOKCallback,
                    ( DialogCallback ) &genDialogCancelCallback,
                    ( DialogCallback ) &genDialogOtherCallback,
-                   ( DialogCallback ) NULL,
-                   NULL
+                   ( DialogCallback ) nullptr,
+                   nullptr
                    );
     }
 
@@ -697,7 +697,7 @@ DtMailGenDialog::setDialog(char * title, char * text, unsigned char type)
 		    XmNmessageString, xmStr,
 		    XmNdialogTitle, titleStr,
 		    XmNdialogType,  type,
-		    NULL );
+		    nullptr );
     XmStringFree(xmStr);
     XmStringFree ( titleStr );
     _info_dialog = 0;
@@ -707,7 +707,7 @@ char *
 DtMailGenDialog::getTextFieldValue()
 {
     if (_clearText) return strdup(_clearText);
-    return NULL;
+    return nullptr;
 }
 
 void
@@ -717,10 +717,10 @@ DtMailGenDialog::setToTextFieldDialog(
     int	  shroud
 )
 {
-    if (NULL != _textField)
+    if (nullptr != _textField)
     {
-	if (NULL != _clearText) *_clearText = '\0';
-	XtVaSetValues(_textField, XmNvalue, "", NULL);
+	if (nullptr != _clearText) *_clearText = '\0';
+	XtVaSetValues(_textField, XmNvalue, "", nullptr);
         XtManageChild(_textField);
     }
     else
@@ -728,7 +728,7 @@ DtMailGenDialog::setToTextFieldDialog(
         _textField = XtVaCreateManagedWidget(
 			"GenDialogTF", xmTextFieldWidgetClass, _w,
 			XmNcolumns, 30,
-			NULL);
+			nullptr);
 	XtAddCallback(
 			_textField,
 			XmNmodifyVerifyCallback,DtMailGenDialog::verifyCallback,
@@ -736,7 +736,7 @@ DtMailGenDialog::setToTextFieldDialog(
 	_maxTextlen = 256;
         _clearText = (char*) malloc(_maxTextlen);
 	memset(_clearText, 0, _maxTextlen);
-	assert(NULL!=_clearText);
+	assert(nullptr!=_clearText);
     }
     _shroudText = shroud;
     setDialog(title, text, XmDIALOG_QUESTION);
@@ -748,7 +748,7 @@ DtMailGenDialog::setToQuestionDialog(
     char *text
 )
 {
-    if (NULL != _textField && XtIsManaged(_textField))
+    if (nullptr != _textField && XtIsManaged(_textField))
       XtUnmanageChild(_textField);
     
     setDialog(title, text, XmDIALOG_QUESTION);
@@ -760,7 +760,7 @@ DtMailGenDialog::setToWarningDialog(
     char *text
 )
 {
-    if (NULL != _textField && XtIsManaged(_textField))
+    if (nullptr != _textField && XtIsManaged(_textField))
       XtUnmanageChild(_textField);
     
     setDialog(title, text, XmDIALOG_WARNING);
@@ -772,7 +772,7 @@ DtMailGenDialog::setToErrorDialog(
     char *text
 )
 {
-    if (NULL != _textField && XtIsManaged(_textField))
+    if (nullptr != _textField && XtIsManaged(_textField))
       XtUnmanageChild(_textField);
     
     setDialog(title, text, XmDIALOG_ERROR);
@@ -785,7 +785,7 @@ DtMailGenDialog::setToInfoDialog(
     char *text
 )
 {
-    if (NULL != _textField && XtIsManaged(_textField))
+    if (nullptr != _textField && XtIsManaged(_textField))
       XtUnmanageChild(_textField);
     
     setDialog(title, text, XmDIALOG_INFORMATION);
@@ -804,7 +804,7 @@ DtMailGenDialog::setToAboutDialog(void)
 	doCredits = 0;
     }
     else {
-	if (NULL == ABOUT_TITLE) {
+	if (nullptr == ABOUT_TITLE) {
 	    char *version;
 
 	    ABOUT_TITLE = CATGETS(DT_catd, 1, 235, "Mailer - About Mailer");
@@ -823,12 +823,12 @@ DtMailGenDialog::setToAboutDialog(void)
     _info_dialog = 1;
 
     char * icon_filename = XmGetIconFileName(XtScreen(_w),
-					     NULL,
+					     nullptr,
 					     "DtMail",
-					     NULL,
+					     nullptr,
 					     DtLARGE);
 
-    if (icon_filename == NULL) {
+    if (icon_filename == nullptr) {
 	return;
     }
 
@@ -837,7 +837,7 @@ DtMailGenDialog::setToAboutDialog(void)
     XtVaGetValues (_w,
 		   XmNforeground, &fg,
 		   XmNbackground, &bg,
-		   NULL);
+		   nullptr);
 
     Pixmap icon = XmGetPixmap(XtScreen(_w),
 			      icon_filename,
@@ -905,9 +905,9 @@ DtMailGenDialog::setToAboutDialog(void)
 
     XtVaSetValues ( _w,
 		    XmNsymbolPixmap, clipped_icon,
-		    NULL );
+		    nullptr );
 
-    if (NULL != _textField && XtIsManaged(_textField))
+    if (nullptr != _textField && XtIsManaged(_textField))
       XtUnmanageChild(_textField);
     
 }

@@ -63,8 +63,8 @@ DtMail::MailBox::MailBox(DtMailEnv & error,
     error.clear();
     _space = space;
     _arg = arg;
-    _errmsg_func = NULL;
-    _err_data = NULL;
+    _errmsg_func = nullptr;
+    _err_data = nullptr;
     _callback = cb;
     _cb_data = clientData;
     _obj_mutex = MutexInit();
@@ -76,7 +76,7 @@ DtMail::MailBox::~MailBox(void)
 {
     if (_obj_mutex) {
 	MutexDestroy(_obj_mutex);
-	_obj_mutex = NULL;
+	_obj_mutex = nullptr;
 
 	_session->removeObjectKey(_key);
     }
@@ -91,7 +91,7 @@ DtMail::MailBox::appendCB(
 {
     DtMail::MailBox *obj = (DtMail::MailBox*) clientData;
 
-    if (NULL == obj) return;
+    if (nullptr == obj) return;
     obj->append(error, buf, len);
 }
 
@@ -117,8 +117,8 @@ DtMail::MailBox::registerErrMsgFunc(err_func errmsg_func, void * err_data)
 void
 DtMail::MailBox::unregisterErrMsgFunc(DtMailEnv&)
 {
-    _errmsg_func = NULL;
-    _err_data = NULL;
+    _errmsg_func = nullptr;
+    _err_data = nullptr;
 }
 void
 DtMail::MailBox::showError(char *fsnam)

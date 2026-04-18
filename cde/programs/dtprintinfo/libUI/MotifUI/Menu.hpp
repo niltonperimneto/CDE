@@ -55,24 +55,24 @@ class Menu : public MotifUI {
    Menu(char *category,
         MotifUI *parent,
 	char *name,
-	char *mnemonic = NULL,
+	char *mnemonic = nullptr,
 	MenuType menu_type = PULLDOWN_MENU);
    Menu(char *category,
 	MotifUI *parent,
 	boolean has_title,
         char *title,
 	char *name,
-	char *mnemonic = NULL,
+	char *mnemonic = nullptr,
 	MenuType menu_type = PULLDOWN_MENU);
    Menu(MotifUI *parent,
 	char *name,
-	char *mnemonic = NULL,
+	char *mnemonic = nullptr,
 	MenuType menu_type = PULLDOWN_MENU);
    Menu(MotifUI *parent,
 	boolean has_title,
 	char *title,
 	char *name,
-	char *mnemonic = NULL,
+	char *mnemonic = nullptr,
 	MenuType menu_type = PULLDOWN_MENU);
 
    void SetRadio(boolean flag);

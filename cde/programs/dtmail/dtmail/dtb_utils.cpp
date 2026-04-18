@@ -213,22 +213,22 @@ static Boolean path_is_executable(
 /*
  * Variable for storing client session save callback
  */
-static DtbClientSessionSaveCB		dtb_client_session_saveCB = NULL;
+static DtbClientSessionSaveCB		dtb_client_session_saveCB = nullptr;
 
 /*
  * Variable for storing top level widget
  */
-static Widget		dtb_project_toplevel_widget = (Widget)NULL;
+static Widget		dtb_project_toplevel_widget = (Widget)nullptr;
 
 /*
  * Variable for storing command used to invoke application
  */
-static char				*dtb_save_command_str = (char *)NULL;
+static char				*dtb_save_command_str = (char *)nullptr;
 
 /*
  * Directory where the binary for this process whate loaded from
  */
-static char				*dtb_exe_dir = (char *)NULL;
+static char				*dtb_exe_dir = (char *)nullptr;
 
 /*
  * Application Builder utility funcs
@@ -247,7 +247,7 @@ dtb_cvt_file_to_pixmap(
 {
 #define pixmapReturn (*pixmapReturnPtr)
     Pixmap	pixmap = 0;
-    Screen	*screen = NULL;
+    Screen	*screen = nullptr;
     Pixel	fgPixel = 0;
     Pixel	bgPixel = 0;
     char	*image_path = new char[MAXPATHLEN+1];
@@ -266,7 +266,7 @@ dtb_cvt_file_to_pixmap(
     XtVaGetValues(widget,
 	XmNforeground, &fgPixel,
 	XmNbackground, &bgPixel,
-	NULL);
+	nullptr);
 
     /*
      * In CDE, XmGetPixmap handles .xpm files, as well.
@@ -316,18 +316,18 @@ dtb_set_label_from_bitmap_data(
     unsigned char	*bitmapData
 )
 {
-    Display		*display = NULL;
-    Screen		*screen = NULL;
+    Display		*display = nullptr;
+    Screen		*screen = nullptr;
     Drawable		window = 0;
     long		bgPixel = 0;
     long		fgPixel = 0;
     unsigned int	depth = 0;
     Pixmap		labelPixmap = 0;
 
-    if (   (widget == NULL)
+    if (   (widget == nullptr)
 	|| (width < 1)
 	|| (height < 1)
-	|| (bitmapData == NULL) )
+	|| (bitmapData == nullptr) )
     {
         return -1;
     }
@@ -353,7 +353,7 @@ dtb_set_label_from_bitmap_data(
 		XmNbackground,	&widgetBg,
 		XmNforeground,	&widgetFg,
 		XmNdepth,	&widgetDepth,
-		NULL);
+		nullptr);
 	bgPixel = widgetBg;
 	fgPixel = widgetFg;
 	depth = widgetDepth;
@@ -383,7 +383,7 @@ dtb_set_label_from_bitmap_data(
 /*
  * Sets the label and insensitive label pixmaps of the widget.  
  *
- * If either (or both) pixmap is NULL, it is ignored.
+ * If either (or both) pixmap is nullptr, it is ignored.
  */
 int
 dtb_set_label_pixmaps(
@@ -392,7 +392,7 @@ dtb_set_label_pixmaps(
     Pixmap	labelInsensitivePixmap
 )
 {
-    if (   (widget == NULL)
+    if (   (widget == nullptr)
 	|| ((labelPixmap == 0) && (labelInsensitivePixmap == 0)) )
     {
 	return -1;
@@ -401,15 +401,15 @@ dtb_set_label_pixmaps(
     /*
      * Set the appropriate resources.
      */
-    XtVaSetValues(widget, XmNlabelType,	XmPIXMAP, NULL);
+    XtVaSetValues(widget, XmNlabelType,	XmPIXMAP, nullptr);
     if (labelPixmap != 0)
     {
-	XtVaSetValues(widget, XmNlabelPixmap, labelPixmap, NULL);
+	XtVaSetValues(widget, XmNlabelPixmap, labelPixmap, nullptr);
     }
     if (labelInsensitivePixmap != 0)
     {
 	XtVaSetValues(widget, XmNlabelInsensitivePixmap, 
-				labelInsensitivePixmap, NULL);
+				labelInsensitivePixmap, nullptr);
     }
 
     return 0;
@@ -427,18 +427,18 @@ dtb_file_has_extension(
 {
     Boolean        hasExt = FALSE;
 
-    if (extension == NULL)
+    if (extension == nullptr)
     {
-        hasExt = ( (fileName == NULL) || (strlen(fileName) == 0) );
+        hasExt = ( (fileName == nullptr) || (strlen(fileName) == 0) );
     }   
     else
     {   
-        if (fileName == NULL)
+        if (fileName == nullptr)
             hasExt = FALSE;
         else
         {
             char *dotPtr= strrchr(fileName, '.');
-            if (dotPtr == NULL)
+            if (dotPtr == nullptr)
                 hasExt= FALSE;
             else if (strcmp(dotPtr+1, extension) == 0)
 	 	hasExt = TRUE;
@@ -492,7 +492,7 @@ dtb_cvt_image_file_to_pixmap(
     }
     else /* Append extensions to locate best graphic match */
     {
-    	XtVaGetValues(widget, XmNdepth, &depth, NULL);
+    	XtVaGetValues(widget, XmNdepth, &depth, nullptr);
 
     	if (depth > 1) /* Look for Color Graphics First */
     	{
@@ -573,7 +573,7 @@ dtb_cvt_resource_from_string(
     unsigned short	cvt_value2 = 0;
     unsigned int	cvt_value3 = 0;
     unsigned long	cvt_value4 = 0;
-    XtPointer		cvt_value_ptr = NULL;
+    XtPointer		cvt_value_ptr = nullptr;
     int			which_cvt_value = -1;
     XrmValue		source;
     XrmValue		dest;
@@ -677,19 +677,19 @@ dtb_create_greyed_pixmap(
 
     dpy = XtDisplay(widget);
 
-    if(pixmap == XmUNSPECIFIED_PIXMAP || pixmap == (Pixmap)NULL) {
+    if(pixmap == XmUNSPECIFIED_PIXMAP || pixmap == (Pixmap)nullptr) {
 	fprintf(stderr,"dtb_create_greyed_pixmap: Invalid source pixmap\n");
-	return((Pixmap)NULL);
+	return((Pixmap)nullptr);
     }
 
     XtVaGetValues(widget,
 	XmNbackground, &background,
-	NULL);
+	nullptr);
 
     /* Get width/height of source pixmap */
     if (!XGetGeometry(dpy,pixmap,&root,&x,&y,&width,&height,&bw,&depth)) {
 	fprintf(stderr,"dtb_create_greyed_pixmap: Invalid source pixmap\n");
-	    return((Pixmap)NULL);
+	    return((Pixmap)nullptr);
     }
     gcv.foreground = background;
     gcv.fill_style = FillStippled;
@@ -712,7 +712,7 @@ dtb_create_greyed_pixmap(
 ** Routines to save and access the toplevel widget for an application.
 ** This is useful in dtb_ convenience functions, and also probably by
 ** developers in routines they provide in their _stubs.c files.
-** static Widget dtb_project_toplevel_widget = (Widget) NULL;
+** static Widget dtb_project_toplevel_widget = (Widget) nullptr;
 */
 void
 dtb_save_toplevel_widget(
@@ -747,7 +747,7 @@ dtb_save_command(
     if (determine_exe_dir(argv0, exe_dir, MAXPATHLEN+1) >= 0)
     {
 	dtb_exe_dir = (char *)malloc(strlen(exe_dir)+1);
-	if (dtb_exe_dir != NULL)
+	if (dtb_exe_dir != nullptr)
 	{
 	    strcpy(dtb_exe_dir, exe_dir);
 	}
@@ -782,7 +782,7 @@ dtb_help_dispatch(
     Arg             	wargs[10];
     char		*buffer = new char[100];
     Widget		back_button;
-    static Widget	Quick_help_dialog = (Widget)NULL;
+    static Widget	Quick_help_dialog = (Widget)nullptr;
     static Widget	MoreButton;
 
     /* 
@@ -794,8 +794,8 @@ dtb_help_dispatch(
     ** Checking the status of the more-help info also lets us decide whether
     ** the "More..." button should be enabled on the dialog.
     */
-    if( help_data->help_volume     ==0 || *(help_data->help_volume) == NULL ||
-	help_data->help_locationID ==0 || *(help_data->help_locationID)== NULL){
+    if( help_data->help_volume     ==0 || *(help_data->help_volume) == nullptr ||
+	help_data->help_locationID ==0 || *(help_data->help_locationID)== nullptr){
 		buffer[0] = '\0';
     }
     else {
@@ -811,7 +811,7 @@ dtb_help_dispatch(
     ** its internal stack mechanism takes repeated settings as separate items
     ** and updates the stack for each.)
     */
-    if(Quick_help_dialog == (Widget)NULL) {
+    if(Quick_help_dialog == (Widget)nullptr) {
         /* Create shared help dialog */
         i = 0;
 	XtSetArg(wargs[i],XmNtitle, "Application Help");            i++;
@@ -860,7 +860,7 @@ dtb_help_dispatch(
     	    DtNhelpType, DtHELP_TYPE_DYNAMIC_STRING,
             DtNhelpVolume,buffer,
             DtNstringData,help_data->help_text,
-	    NULL);
+	    nullptr);
     }
 
     /* Now display the help dialog */
@@ -887,20 +887,20 @@ dtb_more_help_dispatch(
     Arg             	wargs[10];
     String		buffer, vol, loc;
     char		*cp;
-    static Widget	GeneralHelpDialog = (Widget) NULL;
+    static Widget	GeneralHelpDialog = (Widget) nullptr;
     Widget		help_dialog = (Widget)clientData;
 
     /* Fetch the saved volume/locationID information from the dialog widget */
     XtVaGetValues(help_dialog,
 	DtNhelpVolume,&buffer,
-	NULL);
+	nullptr);
 
     /* 
     ** Parse the combined volume/locationID string.  If that fails there
     ** must be no data, so don't bother displaying the GeneralHelpDialog.
     ** (We shouldn't be in this callback routine if that happens, though...)
     */
-    if( (cp=strrchr(buffer,'/')) != (char *)NULL) {
+    if( (cp=strrchr(buffer,'/')) != (char *)nullptr) {
 	*cp++ = 0;
 	vol = buffer;
 	loc = cp; 
@@ -909,7 +909,7 @@ dtb_more_help_dispatch(
 	return;
     }
 
-    if(GeneralHelpDialog == (Widget)NULL) {
+    if(GeneralHelpDialog == (Widget)nullptr) {
 	/* Create General Help Dialog */
         i = 0;
 	XtSetArg(wargs[i],XmNtitle, "Application Help");        i++;
@@ -957,7 +957,7 @@ dtb_help_back_hdlr(
     XtVaGetValues(help_dialog,
 	DtNhelpVolume,&buffer,
 	DtNstringData,&text,
-	NULL);
+	nullptr);
 
     /* Get a handle to the "More..." button */
     more_button = DtHelpQuickDialogGetChild(help_dialog,
@@ -967,7 +967,7 @@ dtb_help_back_hdlr(
     ** button if there isn't any help info, and enable it if there is.
     */
     if( buffer == 0 || (*buffer == '\0') ||
-	(cp=strrchr(buffer,'/')) == (char *)NULL) {
+	(cp=strrchr(buffer,'/')) == (char *)nullptr) {
 		XtSetSensitive(more_button,False);
     }
     else {
@@ -989,16 +989,16 @@ dtb_do_onitem_help()
 
     /* Call the DtHelp routine that supports interactive on-item help. */
     if(DtHelpReturnSelectedWidgetId(dtb_get_toplevel_widget(),
-	(Cursor)NULL,&target) != DtHELP_SELECT_VALID) return;
+	(Cursor)nullptr,&target) != DtHELP_SELECT_VALID) return;
 	
     /*
     ** Starting at the target widget, wander up the widget tree looking
     ** for one that has an XmNhelpCallback, and call the first one we
     ** find.
     */
-    while(target != (Widget)NULL) {
+    while(target != (Widget)nullptr) {
 	if( XtHasCallbacks(target,XmNhelpCallback) == XtCallbackHasSome) {
-	    XtCallCallbacks(target,XmNhelpCallback,(XtPointer)NULL);
+	    XtCallCallbacks(target,XmNhelpCallback,(XtPointer)nullptr);
 	    return;
 	}
 	else {
@@ -1023,9 +1023,9 @@ dtb_show_help_volume_info(
 {
     int             	i;
     Arg             	wargs[10];
-    static Widget	GeneralHelpDialog = (Widget) NULL;
+    static Widget	GeneralHelpDialog = (Widget) nullptr;
     
-    if(GeneralHelpDialog == (Widget)NULL) {
+    if(GeneralHelpDialog == (Widget)nullptr) {
 	/* Create General Help Dialog */
         i = 0;
 	XtSetArg(wargs[i],XmNtitle, "Application Help");        i++;
@@ -1067,7 +1067,7 @@ dtb_call_help_callback(
 {
 	Widget target = (Widget)clientData;
 
-	XtCallCallbacks(target,XmNhelpCallback,(XtPointer)NULL);
+	XtCallCallbacks(target,XmNhelpCallback,(XtPointer)nullptr);
 }
 #endif /* DEAD_WOOD */
 
@@ -1091,10 +1091,10 @@ dtb_session_save(
     				new_argc_counter,
     				i;
     char			**new_argv,
-    				**client_argv = NULL,
+    				**client_argv = nullptr,
     				*session_file_path,
     				*session_file_name,
-    				*app_name = NULL;
+    				*app_name = nullptr;
     Boolean			status = False;
     DtbClientSessionSaveCB	session_saveCB;
 
@@ -1270,7 +1270,7 @@ dtb_children_center(
     XtVaGetValues(form,
             XmNnumChildren, &num_children,
             XmNchildren, &children_list,
-            NULL);
+            nullptr);
 
     /*
      * Center all children
@@ -1305,7 +1305,7 @@ dtb_children_uncenter(
     XtVaGetValues(form,
             XmNnumChildren, &num_children,
             XmNchildren, &children_list,
-            NULL);
+            nullptr);
 
     /*
      * Center all children
@@ -1395,7 +1395,7 @@ center_widget(
 		XmNheight, &height,
 		XmNleftAttachment, &left_attach,
 		XmNtopAttachment, &top_attach,
-                NULL);
+                nullptr);
 
     switch (type) {
 	case DTB_CENTER_POSITION_VERT:
@@ -1407,7 +1407,7 @@ center_widget(
 
             XtVaSetValues(form_child,
 		XmNleftOffset, center_offset,
-		NULL);
+		nullptr);
 
 	break;
 
@@ -1420,7 +1420,7 @@ center_widget(
 
             XtVaSetValues(form_child,
 		XmNtopOffset, center_offset,
-		NULL);
+		nullptr);
 	break;
 
 	case DTB_CENTER_POSITION_BOTH:
@@ -1438,7 +1438,7 @@ center_widget(
             XtVaSetValues(form_child,
 		XmNleftOffset, left_offset,
 		XmNtopOffset, top_offset,
-		NULL);
+		nullptr);
 	}
 	break;
 
@@ -1473,7 +1473,7 @@ uncenter_widget(
     XtVaGetValues(form_child,
 		XmNleftAttachment, &left_attach,
 		XmNtopAttachment, &top_attach,
-                NULL);
+                nullptr);
 
     switch (type) {
 	case DTB_CENTER_POSITION_VERT:
@@ -1483,7 +1483,7 @@ uncenter_widget(
 
             XtVaSetValues(form_child,
 		XmNleftOffset, 0,
-		NULL);
+		nullptr);
 
 	break;
 
@@ -1494,7 +1494,7 @@ uncenter_widget(
 
             XtVaSetValues(form_child,
 		XmNtopOffset, 0,
-		NULL);
+		nullptr);
 	break;
 
 	case DTB_CENTER_POSITION_BOTH:
@@ -1506,7 +1506,7 @@ uncenter_widget(
             XtVaSetValues(form_child,
 		XmNleftOffset, 0,
 		XmNtopOffset, 0,
-		NULL);
+		nullptr);
 	break;
 
 	default:
@@ -1553,10 +1553,10 @@ get_label_widget(
 )
 {
     WidgetList	children_list;
-    Widget	label_widget = NULL;
+    Widget	label_widget = nullptr;
     int		num_children = 0;
-    char	*subobj_name = NULL,
-		*label_name = NULL;
+    char	*subobj_name = nullptr,
+		*label_name = nullptr;
 
     if (XtIsSubclass(widget, xmLabelWidgetClass))  {
 	return(widget);
@@ -1583,12 +1583,12 @@ get_label_widget(
         XtVaGetValues(widget,
             XmNnumChildren, &num_children,
             XmNchildren, &children_list,
-            NULL);
+            nullptr);
 
     if (num_children > 0)
         return(get_label_widget(children_list[0]));
 
-    return (NULL);
+    return (nullptr);
 }
 
 
@@ -1599,13 +1599,13 @@ get_offset_from_ancestor(
 )
 {
     Widget	cur = w;
-    Widget	cur_parent = NULL;
+    Widget	cur_parent = nullptr;
     Position	offset = 0;
 
     if (!ancestor || !w || (w == ancestor))
 	return (0);
 
-    XtVaGetValues(cur, XmNx, &offset, NULL);
+    XtVaGetValues(cur, XmNx, &offset, nullptr);
 
     cur_parent = XtParent(cur);
 
@@ -1614,7 +1614,7 @@ get_offset_from_ancestor(
         Position	tmp_offset = 0;
 
 	cur = cur_parent;
-        XtVaGetValues(cur, XmNx, &tmp_offset, NULL);
+        XtVaGetValues(cur, XmNx, &tmp_offset, nullptr);
 	
 	offset += tmp_offset;
         cur_parent = XtParent(cur);
@@ -1629,7 +1629,7 @@ get_label_width(
     Widget	widget
 )
 {
-    Widget	lbl_widget = NULL;
+    Widget	lbl_widget = nullptr;
     Dimension	lbl_width = 0;
 
     lbl_widget = get_label_widget(widget);
@@ -1640,7 +1640,7 @@ get_label_width(
 
         XtVaGetValues(lbl_widget,
             XmNwidth, &lbl_width,
-            NULL);
+            nullptr);
 
 	offset = get_offset_from_ancestor(widget, lbl_widget);
 
@@ -1659,7 +1659,7 @@ get_widest_label(
     Dimension	*label_width
 )
 {
-    Widget	cur_widest = NULL;
+    Widget	cur_widest = nullptr;
     Dimension	cur_width = 0;
     int		i;
 
@@ -1689,7 +1689,7 @@ get_widest_value(
     Dimension	*value_width
 )
 {
-    Widget	cur_widest = NULL;
+    Widget	cur_widest = nullptr;
     Dimension	cur_width = 0;
     int		i;
 
@@ -1698,7 +1698,7 @@ get_widest_value(
 	Dimension	tmp, label_width, obj_width = 0;
 
 	label_width = get_label_width(list[i]);
-	XtVaGetValues(list[i], XmNwidth, &obj_width, NULL);
+	XtVaGetValues(list[i], XmNwidth, &obj_width, nullptr);
 
 	tmp = obj_width - label_width;
 
@@ -1728,7 +1728,7 @@ get_widget_rect(
         XtNheight,      (XtArgVal)&(rect->height),
         XtNx,           (XtArgVal)&(rect->x),
         XtNy,           (XtArgVal)&(rect->y),
-        NULL);
+        nullptr);
 }
 
 
@@ -1757,10 +1757,10 @@ get_greatest_size(
     *height = w_rect.height;
     previous_height = *height;
 
-    if (tallest != NULL)
+    if (tallest != nullptr)
         *tallest = list[0];
 
-    if (widest != NULL)
+    if (widest != nullptr)
     	*widest = list[0];
 
     for (i=0; i < count; i++)
@@ -1768,11 +1768,11 @@ get_greatest_size(
         get_widget_rect(list[i], &w_rect);
 
         *width = max((int) w_rect.width, (int) *width); 
-	if (widest != NULL && *width > previous_width)
+	if (widest != nullptr && *width > previous_width)
 		*widest = list[i];
 
         *height = max((int) w_rect.height, (int)*height);
-	if (tallest != NULL && *height > previous_height)
+	if (tallest != nullptr && *height > previous_height)
 		*tallest = list[i];
     }
 }
@@ -1786,7 +1786,7 @@ get_group_cell_size(
     int			*cell_height
 )
 {
-    WidgetList	children_list = NULL;
+    WidgetList	children_list = nullptr;
     int		num_children = 0;
 
     /*
@@ -1795,11 +1795,11 @@ get_group_cell_size(
     XtVaGetValues(parent,
             XmNnumChildren, &num_children,
             XmNchildren, &children_list,
-            NULL);
+            nullptr);
 
     get_greatest_size(children_list, num_children,
 		cell_width, cell_height,
-		(Widget *)NULL, (Widget *)NULL);
+		(Widget *)nullptr, (Widget *)nullptr);
 }
 
 
@@ -1811,7 +1811,7 @@ get_group_row_col(
     int			*cols
 )
 {
-    WidgetList	children_list = NULL;
+    WidgetList	children_list = nullptr;
     int		num_rows,
 		num_cols,
     		num_children;
@@ -1829,7 +1829,7 @@ get_group_row_col(
     XtVaGetValues(parent,
             XmNnumChildren, &num_children,
             XmNchildren, &children_list,
-            NULL);
+            nullptr);
 
     num_rows = group_info->num_rows;
     num_cols = group_info->num_cols;
@@ -1861,8 +1861,8 @@ get_group_child(
 )
 {
     DTB_GROUP_TYPES	group_type;
-    WidgetList		children_list = NULL;
-    Widget		ret_child = NULL;
+    WidgetList		children_list = nullptr;
+    Widget		ret_child = nullptr;
     int			num_children = 0,
 			num_rows,
 			num_columns,
@@ -1870,7 +1870,7 @@ get_group_child(
 
     if (!parent || !group_info || 
        (x_pos < 0) || (y_pos < 0))
-	return (NULL);
+	return (nullptr);
 
     group_type = group_info->group_type;
     num_rows = group_info->num_rows;
@@ -1882,10 +1882,10 @@ get_group_child(
     XtVaGetValues(parent,
             XmNnumChildren, &num_children,
             XmNchildren, &children_list,
-            NULL);
+            nullptr);
 
     if (num_children <= 0)
-	return (NULL);
+	return (nullptr);
 
     switch (group_type)
     {
@@ -1973,7 +1973,7 @@ dtb_children_align(
     }
 
 #ifdef DTB_GROUP_USERDATA
-    XtVaGetValues(parent, XmNuserData, (XtPointer)&group_info, NULL);
+    XtVaGetValues(parent, XmNuserData, (XtPointer)&group_info, nullptr);
 
     if (group_info)
     {
@@ -1998,10 +1998,10 @@ dtb_children_align(
     group_info->num_cols = num_cols;
     group_info->hoffset = hoffset;
     group_info->voffset = voffset;
-    group_info->ref_widget = NULL;
+    group_info->ref_widget = nullptr;
 
 #ifdef DTB_GROUP_USERDATA
-    XtVaSetValues(parent, XmNuserData, (XtPointer)group_info, NULL);
+    XtVaSetValues(parent, XmNuserData, (XtPointer)group_info, nullptr);
 #endif
 
     align_children(parent, group_info, True);
@@ -2049,7 +2049,7 @@ align_children(
     Bool		init
 )
 {
-    WidgetList	children_list = NULL;
+    WidgetList	children_list = nullptr;
     int		num_children = 0;
 
     if (!parent || !group_info)
@@ -2060,7 +2060,7 @@ align_children(
         XtVaGetValues(parent,
             XmNnumChildren, &num_children,
             XmNchildren, &children_list,
-            NULL);
+            nullptr);
 
         XtUnmanageChildren(children_list, num_children);
     }
@@ -2114,7 +2114,7 @@ align_handler(
     XtVaGetValues(widget,
             XmNnumChildren, &num_children,
             XmNchildren, &children_list,
-            NULL);
+            nullptr);
 
     if (num_children <= 0)
 	return;
@@ -2300,7 +2300,7 @@ align_left(
     XtVaGetValues(parent,
             XmNnumChildren, &num_children,
             XmNchildren, &children_list,
-            NULL);
+            nullptr);
 
     if (num_children <= 0)
 	return;
@@ -2345,7 +2345,7 @@ align_left(
 		{
 		    Dimension	width = 0;
 
-		    XtVaGetValues(previous_child, XmNwidth, &width, NULL);
+		    XtVaGetValues(previous_child, XmNwidth, &width, nullptr);
 		    offset += (cell_width - (int)(width));
 		}
 
@@ -2404,7 +2404,7 @@ align_right(
     XtVaGetValues(parent,
             XmNnumChildren, &num_children,
             XmNchildren, &children_list,
-            NULL);
+            nullptr);
 
     if (num_children <= 0)
 	return;
@@ -2428,7 +2428,7 @@ align_right(
 	    {
 		Dimension	width = 0;
 
-		XtVaGetValues(child, XmNwidth, &width, NULL);
+		XtVaGetValues(child, XmNwidth, &width, nullptr);
 
 		offset = (cell_width - width);
 
@@ -2454,7 +2454,7 @@ align_right(
 		{
 		    Dimension	width = 0;
 
-		    XtVaGetValues(child, XmNwidth, &width, NULL);
+		    XtVaGetValues(child, XmNwidth, &width, nullptr);
 		    offset += (cell_width - width);
 		}
 
@@ -2491,11 +2491,11 @@ align_labels(
     DtbGroupInfo	*group_info
 )
 {
-    WidgetList	children_list = NULL,
-		one_col = NULL;
-    Widget	previous_child = NULL,
+    WidgetList	children_list = nullptr,
+		one_col = nullptr;
+    Widget	previous_child = nullptr,
 		child,
-		previous_ref_widget = NULL;
+		previous_ref_widget = nullptr;
     Dimension	ref_lbl_width = 0,
 		max_label_width = 0,
 		max_value_width = 0;
@@ -2517,7 +2517,7 @@ align_labels(
     XtVaGetValues(parent,
             XmNnumChildren, &num_children,
             XmNchildren, &children_list,
-            NULL);
+            nullptr);
 
     if (num_children <= 0)
 	return;
@@ -2614,7 +2614,7 @@ align_vcenter(
     XtVaGetValues(parent,
             XmNnumChildren, &num_children,
             XmNchildren, &children_list,
-            NULL);
+            nullptr);
 
     if (num_children <= 0)
 	return;
@@ -2650,7 +2650,7 @@ align_vcenter(
 	    if (!child)
 		continue;
 
-	    XtVaGetValues(child, XmNwidth, &width, NULL);
+	    XtVaGetValues(child, XmNwidth, &width, nullptr);
 
 	    if (init)
 	    {
@@ -2690,7 +2690,7 @@ align_top(
 )
 {
     WidgetList	children_list;
-    Widget	previous_child = NULL,
+    Widget	previous_child = nullptr,
 		child;
     int		num_children = 0,
 		num_columns,
@@ -2709,7 +2709,7 @@ align_top(
     XtVaGetValues(parent,
             XmNnumChildren, &num_children,
             XmNchildren, &children_list,
-            NULL);
+            nullptr);
 
     if (num_children <= 0)
 	return;
@@ -2753,7 +2753,7 @@ align_top(
 		    {
 			Dimension	height = 0;
 
-			XtVaGetValues(previous_child, XmNheight, &height, NULL);
+			XtVaGetValues(previous_child, XmNheight, &height, nullptr);
 
 		        offset += (cell_height - (int)(height));
 		    }
@@ -2812,7 +2812,7 @@ align_bottom(
     XtVaGetValues(parent,
             XmNnumChildren, &num_children,
             XmNchildren, &children_list,
-            NULL);
+            nullptr);
 
     if (num_children <= 0)
 	return;
@@ -2836,7 +2836,7 @@ align_bottom(
 	    {
 		Dimension	height = 0;
 
-		XtVaGetValues(child, XmNheight, &height, NULL);
+		XtVaGetValues(child, XmNheight, &height, nullptr);
 
 		offset = cell_height - height;
 
@@ -2857,7 +2857,7 @@ align_bottom(
 	        {
 		    Dimension	height = 0;
 
-		    XtVaGetValues(child, XmNheight, &height, NULL);
+		    XtVaGetValues(child, XmNheight, &height, nullptr);
 
 	            offset = group_info->voffset;
 
@@ -2898,7 +2898,7 @@ align_hcenter(
     Bool		init
 )
 {
-    WidgetList	children_list = NULL;
+    WidgetList	children_list = nullptr;
     Widget	child;
     DTB_GROUP_TYPES group_type;
     int		num_children = 0,
@@ -2921,7 +2921,7 @@ align_hcenter(
     XtVaGetValues(parent,
             XmNnumChildren, &num_children,
             XmNchildren, &children_list,
-            NULL);
+            nullptr);
 
     if (num_children <= 0)
 	return;
@@ -2957,7 +2957,7 @@ align_hcenter(
 	    if (!child)
 		continue;
 
-	    XtVaGetValues(child, XmNheight, &height, NULL);
+	    XtVaGetValues(child, XmNheight, &height, nullptr);
 
 	    if (init)
 	    {
@@ -3013,7 +3013,7 @@ determine_exe_dir(
 {
     Boolean	foundDir= False;
 
-    if ((buf == NULL) || (bufSize < 1))
+    if ((buf == nullptr) || (bufSize < 1))
     {
 	return -1;
     }
@@ -3038,23 +3038,23 @@ determine_exe_dir(
     if (foundDir && (buf[0] != '/'))
     {
 	char	cwd[MAXPATHLEN+1];
-	char	*env_pwd = NULL;
-	char	*path_prefix = NULL;
+	char	*env_pwd = nullptr;
+	char	*path_prefix = nullptr;
 
-	if (getcwd(cwd, MAXPATHLEN+1) != NULL)
+	if (getcwd(cwd, MAXPATHLEN+1) != nullptr)
 	{
 	    path_prefix = cwd;
 	}
 	else
 	{
 	    env_pwd = getenv("PWD");
-	    if (env_pwd != NULL)
+	    if (env_pwd != nullptr)
 	    {
 		path_prefix = env_pwd;
 	    }
 	}
 
-	if (path_prefix != NULL)
+	if (path_prefix != nullptr)
 	{
 	    char *abs_exe_dir = new char[MAXPATHLEN+1];
 	    if (strcmp(buf, ".") != 0) {
@@ -3114,7 +3114,7 @@ determine_exe_dir_from_path (
     Boolean	moreDirs= True;
     char	*szExeName= argv0;
     int		iExeNameLen= strlen(szExeName);
-    char	*szTemp= NULL;
+    char	*szTemp= nullptr;
     char	*szPathVar = new char[MAXPATHLEN+1];
     int		iPathVarLen= 0;
     char	*szCurrentPath = new char[MAXPATHLEN+1];
@@ -3125,7 +3125,7 @@ determine_exe_dir_from_path (
     uid_t	egid= getegid();
 
     szTemp= getenv("PATH");
-    if (szTemp == NULL)
+    if (szTemp == nullptr)
     {
 	moreDirs= False;
     }

@@ -53,7 +53,7 @@ DtPrtProps::DtPrtProps(DtMainW *parent, char *name, DtPrinterIcon *_printer)
    mainw = parent;
    printer = _printer;
    _iconFile = STRDUP(printer->IconFile());
-   findSetD = NULL;
+   findSetD = nullptr;
    _has_been_posted = false;
 
    int i, captionWidth = 0, width, columns = 0;
@@ -76,14 +76,14 @@ DtPrtProps::DtPrtProps(DtMainW *parent, char *name, DtPrinterIcon *_printer)
     }
 
    icon_prompt = new Prompt(this, MESSAGE(IconLabelL), true, STRING_PROMPT,
-		            (char *)printer->Name(), NULL,
-		            NULL, true, columns, 1, captionWidth + 8);
+		            (char *)printer->Name(), nullptr,
+		            nullptr, true, columns, 1, captionWidth + 8);
    icon_prompt->AttachLeft();
    icon_prompt->AttachRight();
    icon_prompt->AttachTop(5);
 		       
    Container *form = new Container(this, "form", FORM);
-   icon_group = new Group(form, NULL, FORM_BOX);
+   icon_group = new Group(form, nullptr, FORM_BOX);
    LabelObj *label = new LabelObj(form, MESSAGE(IconGroupTitleL),
 				  RIGHT_JUSTIFIED);
    label->AttachTop();
@@ -96,20 +96,20 @@ DtPrtProps::DtPrtProps(DtMainW *parent, char *name, DtPrinterIcon *_printer)
    icon_group->AttachLeft(label);
 
    // Creation of Large Icon
-   largeIcon = new IconObj(icon_group, NULL, printer->IconFile());
+   largeIcon = new IconObj(icon_group, nullptr, printer->IconFile());
    largeIcon->IconView(VERY_LARGE_ICON);
    largeIcon->AttachLeft(10);
    largeIcon->AttachTop(10);
    largeIcon->AttachBottom(10);
 
    // Creation of Medium Icon
-   mediumIcon = new IconObj(icon_group, NULL, printer->IconFile());
+   mediumIcon = new IconObj(icon_group, nullptr, printer->IconFile());
    mediumIcon->IconView(MEDIUM_ICON);
    mediumIcon->AttachLeft(largeIcon, 10);
    mediumIcon->AttachBottom(10);
 
    // Creation of Small Icon
-   smallIcon = new IconObj(icon_group, NULL, printer->IconFile());
+   smallIcon = new IconObj(icon_group, nullptr, printer->IconFile());
    smallIcon->IconView(SMALL_ICON);
    smallIcon->AttachLeft(mediumIcon, 10);
    smallIcon->AttachBottom(10);
@@ -130,8 +130,8 @@ DtPrtProps::DtPrtProps(DtMainW *parent, char *name, DtPrinterIcon *_printer)
    for (i = 0; i < n_attributes; i++)
     {
       new Prompt(rc, attributes[i]->DisplayName, false, STRING_PROMPT,
-		 attributes[i]->DisplayValue, NULL,
-		 NULL, true, columns, 1, captionWidth + 8);
+		 attributes[i]->DisplayValue, nullptr,
+		 nullptr, true, columns, 1, captionWidth + 8);
       if (mainw->PrinterAppMode() != CONFIG_PRINTERS)
        {
 	 char *value;
@@ -145,7 +145,7 @@ DtPrtProps::DtPrtProps(DtMainW *parent, char *name, DtPrinterIcon *_printer)
 	    value = _printer->PrintDeviceUp() ? MESSAGE(UpL) : MESSAGE(DownL);
 #endif
          new Prompt(rc, MESSAGE(PrinterStatusL), false, STRING_PROMPT,
-		    value, NULL, NULL, true, columns, 1, captionWidth + 8);
+		    value, nullptr, nullptr, true, columns, 1, captionWidth + 8);
        }
     }
 
@@ -160,7 +160,7 @@ DtPrtProps::DtPrtProps(DtMainW *parent, char *name, DtPrinterIcon *_printer)
 
    description = new Prompt(this, MESSAGE(DescriptionL), false,
 			    MULTI_LINE_STRING_PROMPT, printer->Description(),
-			    NULL, NULL, true, columns, 3, captionWidth + 8);
+			    nullptr, nullptr, true, columns, 3, captionWidth + 8);
    description->AttachLeft();
    description->AttachRight();
    description->AttachTop(form, 5);
@@ -252,7 +252,7 @@ void DtPrtProps::Apply()
    sprintf(buf, "%s.%ld", filename, (long)getpid());
    rename(buf, filename);
    DtActionInvoke(((AnyUI *)mainw->Parent())->BaseWidget(), "ReloadActions",
-                  NULL, 0, NULL, NULL, NULL, True, NULL, NULL);
+                  nullptr, 0, nullptr, nullptr, nullptr, True, nullptr, nullptr);
    delete [] buf;
    mainw->WorkingCursor(false);
    mainw->status_line->Name(save_msg);

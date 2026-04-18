@@ -162,7 +162,7 @@ SearchCmd::SearchCmd(
 		     ) : InterruptibleCmd (name, label, active)
 {
     _menuwindow = window;
-    _criteria = NULL;
+    _criteria = nullptr;
 }
 
 void
@@ -279,7 +279,7 @@ OpenInboxCmd::doit()
     else
     {
 	DtMailEnv	mail_error;
-	char		*mail_file = NULL;
+	char		*mail_file = nullptr;
 	DtMailObjectSpace space;
 	DtMail::Session *d_session = theRoamApp.session()->session();
 
@@ -351,7 +351,7 @@ OpenContainerCmd::doit()
 {
     DtMailEnv error;
     
-    assert(_menuWindow != NULL);
+    assert(_menuWindow != nullptr);
     
     // Initialize the mail_error.
     error.clear();
@@ -424,11 +424,11 @@ ConvertContainerCmd::ConvertContainerCmd(
     _menuWindow = window;
     _num_converted = 0;
     _num_to_be_converted = 0;
-    _dialog = NULL;
-    _criteria = NULL;
-    _conv_cb = NULL;
-    _src = NULL;
-    _dest = NULL;
+    _dialog = nullptr;
+    _criteria = nullptr;
+    _conv_cb = nullptr;
+    _src = nullptr;
+    _dest = nullptr;
 }
 
 void
@@ -470,7 +470,7 @@ ConvertContainerCmd::execute ( RoamTaskDoneCallback rtd_callback,
 void
 ConvertContainerCmd::doit()
 {
-    assert(_menuWindow != NULL);
+    assert(_menuWindow != nullptr);
     
     MailSession *ses = theRoamApp.session();
     DtMailEnv mail_error;
@@ -546,7 +546,7 @@ ConvertContainerCmd::post_dialog()
 		   buf,
 		   _menuWindow->baseWidget(),
 		   (void *) this,
-		   NULL, 
+		   nullptr, 
 		   &RoamInterruptibleCmd::interruptCallback );
     
     XtVaGetValues(_dialog->baseWidget(),
@@ -554,7 +554,7 @@ ConvertContainerCmd::post_dialog()
 		  XmNy, &y,
 		  XmNwidth, &wid,
 		  XmNheight, &ht,
-		  NULL);
+		  nullptr);
     
 }
 
@@ -621,7 +621,7 @@ ChooseCmd::ChooseCmd(
 		      ) :  NoUndoCmd( name, label, active )
 {
     _menuwindow = window;
-    _msgno = NULL;
+    _msgno = nullptr;
 }
 
 void
@@ -662,7 +662,7 @@ DeleteCmd::DeleteCmd(
 		      ) :  Cmd ( name, label, active )
 {
     _menuwindow = window;
-    _msgno = NULL;
+    _msgno = nullptr;
 }
 
 void
@@ -705,8 +705,8 @@ DestroyCmd::undoit()
 
 // Unified Select File Cmd stuff
 int   UnifiedSelectFileCmd::_is_initialized = 0;
-char *UnifiedSelectFileCmd::_unified_directory = NULL;
-char *UnifiedSelectFileCmd::_unified_file = NULL;
+char *UnifiedSelectFileCmd::_unified_directory = nullptr;
+char *UnifiedSelectFileCmd::_unified_file = nullptr;
 int   UnifiedSelectFileCmd::_unified_hidden = 0;
 int   UnifiedSelectFileCmd::_unify_selection = 1;
 
@@ -735,13 +735,13 @@ UnifiedSelectFileCmd::UnifiedSelectFileCmd (
    {
        FORCE_SEGV_DECL(DtMail::Session, m_session);
        DtMailEnv	error;
-       const char	*dirname = NULL;
-       const char	*expanded_dirname = NULL;
-       const char	*value = NULL;
-       char		*full_dirname = NULL;
+       const char	*dirname = nullptr;
+       const char	*expanded_dirname = nullptr;
+       const char	*value = nullptr;
+       char		*full_dirname = nullptr;
 
-       _unified_directory = NULL;
-       _unified_file = NULL;
+       _unified_directory = nullptr;
+       _unified_file = nullptr;
        _unified_hidden = 0;
        _unify_selection = 1;
        _is_initialized = 1;
@@ -783,12 +783,12 @@ UnifiedSelectFileCmd::~UnifiedSelectFileCmd()
 void
 UnifiedSelectFileCmd::doit()
 {
-    if (NULL == _fileBrowser)
+    if (nullptr == _fileBrowser)
     {
         SelectFileCmd::doit();
-        if (NULL != _unified_directory)
+        if (nullptr != _unified_directory)
           setDirectory(_unified_directory);
-        if (NULL != _unified_file)
+        if (nullptr != _unified_file)
           setSelected(_unified_file);
         setHidden(_unified_hidden);
     }
@@ -796,9 +796,9 @@ UnifiedSelectFileCmd::doit()
     {
         if (_unify_selection)
         {
-            if (NULL != _unified_directory)
+            if (nullptr != _unified_directory)
               setDirectory(_unified_directory);
-            if (NULL != _unified_file)
+            if (nullptr != _unified_file)
               setSelected(_unified_file);
             setHidden(_unified_hidden);
         }
@@ -811,7 +811,7 @@ UnifiedSelectFileCmd::unifiedFileSelectedCB(void *client_data, char *selection)
 {
     UnifiedSelectFileCmd *self = (UnifiedSelectFileCmd *) client_data;
 
-    if (NULL != self)
+    if (nullptr != self)
     {
         self->updateUnifiedData();
         self->unifiedFileSelected(selection);
@@ -826,7 +826,7 @@ UnifiedSelectFileCmd::unifiedFileSelected(char *selection)
     SafePathIsAccessible(error, selection);
     if (error.isSet())
     {
-	const char *errmsg = NULL;
+	const char *errmsg = nullptr;
 	char *err;
 	int answer;
 
@@ -849,7 +849,7 @@ UnifiedSelectFileCmd::unifiedFileCanceledCB(void *client_data, char *)
 {
     UnifiedSelectFileCmd *self = (UnifiedSelectFileCmd *) client_data;
 
-    if (NULL != self)
+    if (nullptr != self)
       self->updateUnifiedData();
 }
 
@@ -859,12 +859,12 @@ UnifiedSelectFileCmd::updateUnifiedData()
     if (! _unify_selection)
       return;
 
-    if (NULL != _unified_file)
+    if (nullptr != _unified_file)
       XtFree(_unified_file);
     _unified_file = getSelected();
 
 
-    if (NULL != _unified_directory)
+    if (nullptr != _unified_directory)
       XtFree(_unified_directory);
     _unified_directory = getDirectory();
 
@@ -873,8 +873,8 @@ UnifiedSelectFileCmd::updateUnifiedData()
 
 // Unified Select Mailbox Cmd stuff
 int   UnifiedSelectMailboxCmd::_is_initialized = 0;
-char *UnifiedSelectMailboxCmd::_unified_directory = NULL;
-char *UnifiedSelectMailboxCmd::_unified_file = NULL;
+char *UnifiedSelectMailboxCmd::_unified_directory = nullptr;
+char *UnifiedSelectMailboxCmd::_unified_file = nullptr;
 int   UnifiedSelectMailboxCmd::_unified_hidden = 0;
 int   UnifiedSelectMailboxCmd::_unify_selection = 1;
 
@@ -906,13 +906,13 @@ UnifiedSelectMailboxCmd::UnifiedSelectMailboxCmd (
    {
        FORCE_SEGV_DECL(DtMail::Session, m_session);
        DtMailEnv	 error;
-       const char	*dirname = NULL;
-       const char	*expanded_dirname = NULL;
-       const char	*value = NULL;
-       char		*full_dirname = NULL;
+       const char	*dirname = nullptr;
+       const char	*expanded_dirname = nullptr;
+       const char	*value = nullptr;
+       char		*full_dirname = nullptr;
 
-       _unified_directory = NULL;
-       _unified_file = NULL;
+       _unified_directory = nullptr;
+       _unified_file = nullptr;
        _unified_hidden = 0;
        _unify_selection = 1;
        _is_initialized = 1;
@@ -955,12 +955,12 @@ UnifiedSelectMailboxCmd::~UnifiedSelectMailboxCmd()
 void
 UnifiedSelectMailboxCmd::doit()
 {
-    if (NULL == _fileBrowser)
+    if (nullptr == _fileBrowser)
     {
         SelectFileCmd::doit();
-        if (NULL != _unified_directory)
+        if (nullptr != _unified_directory)
           setDirectory(_unified_directory);
-        if (NULL != _unified_file)
+        if (nullptr != _unified_file)
           setSelected(_unified_file);
         setHidden(_unified_hidden);
 
@@ -969,15 +969,15 @@ UnifiedSelectMailboxCmd::doit()
 		_fileBrowser,
 		XmNfileSearchProc,
 		UnifiedSelectMailboxCmd::unifiedMailboxSearchProc,
-		NULL);
+		nullptr);
     }
     else
     {
         if (_unify_selection)
         {
-            if (NULL != _unified_directory)
+            if (nullptr != _unified_directory)
               setDirectory(_unified_directory);
-            if (NULL != _unified_file)
+            if (nullptr != _unified_file)
               setSelected(_unified_file);
             setHidden(_unified_hidden);
         }
@@ -1032,14 +1032,14 @@ UnifiedSelectMailboxCmd::unifiedMailboxSearchProc(
 	XtFree(dir);
         return;
     } 
-    fileList = NULL;
+    fileList = nullptr;
 
     XtVaGetValues(
 		w,
 		XmNfileTypeMask, &fileTypeMask,
 		XmNfileFilterStyle, &fileFilterStyle,
 		XmNpathMode, &pathMode,
-		NULL);
+		nullptr);
 
     _XmOSBuildFileList(
 		dir, pattern, fileTypeMask,
@@ -1060,7 +1060,7 @@ UnifiedSelectMailboxCmd::unifiedMailboxSearchProc(
 	while (Index < numFiles)
 	{
 	    Boolean	isMailBox = 0;
-	    char	*dataType = NULL;
+	    char	*dataType = nullptr;
 
 	    dataType = DtDtsFileToDataType(fileList[Index]);
 	    if (dataType)
@@ -1074,12 +1074,12 @@ UnifiedSelectMailboxCmd::unifiedMailboxSearchProc(
 		  XmStringFileList[numItems++] = 
 			XmStringGenerate(fileList[Index],
 					 XmFONTLIST_DEFAULT_TAG,
-					 XmCHARSET_TEXT, NULL);
+					 XmCHARSET_TEXT, nullptr);
 		else 
 		  XmStringFileList[numItems++] = 
 			XmStringGenerate(&(fileList[Index])[dirLen],
 					 XmFONTLIST_DEFAULT_TAG,
-					 XmCHARSET_TEXT, NULL) ;
+					 XmCHARSET_TEXT, nullptr) ;
 	    } 
 	    ++Index ;
 	} 
@@ -1092,7 +1092,7 @@ UnifiedSelectMailboxCmd::unifiedMailboxSearchProc(
 		XmNfileListItemCount, numItems,
 		XmNfileListItems, XmStringFileList,
 		XmNlistUpdated, TRUE,
-		NULL);
+		nullptr);
 
         Index = numFiles;
         while(Index--)
@@ -1108,9 +1108,9 @@ UnifiedSelectMailboxCmd::unifiedMailboxSearchProc(
 	XtVaSetValues(
 		w,
 		XmNfileListItemCount, 0,
-		XmNfileListItems, NULL,
+		XmNfileListItems, nullptr,
 		XmNlistUpdated, TRUE,
-		NULL);
+		nullptr);
     } 
 
     XtFree((char *) fileList);
@@ -1126,7 +1126,7 @@ UnifiedSelectMailboxCmd::unifiedMailboxSelectedCB(
 {
     UnifiedSelectMailboxCmd *self = (UnifiedSelectMailboxCmd *) client_data;
 
-    if (NULL != self)
+    if (nullptr != self)
     {
         self->updateUnifiedData();
         self->unifiedMailboxSelected(
@@ -1147,8 +1147,8 @@ UnifiedSelectMailboxCmd::unifiedMailboxSelected(
     SafePathIsAccessible(error, selection);
     if (error.isSet())
     {
-	const char *errmsg = NULL;
-	char *err = NULL;
+	const char *errmsg = nullptr;
+	char *err = nullptr;
 	int answer;
 
         errmsg = (const char*) error;
@@ -1170,7 +1170,7 @@ UnifiedSelectMailboxCmd::unifiedMailboxCanceledCB(void *client_data, char *)
 {
     UnifiedSelectMailboxCmd *self = (UnifiedSelectMailboxCmd *) client_data;
 
-    if (NULL != self)
+    if (nullptr != self)
       self->updateUnifiedData();
 }
 
@@ -1180,12 +1180,12 @@ UnifiedSelectMailboxCmd::updateUnifiedData()
     if (! _unify_selection)
       return;
 
-    if (NULL != _unified_file)
+    if (nullptr != _unified_file)
       XtFree(_unified_file);
     _unified_file = getSelected();
 
 
-    if (NULL != _unified_directory)
+    if (nullptr != _unified_directory)
       XtFree(_unified_directory);
     _unified_directory = getDirectory();
 
@@ -1272,7 +1272,7 @@ MoveToInboxCmd::doit()
     mail_error.clear();
     
     // Get a handle to the Inbox.
-    char * mail_file = NULL;
+    char * mail_file = nullptr;
     DtMailObjectSpace space;
     DtMail::Session * d_session = theRoamApp.session()->session();
     
@@ -1311,7 +1311,7 @@ CopyToInboxCmd::doit()
     mail_error.clear();
  
     // Get a handle to the Inbox.
-    char * mail_file = NULL;
+    char * mail_file = nullptr;
     DtMailObjectSpace space;
     DtMail::Session * d_session = theRoamApp.session()->session();
  
@@ -1401,9 +1401,9 @@ UndeleteCmd::UndeleteCmd (
 			   ) : ChooseCmd  ( name, label, active, window )
 {
     _menuwindow = window;
-    _undelFromList = NULL;
+    _undelFromList = nullptr;
     _fromList = viaDeleteList;
-    _clientData = NULL;
+    _clientData = nullptr;
     _num_deleted = 0;
 }
 
@@ -1480,7 +1480,7 @@ void
 SaveCmd::doit()
 {
     
-    assert(_menuwindow->mailbox() != NULL);
+    assert(_menuwindow->mailbox() != nullptr);
 }
 #endif /* DEAD_WOOD */
 
@@ -1506,11 +1506,11 @@ MoveCopyCmd::MoveCopyCmd( char *name,
 {
     _copy_callback = copy_callback;
     _menuwindow = menu_window;
-    _copy_button = NULL;
-    _move_button = NULL;
-    _file_list = NULL;
-    _file_text = NULL;
-    _default_button = NULL;
+    _copy_button = nullptr;
+    _move_button = nullptr;
+    _file_list = nullptr;
+    _file_text = nullptr;
+    _default_button = nullptr;
 }
 
 MoveCopyCmd::~MoveCopyCmd()
@@ -1547,14 +1547,14 @@ MoveCopyCmd::doit()
 	unused_button = XtVaCreateWidget(
 			"Unused Button",
 			xmPushButtonWidgetClass, _fileBrowser,
-			NULL);
+			nullptr);
 	_copy_button = XtVaCreateManagedWidget(
 			CATGETS(DT_catd, 1, 237, "Copy"),
 			/*xmPushButtonWidgetClass, _fileBrowser,*/
 			xmPushButtonGadgetClass, _fileBrowser,
                 	XmNlabelString,
 			XmStringCreateLocalized(CATGETS(DT_catd, 1, 43, "Copy")),
-			NULL);
+			nullptr);
 	printHelpId("Copy", _copy_button);
 	//
 	// add help callback
@@ -1597,7 +1597,7 @@ MoveCopyCmd::doit()
 		(XtPointer) this);
 
 	_file_text = XtNameToWidget(_fileBrowser, "*Text");
-	if (NULL != _file_text)
+	if (nullptr != _file_text)
 	  XtAddCallback(
 		_file_text,
 		XmNfocusCallback, &MoveCopyCmd::setDefaultButtonCB,
@@ -1621,10 +1621,10 @@ MoveCopyCmd::fileSelectedCallback2 (
     MoveCopyCmd	*obj = (MoveCopyCmd *) clientData;
     XmFileSelectionBoxCallbackStruct *cb =
         	(XmFileSelectionBoxCallbackStruct *) callData;
-    char	*name = NULL;
-    char	*dir_str = NULL;
-    char	*fname = NULL;
-    char	*dname = NULL;
+    char	*name = nullptr;
+    char	*dir_str = nullptr;
+    char	*fname = nullptr;
+    char	*dname = nullptr;
     int		status = 0;
     XmString	xmstr;
     
@@ -1636,31 +1636,31 @@ MoveCopyCmd::fileSelectedCallback2 (
     //
     // Get the file name
     //
-    XtVaGetValues(obj->_fileBrowser, XmNdirectory, &xmstr, NULL);
+    XtVaGetValues(obj->_fileBrowser, XmNdirectory, &xmstr, nullptr);
     if (xmstr)
       dname = (char*) _XmStringUngenerate(
-					xmstr, NULL,
+					xmstr, nullptr,
 					XmMULTIBYTE_TEXT, XmMULTIBYTE_TEXT);
     
     //
     // Get the file name
     //
-    XtVaGetValues(obj->_fileBrowser, XmNdirSpec, &xmstr, NULL);
+    XtVaGetValues(obj->_fileBrowser, XmNdirSpec, &xmstr, nullptr);
     if (xmstr)
     {
 	// Extract the first character string matching the default
 	// character set from the compound string
         fname = (char *) _XmStringUngenerate(
-					xmstr, NULL,
+					xmstr, nullptr,
 					XmMULTIBYTE_TEXT, XmMULTIBYTE_TEXT);
 	  
-	if (NULL == fname || strlen(fname) == 0)
+	if (nullptr == fname || strlen(fname) == 0)
 	  return;
 
 	// If a string was successfully extracted, call
 	// unifiedMailboxSelected to handle the file.
 	*selected = '\0';
-	if (NULL != dname) snprintf(selected, sizeof(selected), "%s", dname);
+	if (nullptr != dname) snprintf(selected, sizeof(selected), "%s", dname);
 	strcat(selected, fname);
         obj->updateUnifiedData();
 	obj->unifiedMailboxSelected(
@@ -1853,7 +1853,7 @@ PrintCmd::printit( int silent )
     
     // Create tmp file.
     snprintf(tmpdir, MAXPATHLEN+1, "%s/%s", getenv("HOME"), DtPERSONAL_TMP_DIRECTORY);
-    if ((p = tempnam(tmpdir, "dtmail")) == NULL) {
+    if ((p = tempnam(tmpdir, "dtmail")) == nullptr) {
 	delete [] tmpdir;
 	return;
     }
@@ -1896,7 +1896,7 @@ PrintCmd::_register_tmp_file(
     struct tmp_file	*f;
     
     // Allocate struct to hold id and temp file
-    if ((f = (struct tmp_file *)malloc(sizeof(struct tmp_file))) == NULL) {
+    if ((f = (struct tmp_file *)malloc(sizeof(struct tmp_file))) == nullptr) {
 	return -1;
     }
     
@@ -1971,7 +1971,7 @@ OnItemCmd::doit()
 {
     int status = DtHELP_SELECT_ERROR;
     Widget widget = _parent->baseWidget();
-    Widget selWidget = NULL;
+    Widget selWidget = nullptr;
     
     // Display the appropriate help information for the selected item.
     
@@ -1982,10 +1982,10 @@ OnItemCmd::doit()
 	printf("Selection Error, cannot continue\n");
 	break;
       case DtHELP_SELECT_VALID:
-	while (selWidget != NULL) {
+	while (selWidget != nullptr) {
 	    if ((XtHasCallbacks(selWidget, XmNhelpCallback)
 		 == XtCallbackHasSome)) {
-		XtCallCallbacks((Widget) selWidget, XmNhelpCallback, NULL);
+		XtCallCallbacks((Widget) selWidget, XmNhelpCallback, nullptr);
 		break;
 	    } else {
 		selWidget = XtParent(selWidget);
@@ -2072,7 +2072,7 @@ RelNoteCmd::RelNoteCmd ( char * name,
 		     ) : NoUndoCmd (name, label, active )
 {
     _parent = window;
-    _genDialog = NULL;
+    _genDialog = nullptr;
 }
 
 void
@@ -2176,7 +2176,7 @@ void
 StopCmd::doit()
 {
     unlink( parent->forwardFilename() );
-    parent->title( NULL );
+    parent->title( nullptr );
 }
 
 
@@ -2255,7 +2255,7 @@ SaveAttachCmd::SaveAttachCmd ( char *name,
 		       parent)
 {
    _parent = clientData;
-   _name = NULL;
+   _name = nullptr;
 }
 
 SaveAttachCmd::SaveAttachCmd ( 
@@ -2277,7 +2277,7 @@ SaveAttachCmd::SaveAttachCmd (
 		       parent )
 {
    _parent = clientData;
-   _name = NULL;
+   _name = nullptr;
 }
 
 SaveAttachCmd::SaveAttachCmd ( 
@@ -2299,7 +2299,7 @@ SaveAttachCmd::SaveAttachCmd (
 		       parent )
 {
     _parent = clientData;
-    _name = NULL;
+    _name = nullptr;
 }
 
 void
@@ -2310,7 +2310,7 @@ SaveAttachCmd::doit()
     DtMailEditor *editor = _parent->get_editor();
     AttachArea *aa = editor->attachArea();
     XmString attachmentName = aa->getSelectedAttachName();
-    XtVaSetValues(_fileBrowser, XmNtextString, attachmentName, NULL);
+    XtVaSetValues(_fileBrowser, XmNtextString, attachmentName, nullptr);
     XtAddCallback ( _fileBrowser, XmNapplyCallback,
 		    &SaveAttachCmd::updateCallback,
 		    (XtPointer) this);
@@ -2326,7 +2326,7 @@ void SaveAttachCmd::updateCallback(Widget, XtPointer clientData, XtPointer )
 {
     SaveAttachCmd *obj = (SaveAttachCmd *)clientData;
     
-    XtVaSetValues(obj->_fileBrowser, XmNtextString, obj->_name, NULL);
+    XtVaSetValues(obj->_fileBrowser, XmNtextString, obj->_name, nullptr);
 }
 
 SaveAsTextCmd::SaveAsTextCmd ( 
@@ -2370,7 +2370,7 @@ SaveAsTextCmd::SaveAsTextCmd (
 		       parent )
 {
     _text_editor = editor;
-    _roam_menu_window = NULL;
+    _roam_menu_window = nullptr;
 }
 
 void
@@ -2443,7 +2443,7 @@ Check file permissions and retry."),
 	return;
     }
     
-    if (NULL == _roam_menu_window)
+    if (nullptr == _roam_menu_window)
     {
 	char	*text_buf = _text_editor->get_contents();
 	writeText((XtPointer) (intptr_t) fd, text_buf);
@@ -2472,7 +2472,7 @@ SaveAsTextCmd::writeTextFromScrolledList(int fd)
     //
     char *tmpdir = new char[MAXPATHLEN+1];
     snprintf(tmpdir, MAXPATHLEN+1, "%s/%s", getenv("HOME"), DtPERSONAL_TMP_DIRECTORY);
-    if ((tmppath = tempnam(tmpdir, "dtmail")) == NULL) {
+    if ((tmppath = tempnam(tmpdir, "dtmail")) == nullptr) {
 	snprintf(buf, sizeof(buf), CATGETS(DT_catd, 3, 51, "Unable to create %s."), tmpdir);
 	_genDialog->setToErrorDialog(CATGETS(DT_catd, 3, 52, "Mailer"), buf);
         helpId = DTMAILHELPNOCREATE;        
@@ -2513,7 +2513,7 @@ SaveAsTextCmd::writeTextFromScrolledList(int fd)
 			&SaveAsTextCmd::writeText,
 			(XtPointer) (intptr_t) fd);
 	writeText((XtPointer) (intptr_t) fd, "\n\n");
-    } while ((next_msg = mailbox->nextMessage()) != (DmxMsg *) NULL);
+    } while ((next_msg = mailbox->nextMessage()) != (DmxMsg *) nullptr);
     delete mailbox;
 
     //
@@ -2549,9 +2549,9 @@ SaveAsTextCmd::writeText(XtPointer filedes, char *text_buf)
 void
 SaveAsTextCmd::doit()
 {
-    MsgScrollingList	*list = NULL;
+    MsgScrollingList	*list = nullptr;
     Widget		listW;
-    int			*pos_list = NULL;
+    int			*pos_list = nullptr;
     int			pos_count = 0;
 
     if (_roam_menu_window &&
@@ -2568,7 +2568,7 @@ SaveAsTextCmd::doit()
 	    dialog->setToErrorDialog(
 			    CATGETS(DT_catd, 3, 50, "Mailer"),
 			    CATGETS(DT_catd, 2, 16, "No message selected."));
-	    dialog->post_and_return(NULL);
+	    dialog->post_and_return(nullptr);
 
             return;
         }
@@ -2620,15 +2620,15 @@ SaveAsTextCmd::doit()
 	    subject[j] = '\0';
 
 	    xms = XmStringCreateLocalized(subject);
-	    XtVaSetValues(_fileBrowser, XmNtextString, xms, NULL);
+	    XtVaSetValues(_fileBrowser, XmNtextString, xms, nullptr);
 
 	    XmStringFree(xms);
 	    free(subject);
 	}
 
-	if (NULL != request.header_name)
+	if (nullptr != request.header_name)
 	{
-	  if (NULL != request.header_name[0])
+	  if (nullptr != request.header_name[0])
 	    free(request.header_name[0]);
 	  free(request.header_name);
 	}
@@ -2697,20 +2697,20 @@ RenameAttachCmd::RenameAttachCmd (
     renameDialog = XmCreatePromptDialog(
 					smd->baseWidget(), 
 					"renameDialog", 
-					NULL, 
+					nullptr, 
 					0
 					);
     
     message = XmStringCreateLocalized(CATGETS(DT_catd, 1, 96, "Empty"));
-    XtVaSetValues(renameDialog, XmNselectionLabelString, message, NULL);
+    XtVaSetValues(renameDialog, XmNselectionLabelString, message, nullptr);
     XmStringFree(message);
     XmString ok_str = XmStringCreateLocalized(CATGETS(DT_catd, 1, 97, "Rename"));
     XtVaSetValues(XtParent(renameDialog),
 		  XmNtitle, CATGETS(DT_catd, 1, 98, "Mailer - Rename"),
-		  NULL);
+		  nullptr);
     XtVaSetValues(renameDialog,
 		  XmNokLabelString, ok_str,
-		  NULL);
+		  nullptr);
 
     XmStringFree(ok_str);
     XtUnmanageChild(XmSelectionBoxGetChild(renameDialog, XmDIALOG_HELP_BUTTON));
@@ -2727,7 +2727,7 @@ RenameAttachCmd::RenameAttachCmd (
 void RenameAttachCmd::doit()
 {
     Widget renameDialog;
-    XmString oldAttachName = NULL;
+    XmString oldAttachName = nullptr;
     XmString message;
     char	buf[512];
     AttachArea *aa;
@@ -2740,7 +2740,7 @@ void RenameAttachCmd::doit()
     
     oldAttachName = aa->getSelectedAttachName();
     
-    if (oldAttachName == NULL) return;
+    if (oldAttachName == nullptr) return;
     
     renameDialog = aa->getRenameDialog();
     
@@ -2751,7 +2751,7 @@ void RenameAttachCmd::doit()
     XtVaSetValues(renameDialog, 
 		  XmNselectionLabelString, message,
 		  XmNtextString, oldAttachName,
-		  NULL);
+		  nullptr);
     
 //     XtFree(buf);
     XmStringFree(message);
@@ -3012,7 +3012,7 @@ EditCutCmd::EditCutCmd(
 	_compose_dialog = (SendMsgDialog *)w;
     }
     else {
-	_compose_dialog = NULL;
+	_compose_dialog = nullptr;
     }
 }
 
@@ -3043,7 +3043,7 @@ EditCopyCmd::EditCopyCmd(
 	_compose_dialog = (SendMsgDialog *)w;
     }
     else {
-	_compose_dialog = NULL;
+	_compose_dialog = nullptr;
     }
 }
 
@@ -3231,17 +3231,17 @@ AliasCmd::doit()
 {
     char	*value;
 
-    XtVaGetValues(_header, XmNvalue, &value, NULL);
+    XtVaGetValues(_header, XmNvalue, &value, nullptr);
 
     if (strlen(value))
     {
 	char	*newvalue = (char *) malloc(strlen(value) + strlen(_alias) + 3);
 	sprintf(newvalue, "%s, %s", value, _alias);
-	XtVaSetValues(_header, XmNvalue, newvalue, NULL);
+	XtVaSetValues(_header, XmNvalue, newvalue, nullptr);
 	free(newvalue);
     }
     else
-      XtVaSetValues(_header, XmNvalue, _alias, NULL);
+      XtVaSetValues(_header, XmNvalue, _alias, nullptr);
     
     XtFree(value);
 }
@@ -3258,7 +3258,7 @@ OtherAliasesCmd::OtherAliasesCmd(
     int active)
     : NoUndoCmd (name, label, active)
 {
-        _header = NULL;
+        _header = nullptr;
 }
 
 void
@@ -3300,7 +3300,7 @@ LogMsgCmd::LogMsgCmd(
   // But for now, just look in .mailrc to see if "record" is set.
 
   DtMailEnv error;
-  const char *logfile = NULL;
+  const char *logfile = nullptr;
 
   _send = send;
 
@@ -3329,10 +3329,10 @@ VacationCmd::VacationCmd(
 
     _forwardFile = ".forward";
     _backupSuffix = "..BACKUP";
-    _subject = NULL;
-    _body = NULL;
-    _msg = NULL;
-    _dialog = NULL;
+    _subject = nullptr;
+    _body = nullptr;
+    _msg = nullptr;
+    _dialog = nullptr;
 
     // Check if a .forward file exists.  
 
@@ -3348,10 +3348,10 @@ VacationCmd::VacationCmd(
 
 VacationCmd::~VacationCmd()
 {
-    if (NULL != _subject)
+    if (nullptr != _subject)
       free((void*) _subject);
     
-    if (NULL != _msg)
+    if (nullptr != _msg)
       delete _msg;
 }
 
@@ -3488,7 +3488,7 @@ VacationCmd::handleForwardFile()
 	 * tries to update the vacation status when the user is
 	 * already using a .forward file.
 	 */
-	if (NULL != _dialog)
+	if (nullptr != _dialog)
 	  dialog = _dialog;
 	else
 	  dialog = theRoamApp.genDialog();
@@ -3536,7 +3536,7 @@ VacationCmd::handleForwardFile()
 	 * already using a .forward file.
 	 */
 
-	if (NULL != _dialog)
+	if (nullptr != _dialog)
 	  dialog = _dialog;
 	else
 	  dialog = theRoamApp.genDialog();
@@ -3866,7 +3866,7 @@ VacationCmd::body()
 	return((char *)_body);
     }
     else {
-	return(NULL);
+	return(nullptr);
     }
 }
 
@@ -3884,7 +3884,7 @@ VacationCmd::parseVacationMessage()
     DtMail::Session * d_session = theRoamApp.session()->session();
     DtMailBuffer mbuf;
 
-    if (NULL != _dialog)
+    if (nullptr != _dialog)
       dialog = _dialog;
     else
       dialog = theRoamApp.genDialog();
@@ -3900,7 +3900,7 @@ VacationCmd::parseVacationMessage()
 
     char * fullpath = d_session->expandPath(error, messagefile);
     delete [] messagefile;
-    messagefile = NULL;
+    messagefile = nullptr;
 
     // Map the file and try to parse it as a message. If it is a message,
     // then load it with headers. Otherwise, throw everything into the
@@ -3912,8 +3912,8 @@ VacationCmd::parseVacationMessage()
 
     if (fd < 0) {// File doesn't exist
 	
-	_subject = NULL;
-	_body = NULL;
+	_subject = nullptr;
+	_body = nullptr;
 	return;
     }
 
@@ -3926,8 +3926,8 @@ VacationCmd::parseVacationMessage()
 	helpId = DTMAILHELPNOWRITEVACATION;
 	answer = dialog->post_and_return(helpId);
 	    
-	_subject = NULL;
-	_body = NULL;
+	_subject = nullptr;
+	_body = nullptr;
 
 	SafeClose(fd);
 	return;
@@ -3948,15 +3948,15 @@ VacationCmd::parseVacationMessage()
     if (mbuf.buffer == (char *)-1) {
 	free_buf = 1;
 	mbuf.buffer = new char[mbuf.size];
-	if (mbuf.buffer == NULL) {
+	if (mbuf.buffer == nullptr) {
 	    dialog->setToErrorDialog(CATGETS(DT_catd, 3, 59, "No Memory"),
 				     CATGETS(DT_catd, 3, 60, "There is not enough memory to load the existing .vacation.msg file."));
 	    helpId = DTMAILHELPNOLOADVACATION;
 	    answer = dialog->post_and_return(helpId);
 	    SafeClose(fd);
 
-	    _subject = NULL;
-	    _body = NULL;
+	    _subject = nullptr;
+	    _body = nullptr;
 
 	    return;
 	}
@@ -3968,8 +3968,8 @@ VacationCmd::parseVacationMessage()
 	    answer = dialog->post_and_return(helpId);
 	    SafeClose(fd);
 	    delete (char*) mbuf.buffer;
-	    _subject = NULL;
-	    _body = NULL;
+	    _subject = nullptr;
+	    _body = nullptr;
 
 	    return;
 	}
@@ -3981,15 +3981,15 @@ VacationCmd::parseVacationMessage()
     DtMail::Message * msg = d_session->messageConstruct(error,
 							DtMailBufferObject,
 							&mbuf,
-							NULL,
-							NULL,
-							NULL);
+							nullptr,
+							nullptr,
+							nullptr);
     SafeClose(fd);
 
     if (error.isSet()) {
-	_subject = NULL;
-	_body = NULL;
-	_msg = NULL;
+	_subject = nullptr;
+	_body = nullptr;
+	_msg = nullptr;
 	return;
     }
     else {
@@ -4040,10 +4040,10 @@ VacationCmd::parseVacationMessage()
 	    bp->getContents(error,
 			    &_body,
 			    &length,
-			    NULL,
-			    NULL,
-			    NULL,
-			    NULL);
+			    nullptr,
+			    nullptr,
+			    nullptr,
+			    nullptr);
 	}
 
 	//
@@ -4071,7 +4071,7 @@ VacationCmd::handleMessageFile(
 
     BufferMemory buf(4096);
 
-    if (NULL != _dialog)
+    if (nullptr != _dialog)
       dialog = _dialog;
     else
       dialog = theRoamApp.genDialog();
@@ -4089,19 +4089,19 @@ VacationCmd::handleMessageFile(
     answer = 0;
 
     int msg_file_exists = SafeAccess(messagefile, F_OK);
-    if (subj != NULL) {
-	 if (_subject == NULL || strcmp(_subject, subj) != 0)
+    if (subj != nullptr) {
+	 if (_subject == nullptr || strcmp(_subject, subj) != 0)
 		text_changed = TRUE;
     }
-    else if (_subject != NULL)
+    else if (_subject != nullptr)
 	text_changed = TRUE;
 
     if (!text_changed) {
-    	if (text != NULL) {
-	 	if (_body == NULL || strcmp((char*)_body, text) != 0)
+    	if (text != nullptr) {
+	 	if (_body == nullptr || strcmp((char*)_body, text) != 0)
 			text_changed = TRUE;
     	}
-    	else if (_body != NULL)
+    	else if (_body != nullptr)
 		text_changed = TRUE;
     }
 

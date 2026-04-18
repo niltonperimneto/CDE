@@ -84,7 +84,7 @@ AUTOServer::AUTOServer(
 : DtMailServer(folder, session, mailbox,
 	       append_mailbox_cb, append_mailbox_cb_data)
 {
-    _server = NULL;
+    _server = nullptr;
 }
 
 AUTOServer::~AUTOServer()
@@ -223,7 +223,7 @@ AUTOServer::ptrans_parse_response(char *argbuf)
 void
 AUTOServer::retrieve_messages(DtMailEnv &error)
 {
-    if (NULL != _server)
+    if (nullptr != _server)
     {
         _server->retrieve_messages(error);
 	return;
@@ -234,7 +234,7 @@ AUTOServer::retrieve_messages(DtMailEnv &error)
     //
     for (int i=0; i<AUTO_NPROTOCOLS; i++)
     {
-	if (NULL != _server)
+	if (nullptr != _server)
 	  delete _server;
 	
 	switch (i)
@@ -273,16 +273,16 @@ AUTOServer::retrieve_messages(DtMailEnv &error)
 	      break;
 	}
 
-        if (NULL != _server)
+        if (nullptr != _server)
         {
-            if (NULL != _password)
+            if (nullptr != _password)
               _server->set_password(_password);
 
             _server->retrieve_messages(error);
 	    if (DTME_MailServerAccess_MissingPassword == (DTMailError_t) error)
 	    {
 		delete _server;
-		_server = NULL;
+		_server = nullptr;
 		return;
 	    }
 	    else if (error.isNotSet())

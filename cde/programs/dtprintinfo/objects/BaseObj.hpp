@@ -183,29 +183,29 @@ class BaseObj {
    void DeleteFromParent(void);
    void DeleteAttribute(const char *ReferenceName);
    void AddAttribute(const char *ReferenceName,
-		     const char *DisplayName = NULL,
-                     const char *Help = NULL,
-                     const char *ContextualHelp = NULL,
+		     const char *DisplayName = nullptr,
+                     const char *Help = nullptr,
+                     const char *ContextualHelp = nullptr,
                      Characteristics Mask = OPTIONAL,
                      ValueList ValueListType = NO_LIST,
-		     const char *Listing = NULL,
-                     const char *Dependancies = NULL,
-		     const char *DefaultValue = NULL,
-		     const char *DisplayDefaultValue = NULL);
+		     const char *Listing = nullptr,
+                     const char *Dependancies = nullptr,
+		     const char *DefaultValue = nullptr,
+		     const char *DisplayDefaultValue = nullptr);
    void DeleteAction(const char *ReferenceName);
    void AddAction(ActionHandler Handler,
 		  const char *ReferenceName,
-		  const char *DisplayName = NULL,
-                  const char *Nmemonic = NULL,
-                  const char *Help = NULL,
-                  const char *ContextualHelp = NULL,
+		  const char *DisplayName = nullptr,
+                  const char *Nmemonic = nullptr,
+                  const char *Help = nullptr,
+                  const char *ContextualHelp = nullptr,
                   boolean InputRequired = false,
-                  const char *AcceleratorText = NULL,
-                  const char *Accelerator = NULL,
-                  const char *Dependancies = NULL);
+                  const char *AcceleratorText = nullptr,
+                  const char *Accelerator = nullptr,
+                  const char *Dependancies = nullptr);
 
    // Derived classes should redefine these functions
-   virtual void InitChildren() { _children = NULL; _numChildren = 0; }
+   virtual void InitChildren() { _children = nullptr; _numChildren = 0; }
    virtual void InitDetails() { }
    virtual void LoadAttributes(int /*n_attrs*/, Attribute ** /*attrs*/) { }
    virtual void InitDisplayName() { }
@@ -225,9 +225,9 @@ class BaseObj {
    boolean HasAction(const char *ReferenceName);
    boolean HasAction(const char *ReferenceName, Action **action);
    boolean SendAction(Action *action,
-		      BaseObj *requestor = NULL);
+		      BaseObj *requestor = nullptr);
    boolean SendAction(const char *ReferenceName, 
-		      BaseObj *requestor = NULL);
+		      BaseObj *requestor = nullptr);
 
    char * LastActionName()        { return _lastActionName; }
    char * LastActionOutput()      { return _lastActionOutput; }
@@ -251,8 +251,8 @@ class BaseObj {
    void SetInitChildren()         { _init_children = true; }
 
    int RunCommand(const char *command,
-	          char **std_out = NULL,
-	          char **std_err = NULL);
+	          char **std_out = nullptr,
+	          char **std_err = nullptr);
 
    // These are for children
    BaseObj ** Siblings(void);

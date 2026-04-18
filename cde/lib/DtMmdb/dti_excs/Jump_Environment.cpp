@@ -44,7 +44,7 @@ Unwind_Record Unwind_Stack::g_stack[UNWIND_STACK_SIZE];
 // /////////////////////////////////////////////////////////////////
 
 Jump_Environment::Jump_Environment()
-: f_active_exception (NULL), f_unwinding (0)
+: f_active_exception (nullptr), f_unwinding (0)
 {
   PRINTF (("<%d> New Jump_Environment @ %p\n", ++g_level, this));
   // Push this on to the top of the jump env stack. 
@@ -67,7 +67,7 @@ Jump_Environment::~Jump_Environment()
   // An exception was thrown in our try block.
   // An exception may have been thrown in our catch block.
   // If one was, g_jump_env_stack->f_active_exception != NULL. 
-  if (f_active_exception != NULL)
+  if (f_active_exception != nullptr)
     {
       delete_active();
     }
@@ -124,8 +124,8 @@ Jump_Environment::do_unwind_and_jump (Exception *exception, int debugging)
   // Print a message about the throw point if debugging is on. 
   if (debugging)
     {
-      Exceptions::error_handler_t saved = Exceptions::set_error_handler (NULL);
-      Exceptions::error (NULL, Exceptions::THROW_MESSAGE);
+      Exceptions::error_handler_t saved = Exceptions::set_error_handler (nullptr);
+      Exceptions::error (nullptr, Exceptions::THROW_MESSAGE);
       Exceptions::set_error_handler (saved);
     }
 
@@ -150,7 +150,7 @@ Jump_Environment::delete_active()
   // the Jump_Environment that is unwinding.
 
   if (f_active_exception->f_temporary &&
-      (g_jump_env_stack == NULL || f_active_exception != pending_exception()))
+      (g_jump_env_stack == nullptr || f_active_exception != pending_exception()))
     {
       // If there's one pending we created and a current one, we are going
       // to have to move the pending one down on our stack after
@@ -158,8 +158,8 @@ Jump_Environment::delete_active()
       // If the pending exception == the current one, then we're just
       // returning to the scope of a previous exception. 
       
-      if (g_jump_env_stack != NULL &&
-	  pending_exception() != NULL &&
+      if (g_jump_env_stack != nullptr &&
+	  pending_exception() != nullptr &&
 	  pending_exception()->f_temporary &&
 	  pending_exception() != Exception::g_current_exception)
 	{

@@ -85,7 +85,7 @@ DtMailEditor::DtMailEditor(
     // variable _container. Parent private instances to this widget.
     // Expose only _container externally (for attachment stuff...)
 
-    _w = XmCreateForm(parent, "DtMailEditor", NULL, 0);
+    _w = XmCreateForm(parent, "DtMailEditor", nullptr, 0);
     installDestroyHandler();
 
 #ifdef DTEDITOR
@@ -102,12 +102,12 @@ DtMailEditor::DtMailEditor(
 
     _showAttachArea = TRUE;
     _doingDrag = FALSE;
-    _separator = NULL;
-    _msgHandle = NULL;
+    _separator = nullptr;
+    _msgHandle = nullptr;
     _dragX = -1;
     _dragY = -1;
     _editable = FALSE;
-    _container = NULL;
+    _container = nullptr;
 
 }
 
@@ -133,7 +133,7 @@ DtMailEditor::initialize()
 					 XmNbottomOffset, 1,
 					 XmNrightAttachment, XmATTACH_FORM,
 					 XmNleftAttachment, XmATTACH_FORM,
-					 NULL);
+					 nullptr);
 
     // Create an *UNMANAGED* attachArea.
     // If the message has an attachment, the DtMailEditor instance
@@ -156,7 +156,7 @@ DtMailEditor::initialize()
 		  XmNrightOffset, 4,
 		  XmNleftAttachment,XmATTACH_FORM, 
 		  XmNleftOffset, 3,
-		  NULL );
+		  nullptr );
 
     XtVaSetValues(_myAttachArea->baseWidget(),
 		  XmNrightAttachment, XmATTACH_FORM,
@@ -164,12 +164,12 @@ DtMailEditor::initialize()
 		  XmNleftAttachment, XmATTACH_FORM,
 		  XmNleftOffset, 5,
 		  XmNbottomAttachment, XmATTACH_FORM,
-		  NULL);
+		  nullptr);
     
     XtVaSetValues(_separator,
 		  XmNbottomAttachment, XmATTACH_WIDGET,
 		  XmNbottomWidget, _myAttachArea->baseWidget(),
-		  NULL);
+		  nullptr);
 
     // Unmanage the attachArea.  If a message has attachments,
     // manageAttachArea() will get called by the consumer of this
@@ -232,16 +232,16 @@ DtMailEditor::manageAttachArea()
     XtVaSetValues(editor_widget,
 	XmNbottomAttachment, XmATTACH_WIDGET,
 	XmNbottomWidget, _separator,
-  	NULL );
+  	nullptr );
 
     XtVaSetValues(_separator,
 		  XmNbottomAttachment, XmATTACH_WIDGET,
 		  XmNbottomWidget, _myAttachArea->baseWidget(),
-		  NULL);
+		  nullptr);
 
     XtVaSetValues(_myAttachArea->baseWidget(),
 		XmNbottomAttachment, XmATTACH_FORM,
-		NULL);
+		nullptr);
 
 }
 
@@ -256,7 +256,7 @@ DtMailEditor::unmanageAttachArea()
 
     XtVaSetValues(editor_widget,
 	XmNbottomAttachment, XmATTACH_FORM,
-  	NULL );
+  	nullptr );
 
     _myAttachArea->unmanage();
 
@@ -341,7 +341,7 @@ void
 DtMailEditor::attachDropRegister()
 {
     static XtCallbackRec transferCBRec[] = { 
-	{&DtMailEditor::attachTransferCallback, NULL}, {NULL, NULL} };
+	{&DtMailEditor::attachTransferCallback, nullptr}, {nullptr, nullptr} };
 
     // Pass the DtMailEditor object (this) as clientData.
     transferCBRec[0].closure = (XtPointer) this;
@@ -350,7 +350,7 @@ DtMailEditor::attachDropRegister()
 	DtDND_FILENAME_TRANSFER | DtDND_BUFFER_TRANSFER,
 	(unsigned char)(XmDROP_COPY), transferCBRec,
 	DtNtextIsBuffer, TRUE,
-	NULL);
+	nullptr);
 }
 
 // attachDropEnable
@@ -396,7 +396,7 @@ DtMailEditor::attachConvertCallback(
     int			numIcons = editor->attachArea()->getIconCount();
     Attachment		**list = editor->attachArea()->getList();
     int 		ii, current = 0;
-    char		*name = NULL;
+    char		*name = nullptr;
     XmString		str;
     DtMailEnv	    	mail_error;
 
@@ -412,7 +412,7 @@ DtMailEditor::attachConvertCallback(
 		    str = list[ii]->getLabel();
         	    buffers[current].name =
 			(char *) _XmStringUngenerate(
-					str, NULL,
+					str, nullptr,
 					XmMULTIBYTE_TEXT, XmMULTIBYTE_TEXT);
 		    XmStringFree(str);
 		    current++;
@@ -464,9 +464,9 @@ DtMailEditor::attachDragStart( Widget widget,
 				XEvent *event)
 {
     static XtCallbackRec convertCBRec[] = {
-	{&DtMailEditor::attachConvertCallback, NULL}, {NULL, NULL} };
+	{&DtMailEditor::attachConvertCallback, nullptr}, {nullptr, nullptr} };
     static XtCallbackRec dragFinishCBRec[] = {
-	{&DtMailEditor::attachDragFinishCallback, NULL}, {NULL, NULL} };
+	{&DtMailEditor::attachDragFinishCallback, nullptr}, {nullptr, nullptr} };
     int 	itemCount;
     unsigned char operations;
 
@@ -489,8 +489,8 @@ DtMailEditor::attachDragStart( Widget widget,
     if (DtDndVaDragStart(widget, event, DtDND_BUFFER_TRANSFER, itemCount,
 		operations, convertCBRec, dragFinishCBRec,
 //		DtNsourceIcon, dragIcon,
-		NULL)
-	    == NULL) {
+		nullptr)
+	    == nullptr) {
 	    
 	    DebugPrintf(3, "DragStart returned NULL.\n");
     }

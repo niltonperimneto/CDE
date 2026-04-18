@@ -44,7 +44,7 @@ HelpSystem::HelpSystem(MotifUI *parent,
 	               char *volume,
 	               char *location_id,
 	               HelpStyle style)
-	: MotifUI(parent, name, NULL)
+	: MotifUI(parent, name, nullptr)
 {
    CreateHelpDialog(parent, name, volume, location_id, style);
 }
@@ -111,14 +111,14 @@ void HelpSystem::CloseCB(Widget, XtPointer data, XtPointer)
 char *HelpSystem::HelpVolume()
 {
    char *value;
-   XtVaGetValues(_w, DtNhelpVolume, &value, NULL);
+   XtVaGetValues(_w, DtNhelpVolume, &value, nullptr);
    return value;
 }
 
 char *HelpSystem::LocationID()
 {
    char *value;
-   XtVaGetValues(_w, DtNlocationId, &value, NULL);
+   XtVaGetValues(_w, DtNlocationId, &value, nullptr);
    return value;
 }
 
@@ -126,12 +126,12 @@ void HelpSystem::LocationID(char *locationId)
 {
    //if (strcmp(LocationID(), locationId))
       XtVaSetValues(_w, DtNhelpType, DtHELP_TYPE_TOPIC, 
-	            DtNlocationId, locationId, NULL);
+	            DtNlocationId, locationId, nullptr);
 }
 
 void HelpSystem::HelpVolume(char *helpVolume, char *locationId)
 {
    //if (strcmp(HelpVolume(), helpVolume) || strcmp(LocationID(), locationId))
       XtVaSetValues(_w, DtNhelpVolume, helpVolume, DtNlocationId, locationId,
-                    DtNhelpType, DtHELP_TYPE_TOPIC, NULL);
+                    DtNhelpType, DtHELP_TYPE_TOPIC, nullptr);
 }

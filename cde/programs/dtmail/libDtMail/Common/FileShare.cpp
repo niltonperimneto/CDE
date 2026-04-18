@@ -50,7 +50,7 @@
 #include <DtMail/FileShare.hh>
 #include <DtMail/DtMailXtProc.h>
 
-XtAppContext	DtMailDamageContext = NULL;
+XtAppContext	DtMailDamageContext = nullptr;
 
 static const int FileShareTimeout = 900000;
 static int tlock_flag = 1;
@@ -62,53 +62,53 @@ static Tt_message msg_create(char *op, char *file, Tt_class tt_class, Tt_message
   
   // Create the tooltalk message
   if (tt_ptr_error(msg) != TT_OK) {
-    return ((Tt_message) NULL);
+    return ((Tt_message) nullptr);
   }
   
   /* Set the message class type */
   if (tt_message_class_set (msg, tt_class) != TT_OK) {
     tt_message_destroy(msg);
-    return ((Tt_message) NULL);
+    return ((Tt_message) nullptr);
   }
   
   /* Set the message address */
   if (tt_message_address_set (msg, TT_PROCEDURE) != TT_OK) {
     tt_message_destroy(msg);
-    return ((Tt_message) NULL);
+    return ((Tt_message) nullptr);
   }
   
   /* Set the disposition of the message */
   if (tt_message_disposition_set (msg, TT_DISCARD) != TT_OK) {
     tt_message_destroy(msg);
-    return ((Tt_message) NULL);
+    return ((Tt_message) nullptr);
   }
   
   /* Set the message operation. */
   if (tt_message_op_set (msg, op) != TT_OK) {
     tt_message_destroy(msg);
-    return ((Tt_message) NULL);
+    return ((Tt_message) nullptr);
   }
   
   /* Set the message scope */
   if (tt_message_scope_set (msg, TT_FILE) != TT_OK) {
     tt_message_destroy(msg);
-    return ((Tt_message) NULL);
+    return ((Tt_message) nullptr);
   }
   
   if (tt_message_file_set (msg, file) != TT_OK) {  
     tt_message_destroy(msg);
-    return ((Tt_message) NULL);
+    return ((Tt_message) nullptr);
   }
 
   if (tt_message_arg_add(msg, TT_IN, "DtMail", "lock") != TT_OK) {
     tt_message_destroy(msg);
-    return ((Tt_message) NULL);
+    return ((Tt_message) nullptr);
   }
 
   if (f) {
     if (tt_message_callback_add(msg, f) != TT_OK) {
       tt_message_destroy(msg);
-      return ((Tt_message) NULL);
+      return ((Tt_message) nullptr);
     }
   }
 
@@ -120,7 +120,7 @@ FileShare::mt_lock_cb(Tt_message m, Tt_pattern p)
 {
   Tt_state state = tt_message_state(m);
   char *op;
-  char *flag = NULL;
+  char *flag = nullptr;
 
   op = tt_message_op(m);
   if (!op) {
@@ -184,7 +184,7 @@ FileShare::FileShare(DtMailEnv & error,
     //
     _have_write_access = DTM_FALSE;
     _other_modified = DTM_TRUE;
-    _mt_pattern = NULL;
+    _mt_pattern = nullptr;
     error.clear();
 
     // Register the file pattern.
@@ -197,7 +197,7 @@ FileShare::FileShare(DtMailEnv & error,
     _file_pats = ttdt_file_join(_path, TT_FILE, 0, fileCB, _tt_handle);
     if (tt_pointer_error(_file_pats) != TT_OK) {
 	error.setError(DTME_TTFailure);
-	_file_pats = NULL;
+	_file_pats = nullptr;
 	return;
     }
 
@@ -215,7 +215,7 @@ FileShare::~FileShare(void)
 	_session->removeObjectKey(_key);
     }
 
-    if (NULL != _tt_handle)
+    if (nullptr != _tt_handle)
       delete _tt_handle;
 
     if (_file_pats) {
@@ -224,7 +224,7 @@ FileShare::~FileShare(void)
 
     if (_mt_pattern) {
       tt_pattern_destroy(_mt_pattern);
-      _mt_pattern = NULL;
+      _mt_pattern = nullptr;
     }
 
     if (_path) {
@@ -232,7 +232,7 @@ FileShare::~FileShare(void)
     }
 
     _have_write_access = DTM_FALSE;
-    _file_pats = NULL;
+    _file_pats = nullptr;
 }
 
 DtMailBoolean
@@ -249,7 +249,7 @@ FileShare::isModified(DtMailEnv & error)
     Tt_message mt_msg;
 
     mt_msg = msg_create("tlock", _path, TT_REQUEST, mt_lock_cb);
-    if (mt_msg == NULL) {
+    if (mt_msg == nullptr) {
       error.setError(DTME_TTFailure);
       return DTM_TRUE;
     }
@@ -275,7 +275,7 @@ FileShare::isModified(DtMailEnv & error)
       _mt_lock = DTM_FALSE;
 
       // now let's try the dtmail protocol
-      if (ttdt_Get_Modified(NULL, _path, TT_FILE, NULL, FileShareTimeout)) {
+      if (ttdt_Get_Modified(nullptr, _path, TT_FILE, nullptr, FileShareTimeout)) {
 	answer = DTM_TRUE;
 	_other_modified = DTM_TRUE;
       } else {
@@ -328,8 +328,8 @@ FileShare::lockFile(DtMailEnv & error)
 	// mailtool style locking
 	Tt_message mt_msg;
 
-	mt_msg = msg_create("rulock", _path, TT_NOTICE, NULL);
-	if (mt_msg == NULL) {
+	mt_msg = msg_create("rulock", _path, TT_NOTICE, nullptr);
+	if (mt_msg == nullptr) {
 	  error.setError(DTME_TTFailure);
 	  return;
 	}
@@ -341,7 +341,7 @@ FileShare::lockFile(DtMailEnv & error)
 	tt_message_destroy(mt_msg);
       } else {
 	// ttdt style locking
-	ttdt_Save(NULL, _path, TT_FILE, DtMailDamageContext, FileShareTimeout);
+	ttdt_Save(nullptr, _path, TT_FILE, DtMailDamageContext, FileShareTimeout);
       }
 
       // Give the other mailer FileShareTimeout seconds to give up the lock
@@ -353,7 +353,7 @@ FileShare::lockFile(DtMailEnv & error)
 	if (isModified(error) == DTM_FALSE) {
 	  break;
 	} else {
-	  if (time(NULL) - t_start > FileShareTimeout) {
+	  if (time(nullptr) - t_start > FileShareTimeout) {
 	    // time out!
 	    error.setError(DTME_OtherOwnsWrite);
 	    return;
@@ -385,7 +385,7 @@ FileShare::lockFile(DtMailEnv & error)
     }
 
     // Send the message saying we want to be the owner.
-    ttdt_file_event(NULL, TTDT_MODIFIED, _file_pats, 1);
+    ttdt_file_event(nullptr, TTDT_MODIFIED, _file_pats, 1);
 
     // We need to process any messages that have arrived. We will get our own
     // modified message, which is not terribly interesting. What is interesting

@@ -91,9 +91,9 @@
 static DtMailBoolean	DmxPrintSetup_print_separately = DTM_FALSE;
 static DtMailBoolean	DmxPrintSetup_use_word_wrap = DTM_TRUE;
 static DtMailBoolean	DmxPrintSetup_print_to_file = DTM_FALSE;
-static char		*DmxPrintSetup_printer_name = NULL;
+static char		*DmxPrintSetup_printer_name = nullptr;
 #ifdef REUSE_PRINT_SETUP_DIALOGS
-static Widget		DmxPrintSetup_default_dtprint_setup = NULL;
+static Widget		DmxPrintSetup_default_dtprint_setup = nullptr;
 #endif
 
 DmxPrintSetup::DmxPrintSetup (
@@ -104,18 +104,18 @@ DmxPrintSetup::DmxPrintSetup (
 		XtCallbackProc pdmSetupCB, XtPointer pdmSetupClosure)
 {
     _parent = window;
-    _dtprint_setup = (Widget) NULL;
-    _widgets = (PrintSetupWidgets *) NULL;
+    _dtprint_setup = (Widget) nullptr;
+    _widgets = (PrintSetupWidgets *) nullptr;
     _use_word_wrap = DmxPrintSetup_use_word_wrap;
     _print_separately = DmxPrintSetup_print_separately;
     _print_to_file = DmxPrintSetup_print_to_file;
-    if (NULL != DmxPrintSetup_printer_name)
+    if (nullptr != DmxPrintSetup_printer_name)
       _printer_name = strdup(DmxPrintSetup_printer_name);
     else
-      _printer_name = NULL;
+      _printer_name = nullptr;
 
     _filename = (char*) malloc(MAXPATHLEN+1);
-    if (NULL != _filename)
+    if (nullptr != _filename)
       snprintf(_filename, MAXPATHLEN+1, "%s/dtmail_messages.ps", getenv("HOME"));
 
     _printCB = printCB;
@@ -134,10 +134,10 @@ DmxPrintSetup::DmxPrintSetup (
 
 DmxPrintSetup::~DmxPrintSetup (void)
 {
-    if (NULL != _printer_name)
+    if (nullptr != _printer_name)
       free(_printer_name);
 
-    if (NULL != _filename)
+    if (nullptr != _filename)
       free(_filename);
 
     detachPrintSetupDialog();
@@ -146,19 +146,19 @@ DmxPrintSetup::~DmxPrintSetup (void)
 void
 DmxPrintSetup::setPrintToFileName (char *filename)
 {
-    if (NULL != _filename)
+    if (nullptr != _filename)
       free(_filename);
     
     _filename = strdup(filename);
 
-    if (NULL != _filename)
-      XtVaSetValues(_dtprint_setup, DtNfileName, _filename, NULL);
+    if (nullptr != _filename)
+      XtVaSetValues(_dtprint_setup, DtNfileName, _filename, nullptr);
 }
 
 void
 DmxPrintSetup::display (void)
 {
-    if (_dtprint_setup == NULL) return;
+    if (_dtprint_setup == nullptr) return;
 
 #ifdef REUSE_PRINT_SETUP_DIALOGS
     XtArgVal /* Position */ x1, y1, x2, y2;
@@ -167,28 +167,28 @@ DmxPrintSetup::display (void)
 		XtParent(_dtprint_setup),
 		XmNx, &x1, XmNy, &y1,
 		XmNwidth, &w1, XmNheight, &h1,
-		NULL);
+		nullptr);
     XtVaGetValues(
 		_parent,
 		XmNx, &x2, XmNy, &y2,
 		XmNwidth, &w2, XmNheight, &h2,
-		NULL);
+		nullptr);
     XtVaSetValues(
 		XtParent(_dtprint_setup),
 		XmNx, x2 + (w2 - w1) / 2, XmNy, y2 + (h2 - h1) / 2,
-		NULL);
+		nullptr);
 #endif
 
     XtManageChild(_dtprint_setup);
 
-    if (NULL != _printer_name)
-      XtVaSetValues(_widgets->printer_name_tf, XmNvalue, _printer_name, NULL);
+    if (nullptr != _printer_name)
+      XtVaSetValues(_widgets->printer_name_tf, XmNvalue, _printer_name, nullptr);
 }
 
 DtMailBoolean
 DmxPrintSetup::getDefaultPrintData (DtPrintSetupData *print_data)
 {
-    if (_dtprint_setup == NULL || print_data == NULL) return DTM_FALSE;
+    if (_dtprint_setup == nullptr || print_data == nullptr) return DTM_FALSE;
     if (DtPRINT_SUCCESS == DtPrintFillSetupData(_dtprint_setup, print_data))
       return DTM_TRUE;
     else
@@ -217,13 +217,13 @@ DmxPrintSetup::attachPrintSetupDialog (void)
     Widget dialog;
 
 #ifdef REUSE_PRINT_SETUP_DIALOGS
-    if (DmxPrintSetup_default_dtprint_setup != NULL)
+    if (DmxPrintSetup_default_dtprint_setup != nullptr)
     {
 	//
 	// Attempt to reuse the last print setup and print display connection.
 	//
 	_dtprint_setup = DmxPrintSetup_default_dtprint_setup;
-	DmxPrintSetup_default_dtprint_setup = NULL;
+	DmxPrintSetup_default_dtprint_setup = nullptr;
     }
     else
       _dtprint_setup = createPrintSetupDialog(theRoamApp.baseWidget());
@@ -234,7 +234,7 @@ DmxPrintSetup::attachPrintSetupDialog (void)
     //
     // Copy the information about the widgets into the setup.
     //
-    XtVaGetValues(_dtprint_setup, XmNuserData, &_widgets, NULL);
+    XtVaGetValues(_dtprint_setup, XmNuserData, &_widgets, nullptr);
 
     //
     // Add the setup-specific callbacks
@@ -261,33 +261,33 @@ DmxPrintSetup::attachPrintSetupDialog (void)
 		(XtPointer) _pdmSetupClosure);
 
     is_set = (_print_separately) ? XmSET : XmUNSET;
-    XtVaSetValues(_widgets->print_separately_tb, XmNset, is_set, NULL);
+    XtVaSetValues(_widgets->print_separately_tb, XmNset, is_set, nullptr);
 
     is_set = (_use_word_wrap) ? XmSET : XmUNSET;
-    XtVaSetValues(_widgets->use_word_wrap_tb, XmNset, is_set, NULL);
+    XtVaSetValues(_widgets->use_word_wrap_tb, XmNset, is_set, nullptr);
 
     if (DTM_TRUE == _print_to_file)
       XtVaSetValues(
 		_dtprint_setup,
 		DtNprintDestination, DtPRINT_TO_FILE,
-		NULL);
+		nullptr);
     else
       XtVaSetValues(
 		_dtprint_setup,
 		DtNprintDestination, DtPRINT_TO_PRINTER,
-		NULL);
+		nullptr);
 
-    if (NULL != _printer_name)
-      XtVaSetValues(_dtprint_setup, DtNprinterName, _printer_name, NULL);
+    if (nullptr != _printer_name)
+      XtVaSetValues(_dtprint_setup, DtNprinterName, _printer_name, nullptr);
 
-    if (NULL != _filename)
-      XtVaSetValues(_dtprint_setup, DtNfileName, _filename, NULL);
+    if (nullptr != _filename)
+      XtVaSetValues(_dtprint_setup, DtNfileName, _filename, nullptr);
 
     dialog = XtParent(_dtprint_setup);
-    if (NULL != dialog && XtIsShell(dialog))
+    if (nullptr != dialog && XtIsShell(dialog))
     {
 	char *title = (char*) CATGETS(DT_catd, 21, 21, "Mailer - Print Setup");
-        XtVaSetValues(dialog, XmNtitle, title, NULL);
+        XtVaSetValues(dialog, XmNtitle, title, nullptr);
     }
     else
     {
@@ -313,13 +313,13 @@ DmxPrintSetup::createPrintSetupDialog (Widget parent)
     // retrieved later.
     //
     widgets->dtprint_setup =
-      DtCreatePrintSetupDialog(parent, "Setup", NULL, 0);
+      DtCreatePrintSetupDialog(parent, "Setup", nullptr, 0);
 
     XtVaSetValues(
 		widgets->dtprint_setup,
 		DtNworkAreaLocation, DtWORK_AREA_BOTTOM,
 		XmNuserData, widgets,
-		NULL);
+		nullptr);
 
     XtAddCallback(
 		widgets->dtprint_setup,
@@ -337,7 +337,7 @@ DmxPrintSetup::createPrintSetupDialog (Widget parent)
 		"PrintSetupForm",
 		xmFormWidgetClass,
 		widgets->dtprint_setup,
-		NULL);
+		nullptr);
 		 
     xms = XmStringCreateLocalized(CATGETS(DT_catd, 21, 12, "Print Separately"));
     widgets->print_separately_tb = XtVaCreateManagedWidget(
@@ -348,7 +348,7 @@ DmxPrintSetup::createPrintSetupDialog (Widget parent)
 				XmNlabelString, xms,
 				XmNleftAttachment, XmATTACH_FORM,
 				XmNtopAttachment, XmATTACH_FORM,
-				NULL);
+				nullptr);
     XmStringFree(xms);
 
     xms = XmStringCreateLocalized(CATGETS(DT_catd, 21, 13, "Use Word Wrap"));
@@ -362,7 +362,7 @@ DmxPrintSetup::createPrintSetupDialog (Widget parent)
 				XmNrightAttachment, XmATTACH_FORM,
 				XmNtopAttachment, XmATTACH_WIDGET,
 				XmNtopWidget, widgets->print_separately_tb,
-				NULL);
+				nullptr);
     XmStringFree(xms);
 
     xms = XmStringCreateLocalized(CATGETS(DT_catd, 21, 20, "More ..."));
@@ -376,20 +376,20 @@ DmxPrintSetup::createPrintSetupDialog (Widget parent)
 				XmNrightAttachment, XmATTACH_FORM,
 				XmNtopAttachment, XmATTACH_WIDGET,
 				XmNtopWidget, widgets->use_word_wrap_tb,
-				NULL);
+				nullptr);
     XmStringFree(xms);
 
     XtAddCallback(
 		widgets->more_options_pb,
 		XmNactivateCallback,
 		&DmxPrintSetup::moreOptionsCB,
-		(XtPointer) NULL);
+		(XtPointer) nullptr);
 
     widgets->checkbox_tb =
       XtNameToWidget(widgets->dtprint_setup, "DestRadioBox.button_1");
     widgets->printer_name_tf = XtNameToWidget(widgets->dtprint_setup, "Name");
 
-    if (NULL != widgets->checkbox_tb)
+    if (nullptr != widgets->checkbox_tb)
       XtAddCallback(
 		widgets->checkbox_tb,
 		XmNvalueChangedCallback,
@@ -429,10 +429,10 @@ DmxPrintSetup::detachPrintSetupDialog (void)
     // Leave the Print Setup Dialog for the next print job.
     //
 #ifdef REUSE_PRINT_SETUP_DIALOGS
-    if (DmxPrintSetup_default_dtprint_setup != NULL)
+    if (DmxPrintSetup_default_dtprint_setup != nullptr)
     {
 	XtDestroyWidget(DmxPrintSetup_default_dtprint_setup);
-	DmxPrintSetup_default_dtprint_setup = NULL;
+	DmxPrintSetup_default_dtprint_setup = nullptr;
     }
     DmxPrintSetup_default_dtprint_setup = _dtprint_setup;
 #else
@@ -446,11 +446,11 @@ DmxPrintSetup::savePrintSetupOptions(DtPrintSetupData *print_data)
 {
     XtArgVal /* unsigned char */	is_set;
 
-    XtVaGetValues(_widgets->print_separately_tb, XmNset, &is_set, NULL);
+    XtVaGetValues(_widgets->print_separately_tb, XmNset, &is_set, nullptr);
     _print_separately = (is_set == XmSET) ? DTM_TRUE : DTM_FALSE;
     DmxPrintSetup_print_separately = _print_separately;
 
-    XtVaGetValues(_widgets->use_word_wrap_tb, XmNset, &is_set, NULL);
+    XtVaGetValues(_widgets->use_word_wrap_tb, XmNset, &is_set, nullptr);
     _use_word_wrap = (is_set == XmSET) ? DTM_TRUE : DTM_FALSE;
     DmxPrintSetup_use_word_wrap = _use_word_wrap;
     
@@ -458,15 +458,15 @@ DmxPrintSetup::savePrintSetupOptions(DtPrintSetupData *print_data)
 	(DtPRINT_TO_FILE == print_data->destination) ? DTM_TRUE : DTM_FALSE;
     DmxPrintSetup_print_to_file = _print_to_file;
 
-    if (NULL != _printer_name)
+    if (nullptr != _printer_name)
       free(_printer_name);
     _printer_name = strdup(print_data->printer_name);
 
-    if (NULL != DmxPrintSetup_printer_name)
+    if (nullptr != DmxPrintSetup_printer_name)
       free(DmxPrintSetup_printer_name);
     DmxPrintSetup_printer_name = strdup(_printer_name);
 
-    if (NULL != _filename)
+    if (nullptr != _filename)
       free(_filename);
     _filename = strdup(print_data->dest_info);
 }
@@ -481,17 +481,17 @@ DmxPrintSetup::destinationChangedCB(
     PrintSetupWidgets	*widgets = (PrintSetupWidgets*) client_data;
     XtArgVal /* Boolean */ toggleFlag;
 
-    if (NULL == checkbox_tb) return;
+    if (nullptr == checkbox_tb) return;
 
-    XtVaGetValues(checkbox_tb, XmNset, &toggleFlag, NULL);
+    XtVaGetValues(checkbox_tb, XmNset, &toggleFlag, nullptr);
     if(toggleFlag)
       XtVaSetValues(
 		widgets->print_separately_tb,
 		XmNsensitive, False,
 		XmNset, False,
-		NULL);
+		nullptr);
     else
-      XtVaSetValues(widgets->print_separately_tb, XmNsensitive, True, NULL);
+      XtVaSetValues(widgets->print_separately_tb, XmNsensitive, True, nullptr);
 }
 
 

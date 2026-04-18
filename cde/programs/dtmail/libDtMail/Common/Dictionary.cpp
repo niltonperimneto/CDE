@@ -54,7 +54,7 @@ DtMailDictionaryImpl::DtMailDictionaryImpl(int size)
     _hash_table = (HashTable_t *)malloc(sizeof(HashTable_t) * _hash_size);
 
     for (int h = 0; h < _hash_size; h++) {
-	_hash_table[h] = NULL;
+	_hash_table[h] = nullptr;
     }
 
     _obj_mutex = MutexInit();
@@ -71,7 +71,7 @@ DtMailDictionaryImpl::~DtMailDictionaryImpl(void)
 	    }
 	}
 	free(_hash_table);
-	_hash_table = NULL;
+	_hash_table = nullptr;
     }
 
     lock_scope.unlock_and_destroy();
@@ -96,7 +96,7 @@ DtMailDictionaryImpl::set(const char * key, const void * value)
 
     // New key/value. Add it to the appropriate slot.
     //
-    if (_hash_table[hash] == NULL) {
+    if (_hash_table[hash] == nullptr) {
 	_hash_table[hash] = new DtVirtArray<Entry *>(16);
     }
 
@@ -119,7 +119,7 @@ DtMailDictionaryImpl::lookup(const char * key)
 
     Entry * ent;
     locate(hash, key, &ent);
-    const void * value = NULL;
+    const void * value = nullptr;
     if (ent) {
 	value = ent->value;
     }
@@ -140,7 +140,7 @@ DtMailDictionaryImpl::remove(const char * key)
     //
     Entry * ent;
     locate(hash, key, &ent);
-    if (ent == NULL) {
+    if (ent == nullptr) {
 	// Not here, just return.
 	return;
     }
@@ -168,11 +168,11 @@ DtMailDictionaryImpl::hashValue(const char * key)
 void
 DtMailDictionaryImpl::locate(int hash, const char * key, Entry ** ent)
 {
-    *ent = NULL;
+    *ent = nullptr;
 
     DtVirtArray<Entry *> * slot = _hash_table[hash];
 
-    if (slot == NULL) {
+    if (slot == nullptr) {
 	return;
     }
 

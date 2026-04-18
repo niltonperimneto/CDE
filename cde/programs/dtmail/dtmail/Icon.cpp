@@ -73,8 +73,8 @@ Icon::Icon (
 #define MAX_NUM_COLORS	8
     DtMail::BodyPart	*bp;
     DtMailEnv mail_error;
-    char *type = NULL, *icon_name = NULL; 
-    char *icon_filename = NULL, *host_prefix = NULL;
+    char *type = nullptr, *icon_name = nullptr; 
+    char *icon_filename = nullptr, *host_prefix = nullptr;
     int n = 0;
     Arg args[20];
     int	btn1_transfer = 0;
@@ -89,20 +89,20 @@ Icon::Icon (
 
     // Get the pixmap image file name for this attachment.
     bp = _parent->getBodyPart();
-    bp->getContents(mail_error, NULL, NULL, &type, NULL, NULL, NULL);
+    bp->getContents(mail_error, nullptr, nullptr, &type, nullptr, nullptr, nullptr);
 
     // Retrieve the host name.
     host_prefix = DtDtsDataTypeToAttributeValue(type,
 						DtDTS_DA_DATA_HOST,
-						NULL);
+						nullptr);
 
     // Get the name of the icon.
     icon_name = (char *) DtDtsDataTypeToAttributeValue(type,
 						    DtDTS_DA_ICON,
-						    NULL);
+						    nullptr);
     // Retrieve icon file name
     icon_filename = XmGetIconFileName(XtScreen(parent),
-					NULL,
+					nullptr,
 					icon_name,
 					host_prefix,
 					DtMEDIUM);
@@ -134,7 +134,7 @@ Icon::Icon (
     
     XtVaGetValues((Widget)XmGetXmDisplay(XtDisplay(XtParent(_w))),
 	    "enableBtn1Transfer", &btn1_transfer,
-	    NULL);
+	    nullptr);
 
     if (btn1_transfer != True) {
 	XtAddEventHandler(XtParent(_w), Button2MotionMask, FALSE,
@@ -151,20 +151,20 @@ Icon::Icon (
 
     if (type) {
 	free(type);
-	type = NULL;
+	type = nullptr;
     }
     
     if (host_prefix) {
 	DtDtsFreeAttributeValue(host_prefix);
-	host_prefix = NULL;
+	host_prefix = nullptr;
     }
     if (icon_name) {
 	DtDtsFreeAttributeValue(icon_name);
-	icon_name = NULL;
+	icon_name = nullptr;
     }
     if (icon_filename) {
 	XtFree(icon_filename);
-	icon_filename = NULL;
+	icon_filename = nullptr;
     }
 }
 
@@ -184,7 +184,7 @@ Icon::~Icon()
     
     XtVaGetValues((Widget)XmGetXmDisplay(XtDisplay(XtParent(_w))),
 	    "enableBtn1Transfer", &btn1_transfer,
-	    NULL);
+	    nullptr);
 
     if (btn1_transfer != True) {
 	XtRemoveEventHandler(XtParent(_w), Button2MotionMask, FALSE,
@@ -201,7 +201,7 @@ Icon::iconCallback(Widget , XtPointer client_data, XtPointer call_data)
 	Icon *obj = (Icon *)client_data;
 	XEvent *event;
 
-	if ((event = cb->event) != (XEvent *) NULL) {
+	if ((event = cb->event) != (XEvent *) nullptr) {
 	    /*
 	     * The following seems rather bogus....   to make assumptions
 	     * about the context of a ButtonPress before decoding

@@ -63,7 +63,7 @@ InboxTextFieldUiItem::InboxTextFieldUiItem(
 ///////////////////////////////////////////////////////////////////
 void InboxTextFieldUiItem::writeFromUiToSource()
 {
-    char 		*mailspool_file = NULL;
+    char 		*mailspool_file = nullptr;
     char 		*value;
     Widget		w = this->getWidget();
 
@@ -92,7 +92,7 @@ void InboxTextFieldUiItem::writeFromUiToSource()
 ///////////////////////////////////////////////////////////////////
 void InboxTextFieldUiItem::writeFromSourceToUi()
 {
-    char 	*mailspool_file = NULL;
+    char 	*mailspool_file = nullptr;
     char	*value;
     Widget	w = this->getWidget();
 
@@ -115,5 +115,5 @@ void InboxTextFieldUiItem::writeFromSourceToUi()
       options_field_set_value(w, value, this->dirty_bit);
 
     free((void*) value);
-    if (NULL != mailspool_file) free((void*) mailspool_file);
+    if (nullptr != mailspool_file) free((void*) mailspool_file);
 }

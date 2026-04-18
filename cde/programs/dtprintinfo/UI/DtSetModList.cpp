@@ -123,7 +123,7 @@ boolean DtSetModList::SetVisiblity(boolean flag)
       int offset = (width - (select_all->Width() + unselect_all->Width())) / 3;
       select_all->AttachLeft(offset);
       unselect_all->AttachRight(offset);
-      unselect_all->AttachLeft(NULL, 0);
+      unselect_all->AttachLeft(nullptr, 0);
     }
    Reset();
    Dialog::SetVisiblity(flag);

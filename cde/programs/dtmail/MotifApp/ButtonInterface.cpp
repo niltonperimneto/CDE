@@ -81,7 +81,7 @@ ButtonInterface::ButtonInterface ( Widget parent,
     _w = XtVaCreateWidget (w_name, 
 			 xmPushButtonWidgetClass,
 			 parent,
-			 XmNlabelString, label, NULL);
+			 XmNlabelString, label, nullptr);
     XmStringFree(label);
 
     printHelpId("_w", _w);

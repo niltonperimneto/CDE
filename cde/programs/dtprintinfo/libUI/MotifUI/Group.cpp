@@ -39,7 +39,7 @@
 Group::Group(MotifUI *parent,
 	     char *name,
 	     GroupType group_type)
-	: MotifUI(parent, name, NULL)
+	: MotifUI(parent, name, nullptr)
 {
    Widget parentW;
 
@@ -48,17 +48,17 @@ Group::Group(MotifUI *parent,
    parentW = parent->InnerWidget();
    XmString xm_string = StringCreate(name);
 
-   _w = XtVaCreateManagedWidget(name, xmFrameWidgetClass, parentW, NULL);
+   _w = XtVaCreateManagedWidget(name, xmFrameWidgetClass, parentW, nullptr);
    if (name)
       _label = XtVaCreateManagedWidget(name, xmLabelWidgetClass, _w, 
 				       XmNchildType, XmFRAME_TITLE_CHILD,
-				       XmNlabelString, xm_string, NULL);
+				       XmNlabelString, xm_string, nullptr);
    else
       _label = XtVaCreateWidget(name, xmLabelWidgetClass, _w, 
 				XmNchildType, XmFRAME_TITLE_CHILD,
-				XmNlabelString, xm_string, NULL);
+				XmNlabelString, xm_string, nullptr);
    if (group_type == FORM_BOX)
-      _rc = XtVaCreateManagedWidget(name, xmFormWidgetClass, _w, NULL);
+      _rc = XtVaCreateManagedWidget(name, xmFormWidgetClass, _w, nullptr);
    else
     {
       boolean flag;
@@ -74,7 +74,7 @@ Group::Group(MotifUI *parent,
          orientaion = XmVERTICAL;
       _rc = XtVaCreateManagedWidget(name, xmRowColumnWidgetClass, _w, 
 				    XmNradioBehavior, flag,
-				    XmNorientation, orientaion, NULL);
+				    XmNorientation, orientaion, nullptr);
     }
    StringFree(xm_string);
 }
@@ -84,7 +84,7 @@ boolean Group::SetName(char *name)
    if (name)
     {
       XmString xm_string = StringCreate(name);
-      XtVaSetValues(_label, XmNlabelString, xm_string, NULL);
+      XtVaSetValues(_label, XmNlabelString, xm_string, nullptr);
       StringFree(xm_string);
       XtManageChild(_label);
     }

@@ -120,7 +120,7 @@ MsgHndArray::remove_entry(int position)
     for (i=position; i<(_length-1); i++)
       _contents[i] = _contents[i+1];
 
-    _contents[_length] = NULL;
+    _contents[_length] = nullptr;
     _length -= 1;
     
 }

@@ -58,22 +58,22 @@ extern "C" {
 Dialog::Dialog(char *name, RoamMenuWindow *parent) : UIComponent(name)
 {
   _parent = parent;
-  _workArea = NULL;
+  _workArea = nullptr;
     
   _w = XtCreatePopupShell(_name,
 			  xmDialogShellWidgetClass,
 			  parent->baseWidget(),
-			  NULL, 0 );
+			  nullptr, 0 );
 
-  XtVaSetValues(_w, XmNdefaultPosition, False, NULL);
+  XtVaSetValues(_w, XmNdefaultPosition, False, nullptr);
 
-  assert( theApplication != NULL );
+  assert( theApplication != nullptr );
 }
 
 Dialog::Dialog(RoamMenuWindow *parent) : UIComponent("")
 {
   _parent = parent;
-  _workArea=NULL;
+  _workArea=nullptr;
 }
 
 Dialog::~Dialog()
@@ -87,7 +87,7 @@ Dialog::initialize()
     
 
     XtVaSetValues( _w,
-		   XmNdefaultPosition, False, NULL );
+		   XmNdefaultPosition, False, nullptr );
     
     XtAddCallback( _w,
 		   XmNpopupCallback,
@@ -100,7 +100,7 @@ Dialog::initialize()
 		   XtPointer( this ) );
     
     _workArea = createWorkArea ( _w );  
-    assert ( _workArea != NULL );
+    assert ( _workArea != nullptr );
     printHelpId("_workArea", _workArea);
     /* add help callback */
     // XtAddCallback(_workArea, XmNhelpCallback, HelpCB, helpId);
@@ -115,7 +115,7 @@ Dialog::title(
     char *text
 )
 {
-    XtVaSetValues ( _w, XmNtitle, text, NULL );
+    XtVaSetValues ( _w, XmNtitle, text, nullptr );
 }
 
 

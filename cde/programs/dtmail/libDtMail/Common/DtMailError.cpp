@@ -376,17 +376,17 @@ static const char * error_strings[] = {
   "Skipping oversized message (%d bytes).",
   
   // - DTME_MAXDTME
-  NULL
+  nullptr
 };
 
 DtMailEnv::DtMailEnv()
 {
-  setCPP(NULL,NULL,NULL);
+  setCPP(nullptr,nullptr,nullptr);
   _error = DTME_NoError;
-  _message = NULL;
-  _tt_message = NULL;
-  _client = NULL;
-  _implClearFunc = NULL;
+  _message = nullptr;
+  _tt_message = nullptr;
+  _client = nullptr;
+  _implClearFunc = nullptr;
   _fatal = DTM_FALSE;
   _error_minor_code = DTME_NoError;
 }
@@ -395,7 +395,7 @@ char *
 DtMailEnv::getMessageText(int set, int msg, char *dft)
 {
     static int oneTimeFlag = 0;	// Only attempt to open message catalog once
-    char *message = NULL;
+    char *message = nullptr;
     
     if ((oneTimeFlag == 0) && (_errorCatalog == (nl_catd) -1))
     {
@@ -411,7 +411,7 @@ DtMailEnv::getMessageText(int set, int msg, char *dft)
 void
 DtMailEnv::getErrorMessageText()
 {
-    if (_message == NULL)
+    if (_message == nullptr)
     {
         if (_error_minor_code >= DTME_MAXDTME)
           _error_minor_code = DTME_InvalidError;
@@ -420,7 +420,7 @@ DtMailEnv::getErrorMessageText()
 			MailErrorSet, _error_minor_code + 1,
 			(char*) error_strings[_error_minor_code]);
     }
-    if (_message == NULL)
+    if (_message == nullptr)
     {
 	_error = DTME_NoMemory;
 	_message = strdup(error_strings[_error_minor_code]);
@@ -434,17 +434,17 @@ DtMailEnv::clear()
 {
   _error = DTME_NoError;
 
-  if (_message != NULL) {
+  if (_message != nullptr) {
     free((char *)_message);
-    _message = NULL;
+    _message = nullptr;
   }
 
-  if (_tt_message != NULL) {
+  if (_tt_message != nullptr) {
     tt_message_destroy(_tt_message);
-    _tt_message = NULL;
+    _tt_message = nullptr;
   }
 
-  if (_client != NULL && _implClearFunc != NULL) {
+  if (_client != nullptr && _implClearFunc != nullptr) {
     implClear();
   }
   _fatal = DTM_FALSE;
@@ -531,7 +531,7 @@ DtMailEnv::vSetError(const DTMailError_t minor_code,
   // allow error to come up with the final translated error message
   //
   setError(minor_code, fatal, msg);
-  if (_message == NULL)
+  if (_message == nullptr)
     getErrorMessageText();
 
   // Use the current error message as a format to vsprintf to
@@ -552,16 +552,16 @@ DtMailEnv::vSetError(const DTMailError_t minor_code,
 const char *
 DtMailEnv::implGetMessage()
 {
-  if (_client != NULL && _implMessageFunc != NULL) {
+  if (_client != nullptr && _implMessageFunc != nullptr) {
 	return((*_implMessageFunc)(_client));
   }
- return(NULL);
+ return(nullptr);
 }
 
 int
 DtMailEnv::implGetError()
 {
-  if (_client != NULL && _implErrorFunc != NULL) {
+  if (_client != nullptr && _implErrorFunc != nullptr) {
 	return((*_implErrorFunc)(_client));
   }
  return(0);
@@ -595,7 +595,7 @@ DtMailEnv::logError(DtMailBoolean criticalError, const char *format, ...) const
 	 "%s", messageBuffer);
   
   _DtSimpleError("libDtMail", criticalError  == DTM_TRUE ? DtError : DtWarning,
-		NULL, messageBuffer);
+		nullptr, messageBuffer);
   delete [] messageBuffer;
 }
 

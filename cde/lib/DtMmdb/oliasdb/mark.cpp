@@ -51,7 +51,7 @@
 
 #include "oliasdb/mark.hpp"
 
-umark::umark() : mmdb_tuple(2, USER_MARK_CODE), mark_set_hd_ptr(NULL)
+umark::umark() : mmdb_tuple(2, USER_MARK_CODE), mark_set_hd_ptr(nullptr)
 {
 }
 

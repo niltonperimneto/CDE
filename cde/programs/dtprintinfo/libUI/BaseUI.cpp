@@ -92,12 +92,12 @@ BaseUI::BaseUI(BaseUI *parent,
       _visible = true;
       _active = true;
     }
-   _update_message = NULL;
+   _update_message = nullptr;
    _selected = false;
    _parent = parent;
-   _children = NULL;
+   _children = nullptr;
    _numChildren = 0;
-   _allChildren = NULL;
+   _allChildren = nullptr;
    _numAllChildren = 0;
    _has_been_opened = false;
    _opened = false;
@@ -533,7 +533,7 @@ void BaseUI::Selection(int *n_items,
    if (UIClass() != CONTAINER)
     {
       if (items)
-         *items = NULL;
+         *items = nullptr;
       *n_items = 0;
       return;
     }
@@ -560,7 +560,7 @@ void BaseUI::Selection(int *n_items,
       return;
 
    if (*n_items == 0)
-      *items = NULL;
+      *items = nullptr;
    else
     {
       BaseUI **list = new BaseUI*[*n_items];
@@ -600,7 +600,7 @@ BaseUI ** BaseUI::ContainerChildren()
    if (container)
       return container->_allChildren;
    else
-      return NULL;
+      return nullptr;
 }
 
 int BaseUI::NumSiblings()
@@ -616,7 +616,7 @@ BaseUI ** BaseUI::Siblings()
    if (_parent)
       return _parent->_children;
    else
-      return NULL;
+      return nullptr;
 }
 
 void BaseUI::_Find(void *pattern, int depth, int *n_matches,
@@ -633,7 +633,7 @@ void BaseUI::_Find(void *pattern, int depth, int *n_matches,
    for (i = 0; i < n_children; i++)
     {
       int tmp = 0;
-      BaseUI **tmp1 = NULL;
+      BaseUI **tmp1 = nullptr;
       children[i]->_Find(pattern, depth, &tmp, &tmp1, select_proc,
                              regular_expression, case_sensitive,
                              find_by_name, cur_depth + 1);
@@ -664,7 +664,7 @@ void BaseUI::_Find(void *pattern, int depth, int *n_matches,
 #ifdef NO_REGCOMP
                is_match = (int)regex((char *)pattern, value);
 #else
-               is_match = !regexec((regex_t *)pattern, value, (size_t)0,NULL,0);
+               is_match = !regexec((regex_t *)pattern, value, (size_t)0,nullptr,0);
 #endif
             else
 	       is_match = !strcmp(value, (char *)pattern);
@@ -675,7 +675,7 @@ void BaseUI::_Find(void *pattern, int depth, int *n_matches,
 #ifdef NO_REGCOMP
                is_match = (int)regex((char *)pattern, value);
 #else
-               is_match = !regexec((regex_t *)pattern, value, (size_t)0,NULL,0);
+               is_match = !regexec((regex_t *)pattern, value, (size_t)0,nullptr,0);
 #endif
             else 
 	       is_match = !strcasecmp(value, (char *)pattern);
@@ -728,11 +728,11 @@ BaseUI *BaseUI::_FindBy(char *pattern, int depth, int *n_matches,
 	        new_pattern[i++] = *s;
           }
          new_pattern[i] = '\0';
-         reg_expr = regcmp(new_pattern, (char *)NULL);
+         reg_expr = regcmp(new_pattern, (char *)nullptr);
 	 delete new_pattern;
        }
       else
-	 reg_expr = regcmp(pattern, (char *)NULL);
+	 reg_expr = regcmp(pattern, (char *)nullptr);
     }
 #else
    regex_t re;
@@ -744,7 +744,7 @@ BaseUI *BaseUI::_FindBy(char *pattern, int depth, int *n_matches,
       else
          compile_flags = REG_ICASE|REG_NOSUB;
       if (regcomp(&re, pattern, compile_flags) != 0)
-         reg_expr = NULL;
+         reg_expr = nullptr;
       else
          reg_expr = &re;
     }
@@ -754,10 +754,10 @@ BaseUI *BaseUI::_FindBy(char *pattern, int depth, int *n_matches,
       if (n_matches)
          *n_matches = 0;
       if (matches)
-         matches = NULL;
-      return NULL;
+         matches = nullptr;
+      return nullptr;
     }
-   BaseUI **_matches = NULL;
+   BaseUI **_matches = nullptr;
    int _n_matches = 0;
    _Find(reg_expr, depth, &_n_matches, &_matches, select_proc,
 	 regular_expression, case_sensitive, find_by_name, 0);
@@ -774,7 +774,7 @@ BaseUI *BaseUI::_FindBy(char *pattern, int depth, int *n_matches,
       if (_n_matches)
          return _matches[0];
       else
-         return NULL;
+         return nullptr;
     }
    else if (_n_matches)
     {
@@ -782,7 +782,7 @@ BaseUI *BaseUI::_FindBy(char *pattern, int depth, int *n_matches,
       free(_matches);
       return a_match;
     }
-   return NULL;
+   return nullptr;
 }
 
 BaseUI *BaseUI::FindByName(char *pattern, int depth, int *n_matches,

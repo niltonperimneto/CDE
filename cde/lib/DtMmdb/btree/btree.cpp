@@ -68,7 +68,7 @@ btree::btree(const char* store_name)
 
    txn = txn_begin();
 
-   if ((err = mdb_dbi_open(txn, NULL, 0, &btree_DB))) {
+   if ((err = mdb_dbi_open(txn, nullptr, 0, &btree_DB))) {
       mdb_txn_abort(txn);
       throw(stringException(mdb_strerror(err)));
    }
@@ -151,7 +151,7 @@ Boolean btree::remove(data_t& w)
 
    txn = txn_begin();
 
-   if ((err = mdb_del(txn, btree_DB, &key_DBT, NULL))) {
+   if ((err = mdb_del(txn, btree_DB, &key_DBT, nullptr))) {
       mdb_txn_abort(txn);
       throw(stringException(mdb_strerror(err)));
    }
@@ -202,7 +202,7 @@ MDB_txn *btree::txn_begin(unsigned int flags) {
    int err;
    MDB_txn *txn;
 
-   if ((err = mdb_txn_begin(btree_env, NULL, flags, &txn)))
+   if ((err = mdb_txn_begin(btree_env, nullptr, flags, &txn)))
       throw(stringException(mdb_strerror(err)));
 
    return txn;

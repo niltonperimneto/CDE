@@ -143,25 +143,25 @@ OptCmd::OptCmd ( char *name, char *label, int active, Widget parent) :
     vacation_status_changed = FALSE;
     vacation_msg_changed = FALSE;
 
-    _opt_dlog = NULL;
-    catstr = NULL;
-    CurrentPane = NULL;
+    _opt_dlog = nullptr;
+    catstr = nullptr;
+    CurrentPane = nullptr;
 
-    mh_pane_list = NULL;
-    msg_view_pane_list = NULL;
-    compose_pane_list = NULL;
-    msg_filing_pane_list = NULL;
-    vacation_pane_list = NULL;
-    template_pane_list = NULL;
-    aliases_pane_list = NULL;
-    advanced_pane_list = NULL;
-    mailretrieval_pane_list = NULL;
-    vaca_sub = NULL;
-    vaca_msg = NULL;
-    generalDialog = NULL;
-    _PrintingOptions = NULL;
-    _MailRetrievalOptions = NULL;
-    printing_pane_list = NULL;
+    mh_pane_list = nullptr;
+    msg_view_pane_list = nullptr;
+    compose_pane_list = nullptr;
+    msg_filing_pane_list = nullptr;
+    vacation_pane_list = nullptr;
+    template_pane_list = nullptr;
+    aliases_pane_list = nullptr;
+    advanced_pane_list = nullptr;
+    mailretrieval_pane_list = nullptr;
+    vaca_sub = nullptr;
+    vaca_msg = nullptr;
+    generalDialog = nullptr;
+    _PrintingOptions = nullptr;
+    _MailRetrievalOptions = nullptr;
+    printing_pane_list = nullptr;
 }
 
 void
@@ -257,16 +257,16 @@ void OptCmd::create_dlog()
 
     // Attach the object to the mail options panes so they can later be referred
     // to in options_set_category_pane().
-    XtVaSetValues(_opt_dlog->msg_header_pane, XmNuserData, this, NULL);
-    XtVaSetValues(_opt_dlog->msg_view_pane, XmNuserData, this, NULL);
-    XtVaSetValues(_opt_dlog->compose_win_pane, XmNuserData, this, NULL);
-    XtVaSetValues(_opt_dlog->msg_filing_pane, XmNuserData, this, NULL);
-    XtVaSetValues(_opt_dlog->vacation_pane, XmNuserData, this, NULL);
-    XtVaSetValues(_opt_dlog->templates_pane, XmNuserData, this, NULL);
-    XtVaSetValues(_opt_dlog->aliases_pane, XmNuserData, this, NULL);
-    XtVaSetValues(_opt_dlog->advanced_pane, XmNuserData, this, NULL);
-    XtVaSetValues(_opt_dlog->printing_pane, XmNuserData, this, NULL);
-    XtVaSetValues(_opt_dlog->mailretrieval_pane, XmNuserData, this, NULL);
+    XtVaSetValues(_opt_dlog->msg_header_pane, XmNuserData, this, nullptr);
+    XtVaSetValues(_opt_dlog->msg_view_pane, XmNuserData, this, nullptr);
+    XtVaSetValues(_opt_dlog->compose_win_pane, XmNuserData, this, nullptr);
+    XtVaSetValues(_opt_dlog->msg_filing_pane, XmNuserData, this, nullptr);
+    XtVaSetValues(_opt_dlog->vacation_pane, XmNuserData, this, nullptr);
+    XtVaSetValues(_opt_dlog->templates_pane, XmNuserData, this, nullptr);
+    XtVaSetValues(_opt_dlog->aliases_pane, XmNuserData, this, nullptr);
+    XtVaSetValues(_opt_dlog->advanced_pane, XmNuserData, this, nullptr);
+    XtVaSetValues(_opt_dlog->printing_pane, XmNuserData, this, nullptr);
+    XtVaSetValues(_opt_dlog->mailretrieval_pane, XmNuserData, this, nullptr);
 
     // initialize the "current" pane
     options_set_category_pane(_opt_dlog->msg_header_pane);
@@ -340,13 +340,13 @@ options_set_category_pane(
 
   XtVaGetValues(pane,
 	XmNuserData, &cmd_ptr,
-	NULL);
+	nullptr);
 
   current_pane = cmd_ptr->currentPane();
   if (pane == current_pane)
 	return;
 
-  if (current_pane != NULL && props_changed) {
+  if (current_pane != nullptr && props_changed) {
         sprintf(buf, "%s", CATGETS(DT_catd, 15, 1, "You have made unsaved changes.\nYou may save your changes, discard your changes,\nor return to your previous place in the dialog."));
  
         cmd_ptr->genDialog()->setToQuestionDialog(
@@ -376,7 +376,7 @@ options_set_category_pane(
   props_changed = FALSE;
   XtManageChild(pane);
  
-  if (current_pane != NULL)
+  if (current_pane != nullptr)
     XtUnmanageChild(current_pane);
  
   cmd_ptr->setCurrentPane(pane);
@@ -388,7 +388,7 @@ OptCmd::~OptCmd()
 {
 //  free(_opt_dlog);
 
-  _opt_dlog = NULL;
+  _opt_dlog = nullptr;
 
 }
 //////////////////////////////////////////////////////////////////////////////
@@ -419,7 +419,7 @@ void OptCmd::update_panes()
 
   Arg args[1];
 
-  if(vacation_cmd != NULL)
+  if(vacation_cmd != nullptr)
     vaca_running = vacation_cmd->priorVacationRunning();
 
   this->updateUiFromBackEnd(mh_pane_list);    
@@ -435,14 +435,14 @@ void OptCmd::update_panes()
   // make sure Vacation pane is correct
   XtVaSetValues(_opt_dlog->vacation_rb_items.On_item,
 		XmNset, vaca_running,
-		NULL);
+		nullptr);
 
   XtVaSetValues(_opt_dlog->vacation_rb_items.Off_item,
 		XmNset, !vaca_running,
-		NULL);
+		nullptr);
 
   // set Subject and Message
-  if(vacation_cmd != NULL)
+  if(vacation_cmd != nullptr)
     {
       tmp_ptr = vacation_cmd->subject();
 
@@ -453,10 +453,10 @@ void OptCmd::update_panes()
   
       XtSetArg(args[0], XmNvalue, CATGETS(Dtb_project_catd, 2, 68, "Out of the office"));
 
-      if(tmp_ptr != NULL)
+      if(tmp_ptr != nullptr)
         XtVaSetValues(_opt_dlog->subject_tf,
                       XmNvalue, tmp_ptr,
-                      NULL);
+                      nullptr);
   // set back to the default value
       else
         XtSetValues(_opt_dlog->subject_tf,args,1);
@@ -466,14 +466,14 @@ void OptCmd::update_panes()
 
 // Do same thing for the body part
 
-      if(tmp_ptr != NULL)
+      if(tmp_ptr != nullptr)
 	XtVaSetValues(_opt_dlog->vacation_msg_tp,
 		      XmNvalue, tmp_ptr,
-		      NULL);
+		      nullptr);
       else   //set a space to the body
         XtVaSetValues(_opt_dlog->vacation_msg_tp,
                       XmNvalue, " ",
-                      NULL);
+                      nullptr);
 
     }
 
@@ -533,20 +533,20 @@ int OptCmd::doFileLockingCheck()
 
     DtMailEnv        error;
     DtMail::Session *m_session = theRoamApp.session()->session();
-    const char      *value = NULL;
+    const char      *value = nullptr;
     Boolean	     use_file_locking;
     unsigned char    is_set;
 
     m_session->mailRc(error)->getValue(error, "cdetooltalklock", &value);
     use_file_locking = error.isNotSet();
-    if (NULL != value) free((void*) value);
+    if (nullptr != value) free((void*) value);
 
     if (XtIsManaged(_opt_dlog->advanced_pane))
     {
         XtVaGetValues(
 	  _opt_dlog->adv_def_cb_items.Use_network_aware_mail_file_locking_item,
 	  XmNset, &is_set,
-	  NULL);
+	  nullptr);
 
 	if (is_set != use_file_locking)
 	{
@@ -597,7 +597,7 @@ void OptCmd::doVacationCheck()
       {
 	 XtVaGetValues(_opt_dlog->vacation_rb_items.On_item,
 			  XmNset, &is_set,
-			  NULL);
+			  nullptr);
 	 if(is_set)
 	 {
 	    Boolean status = this->startVacation();
@@ -619,8 +619,8 @@ void OptCmd::doVacationCheck()
     if (vacation_cmd)
     {
 	char *subj, *body;
-	XtVaGetValues(_opt_dlog->subject_tf, XmNvalue, &subj, NULL);
-	XtVaGetValues(_opt_dlog->vacation_msg_tp, XmNvalue, &body, NULL);
+	XtVaGetValues(_opt_dlog->subject_tf, XmNvalue, &subj, nullptr);
+	XtVaGetValues(_opt_dlog->vacation_msg_tp, XmNvalue, &body, nullptr);
 
 	vacation_cmd->handleMessageFile(subj, body);
     }
@@ -660,16 +660,16 @@ OptCmd::stopVacation()
 
 Boolean OptCmd::optionsAreValid()
 {
-    char	*errMsg = NULL;
-    PropUiItem	*propui_ptr = NULL;
+    char	*errMsg = nullptr;
+    PropUiItem	*propui_ptr = nullptr;
     int		answer;
 
     for (propui_ptr = _PrintingOptions->getFirstProp();
-	 propui_ptr != (PropUiItem *) NULL;
+	 propui_ptr != (PropUiItem *) nullptr;
 	 propui_ptr = _PrintingOptions->getNextProp())
     {
 	errMsg = propui_ptr->uiValueIsValid();
-        if (errMsg != NULL)
+        if (errMsg != nullptr)
 	{
             this->genDialog()->setToQuestionDialog(
 			CATGETS(DT_catd, 5, 2, "Mailer"),
@@ -685,11 +685,11 @@ Boolean OptCmd::optionsAreValid()
     }
 
     for (propui_ptr = _MailRetrievalOptions->getFirstProp();
-	 propui_ptr != (PropUiItem *) NULL;
+	 propui_ptr != (PropUiItem *) nullptr;
 	 propui_ptr = _MailRetrievalOptions->getNextProp())
     {
 	errMsg = propui_ptr->uiValueIsValid();
-        if (errMsg != NULL)
+        if (errMsg != nullptr)
 	{
             this->genDialog()->setToQuestionDialog(
 			CATGETS(DT_catd, 5, 2, "Mailer"),
@@ -714,7 +714,7 @@ void register_pane_size(Widget pane)
     XtManageChild(pane);
     XtVaGetValues(pane,
                 XmNwidth, &width, XmNheight, &height,
-                NULL);
+                nullptr);
 
     if (width > max_width)
         max_width = width;
@@ -730,7 +730,7 @@ void register_pane_size(Widget pane)
 void OptCmd::init_msg_hdr_pane()
 {
 
-  PropUiItem *propui_ptr = NULL;
+  PropUiItem *propui_ptr = nullptr;
 
   // overall size of pane
   register_pane_size(_opt_dlog->msg_header_pane);
@@ -808,8 +808,8 @@ void OptCmd::init_msg_view_pane()
   DtMailEnv error;
   DtMail::Session * d_session = theRoamApp.session()->session();
   DtMail::MailRc * mail_rc = d_session->mailRc(error);
-  PropUiItem *propui_ptr = NULL;
-  ListUiItem *list_ptr = NULL;
+  PropUiItem *propui_ptr = nullptr;
+  ListUiItem *list_ptr = nullptr;
 
   // overall size of pane 
   register_pane_size(_opt_dlog->msg_view_pane); 
@@ -850,13 +850,13 @@ void OptCmd::init_msg_view_pane()
 //////////////////////////////////////////////////////////////////////////////
 void OptCmd::init_compose_pane()
 {
-  PropUiItem *propui_ptr = NULL;
+  PropUiItem *propui_ptr = nullptr;
   DtMailEnv error;
   DtMail::Session * d_session = theRoamApp.session()->session();
   DtMail::MailRc * mail_rc = d_session->mailRc(error);
 
   DtVirtArray<char *> fields_list(10);
-  ListUiItem *list_ptr = NULL;
+  ListUiItem *list_ptr = nullptr;
 
   // overall size of pane 
   register_pane_size(_opt_dlog->compose_win_pane); 
@@ -918,14 +918,14 @@ void OptCmd::init_msg_filing_pane()
   DtMailEnv error;
   DtMail::Session * d_session = theRoamApp.session()->session();
   DtMail::MailRc * mail_rc = d_session->mailRc(error);
-  const char *list_str = NULL;
+  const char *list_str = nullptr;
   DtVirtArray<char *> move_menu_list(10);
-  PropUiItem *propui_ptr = NULL;
+  PropUiItem *propui_ptr = nullptr;
 
   // overall size of pane 
   register_pane_size(_opt_dlog->msg_filing_pane); 
 
-  ListUiItem *list_ptr = NULL;
+  ListUiItem *list_ptr = nullptr;
 
   // make the list...
   msg_filing_pane_list = new DtVirtArray<PropUiItem *>(5);
@@ -997,7 +997,7 @@ void OptCmd::init_vacation_pane()
 void OptCmd::init_template_pane()
 {
   DtMailEnv error;
-  ListUiItem *list_ptr = NULL;
+  ListUiItem *list_ptr = nullptr;
 
   // overall size of pane 
   register_pane_size(_opt_dlog->templates_pane); 
@@ -1025,7 +1025,7 @@ void OptCmd::init_template_pane()
 void OptCmd::init_aliases_pane()
 {
   DtMailEnv error;
-  ListUiItem *list_ptr = NULL;
+  ListUiItem *list_ptr = nullptr;
 
   // overall size of pane 
   register_pane_size(_opt_dlog->aliases_pane); 
@@ -1054,16 +1054,16 @@ void OptCmd::init_advanced_pane()
 {
   DtMailEnv error;
   DtVirtArray<char *> alternates_list(8);
-  PropUiItem *propui_ptr = NULL;
+  PropUiItem *propui_ptr = nullptr;
   uid_t euid;
-  struct passwd *user_passwd = NULL;
-  char *label_str = NULL;
+  struct passwd *user_passwd = nullptr;
+  char *label_str = nullptr;
   XmString label_xm_str;
 
   // overall size of pane 
   register_pane_size(_opt_dlog->advanced_pane); 
 
-  ListUiItem *list_ptr = NULL;
+  ListUiItem *list_ptr = nullptr;
 
   label_str = (char *)malloc(256);
 
@@ -1134,7 +1134,7 @@ void OptCmd::init_advanced_pane()
 
   XtVaSetValues(_opt_dlog->adv_def_cb_items.Use_local_name_username_item,
 		XmNlabelString, label_xm_str,
-		NULL);
+		nullptr);
 
 
   list_ptr = (ListUiItem *)new AlternatesListUiItem(_opt_dlog->local_name_list,
@@ -1158,7 +1158,7 @@ void OptCmd::init_advanced_pane()
 void OptCmd::init_printing_pane()
 {
   DtMailEnv	error;
-  PropUiItem	*propui_ptr = NULL;
+  PropUiItem	*propui_ptr = nullptr;
   int		npropui;
 
   //_PrintingOptions = new DmxPrintOptions(_opt_dlog->layer);
@@ -1174,7 +1174,7 @@ void OptCmd::init_printing_pane()
   if (npropui)
   {
       for (propui_ptr = _PrintingOptions->getFirstProp();
-	   propui_ptr != (PropUiItem *) NULL;
+	   propui_ptr != (PropUiItem *) nullptr;
 	   propui_ptr = _PrintingOptions->getNextProp())
       {
 	  propui_ptr->writeFromSourceToUi();
@@ -1188,7 +1188,7 @@ void OptCmd::init_printing_pane()
 void OptCmd::init_mailretrieval_pane()
 {
   DtMailEnv	error;
-  PropUiItem	*propui_ptr = NULL;
+  PropUiItem	*propui_ptr = nullptr;
   int		npropui;
 
   //_PrintingOptions = new DmxPrintOptions(_opt_dlog->layer);
@@ -1204,7 +1204,7 @@ void OptCmd::init_mailretrieval_pane()
   if (npropui)
   {
       for (propui_ptr = _MailRetrievalOptions->getFirstProp();
-	   propui_ptr != (PropUiItem *) NULL;
+	   propui_ptr != (PropUiItem *) nullptr;
 	   propui_ptr = _MailRetrievalOptions->getNextProp())
       {
 	  propui_ptr->writeFromSourceToUi();
@@ -1224,27 +1224,27 @@ void OptCmd::doit()
 
   XtVaSetValues(_opt_dlog->cancel_button,
 		XmNuserData, this,
-		NULL);
+		nullptr);
 
   XtVaSetValues(_opt_dlog->ok_button,
 		XmNuserData, this,
-		NULL);
+		nullptr);
 
   XtVaSetValues(_opt_dlog->apply_button,
 		XmNuserData, this,
-		NULL);
+		nullptr);
 
   XtVaSetValues(_opt_dlog->reset_button,
 		XmNuserData, this,
-		NULL);
+		nullptr);
 
   XtVaSetValues(_opt_dlog->vacation_rb_items.On_item,
 		XmNuserData, this,
-		NULL);
+		nullptr);
 
   XtVaSetValues(_opt_dlog->vacation_rb_items.Off_item,
 		XmNuserData, this,
-		NULL);
+		nullptr);
 
   XtPopdown(_opt_dlog->dialog);
   XtPopup(_opt_dlog->dialog, XtGrabNone);
@@ -1256,7 +1256,7 @@ void OptCmd::updateUiFromBackEnd(DtVirtArray<PropUiItem *> *list)
 {
   int len, i;
 
-  if(list != NULL)
+  if(list != nullptr)
     {
       len = list->length();
       
@@ -1272,7 +1272,7 @@ void OptCmd::updateBackEndFromUi(DtVirtArray<PropUiItem *> *list)
 {
   int len, i;
 
-  if(list != NULL)
+  if(list != nullptr)
     {
       len = list->length();
       
@@ -1298,7 +1298,7 @@ void
 OptCmd::execute()
 {
     _opt_dlog = (DtbOptionsDialogInfo)theRoamApp.optionsDialog();	
-    if (_opt_dlog == NULL) {
+    if (_opt_dlog == nullptr) {
 	this->create_dlog();
         generalDialog = new DtMailGenDialog("Dialog", _opt_dlog->dialog);
     	this->doit();
@@ -1313,13 +1313,13 @@ OptCmd::execute()
 //////////////////////////////////////////////////////////////////////////////
 void OptCmd::setNewCategoryStr()
 {
-        XtVaGetValues(XmOptionButtonGadget(_opt_dlog->category_opmenu), XmNlabelString, &catstr, NULL);
+        XtVaGetValues(XmOptionButtonGadget(_opt_dlog->category_opmenu), XmNlabelString, &catstr, nullptr);
 }
 
 //////////////////////////////////////////////////////////////////////////////
 void OptCmd::setOldCategoryStr()
 {
-        XtVaSetValues(XmOptionButtonGadget(_opt_dlog->category_opmenu), XmNlabelString, catstr, NULL);
+        XtVaSetValues(XmOptionButtonGadget(_opt_dlog->category_opmenu), XmNlabelString, catstr, nullptr);
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -1330,7 +1330,7 @@ void OptCmd::displayAliasesOptionsPane()
     XtVaSetValues(
 		_opt_dlog->category_opmenu,
 		XmNmenuHistory, _opt_dlog->category_opmenu_items.Aliases_item,
-		NULL);
+		nullptr);
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -1341,7 +1341,7 @@ void OptCmd::displayPrintingOptionsPane()
     XtVaSetValues(
 		_opt_dlog->category_opmenu,
 		XmNmenuHistory, _opt_dlog->category_opmenu_items.Printing_item,
-		NULL);
+		nullptr);
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -1352,5 +1352,5 @@ void OptCmd::displayMailRetrievalOptionsPane()
     XtVaSetValues(
 	_opt_dlog->category_opmenu,
 	XmNmenuHistory,_opt_dlog->category_opmenu_items.MailRetrieval_item,
-	NULL);
+	nullptr);
 }

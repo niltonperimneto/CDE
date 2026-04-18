@@ -36,8 +36,8 @@
 char *
 strend(const char *str)
 {
-	if (str == NULL)
-		return NULL;
+	if (str == nullptr)
+		return nullptr;
 
 	while (*str != '\0')
 		str++;

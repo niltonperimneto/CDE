@@ -141,18 +141,18 @@ class DtMainW : public MainWindow
 	   char *name,
 	   ContainerType container_type = SCROLLED_WORK_AREA,
 	   SelectionType select_type = SINGLE_SELECT,
-	   OpenCallback openCB = NULL,
-	   void *openCallbackData = NULL,
-	   PreferenceCallback prefCB = NULL,
-	   void *prefCallbackData = NULL,
-	   char *fileMenuName = NULL,
-	   char *fileMenuMnemonic = NULL,
+	   OpenCallback openCB = nullptr,
+	   void *openCallbackData = nullptr,
+	   PreferenceCallback prefCB = nullptr,
+	   void *prefCallbackData = nullptr,
+	   char *fileMenuName = nullptr,
+	   char *fileMenuMnemonic = nullptr,
            PrinterApplicationMode app_mode = SINGLE_PRINTER);
    ~DtMainW();
    void DtAddAction(char *name, char *category,
                     char *actionReferenceName, ActionCallback callback,
-                    void *callback_data, char *mnemonic = NULL,
-                    char *acceleratorText = NULL, char *accelerator = NULL);
+                    void *callback_data, char *mnemonic = nullptr,
+                    char *acceleratorText = nullptr, char *accelerator = nullptr);
 
    void WorkingCursor(boolean);
    PrinterApplicationMode PrinterAppMode() { return app_mode; }

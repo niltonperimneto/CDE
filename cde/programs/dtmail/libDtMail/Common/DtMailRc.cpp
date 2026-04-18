@@ -162,7 +162,7 @@ DtMail::MailRc::MailRc(DtMailEnv &env, DtMail::Session *session)
     env.clear();
     _parseError = DTME_NoError;
 
-    input = NULL;
+    input = nullptr;
 
     init_globals();
     
@@ -197,7 +197,7 @@ DtMail::MailRc::MailRc(DtMailEnv &env, DtMail::Session *session)
 	}
 	else if (rval == -3) {
       	    sprintf(msg, "error: no endif for conditional if statement while reading %s\n", _mailrc_name);
-	    env.setError(DTME_ResourceParsingNoEndif, NULL);
+	    env.setError(DTME_ResourceParsingNoEndif, nullptr);
 	    _parseError = DTME_ResourceParsingNoEndif;
 	}
 		
@@ -236,13 +236,13 @@ DtMailBoolean DtMail::MailRc::ignore(DtMailEnv &env, const char *name)
     
     env.clear();
     
-    if(ignore_list != NULL)  // we have a valid ignore list
+    if(ignore_list != nullptr)  // we have a valid ignore list
       {
 	  return DTM_TRUE;
       }
     else
       {
-	  env.setError(DTME_NoObjectValue, NULL);
+	  env.setError(DTME_NoObjectValue, nullptr);
 	  return DTM_FALSE;
       }
     
@@ -271,10 +271,10 @@ const char *DtMail::MailRc::getAlias(DtMailEnv &env, const char * name)
     
     env.clear();
     
-    if(return_value == NULL)
+    if(return_value == nullptr)
       {
-	  env.setError(DTME_NoObjectValue, NULL);
-	  return NULL;
+	  env.setError(DTME_NoObjectValue, nullptr);
+	  return nullptr;
       }
     else
       {
@@ -406,10 +406,10 @@ void DtMail::MailRc::getValue(DtMailEnv &env,
 {
     char *get_result = mt_value((char *)var);
     
-    *value = NULL;
+    *value = nullptr;
     env.clear();
     
-    if (get_result != NULL)
+    if (get_result != nullptr)
     {
 	if (decrypt)
 	{
@@ -422,7 +422,7 @@ void DtMail::MailRc::getValue(DtMailEnv &env,
           *value = strdup((char *)get_result);
     }
     else
-      env.setError(DTME_NoObjectValue, NULL);
+      env.setError(DTME_NoObjectValue, nullptr);
 }
 
 void
@@ -464,12 +464,12 @@ const char * DtMail::MailRc::getAlternates(DtMailEnv &env)
     env.clear();
     
     // we don't free this memory...
-    alternate_list = NULL;
+    alternate_list = nullptr;
     
-    if(table == NULL)
+    if(table == nullptr)
       {
-	  env.setError(DTME_NoObjectValue, NULL);
-	  return NULL;
+	  env.setError(DTME_NoObjectValue, nullptr);
+	  return nullptr;
       }
     
     i = HASHSIZE;
@@ -479,7 +479,7 @@ const char * DtMail::MailRc::getAlternates(DtMailEnv &env)
 	while (h) {
 	    len = strlen((const char*)h->h_key);
 	    
-	    if(alternate_list == NULL)
+	    if(alternate_list == nullptr)
 	      {
 		  alternate_list = (char *)malloc(len + 1); // plus terminator
 		  strcpy(alternate_list, (const char*)h->h_key);
@@ -533,7 +533,7 @@ DtMail::MailRc::update(DtMailEnv & error)
     strcat(tmp_mailrc, ".tmp");
     
     FILE * outf = fopen(tmp_mailrc, "w+");
-    if (outf == NULL) {
+    if (outf == nullptr) {
 	error.setError(DTME_ObjectCreationFailed);
 	delete [] tmp_mailrc;
 	return;
@@ -541,7 +541,7 @@ DtMail::MailRc::update(DtMailEnv & error)
     
     // Now open the mailrc for input.
     FILE * inf = fopen(_mailrc_name, "r");
-    if (inf != NULL) {
+    if (inf != nullptr) {
 	// Now we will read the input file, and copy it to the output,
 	// based on type and changes to the mailrc.
 	//
@@ -607,7 +607,7 @@ void DtMail::MailRc::getAliasList(hm_callback stuffing_func, void *client_data)
 DtVirtArray<char *> *DtMail::MailRc::getAliasList()
 {	
 
-  DtVirtArray<char *>	*value_list = NULL;
+  DtVirtArray<char *>	*value_list = nullptr;
 
   value_list = new DtVirtArray<char *>(10);
 
@@ -619,7 +619,7 @@ DtVirtArray<char *> *DtMail::MailRc::getAliasList()
 DtVirtArray<char *> *DtMail::MailRc::getIgnoreList()
 {	
 
-  DtVirtArray<char *>	*value_list = NULL;
+  DtVirtArray<char *>	*value_list = nullptr;
 
   value_list = new DtVirtArray<char *>(10);
 
@@ -763,7 +763,7 @@ DtMail::MailRc::outputLine(const char * verbatim,
 	 * Just the constant zero, for exiting,
 	 * eg.
 	 */
-	com->c_write(verbatim, NULL, outf);
+	com->c_write(verbatim, nullptr, outf);
 	break;
 	
       default:
@@ -777,7 +777,7 @@ DtMail::MailRc::outputLine(const char * verbatim,
 // init the global hash structure
 void DtMail::MailRc::init_globals()
 {
-    glob.g_myname = NULL; 
+    glob.g_myname = nullptr; 
     
     glob.g_ignore = this->hm_alloc(); 
     glob.g_retain = this->hm_alloc(); 
@@ -789,7 +789,7 @@ void DtMail::MailRc::init_globals()
     
     strcpy(nullfield, "");
     
-    alternate_list = NULL;
+    alternate_list = nullptr;
     
 }
 
@@ -800,7 +800,7 @@ DtMail::MailRc::load(char *name, char* line)
     FILE *in, *oldin;
     int ret=0;
     
-    if ((in = fopen(name, "r")) == NULL) {
+    if ((in = fopen(name, "r")) == nullptr) {
         sprintf(line, "can not open file %s\n", name);
 	return(-2);
     }
@@ -1214,7 +1214,7 @@ char *DtMail::MailRc::mt_value(char name[])
     char *cp;
 //        extern char *getenv();
     
-    if ((vp = lookup(name, (struct var **)this->variables)) == (struct var *)NULL)
+    if ((vp = lookup(name, (struct var **)this->variables)) == (struct var *)nullptr)
 	cp = getenv(name);
     else
 	cp = vp->v_value;
@@ -1231,10 +1231,10 @@ struct var *DtMail::MailRc::lookup(char *name, struct var **hasharray)
     int h;
     
     h = hash(name);
-    for (vp = hasharray[h]; vp != (struct var *)NULL; vp = vp->v_link)
+    for (vp = hasharray[h]; vp != (struct var *)nullptr; vp = vp->v_link)
 	if (strcmp(vp->v_name, name) == 0)
 	    return (vp);
-    return ((struct var *)NULL);
+    return ((struct var *)nullptr);
 }
 
 
@@ -1337,8 +1337,8 @@ void
 DtMail::MailRc::nalias(char * key, void * data, void * client_data)
 {
     DtVirtArray<char *> *value_list = (DtVirtArray<char *> *)client_data;
-    char *new_alias = NULL;
-    char *white_space = NULL;
+    char *new_alias = nullptr;
+    char *white_space = nullptr;
     int m_size = 0;
     int  i, num_spaces = 0;
     int key_len = strlen(key);
@@ -1386,7 +1386,7 @@ DtMail::MailRc::nignorelist(char * key, void * data, void * client_data)
 {
     data = data;
     DtVirtArray<char *> *value_list = (DtVirtArray<char *> *)client_data;
-    char *new_ignore = NULL;
+    char *new_ignore = nullptr;
 
     new_ignore = (char *)malloc(strlen((char *)key) + 2);
 
@@ -1455,7 +1455,7 @@ DtMail::MailRc::wset(const char * verbatim,
 	// variable.
 	//
 	struct var * vp = lookup(varbuf, (struct var **)variables);
-	if (vp == NULL || vp->v_written) {
+	if (vp == nullptr || vp->v_written) {
 	    // If the original input line was set novar then just write
 	    // it out again. We can not easily track duplicates here.
 	    //
@@ -1511,7 +1511,7 @@ DtMail::MailRc::wunset(const char * verbatim,
 		     FILE * outf)
 {
   arglist = arglist;
-  if(verbatim != NULL && outf != NULL)
+  if(verbatim != nullptr && outf != nullptr)
     fwrite(verbatim, 1, strlen(verbatim), outf);
 }
 
@@ -1580,7 +1580,7 @@ int DtMail::MailRc::mt_deassign(char *s)
     struct var *vp, *vp2;
     int h;
     
-    if ((vp2 = lookup(s, MailRc::variables)) == (struct var *)NULL) {
+    if ((vp2 = lookup(s, MailRc::variables)) == (struct var *)nullptr) {
 	return (1);
     }
     h = hash(s);
@@ -1609,7 +1609,7 @@ void DtMail::MailRc::mt_puthash(char *name, char *val, struct var **hasharray)
     int h;
     
     vp = lookup(name, hasharray);
-    if (vp == (struct var *)NULL) {
+    if (vp == (struct var *)nullptr) {
 	h = hash(name);
 	vp = (struct var *) (calloc(sizeof *vp, 1));
 	vp->v_name = vcopy(name);
@@ -1625,7 +1625,7 @@ void
 DtMail::MailRc::mt_scan(FILE * outf)
 {
     for (int slot = 0; slot < HSHSIZE; slot++) {
-	for (var * vp = MailRc::variables[slot]; vp != (struct var *)NULL; vp = vp->v_link) {
+	for (var * vp = MailRc::variables[slot]; vp != (struct var *)nullptr; vp = vp->v_link) {
 	    if (!vp->v_written) {
 		fwrite("set ", 1, 4, outf);
 		fwrite(vp->v_name, 1, strlen(vp->v_name), outf);
@@ -1690,7 +1690,7 @@ void DtMail::MailRc::hm_add(struct hash **table,
     h->h_written = 0;
     table[index] = h;
     h->h_key = strdup(key);
-    if (size && value != NULL) {
+    if (size && value != nullptr) {
 	h->h_value = malloc(size);
 	memcpy(h->h_value, value, size);
     } else {
@@ -1709,12 +1709,12 @@ void DtMail::MailRc::hm_delete(struct hash **table, char *key)
 	return;
     
     index = hash_index(key);
-    old = NULL;
+    old = nullptr;
     h = table[index];
     while (h) {
 	if (strcasecmp(h->h_key, key) == 0) {
 	    /* found the match */
-	    if (old == NULL)
+	    if (old == nullptr)
 		table[index] = h->h_next;
 	    else
 		old->h_next = h->h_next;
@@ -1734,7 +1734,7 @@ void *DtMail::MailRc::hm_test(struct hash **table, char *key)
     struct hash *h;
     
     if (!table)
-	return (NULL);
+	return (nullptr);
     
     h = table[hash_index(key)];
     
@@ -1747,7 +1747,7 @@ void *DtMail::MailRc::hm_test(struct hash **table, char *key)
 	h = h->h_next;
     }
     
-    return (NULL);
+    return (nullptr);
 }
 
 void DtMail::MailRc::hm_mark(struct hash **table, char *key)
@@ -1900,7 +1900,7 @@ void DtMail::MailRc::add_ignore(char *name)
 {
     if(! MailRc::hm_test((struct hash **)glob.g_ignore, name)) {
 	/* name is not already there... */
-	MailRc::hm_add((struct hash **)glob.g_ignore, name, NULL, 0);
+	MailRc::hm_add((struct hash **)glob.g_ignore, name, nullptr, 0);
     }
 }
 
@@ -1910,7 +1910,7 @@ void DtMail::MailRc::add_ignore(char *name)
  */
 int DtMail::MailRc::alternates(char **namelist, DtMail::MailRc *)
 {
-    while (*namelist != NULL)
+    while (*namelist != nullptr)
 	MailRc::add_alternates(*namelist++);
     return(0);
 }
@@ -1969,7 +1969,7 @@ void DtMail::MailRc::add_alternates(char *name)
 {
     if(! MailRc::hm_test((struct hash**)glob.g_alternates, name)) {
 	/* name is not already there... */
-	MailRc::hm_add((struct hash **)glob.g_alternates, name, NULL, 0);
+	MailRc::hm_add((struct hash **)glob.g_alternates, name, nullptr, 0);
     }
 }
 
@@ -2006,7 +2006,7 @@ DtMail::MailRc::expand(char *name)
 	char *cp, *Shell;
 	int s, pivec[2];
 	struct stat sbuf;
-        char *retchr = NULL;
+        char *retchr = nullptr;
 
 	if (name[0] == '+' && getfolderdir(cmdbuf, LINESIZE) >= 0) {
 		sprintf(xname, "%s/%s", cmdbuf, name + 1);
@@ -2101,7 +2101,7 @@ DtMail::MailRc::source(char **arglist, DtMail::MailRc *self)
   if ((cp = self->expand(fname)) == NOSTR)
     return(0);
 
-  if ((fi = fopen(cp, "r")) == NULL) {
+  if ((fi = fopen(cp, "r")) == nullptr) {
     free(cp);
     return(0);
   }
@@ -2124,7 +2124,7 @@ void
 DtMail::MailRc::wsource(const char * verbatim, char ** arglist, FILE * outf)
 {
   arglist = arglist;
-  if(verbatim != NULL && outf != NULL)
+  if(verbatim != nullptr && outf != nullptr)
     fwrite(verbatim, 1, strlen(verbatim), outf);
 }
 
@@ -2164,7 +2164,7 @@ void
 DtMail::MailRc::wifcmd(const char * verbatim, char ** arglist, FILE * outf)
 {
   arglist = arglist;
-  if(verbatim != NULL && outf != NULL)
+  if(verbatim != nullptr && outf != nullptr)
     fwrite(verbatim, 1, strlen(verbatim), outf);
 }
 
@@ -2206,7 +2206,7 @@ void
 DtMail::MailRc::welsecmd(const char * verbatim, char ** arglist, FILE * outf)
 {
   arglist = arglist;
-  if(verbatim != NULL && outf != NULL)
+  if(verbatim != nullptr && outf != nullptr)
     fwrite(verbatim, 1, strlen(verbatim), outf);
 }
 
@@ -2227,14 +2227,14 @@ void
 DtMail::MailRc::wendifcmd(const char * verbatim, char ** arglist, FILE * outf)
 {
   arglist = arglist;
-  if(verbatim != NULL && outf != NULL)
+  if(verbatim != nullptr && outf != nullptr)
     fwrite(verbatim, 1, strlen(verbatim), outf);
 }
 
 int
 DtMail::MailRc::clearaliases(char **, DtMail::MailRc *)
 {
-	DtVirtArray<char *>   *value_list = NULL;
+	DtVirtArray<char *>   *value_list = nullptr;
 	DtMailEnv error;
 	
   	value_list = new DtVirtArray<char *>(10);
@@ -2243,7 +2243,7 @@ DtMail::MailRc::clearaliases(char **, DtMail::MailRc *)
 
 	while (value_list->length()) {
 		char *buf, *val = (*value_list)[0];
-		if ((buf = strchr(val, ' ')) != NULL)
+		if ((buf = strchr(val, ' ')) != nullptr)
 			*buf = '\0';
 		if (hm_test((struct hash **)glob.g_alias, val))
         		hm_delete((struct hash **)glob.g_alias, val);

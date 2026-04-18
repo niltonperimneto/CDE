@@ -47,9 +47,9 @@ Container::Container(MotifUI *parent,
 		     char *name, 
 		     ContainerType container_type,
 		     SelectionType select_type)
-	: MotifUI(parent, name, NULL)
+	: MotifUI(parent, name, nullptr)
 {
-   CreateContainer(parent, name, NULL, container_type, select_type);
+   CreateContainer(parent, name, nullptr, container_type, select_type);
 }
 
 Container::Container(char *category, 
@@ -62,8 +62,8 @@ Container::Container(char *category,
    CreateContainer(parent, name, category, container_type, select_type);
 }
 
-static XtTranslations trans_tbl = NULL;
-static XtActionsRec action_table[] = {{"ResizeRC", NULL}};
+static XtTranslations trans_tbl = nullptr;
+static XtActionsRec action_table[] = {{"ResizeRC", nullptr}};
 
 void Container::CreateContainer(MotifUI *parent, char * /*name*/,
 				char * /*category*/,
@@ -85,14 +85,14 @@ void Container::CreateContainer(MotifUI *parent, char * /*name*/,
       XtAppAddActions(appContext, action_table, XtNumber(action_table));
     }
 
-   _xm_update_message = NULL;
+   _xm_update_message = nullptr;
    _select_type = select_type;
-   _last_selected = NULL;
+   _last_selected = nullptr;
    parentW = parent->InnerWidget();
    if (GuiIsIcon(parentW))
       superNode = parentW;
    else
-      superNode = NULL;
+      superNode = nullptr;
    if (!XtIsComposite(parentW))
       parentW = XtParent(parentW);
    if (select_type == SINGLE_SELECT)
@@ -102,30 +102,30 @@ void Container::CreateContainer(MotifUI *parent, char * /*name*/,
     {
      case FORM:
        _w = XtVaCreateManagedWidget("form", xmFormWidgetClass,
-				    parentW, NULL);
+				    parentW, nullptr);
        _workArea = _w;
        break;
      case SCROLLED_FORM:
        _w = XtVaCreateManagedWidget("sw", xmScrolledWindowWidgetClass,
-				    parentW, NULL);
+				    parentW, nullptr);
        _workArea = XtVaCreateManagedWidget("form", xmFormWidgetClass,
-				           _w, NULL);
+				           _w, nullptr);
        break;
      case CANVAS:
        _w = XtVaCreateManagedWidget("canvas", xmDrawingAreaWidgetClass,
-				    parentW, NULL);
+				    parentW, nullptr);
        _workArea = _w;
        break;
      case SCROLLED_CANVAS:
        _w = XtVaCreateManagedWidget("sw", xmScrolledWindowWidgetClass,
-				    parentW, NULL);
+				    parentW, nullptr);
        _workArea = XtVaCreateManagedWidget("canvas", xmDrawingAreaWidgetClass,
-				           _w, NULL);
+				           _w, nullptr);
        break;
      case HORIZONTAL_ROW_COLUMN:
        _w = XtVaCreateManagedWidget("rc", xmRowColumnWidgetClass, parentW,
 				    XmNorientation, XmHORIZONTAL,
-                                    XmNradioBehavior, radio_behavior, NULL);
+                                    XmNradioBehavior, radio_behavior, nullptr);
        _workArea = _w;
        break;
      case SCROLLED_HORIZONTAL_ROW_COLUMN:
@@ -134,21 +134,21 @@ void Container::CreateContainer(MotifUI *parent, char * /*name*/,
 				    GuiNsuperNode, superNode, XmNspacing, 0,
 				    XmNscrollBarDisplayPolicy, XmAS_NEEDED,
 				    XmNscrollingPolicy, XmAUTOMATIC,
-				    XmNheight, Parent()->Height(), NULL);
-       XtAddCallback(_w, XmNtraverseObscuredCallback, MakeChildVisible, NULL);
+				    XmNheight, Parent()->Height(), nullptr);
+       XtAddCallback(_w, XmNtraverseObscuredCallback, MakeChildVisible, nullptr);
        _workArea = XtVaCreateManagedWidget("rc", xmRowColumnWidgetClass, _w,
 					   XmNorientation, XmHORIZONTAL, 
                                            XmNradioBehavior, radio_behavior,
                                            XmNpacking, XmPACK_TIGHT,
 					   XmNadjustLast, False,
-					   XmNuserData, this, NULL);
+					   XmNuserData, this, nullptr);
        XtAddCallback(XtParent(_workArea), XmNresizeCallback, 
 	             ResizeSW, (XtPointer) this);
        XtOverrideTranslations(_workArea, trans_tbl);
        break;
      case VERTICAL_ROW_COLUMN:
        _w = XtVaCreateManagedWidget("rc", xmRowColumnWidgetClass, parentW,
-                                    XmNradioBehavior, radio_behavior, NULL);
+                                    XmNradioBehavior, radio_behavior, nullptr);
        _workArea = _w;
        break;
      case SCROLLED_VERTICAL_ROW_COLUMN:
@@ -157,30 +157,30 @@ void Container::CreateContainer(MotifUI *parent, char * /*name*/,
 				    GuiNsuperNode, superNode, XmNspacing, 0,
                                     XmNradioBehavior, radio_behavior,
 				    XmNscrollBarDisplayPolicy, XmAS_NEEDED,
-				    XmNscrollingPolicy, XmAUTOMATIC, NULL);
+				    XmNscrollingPolicy, XmAUTOMATIC, nullptr);
        _workArea = XtVaCreateManagedWidget("rc", xmRowColumnWidgetClass, _w,
                                            XmNradioBehavior, radio_behavior,
-					   NULL);
+					   nullptr);
        break;
      case PANE:
        _w = XtVaCreateManagedWidget("pane", xmPanedWindowWidgetClass,
-				    parentW, NULL);
+				    parentW, nullptr);
        _workArea = _w;
        break;
      case SCROLLED_PANE:
        _w = XtVaCreateManagedWidget("sw", xmScrolledWindowWidgetClass,
-				    parentW, NULL);
+				    parentW, nullptr);
        _workArea = XtVaCreateManagedWidget("form", xmPanedWindowWidgetClass,
-				           _w, NULL);
+				           _w, nullptr);
        break;
      case WORK_AREA:
        _w = XtVaCreateManagedWidget("form", workAreaWidgetClass,
-				    parentW, NULL);
+				    parentW, nullptr);
        _workArea = _w;
        break;
      case ICON_LIST:
        _w = XtVaCreateManagedWidget("form", workAreaWidgetClass,
-				    parentW, GuiNisList, True, NULL);
+				    parentW, GuiNisList, True, nullptr);
        _workArea = _w;
        break;
      case SCROLLED_ICON_LIST:
@@ -192,7 +192,7 @@ void Container::CreateContainer(MotifUI *parent, char * /*name*/,
        _w = XtVaCreateManagedWidget("form", xmFormWidgetClass,
 				    parentW,
 				    XmNshadowThickness, _shadowThickness,
-				    XmNshadowType, XmSHADOW_OUT, NULL);
+				    XmNshadowType, XmSHADOW_OUT, nullptr);
        n = 0;
        if (_container_type == SCROLLED_ICON_LIST)
 	{
@@ -224,14 +224,14 @@ void Container::CreateContainer(MotifUI *parent, char * /*name*/,
 
    if (_workArea == _w)
     {
-      _clipWidget = _sw = _vbar = _hbar = NULL;
+      _clipWidget = _sw = _vbar = _hbar = nullptr;
     }
    else
     {
       _clipWidget = XtParent(_workArea);
       _sw = XtParent(_clipWidget);
       XtVaGetValues(_sw, XmNverticalScrollBar, &_vbar, 
-                    XmNhorizontalScrollBar, &_hbar, NULL);
+                    XmNhorizontalScrollBar, &_hbar, nullptr);
       if (container_type == SCROLLED_HORIZONTAL_ROW_COLUMN)
 	 XtUnmanageChild(_vbar);
 
@@ -239,9 +239,9 @@ void Container::CreateContainer(MotifUI *parent, char * /*name*/,
 	  (container_type == SCROLLED_WORK_AREA ||
            container_type == SCROLLED_ICON_LIST))
        {
-          XtVaGetValues(_vbar, XmNtroughColor, &pixel, NULL);
-          XtVaSetValues(_workArea, XmNbackground, pixel, NULL);
-          XtVaSetValues(_clipWidget, XmNbackground, pixel, NULL);
+          XtVaGetValues(_vbar, XmNtroughColor, &pixel, nullptr);
+          XtVaSetValues(_workArea, XmNbackground, pixel, nullptr);
+          XtVaSetValues(_clipWidget, XmNbackground, pixel, nullptr);
        }
     }
    InstallHelpCB();
@@ -281,7 +281,7 @@ void Container::DoEndUpdate()
    StringFree(_xm_update_message);
    if (XtIsRealized(_workArea))
       XClearArea(display, XtWindow(XtParent(_workArea)), 0, 0, 0, 0, TRUE);
-   _xm_update_message = NULL;
+   _xm_update_message = nullptr;
    if (_container_type == SCROLLED_WORK_AREA ||
        _container_type == WORK_AREA ||
        _container_type == SCROLLED_ICON_LIST ||
@@ -317,7 +317,7 @@ void Container::NotifyDelete(BaseUI *obj)
 {
    MotifUI::NotifyDelete(obj);
    if (_last_selected == obj)
-      _last_selected = NULL;
+      _last_selected = nullptr;
    if (_container_type == SCROLLED_HORIZONTAL_ROW_COLUMN)
       XtAppAddTimeOut(appContext, 500, ResizeTimeOut, this);
 }
@@ -341,7 +341,7 @@ void Container::NotifySelected(BaseUI *obj)
       if (obj->Selected())
          _last_selected = obj;
       else
-         _last_selected = NULL;
+         _last_selected = nullptr;
       break;
    case MULTIPLE_SELECT:
       break;
@@ -372,8 +372,8 @@ void Container::OpenAnimation(MotifUI *obj)
    else
       widget = _w;
 
-   XtVaGetValues(widget, XmNwidth, &w, XmNheight, &h, NULL);
-   XtVaGetValues(obj->BaseWidget(), XmNwidth, &w2, XmNheight, &h2, NULL);
+   XtVaGetValues(widget, XmNwidth, &w, XmNheight, &h, nullptr);
+   XtVaGetValues(obj->BaseWidget(), XmNwidth, &w2, XmNheight, &h2, nullptr);
 
    area = XtWindow(widget);
    x1 = (int)w2 / 2;
@@ -433,7 +433,7 @@ static GC CreateGC(Widget w)
    XGCValues values;
 
    XtVaGetValues(w, XmNforeground, &values.foreground, 
-                 XmNbackground, &values.background, NULL);
+                 XmNbackground, &values.background, nullptr);
    // Set the fg to the XOR of the fg and bg, so if it is
    // XOR'ed with bg, the result will be fg and vice-versa.
    // This effectively achieves inverse video for the line.
@@ -457,7 +457,7 @@ void Container::UpdateAreaMessage(Widget widget, XtPointer client_data,
    Dimension	  w, h;
    int		  x, y;
 
-   static GC gc = (GC) NULL;
+   static GC gc = (GC) nullptr;
 
    Container *container = (Container *) client_data;
 
@@ -466,7 +466,7 @@ void Container::UpdateAreaMessage(Widget widget, XtPointer client_data,
 
    if (!gc)
     {
-      XtVaGetValues(widget, XmNforeground, &values.foreground, NULL);
+      XtVaGetValues(widget, XmNforeground, &values.foreground, nullptr);
       if (container->font)
          valueMask = GCFont | GCForeground;
       else
@@ -475,14 +475,14 @@ void Container::UpdateAreaMessage(Widget widget, XtPointer client_data,
       gc = XCreateGC(display, root, valueMask, &values);
     }
    XClearArea(display, XtWindow(widget), 0, 0, 0, 0, FALSE);
-   XtVaGetValues(widget, XmNwidth, &width, XmNheight, &height, NULL);
-   XtVaGetValues(container->_workArea, XmNstringDirection, &direction, NULL);
+   XtVaGetValues(widget, XmNwidth, &width, XmNheight, &height, nullptr);
+   XtVaGetValues(container->_workArea, XmNstringDirection, &direction, nullptr);
    XmStringExtent(container->userFont, container->_xm_update_message, &w, &h);
    x = (Dimension)(width - w) / 2;
    y = (Dimension)(height - h) / 2;
    XmStringDraw(display, XtWindow(widget), container->userFont,
       container->_xm_update_message,
-      gc, x, y, w, XmALIGNMENT_CENTER, direction, NULL);
+      gc, x, y, w, XmALIGNMENT_CENTER, direction, nullptr);
 }
 
 void Container::MakeChildVisible(Widget widget, XtPointer, XtPointer call_data)
@@ -513,7 +513,7 @@ void Container::ResizeTimeOut(void *data, XtIntervalId * /*id*/)
        {
 	 if (XtIsManaged(children[i]->BaseWidget()))
 	  {
-            XtQueryGeometry(children[i]->BaseWidget(), NULL, &preferred);
+            XtQueryGeometry(children[i]->BaseWidget(), nullptr, &preferred);
             if ((h1 = preferred.height) > max_height)
 	     {
 	       max_height = h1;
@@ -523,15 +523,15 @@ void Container::ResizeTimeOut(void *data, XtIntervalId * /*id*/)
        }
       Position y;
       if (max_height)
-         XtVaGetValues(children[0]->BaseWidget(), XmNy, &y, NULL);
+         XtVaGetValues(children[0]->BaseWidget(), XmNy, &y, nullptr);
       else
 	 y = 0;
       h1 = max_height + (2 * y);
     }
    else
-      XtVaGetValues(obj->_workArea, XmNheight, &h1, NULL);
-   XtVaGetValues(obj->_clipWidget, XmNheight, &h2, NULL);
-   XtVaGetValues(obj->_w, XmNheight, &h3, NULL);
+      XtVaGetValues(obj->_workArea, XmNheight, &h1, nullptr);
+   XtVaGetValues(obj->_clipWidget, XmNheight, &h2, nullptr);
+   XtVaGetValues(obj->_w, XmNheight, &h3, nullptr);
    h3 = h3 - h2 + h1;
    if (h2 != h1)
     {
@@ -543,9 +543,9 @@ void Container::ResizeTimeOut(void *data, XtIntervalId * /*id*/)
     }
    else if (h4 <= (int)h3)
       return;
-   XtVaSetValues(obj->_w, XmNheight, h4, NULL);
+   XtVaSetValues(obj->_w, XmNheight, h4, nullptr);
    obj->Refresh();
-   XtVaGetValues(obj->_w, XmNheight, &h3, NULL);
+   XtVaGetValues(obj->_w, XmNheight, &h3, nullptr);
    if (h3 != h4)
       XtAppAddTimeOut(obj->appContext, 500, ResizeTimeOut, obj);
 }
@@ -562,6 +562,6 @@ void Container::ResizeSW(Widget w, XtPointer client_data, XtPointer)
 void Container::ResizeRC(Widget w, XEvent *, String *, int *)
 {
    Container *obj;
-   XtVaGetValues(w, XmNuserData, &obj, NULL);
+   XtVaGetValues(w, XmNuserData, &obj, nullptr);
    XtAppAddTimeOut(obj->appContext, 500, ResizeTimeOut, obj);
 }

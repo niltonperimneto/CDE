@@ -80,7 +80,7 @@ XtResource
 Application::_appResources[] = {
   {
     "workspaceList", "WorkspaceList", XtRString, sizeof(XtRString),
-    XtOffset(Application *, _appWorkspaceList), XtRString, (XtPointer) NULL
+    XtOffset(Application *, _appWorkspaceList), XtRString, (XtPointer) nullptr
   }
 };
 
@@ -98,7 +98,7 @@ Application::_appResources[] = {
 #define NL_CAT_LOCALE 0
 #endif
 
-Application *theApplication = NULL;
+Application *theApplication = nullptr;
 
 nl_catd catd = (nl_catd) -1;    // catgets file descriptor
 
@@ -114,14 +114,14 @@ Application::Application ( char *appClassName ) :
     
     // Initialize data members
     
-    _display    = NULL;
-    _appContext = NULL;
+    _display    = nullptr;
+    _appContext = nullptr;
     _bMenuButton = 0;
-    _windows    = NULL;
+    _windows    = nullptr;
     _numWindows = 0;
     _shutdownEnabled = 1;
     _applicationClass = strdup ( appClassName );
-    _appWorkspaceList = NULL;
+    _appWorkspaceList = nullptr;
     _lastInteractiveEventTime = 0;
     _originalEgid = 0;
     _originalRgid = 0;
@@ -158,16 +158,16 @@ void Application::initialize ( int *argcp, char **argv )
     _w = XtOpenApplication (
 			&_appContext, 
 			_applicationClass, 
-			(XrmOptionDescList) NULL, 0, 
+			(XrmOptionDescList) nullptr, 0, 
 			argcp, argv, ApplicationFallbacks,
-			sessionShellWidgetClass, (ArgList) NULL, 0 );
+			sessionShellWidgetClass, (ArgList) nullptr, 0 );
     
     // Extract and save a pointer to the X display structure
     DebugPrintf(3, "Application::initialize - Extracting display.\n");
     _display = XtDisplay ( _w );
 
     // Set virtual BMenu mouse binding
-    int numButtons = XGetPointerMapping(_display, (unsigned char *)NULL, 0);
+    int numButtons = XGetPointerMapping(_display, (unsigned char *)nullptr, 0);
     _bMenuButton = (numButtons < 3) ? Button2 : Button3;
     
     // The Application class is less likely to need to handle
@@ -184,7 +184,7 @@ void Application::initialize ( int *argcp, char **argv )
 		   XmNy, DisplayHeight ( _display, 0 ) / 2,
 		   XmNwidth,  1,
 		   XmNheight, 1,
-		   NULL );
+		   nullptr );
     
     // The instance name of this object was set in the UIComponent 
     // constructor, before the name of the program was available
@@ -362,7 +362,7 @@ void
 Application::setAppWorkspaceList(char *workspaceList)
 {
     // open message catalog file
-    if (NULL != _appWorkspaceList)
+    if (nullptr != _appWorkspaceList)
       free(_appWorkspaceList);
 
     _appWorkspaceList = strdup(workspaceList);

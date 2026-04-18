@@ -54,9 +54,9 @@
 extern nl_catd catd;
 
 void DisplayMain( Widget, char *, char *);
-static Widget helpMain = NULL;
-static Widget helpError = NULL;
-static Widget versionMain = NULL;
+static Widget helpMain = nullptr;
+static Widget helpError = nullptr;
+static Widget versionMain = nullptr;
 
 Widget
 getErrorHelpWidget(void)
@@ -67,7 +67,7 @@ getErrorHelpWidget(void)
 void
 clearErrorHelpWidget(void)
 {
-    helpError = NULL;
+    helpError = nullptr;
 }
 
 char *
@@ -78,7 +78,7 @@ getHelpId (Widget w)
     char *index;
     int i = 0, j = 0;
  
-    if (XtParent(w) == NULL) {
+    if (XtParent(w) == nullptr) {
         helpId = (char *) malloc(1000);
 	index = helpId;
 	buf = XtName(w);
@@ -122,11 +122,11 @@ DisplayVersion (
     Widget	printWidget;
     Widget	helpWidget;
 
-    if (versionMain != NULL) {
+    if (versionMain != nullptr) {
 	n = 0;
 	XtSetArg (args[n], XmNtitle, CATGETS(catd, 1, 4,
 	  "DtMail Version Dialog")); n++;
-	if (helpVolume != NULL) {
+	if (helpVolume != nullptr) {
 	    XtSetArg (args[n], DtNhelpVolume, helpVolume); n++;
 	}
 	XtSetArg (args[n], DtNlocationId, locationId); n++;
@@ -141,7 +141,7 @@ DisplayVersion (
 	n = 0;
 	XtSetArg (args[n], XmNtitle, CATGETS(catd, 1, 5,
 	  "DtMail Version Dialog")); n++;
-	if (helpVolume != NULL) {
+	if (helpVolume != nullptr) {
 	    XtSetArg (args[n], DtNhelpVolume, helpVolume); n++;
 	}
 	XtSetArg (args[n], DtNlocationId, locationId); n++;
@@ -174,7 +174,7 @@ HelpMenuCB (
 	XtPointer	clientdata,
 	XtPointer)
 {
-    Widget selWidget = NULL;
+    Widget selWidget = nullptr;
     int	status = DtHELP_SELECT_ERROR;
 
     // Determine which help button was activated and display the
@@ -184,18 +184,18 @@ HelpMenuCB (
 	case HELP_ON_ITEM:
 	    while (!XtIsSubclass(widget, applicationShellWidgetClass))
 		widget = XtParent(widget);
-	    status = DtHelpReturnSelectedWidgetId(widget, NULL, &selWidget);
+	    status = DtHelpReturnSelectedWidgetId(widget, nullptr, &selWidget);
 
 	    switch ((int) status) {
 		case DtHELP_SELECT_ERROR:
 		    printf(CATGETS(catd, 2, 1, "Selection Error, cannot continue\n"));
 		    break;
 		case DtHELP_SELECT_VALID:
-		    while (selWidget != NULL) {
+		    while (selWidget != nullptr) {
 			if ((XtHasCallbacks(selWidget, XmNhelpCallback)
 					== XtCallbackHasSome)) {
 			    XtCallCallbacks((Widget)selWidget,
-					XmNhelpCallback, NULL);
+					XmNhelpCallback, nullptr);
 			    break;
 			} else {
 			    selWidget = XtParent(selWidget);
@@ -212,10 +212,10 @@ HelpMenuCB (
 	    }
 	    break;
 	case HELP_ON_TOPIC:
-	    DisplayMain(widget, NULL, APP_MENU_ID);
+	    DisplayMain(widget, nullptr, APP_MENU_ID);
 	    break;
 	case HELP_ON_VERSION:
-	    DisplayVersion(widget, NULL, VER_MENU_ID);
+	    DisplayVersion(widget, nullptr, VER_MENU_ID);
 	    break;
 	default:
 	    break;
@@ -255,13 +255,13 @@ DisplayMain(
     Arg	args[10];
     int n;
 
-    if (helpMain != NULL) {
+    if (helpMain != nullptr) {
 	n = 0;
 #ifdef undef
 	XtSetArg (args[n], XmNtitle, CATGETS(catd, 1, 7, "DtMail Help")); n++;
 #endif
 	XtSetArg (args[n], XmNtitle, CATGETS(catd, 1, 12, "Mailer : Help")); n++;
-	if (helpVolume != NULL) {
+	if (helpVolume != nullptr) {
 	    XtSetArg (args[n], DtNhelpVolume, helpVolume); n++;
 	}
 	XtSetArg (args[n], DtNlocationId, locationId); n++;
@@ -276,14 +276,14 @@ DisplayMain(
 	// Build a new one in our cached list
 	n = 0;
 	XtSetArg (args[n], XmNtitle, CATGETS(catd, 1, 12, "Mailer : Help")); n++;
-	if (helpVolume != NULL) {
+	if (helpVolume != nullptr) {
 	    XtSetArg (args[n], DtNhelpVolume, helpVolume); n++;
 	}
 	XtSetArg (args[n], DtNlocationId, locationId); n++;
 	XtSetArg (args[n], DtNhelpType, DtHELP_TYPE_TOPIC); n++;
 	helpMain = DtCreateHelpDialog(parent, "Mailer", args, n);
 
-	XtAddCallback(helpMain, DtNhyperLinkCallback, ProcessLinkCB, NULL);
+	XtAddCallback(helpMain, DtNhyperLinkCallback, ProcessLinkCB, nullptr);
 	XtAddCallback(
 		helpMain,
 		DtNcloseCallback, CloseMainCB, (XtPointer) helpMain);
@@ -307,7 +307,7 @@ DisplayErrorHelp(
 	XtSetArg (args[n], XmNtitle, CATGETS(catd, 1, 7, "DtMail Help")); n++;
 #endif
 	XtSetArg (args[n], XmNtitle, CATGETS(catd, 1, 12, "Mailer : Help")); n++;
-	if (helpVolume != NULL) {
+	if (helpVolume != nullptr) {
 	    XtSetArg (args[n], DtNhelpVolume, helpVolume); n++;
 	}
 	XtSetArg (args[n], DtNlocationId, locationId); n++;
@@ -324,7 +324,7 @@ DisplayErrorHelp(
 	XtSetArg (args[n], XmNtitle, CATGETS(catd, 1, 8, "DtMail Help")); n++;
 #endif
 	XtSetArg (args[n], XmNtitle, CATGETS(catd, 1, 12, "Mailer : Help")); n++;
-	if (helpVolume != NULL) {
+	if (helpVolume != nullptr) {
 	XtSetArg (args[n], DtNhelpVolume, helpVolume); n++;
 	}
 	//XtSetArg (args[n], DtNlocationId, "DTMAILVIEWMAINWINDOWWORK-AREAPANEDWFORM2ROWCOLUMNPREVIOUS"); n++;
@@ -332,7 +332,7 @@ DisplayErrorHelp(
 	XtSetArg (args[n], DtNhelpType, DtHELP_TYPE_TOPIC); n++;
 	helpError = DtCreateHelpDialog(parent, "Mailer", args, n);
 
-	XtAddCallback(helpError, DtNhyperLinkCallback, ProcessLinkCB, NULL);
+	XtAddCallback(helpError, DtNhyperLinkCallback, ProcessLinkCB, nullptr);
 
 	XtAddCallback(helpError, DtNcloseCallback, 
 		CloseMainCB, (XtPointer) helpError);
@@ -387,7 +387,7 @@ HelpTexteditCB (
 	XtPointer callData )
 {
 
-     char *locationId = NULL;
+     char *locationId = nullptr;
      Widget wEditor = (Widget) clientData;
      DtEditorHelpCallbackStruct *editorHelp =
                          (DtEditorHelpCallbackStruct *) callData;

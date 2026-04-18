@@ -107,7 +107,7 @@ void unixf_storage::remove()
 /***********************************************************/
 int unixf_storage::_open(int new_mode)
 {
-   char *fmt = NULL;
+   char *fmt = nullptr;
 
    if ( ! ( *this ) ) {
 #ifdef DEBUG
@@ -364,7 +364,7 @@ Boolean unixf_storage::io_mode(int test_mode)
 
 int unixf_storage::truncate(int target_length_in_bytes)
 {
-   char *fmt = NULL;
+   char *fmt = nullptr;
 
    _open(ios::out);
 

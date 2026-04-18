@@ -78,7 +78,7 @@ class Queue : public BaseObj {
    void LoadAttributes(int numAttributes, Attribute **attributes);
    void ParseOutput(char *, int);
 
-   void ProcessJobs(char *jobs = NULL);
+   void ProcessJobs(char *jobs = nullptr);
 
    boolean is_remote;
    boolean remote_up;

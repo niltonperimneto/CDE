@@ -133,62 +133,62 @@ AttachArea::AttachArea (
     _myOwner = owner;
     _parent  = parent;
 
-    _attachmentList=NULL;
+    _attachmentList=nullptr;
 
-    _w = NULL;
+    _w = nullptr;
     _iconCount = 0;
     _iconSelectedCount = 0;
     _deleteCount = 0;
 
-    _fsDialog = NULL;
+    _fsDialog = nullptr;
     _fsState = NOTSET;
     _lastRow = 0;
     _currentRow = 0;
     _attachmentsSize = 0;
     _selectedAttachmentsSize = 0;
-    _clientData = NULL;
-    _renameDialog = NULL;
+    _clientData = nullptr;
+    _renameDialog = nullptr;
 
-    _myRMW = NULL;
-    _myVMD = NULL;
-    _mySMD = NULL;
+    _myRMW = nullptr;
+    _myVMD = nullptr;
+    _mySMD = nullptr;
     
     _pendingAction = FALSE;
     _numPendingActions = 0;
 
     _attach_area_selection_state = AA_SEL_NONE;
-    _cache_single_attachment = NULL;
+    _cache_single_attachment = nullptr;
 
-    _no_selected_label = NULL;
-    _selected_label = NULL;
-    rowOfAttachmentsStatus = NULL;
-    _attachments_status = NULL;
-    _attachments_summary = NULL;
-    _mailbox = NULL;
+    _no_selected_label = nullptr;
+    _selected_label = nullptr;
+    rowOfAttachmentsStatus = nullptr;
+    _attachments_status = nullptr;
+    _attachments_summary = nullptr;
+    _mailbox = nullptr;
     _attachAreaWidth = 0;
     _attachAreaHeight = 0;
-    _rc = NULL;
-    _sw = NULL;
-    _vsb = NULL;
-    _message = NULL;
-    _clipWindow = NULL;
-    _open = NULL;
-    _saveas = NULL;
-    _selectall = NULL;
-    _unselectall = NULL;
-    _menuBar = NULL;
+    _rc = nullptr;
+    _sw = nullptr;
+    _vsb = nullptr;
+    _message = nullptr;
+    _clipWindow = nullptr;
+    _open = nullptr;
+    _saveas = nullptr;
+    _selectall = nullptr;
+    _unselectall = nullptr;
+    _menuBar = nullptr;
     _background = 0;
     _foreground = 0;
     _appBackground = 0;
     _appForeground = 0;
-    _fileCmdList = NULL;
-    _editCmdList = NULL;
-    _size_selected_label = NULL;
-    _format_button = NULL;
-    _descriptionDialog = NULL;
-    _no_attachments_label = NULL;
-    _attachments_label = NULL;
-    _size_attachments_label = NULL;
+    _fileCmdList = nullptr;
+    _editCmdList = nullptr;
+    _size_selected_label = nullptr;
+    _format_button = nullptr;
+    _descriptionDialog = nullptr;
+    _no_attachments_label = nullptr;
+    _attachments_label = nullptr;
+    _size_attachments_label = nullptr;
     
     
 }
@@ -214,7 +214,7 @@ AttachArea::initialize()
     _w = XtVaCreateManagedWidget (
 			"AttachPane",
 			xmFormWidgetClass, _parent, 
-			NULL);
+			nullptr);
 
     // Get pixel data.
     XmeGetColorObjData(XtScreen(_parent), &colorUse, pixels, XmCO_NUM_COLORS,
@@ -243,11 +243,11 @@ AttachArea::initialize()
 				    XmNspacing, 2,
 				    XmNwidth,	     parWid,
 				    XmNheight,	     parHeight,
-				    NULL);
+				    nullptr);
 
     rowOfAttachmentsStatus = XtCreateManagedWidget("Attachments_Status",
 				xmFormWidgetClass,
-				_w, NULL, 0);
+				_w, nullptr, 0);
 
      XtVaSetValues(rowOfAttachmentsStatus,
   	XmNrightAttachment,	XmATTACH_FORM, 
@@ -256,18 +256,18 @@ AttachArea::initialize()
  	XmNtopWidget,	        _sw,
  	XmNtopOffset,		5,
 	XmNbottomOffset,	5,
- 	NULL );
+ 	nullptr );
 
     this->addToRowOfAttachmentsStatus();
 
     size.request_mode = CWHeight;
-    XtQueryGeometry(rowOfAttachmentsStatus, NULL, &size);
+    XtQueryGeometry(rowOfAttachmentsStatus, nullptr, &size);
 
     XtVaSetValues(
 	rowOfAttachmentsStatus,
 	XmNpaneMaximum, size.height,
 	XmNpaneMinimum, size.height,
-	NULL
+	nullptr
     );
 
     _vsb = XtVaCreateManagedWidget("vsb", xmScrollBarWidgetClass, _sw,
@@ -275,7 +275,7 @@ AttachArea::initialize()
 		    XmNsliderSize, 1,
 		    XmNmaximum, 1,
 		    XmNpageIncrement, 1,
-		    NULL);
+		    nullptr);
 
     XtAddCallback(
 	_vsb, 
@@ -295,8 +295,8 @@ AttachArea::initialize()
 		    XmNbackground, _background,
 		    XmNwidth,	     parWid,
 		    XmNheight,	     parHeight,
-		    NULL);
-    XmScrolledWindowSetAreas(_sw, NULL, _vsb, _clipWindow);
+		    nullptr);
+    XmScrolledWindowSetAreas(_sw, nullptr, _vsb, _clipWindow);
 
     XtManageChild(_clipWindow);
     XtManageChild(_vsb);
@@ -306,7 +306,7 @@ AttachArea::initialize()
     // Set RowCol to NULL here.
     // It gets set in the expose_all_attachments.
 
-    _rc = NULL;
+    _rc = nullptr;
 
     CalcSizeOfAttachPane();
 
@@ -362,25 +362,25 @@ void AttachArea::setAttachmentsLabel( )
 	// Number of Attachments
 	XtVaGetValues(_no_attachments_label,
 		XmNlabelString, &xmstr,
-		NULL);
-	str = NULL;
+		nullptr);
+	str = nullptr;
         str = (char *) _XmStringUngenerate(
-					xmstr, NULL,
+					xmstr, nullptr,
 					XmMULTIBYTE_TEXT, XmMULTIBYTE_TEXT);
-	if (NULL == str) return; // internal error
-	last_displayCount = (unsigned int)strtol(str, NULL, 10);
+	if (nullptr == str) return; // internal error
+	last_displayCount = (unsigned int)strtol(str, nullptr, 10);
 	XtFree(str);
 
 	// Number of Attachments Selected
 	XtVaGetValues(_no_selected_label,
 		XmNlabelString, &xmstr,
-		NULL);
-	str = NULL;
+		nullptr);
+	str = nullptr;
         str = (char *) _XmStringUngenerate(
-					xmstr, NULL,
+					xmstr, nullptr,
 					XmMULTIBYTE_TEXT, XmMULTIBYTE_TEXT);
-	if (NULL == str) return; // internal error
-	last_selectedCount = (unsigned int)strtol(str, NULL, 10);
+	if (nullptr == str) return; // internal error
+	last_selectedCount = (unsigned int)strtol(str, nullptr, 10);
 	XtFree(str);
 
 	if((last_displayCount == 0 && displayCount == 1) ||
@@ -388,33 +388,33 @@ void AttachArea::setAttachmentsLabel( )
 	    sprintf(c, CATGETS(DT_catd, 12, 1, "Attachment"));
 	    XtVaSetValues(_attachments_label,
 		XtVaTypedArg, XmNlabelString, XtRString, c, strlen(c)+1,
-		NULL);
+		nullptr);
 	} else if(last_displayCount == 1 && displayCount == 2) {
 	    sprintf(c, CATGETS(DT_catd, 12, 2, "Attachments"));
 	    XtVaSetValues(_attachments_label,
 		XtVaTypedArg, XmNlabelString, XtRString, c, strlen(c)+1,
-		NULL);
+		nullptr);
 	}
 	if(last_displayCount != displayCount) {
 	    sprintf(c, CATGETS(DT_catd, 12, 3, "displayCount"));
 	    XtVaSetValues(_no_attachments_label,
 		XtVaTypedArg, XmNlabelString, XtRString, c, strlen(c)+1,
-		NULL);
+		nullptr);
 	}
 	sprintf(c, "(%s),", calcKbytes(attachmentsSize));
 	XtVaSetValues(_size_attachments_label,
 	    XtVaTypedArg, XmNlabelString, XtRString, c, strlen(c)+1,
-	    NULL);
+	    nullptr);
 
 	if(last_selectedCount != _iconSelectedCount) {
 	    sprintf(c, "%d", _iconSelectedCount); 
 	    XtVaSetValues(_no_selected_label,
 		XtVaTypedArg, XmNlabelString, XtRString, c, strlen(c)+1,
-		NULL);
+		nullptr);
 	    sprintf(c, "(%s)", calcKbytes(getSelectedAttachmentsSize())); 
 	    XtVaSetValues(_size_selected_label,
 		XtVaTypedArg, XmNlabelString, XtRString, c, strlen(c)+1,
-		NULL);
+		nullptr);
 	}
 	if(!XtIsManaged(_no_attachments_label)) {
 	    XtManageChild(_no_attachments_label);
@@ -495,7 +495,7 @@ AttachArea::inputCallback(Widget, XtPointer client_data, XtPointer call_data)
 	return;
 
     if(((XButtonEvent *)cb->event)->button == Button1)
-    	obj->unselectOtherSelectedAttachments(NULL);
+    	obj->unselectOtherSelectedAttachments(nullptr);
 }
 
 void AttachArea::resizeCallback ( 
@@ -510,7 +510,7 @@ void AttachArea::resizeCallback (
     XtVaGetValues(
 	w,
 	XmNwidth, &wid,
-	NULL
+	nullptr
     );
 
     obj->resize((Dimension)wid);
@@ -524,7 +524,7 @@ void AttachArea::resize(
     Attachment **list = getList();
 
     _attachAreaWidth = wid;
-    XtVaSetValues(_clipWindow, XmNwidth, _attachAreaWidth, NULL);
+    XtVaSetValues(_clipWindow, XmNwidth, _attachAreaWidth, nullptr);
 
     for (i=0; i<getIconCount(); i++)
       list[i]->unmanageIconWidget();
@@ -539,7 +539,7 @@ void AttachArea::resize(
 void AttachArea::CalcSizeOfAttachPane( )
 {
     _attachAreaWidth = _myOwner->textEditor()->get_text_width();
-    XtVaSetValues(_clipWindow, XmNwidth, _attachAreaWidth, NULL);
+    XtVaSetValues(_clipWindow, XmNwidth, _attachAreaWidth, nullptr);
 }
 
 void AttachArea::activateDeactivate()
@@ -587,16 +587,16 @@ AttachArea::addAttachment(
     int fd;
     struct stat s;
     Boolean validtype = TRUE;
-    DtMail::BodyPart * bp = NULL;
+    DtMail::BodyPart * bp = nullptr;
     DtMailEnv mail_error;
     int answer;
-    char *helpId = NULL;
+    char *helpId = nullptr;
 
     mail_error.clear();
 
     char *errormsg = new char[512];
     char *buf = new char[2048];
-    char *buffer = NULL, *lbl;
+    char *buffer = nullptr, *lbl;
     char *fname_start;
 
     for (fname_start = filename + strlen(filename) - 1;
@@ -616,7 +616,7 @@ AttachArea::addAttachment(
 					 buf);
 	delete [] buf;
 	delete [] errormsg;
-	return(NULL);
+	return(nullptr);
     }
 
     SafeStat(filename, &s);
@@ -651,10 +651,10 @@ AttachArea::addAttachment(
     if(validtype == FALSE) {
 	answer = this->handleErrorDialog(CATGETS(DT_catd, 1, 81, "Mailer"),
 					 errormsg,
-                                         NULL);
+                                         nullptr);
 	delete [] buf;
 	delete [] errormsg;
-	return(NULL);
+	return(nullptr);
     }
 
     fd = SafeOpen(filename, O_RDONLY);
@@ -667,7 +667,7 @@ AttachArea::addAttachment(
                                          helpId);
 	delete [] buf;
 	delete [] errormsg;
-	return(NULL);
+	return(nullptr);
     }
 
     int page_size = (int)sysconf(_SC_PAGESIZE);
@@ -691,7 +691,7 @@ AttachArea::addAttachment(
 	    answer = this->handleErrorDialog(CATGETS(DT_catd, 1, 83, "Mailer"),
 					     buf,
                                              helpId);
-	    return(NULL);
+	    return(nullptr);
 	}
 
 	if (read(fd, buffer, (unsigned int) s.st_size) < 0) {
@@ -699,11 +699,11 @@ AttachArea::addAttachment(
 	    delete [] buf;
 	    delete [] buffer;
 	    delete [] errormsg;
-	    return(NULL);
+	    return(nullptr);
 	}
 	buffer[s.st_size] = 0;
 	bp->setContents(
-		mail_error, buffer, s.st_size, NULL, fname_start, 0, NULL
+		mail_error, buffer, s.st_size, nullptr, fname_start, 0, nullptr
 		);
     }
     else {
@@ -716,7 +716,7 @@ AttachArea::addAttachment(
 	// copy the buffer, terminate it and then give it to XmText.
 	//
 	bp->setContents(
-	    mail_error, map, s.st_size, NULL, fname_start, 0, NULL
+	    mail_error, map, s.st_size, nullptr, fname_start, 0, nullptr
 	);
 	munmap(map, map_size);
     }
@@ -731,7 +731,7 @@ AttachArea::addAttachment(
     if(name)
 	lbl = strdup(name);
     else {
-	if(strchr(filename, '/') == NULL) // The name does not include a slash
+	if(strchr(filename, '/') == nullptr) // The name does not include a slash
 	    lbl = strdup(filename);
 	else			   // The name does include a slash
 	    lbl = strdup(strrchr(filename, '/')+1);
@@ -759,7 +759,7 @@ AttachArea::addAttachment(
 )
 {
     DtMailEnv mail_error;
-    DtMail::BodyPart * bp = NULL;
+    DtMail::BodyPart * bp = nullptr;
 
     if (!name)
 	name = "noname";
@@ -767,7 +767,7 @@ AttachArea::addAttachment(
     mail_error.clear();
 
     bp = msg->newBodyPart(mail_error, lastAttBP);
-    bp->setContents(mail_error, buf.buffer, buf.size, NULL, name, 0, NULL);
+    bp->setContents(mail_error, buf.buffer, buf.size, nullptr, name, 0, nullptr);
 
     Attachment *attachment = new Attachment(this,
 					    name,
@@ -858,7 +858,7 @@ void AttachArea::deleteAttachments( )
      AdjustCurrentRow();
      SetScrollBarSize(getLastRow()+1);
      activateDeactivate();
-     _attachmentList=NULL;
+     _attachmentList=nullptr;
      _attachmentsSize = 0;
      _selectedAttachmentsSize = 0;
 }
@@ -896,7 +896,7 @@ void AttachArea::CalcAttachmentPosition(Attachment *item)
  	    found_managed = TRUE;
  	}
     calculate_attachment_position(
-       found_managed ? list[j] : (Attachment *)NULL, item
+       found_managed ? list[j] : (Attachment *)nullptr, item
        );
 
 }      
@@ -961,7 +961,7 @@ void AttachArea::CalcAllAttachmentPositions()
     for(i=0;i<getIconCount();i++) {
 	if(!list[i]->isDeleted()) {
 	    calculate_attachment_position(
-			(j == -1) ? (Attachment *)NULL : list[j],
+			(j == -1) ? (Attachment *)nullptr : list[j],
 			list[i]);
 	    j = i;
 	}
@@ -978,7 +978,7 @@ void AttachArea::calculate_attachment_position(
     Attachment *item
 )
 {
-    if(ref == NULL) {
+    if(ref == nullptr) {
 	item->setX(HSPACE);
 	item->setY(VSPACE);
 	item->setRow(0);
@@ -1074,7 +1074,7 @@ void AttachArea::SetScrollBarSize(unsigned int size)
 {
     XtVaSetValues(_vsb, 
 	XmNmaximum, size,
-	NULL);
+	nullptr);
 }
 
 //
@@ -1086,14 +1086,14 @@ void AttachArea::AdjustCurrentRow()
 {
     if(_currentRow > _lastRow) {
 	_currentRow = _lastRow;
-	XtVaSetValues(_vsb, XmNvalue, _currentRow, NULL);
+	XtVaSetValues(_vsb, XmNvalue, _currentRow, nullptr);
     }
 }
 
 XmString
 AttachArea::getSelectedAttachName()
 {
-    XmString str = (XmString)NULL;
+    XmString str = (XmString)nullptr;
 
     if(_cache_single_attachment)
 	str = _cache_single_attachment->getLabel();
@@ -1131,7 +1131,7 @@ AttachArea::attachmentSelected(
     this->unselectOtherSelectedAttachments(attachment);
     
     // Enable the menu item at the toplevel shell's menubar.
-    if(_cache_single_attachment == NULL)
+    if(_cache_single_attachment == nullptr)
     	_myOwner->owner()->attachment_selected();
 
     // Cache the single selected attachment
@@ -1175,13 +1175,13 @@ AttachArea::addToRowOfAttachmentsStatus()
 
     _attachments_summary = XtCreateManagedWidget("Attachments_Summary", 
 						 xmLabelWidgetClass,
-						 rowOfAttachmentsStatus, NULL, 0);
+						 rowOfAttachmentsStatus, nullptr, 0);
 
     XtVaSetValues(_attachments_summary,
 		  XmNalignment, XmALIGNMENT_END,
 		  XmNlabelString, labelStr2,
 		  XmNrightAttachment, XmATTACH_FORM,
-		  NULL );
+		  nullptr );
 
      XmStringFree(labelStr2);
 }
@@ -1234,16 +1234,16 @@ AttachArea::parseAttachments(
 	index++;
     }
     
-    while (tmpBP != NULL) {
+    while (tmpBP != nullptr) {
 	num_attachments++;
 	tmpBP->getContents(
 			mail_error,
-			NULL,
-			NULL,
-			NULL,
+			nullptr,
+			nullptr,
+			nullptr,
 			&name,
-			NULL,
-			NULL);
+			nullptr,
+			nullptr);
 	
 	if (mail_error.isSet()) {
 	    // do something
@@ -1271,7 +1271,7 @@ AttachArea::attachment_summary(
 )
 {
 
-    char *buf = NULL;
+    char *buf = nullptr;
     char * tmp1;
     char * tmp2;
 
@@ -1299,7 +1299,7 @@ AttachArea::attachment_summary(
 	XmString buf_str = XmStringCreateLocalized(buf);
 	XtVaSetValues(_attachments_summary,
 	    XmNlabelString, buf_str,
-	    NULL );
+	    nullptr );
     
 	delete [] buf;
 	XmStringFree(buf_str);
@@ -1333,15 +1333,15 @@ AttachArea::manage()
 		(XtPointer) this);
 
     // hack
-    XtVaGetValues(sww, XmNheight, &ht, NULL);
-    XtVaGetValues(_w, XmNheight, &pht, NULL);
+    XtVaGetValues(sww, XmNheight, &ht, nullptr);
+    XtVaGetValues(_w, XmNheight, &pht, nullptr);
     // Manage the clipWindow back
     if (!XtIsManaged(_clipWindow)) XtManageChild(_clipWindow);
 
     // hack
-    XtVaSetValues(sww, XmNheight, ht, NULL);
+    XtVaSetValues(sww, XmNheight, ht, nullptr);
     UIComponent::manage();
-    XtVaSetValues(_w, XmNheight, pht, NULL);
+    XtVaSetValues(_w, XmNheight, pht, nullptr);
 }
 
 void
@@ -1390,11 +1390,11 @@ AttachArea::removeCurrentAttachments()
     // Reset
     if (_attachmentList)
 	delete []_attachmentList;
-    _attachmentList = NULL;
+    _attachmentList = nullptr;
     _iconCount = 0;
     _deleteCount = 0;
     _attach_area_selection_state = AA_SEL_NONE;
-    _cache_single_attachment = NULL;
+    _cache_single_attachment = nullptr;
 
     this->attachment_summary(_iconCount, _deleteCount);
 }
@@ -1421,11 +1421,11 @@ AttachArea::clearAttachArea()
     // Reset
     if (_attachmentList)
 	delete []_attachmentList;
-    _attachmentList = NULL;
+    _attachmentList = nullptr;
     _iconCount = 0;
     _deleteCount = 0;
     _attach_area_selection_state = AA_SEL_NONE;
-    _cache_single_attachment = NULL;
+    _cache_single_attachment = nullptr;
 }
 
 #ifdef DEAD_WOOD
@@ -1438,7 +1438,7 @@ AttachArea::saveAttachmentToFile(
 
     Attachment *attachment = this->getSelectedAttachment();
 
-    if(attachment != NULL)
+    if(attachment != nullptr)
     	attachment->saveToFile(mail_error, save_path);
 
 }
@@ -1472,7 +1472,7 @@ AttachArea::deleteSelectedAttachments(
 	list[i]->unmanageIconWidget();
     }
 
-    _cache_single_attachment = NULL;
+    _cache_single_attachment = nullptr;
     _attach_area_selection_state = AA_SEL_NONE;
 
     this->manageList();
@@ -1562,14 +1562,14 @@ AttachArea::unselectOtherSelectedAttachments(
     else if (_cache_single_attachment && 
 	    (attachment != _cache_single_attachment)) {
 	_cache_single_attachment->unselect();
-	_cache_single_attachment = NULL;
+	_cache_single_attachment = nullptr;
     }
 
-   if(attachment == NULL) {
+   if(attachment == nullptr) {
    	// Grey out the appropriate menu items in the RMW...
    	_myOwner->owner()->all_attachments_deselected();
 	_attach_area_selection_state = AA_SEL_NONE;
-	_cache_single_attachment = NULL;
+	_cache_single_attachment = nullptr;
    }
 }
 
@@ -1626,14 +1626,14 @@ AttachArea::ownerShellWidget()
     else {
 	// Error out
     }
-    return((Widget) NULL);
+    return((Widget) nullptr);
 }
 
 Boolean
 AttachArea::isOwnerShellEditable()
 {
     // only SMD is editable
-    if (_mySMD != NULL) {
+    if (_mySMD != nullptr) {
 	return TRUE;
     }
     else {
@@ -1679,7 +1679,7 @@ AttachArea::selectAllAttachments()
 
     list = getList(); 
     
-    if(list == NULL)
+    if(list == nullptr)
 	return;
 
     // if there's only 1 attachment, select it and
@@ -1698,7 +1698,7 @@ AttachArea::selectAllAttachments()
 
 	// Grey out the appropriate menu items in the RMW...
 	_myOwner->owner()->all_attachments_selected();
-	_cache_single_attachment = NULL;
+	_cache_single_attachment = nullptr;
 	_attach_area_selection_state = AA_SEL_ALL;
     }
 }

@@ -69,7 +69,7 @@
 extern Cmd *theUndoCmd;  // External object that reverses the 
 // most recent Cmd when executed
 
-Cmd *Cmd::_lastCmd = NULL;  // Pointer to most recent Cmd
+Cmd *Cmd::_lastCmd = nullptr;  // Pointer to most recent Cmd
 
 Cmd::Cmd ( char *name, char *label, int active )
 {
@@ -78,9 +78,9 @@ Cmd::Cmd ( char *name, char *label, int active )
     _name              = name;  
     _active            = active;  
     _numInterfaces     = 0;    
-    _ci                = NULL;
-    _activationList    = NULL;
-    _deactivationList  = NULL;
+    _ci                = nullptr;
+    _activationList    = nullptr;
+    _deactivationList  = nullptr;
     _hasUndo           = TRUE;
     _previouslyActive  = 0;
 
@@ -209,7 +209,7 @@ void Cmd::execute()
     }
     else  
     {      
-	Cmd::_lastCmd = NULL;
+	Cmd::_lastCmd = nullptr;
 	theUndoCmd->deactivate();
     }
     

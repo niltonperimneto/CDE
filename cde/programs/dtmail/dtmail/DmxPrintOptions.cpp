@@ -204,8 +204,8 @@ DmxPrintOptions::DmxPrintOptions (
 				Widget parent
 			 	) : UIComponent( "PrintOptions" )
 {
-    IndexedOptionMenu	*iom = (IndexedOptionMenu *) NULL;
-    PropUiItem		*pui = (PropUiItem  *) NULL;
+    IndexedOptionMenu	*iom = (IndexedOptionMenu *) nullptr;
+    PropUiItem		*pui = (PropUiItem  *) nullptr;
     Widget		*menu_buttons, w;
     int			nitems;
     char		**strings;
@@ -217,11 +217,11 @@ DmxPrintOptions::DmxPrintOptions (
     _propui_array = new DtVirtArray<PropUiItem *>(10);
     _propui_array_iterator = 0;
     _parent = parent;
-    _prop_source = NULL;
-    _hdrftr_frame = NULL;
-    _margin_frame = NULL;
-    _msgsep_iom = NULL;
-    _prthdr_iom = NULL;
+    _prop_source = nullptr;
+    _hdrftr_frame = nullptr;
+    _margin_frame = nullptr;
+    _msgsep_iom = nullptr;
+    _prthdr_iom = nullptr;
 
 
     //
@@ -236,9 +236,9 @@ DmxPrintOptions::DmxPrintOptions (
 			  	XmNleftAttachment, XmATTACH_FORM,
 			  	XmNtopAttachment, XmATTACH_FORM,
 			  	XmNresizePolicy, XmRESIZE_ANY,
-			  	NULL
+			  	nullptr
 				);
-    if (_form == (Widget) NULL) return;
+    if (_form == (Widget) nullptr) return;
     _w = _form;
     installDestroyHandler();
 
@@ -264,15 +264,15 @@ DmxPrintOptions::DmxPrintOptions (
 		_hdrftr_frame,
 		XmNtopAttachment, XmATTACH_FORM,
 		XmNleftAttachment, XmATTACH_FORM,
-		NULL
+		nullptr
 		);
     XtManageChild(_hdrftr_frame);
 
     //
     //  Create PropUiItem's for the Header/Footer options
     //
-    menu_buttons = NULL;
-    _DtPrintHdrFtrFrameMenuWidgets( _hdrftr_frame, NULL, NULL, &menu_buttons);
+    menu_buttons = nullptr;
+    _DtPrintHdrFtrFrameMenuWidgets( _hdrftr_frame, nullptr, nullptr, &menu_buttons);
     for (j=0, nhdrftrs=DMX_ARRAY_SIZE(hdrftr_keys); j<nhdrftrs; j++)
     {
         w = _DtPrintHdrFtrFrameEnumToWidget(
@@ -305,7 +305,7 @@ DmxPrintOptions::DmxPrintOptions (
 		XmNtopAttachment, XmATTACH_WIDGET,
 		XmNtopWidget, _hdrftr_frame,
 		XmNleftAttachment, XmATTACH_FORM,
-		NULL
+		nullptr
 		);
     XtManageChild(_margin_frame);
 
@@ -357,7 +357,7 @@ DmxPrintOptions::DmxPrintOptions (
 		XmNtopWidget, _margin_frame,
 		XmNrightAttachment, XmATTACH_FORM,
 		XmNleftAttachment, XmATTACH_FORM,
-		NULL
+		nullptr
 		);
     iom->manage();
     _prthdr_iom = iom;
@@ -407,7 +407,7 @@ DmxPrintOptions::DmxPrintOptions (
 		XmNrightAttachment, XmATTACH_FORM,
 		XmNleftAttachment, XmATTACH_FORM,
 		XmNbottomAttachment, XmATTACH_FORM,
-		NULL
+		nullptr
 		);
     iom->manage();
     _iom_array->append(iom);
@@ -465,7 +465,7 @@ DmxPrintOptions::getFirstProp(void)
 PropUiItem *
 DmxPrintOptions::getNextProp(void)
 {
-    PropUiItem	*pui = (PropUiItem  *) NULL;
+    PropUiItem	*pui = (PropUiItem  *) nullptr;
 
     if (_propui_array_iterator < _propui_array->length())
     {
@@ -484,17 +484,17 @@ DmxPrintOptions::getNumProps(void)
 const char *
 DmxPrintOptions::getSeparatorString(void)
 {
-    DtMail::Session	*d_session = NULL;
-    DtMail::MailRc	*m_rc = NULL;
+    DtMail::Session	*d_session = nullptr;
+    DtMail::MailRc	*m_rc = nullptr;
     DtMailEnv		error;
-    const char		*string = NULL;
+    const char		*string = nullptr;
     char		*dflt = "-";
 
     d_session = theRoamApp.session()->session();
     m_rc = d_session->mailRc(error);
 
     m_rc->getValue(error, DMX_PROPKEY_SEPARATOR_STRING, &string);
-    if (string == NULL || error.isSet())
+    if (string == nullptr || error.isSet())
       return strdup(dflt);
 
     return string;
@@ -503,12 +503,12 @@ DmxPrintOptions::getSeparatorString(void)
 DmxStringTypeEnum
 DmxPrintOptions::getHdrFtrSpec(_DtPrintHdrFtrEnum which)
 {
-    DtMail::Session	*d_session = NULL;
-    DtMail::MailRc	*m_rc = NULL;
+    DtMail::Session	*d_session = nullptr;
+    DtMail::MailRc	*m_rc = nullptr;
     DtMailEnv		error;
     DmxpoPropKey	*key;
-    const char		*string = NULL;
-    DmxpoPropValue	*value = NULL;
+    const char		*string = nullptr;
+    DmxpoPropValue	*value = nullptr;
     DmxStringTypeEnum	rtn = DMX_NONE_STRING;
 
     d_session = theRoamApp.session()->session();
@@ -520,10 +520,10 @@ DmxPrintOptions::getHdrFtrSpec(_DtPrintHdrFtrEnum which)
 				hdrftr_keys
 				);
 
-    if (key != NULL)
+    if (key != nullptr)
     {
         m_rc->getValue(error, key->key , &string);
-        if (string == NULL || error.isSet())
+        if (string == nullptr || error.isSet())
           string = strdup(key->dflt_prop_string);
     }
     else
@@ -533,10 +533,10 @@ DmxPrintOptions::getHdrFtrSpec(_DtPrintHdrFtrEnum which)
 			string,
 			DMX_ARRAY_SIZE(hdrftr_values),
 			hdrftr_values);
-    if (value != NULL)
+    if (value != nullptr)
       rtn = (DmxStringTypeEnum) value->which;
 
-    if (NULL != string)
+    if (nullptr != string)
       free((void*) string);
 
     return rtn;
@@ -545,11 +545,11 @@ DmxPrintOptions::getHdrFtrSpec(_DtPrintHdrFtrEnum which)
 const char *
 DmxPrintOptions::getMarginSpec(_DtPrintMarginEnum which)
 {
-    DtMail::Session	*d_session = NULL;
-    DtMail::MailRc	*m_rc = NULL;
+    DtMail::Session	*d_session = nullptr;
+    DtMail::MailRc	*m_rc = nullptr;
     DtMailEnv		error;
     DmxpoPropKey	*key;
-    const char		*string = NULL;
+    const char		*string = nullptr;
 
     d_session = theRoamApp.session()->session();
     m_rc = d_session->mailRc(error);
@@ -560,11 +560,11 @@ DmxPrintOptions::getMarginSpec(_DtPrintMarginEnum which)
 				margin_keys
 				);
 
-    if (key == NULL)
+    if (key == nullptr)
       return DMX_PROPVAL_DFLT_MARGIN;
 
     m_rc->getValue(error, key->key , &string);
-    if (string == NULL || error.isSet())
+    if (string == nullptr || error.isSet())
       string = strdup(key->dflt_prop_string);
 
     return string;
@@ -573,28 +573,28 @@ DmxPrintOptions::getMarginSpec(_DtPrintMarginEnum which)
 DmxMsgSeparatorEnum
 DmxPrintOptions::getMessageSeparator(void)
 {
-    DtMail::Session	*d_session = NULL;
-    DtMail::MailRc	*m_rc = NULL;
+    DtMail::Session	*d_session = nullptr;
+    DtMail::MailRc	*m_rc = nullptr;
     DtMailEnv		error;
-    const char		*string = NULL;
-    DmxpoPropValue	*value = NULL;
+    const char		*string = nullptr;
+    DmxpoPropValue	*value = nullptr;
     DmxMsgSeparatorEnum	rtn = DMX_SEPARATOR_PAGE_BREAK;
 
     d_session = theRoamApp.session()->session();
     m_rc = d_session->mailRc(error);
 
     m_rc->getValue(error, DMX_PROPKEY_MESSAGE_SEPARATOR , &string);
-    if (string == NULL || error.isSet())
+    if (string == nullptr || error.isSet())
       return rtn;
 
     value = stringToPropValue(
 			string,
 			DMX_ARRAY_SIZE(msgsep_values),
 			msgsep_values);
-    if (value != NULL)
+    if (value != nullptr)
       rtn = (DmxMsgSeparatorEnum) value->which;
 
-    if (NULL != string)
+    if (nullptr != string)
       free((void*) string);
 
     return rtn;
@@ -603,28 +603,28 @@ DmxPrintOptions::getMessageSeparator(void)
 DmxPrintHeadersEnum
 DmxPrintOptions::getPrintedHeaders(void)
 {
-    DtMail::Session	*d_session = NULL;
-    DtMail::MailRc	*m_rc = NULL;
+    DtMail::Session	*d_session = nullptr;
+    DtMail::MailRc	*m_rc = nullptr;
     DtMailEnv		error;
-    const char		*string = NULL;
-    DmxpoPropValue	*value = NULL;
+    const char		*string = nullptr;
+    DmxpoPropValue	*value = nullptr;
     DmxPrintHeadersEnum	rtn = DMX_PRINT_HEADERS_STANDARD;
 
     d_session = theRoamApp.session()->session();
     m_rc = d_session->mailRc(error);
 
     m_rc->getValue(error, DMX_PROPKEY_PRINT_HEADERS , &string);
-    if (string == NULL || error.isSet())
+    if (string == nullptr || error.isSet())
       return rtn;
 
     value = stringToPropValue(
 			string,
 			DMX_ARRAY_SIZE(prthdr_values),
 			prthdr_values);
-    if (value != NULL)
+    if (value != nullptr)
       rtn = (DmxPrintHeadersEnum) value->which;
 
-    if (NULL != string)
+    if (nullptr != string)
       free((void*) string);
 
     return rtn;
@@ -637,7 +637,7 @@ DmxPrintOptions::enumToPropKey(int which, int nkeys, DmxpoPropKey *keys)
       if (keys[i].which == which)
 	return &(keys[i]);
     
-    return NULL;
+    return nullptr;
 }
 
 PropUiItem *
@@ -654,7 +654,7 @@ DmxPrintOptions::propKeyToPropItem(char *key)
 	  return pui;
     }
     
-    return NULL;
+    return nullptr;
 }
 
 DmxpoPropValue *
@@ -668,15 +668,15 @@ DmxPrintOptions::stringToPropValue(
       if (strcmp(values[i].prop_string, string) == 0)
 	return &(values[i]);
     
-    return NULL;
+    return nullptr;
 }
 
 char *
 DmxPrintOptions::isValidMarginSpec(PropUiItem* pui, void* data)
 {
     char        *i18nMsg;
-    char	*errMsg = NULL;
-    char	*marginSpec = NULL;
+    char	*errMsg = nullptr;
+    char	*marginSpec = nullptr;
     XtEnum	parseError;
     Widget	text;
 
@@ -687,7 +687,7 @@ DmxPrintOptions::isValidMarginSpec(PropUiItem* pui, void* data)
       marginSpec = _DtPrintGetMarginSpec(text);
 
     parseError = FALSE;
-    if (marginSpec == NULL || strcmp("", marginSpec) == 0)
+    if (marginSpec == nullptr || strcmp("", marginSpec) == 0)
       parseError = TRUE;
     else 
       (void) XmConvertStringToUnits(
@@ -697,7 +697,7 @@ DmxPrintOptions::isValidMarginSpec(PropUiItem* pui, void* data)
                                 XmPIXELS,
                                 &parseError);
  
-    if (! parseError) return NULL;
+    if (! parseError) return nullptr;
  
     switch (which)
     {

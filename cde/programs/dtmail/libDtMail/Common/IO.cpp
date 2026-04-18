@@ -472,9 +472,9 @@ void SafePathIsAccessible(DtMailEnv &error, const char *path) {
   status = SafeAccess(path, F_OK);
   if (-1 == status) {
     if (EACCES == errno)
-      error.vSetError(DTME_PathElementPermissions, DTM_FALSE, NULL, path);
+      error.vSetError(DTME_PathElementPermissions, DTM_FALSE, nullptr, path);
     else if (ENOTDIR == errno)
-      error.vSetError(DTME_PathElementNotDirectory, DTM_FALSE, NULL, path);
+      error.vSetError(DTME_PathElementNotDirectory, DTM_FALSE, nullptr, path);
     else if (ENOENT == errno) {
       char *s, *t;
 
@@ -484,14 +484,14 @@ void SafePathIsAccessible(DtMailEnv &error, const char *path) {
         *s = '\0';
         status = SafeAccess(t, F_OK);
         if (-1 == status)
-          error.vSetError(DTME_PathElementDoesNotExist, DTM_FALSE, NULL, path);
+          error.vSetError(DTME_PathElementDoesNotExist, DTM_FALSE, nullptr, path);
       }
     }
   }
 }
 
 #if defined(POSIX_THREADS)
-static void *time_mutex = NULL;
+static void *time_mutex = nullptr;
 #endif
 
 void SafeCtime(const time_t *clock, char *buf, int buflen) {
@@ -550,7 +550,7 @@ void *SockOpen(char *host, int clientPort, char **errorstring) {
   struct sockaddr_in ad;
   struct hostent *hp;
   DtMailEnv error;
-  char *errorfmt = NULL;
+  char *errorfmt = nullptr;
 
   memset(&ad, 0, sizeof(ad));
   ad.sin_family = AF_INET;
@@ -560,15 +560,15 @@ void *SockOpen(char *host, int clientPort, char **errorstring) {
     memcpy(&ad.sin_addr, &inaddr, sizeof(inaddr));
   else {
     hp = gethostbyname(host);
-    if (hp == NULL) {
-      if (NULL != errorstring) {
+    if (hp == nullptr) {
+      if (nullptr != errorstring) {
         errorfmt =
             DtMailEnv::getMessageText(SockErrorSet, 2, "Unknown host:  %s");
-        if (NULL == *errorstring)
+        if (nullptr == *errorstring)
           *errorstring = (char *)malloc(BUFSIZ);
         sprintf(*errorstring, errorfmt, host);
       }
-      return (FILE *)NULL;
+      return (FILE *)nullptr;
     }
     memcpy(&ad.sin_addr, hp->h_addr, hp->h_length);
   }
@@ -576,30 +576,30 @@ void *SockOpen(char *host, int clientPort, char **errorstring) {
 
   sockfd = socket(AF_INET, SOCK_STREAM, 0);
   if (sockfd < 0) {
-    if (NULL != errorstring) {
+    if (nullptr != errorstring) {
       errorfmt = DtMailEnv::getMessageText(SockErrorSet, 3,
                                            "Error creating socket: %s");
-      if (NULL == *errorstring)
+      if (nullptr == *errorstring)
         *errorstring = (char *)malloc(BUFSIZ);
       sprintf(*errorstring, errorfmt, error.errnoMessage());
     }
-    return (FILE *)NULL;
+    return (FILE *)nullptr;
   }
   if (connect(sockfd, (struct sockaddr *)&ad, sizeof(ad)) < 0) {
-    if (NULL != errorstring) {
+    if (nullptr != errorstring) {
       errorfmt = DtMailEnv::getMessageText(SockErrorSet, 3,
                                            "Error connecting to socket:  %s");
-      if (NULL == *errorstring)
+      if (nullptr == *errorstring)
         *errorstring = (char *)malloc(BUFSIZ);
       sprintf(*errorstring, errorfmt, error.errnoMessage());
     }
     close(sockfd);
-    return (FILE *)NULL;
+    return (FILE *)nullptr;
   }
 
 #if defined(USE_SOCKSTREAM)
   FILE *sockfp = fdopen(sockfd, "r+");
-  setvbuf(sockfp, NULL, _IONBF, SockINTERNAL_BUFSIZE);
+  setvbuf(sockfp, nullptr, _IONBF, SockINTERNAL_BUFSIZE);
   return (void *)sockfp;
 #else
   return (void *)(long)sockfd;
@@ -686,7 +686,7 @@ void GetGroupName(char *grp_name) {
 }
 
 gid_t GetIdForGroupName(char *grp_name) {
-  assert(grp_name != NULL);
+  assert(grp_name != nullptr);
   struct group *grp;
   _Xgetgrparams grp_buf;
 
@@ -713,7 +713,7 @@ void GetPasswordEntry(passwd &result) {
     tresult = _XGetpwuid(getuid(), pw_buf);
 #endif
 
-    assert(tresult != NULL);
+    assert(tresult != nullptr);
     memcpy(&passwordEntry, tresult, sizeof(struct passwd));
     passwordEntry.pw_name = strdup(passwordEntry.pw_name);
     passwordEntry.pw_passwd = strdup(passwordEntry.pw_passwd);
@@ -752,7 +752,7 @@ int isSetMailGidNeeded(const char *mailboxPath) {
 
   // parse the mailfolder name from the path
   char *p = strrchr(mailboxPath, '/');
-  int len = (NULL != 0) ? strlen(mailboxPath) - strlen(p) : strlen(mailboxPath);
+  int len = (nullptr != 0) ? strlen(mailboxPath) - strlen(p) : strlen(mailboxPath);
   char *str = (char *)calloc(1, len + 1);
   strncpy(str, mailboxPath, len);
   str[len] = '\0';
@@ -813,7 +813,7 @@ int get_stat(struct vmount **vmountpp) /* place to tell where buffer is */
   count = 10;    /* don't try forever    */
 
   while (count--) { /* don't try it forever */
-    if ((vm = (struct vmount *)malloc(size)) == NULL) {
+    if ((vm = (struct vmount *)malloc(size)) == nullptr) {
       return (-1);
     }
 
@@ -851,16 +851,16 @@ int get_stat(struct vmount **vmountpp) /* place to tell where buffer is */
  * EXECUTION ENVIRONMENT: Part of user command.
  *
  * RETURNS:
- *      ptr to structure with vmount id of filesystem or NULL
+ *      ptr to structure with vmount id of filesystem or nullptr
  */
 struct vmount *get_vmount(fsid_t *fsid) {
-  struct vmount *inu_vmount_p = NULL;
+  struct vmount *inu_vmount_p = nullptr;
   int inu_vmount_num;
   struct vmount *vm;
   int nmount;
 
   /* make sure we have all the virtual mount status of this host */
-  if (inu_vmount_p == NULL)
+  if (inu_vmount_p == nullptr)
     inu_vmount_num = get_stat(&inu_vmount_p);
 
   /* get the number of struct vmount in the vmount buffer */
@@ -873,7 +873,7 @@ struct vmount *get_vmount(fsid_t *fsid) {
         (vm->vmt_fsid.fsid_type == fsid->fsid_type))
       return (vm);
   }
-  return ((struct vmount *)NULL);
+  return ((struct vmount *)nullptr);
 }
 #endif /* _AIX */
 

@@ -116,7 +116,7 @@ AliasKey::hashValue(void)
 //
 static int
 deleteAllocatedKey(ObjectKey & object, AliasKey *, void *) {
-  assert(&object != NULL);
+  assert(&object != nullptr);
   delete &object;
   return(1);
 }

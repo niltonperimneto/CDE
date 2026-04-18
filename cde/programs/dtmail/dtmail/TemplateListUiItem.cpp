@@ -59,21 +59,21 @@ TemplateListUiItem::TemplateListUiItem(Widget w,
 		       int source, 
 		       char *search_key,
 		       Widget key_entry_widget,
-		       Widget value_entry_widget):ListUiItem(w, source, search_key, NULL)
+		       Widget value_entry_widget):ListUiItem(w, source, search_key, nullptr)
 {
   source = source; search_key = search_key;
 
   key_widget = key_entry_widget;
   value_widget = value_entry_widget;
 
-  list_items = NULL;
-  deleted_items = NULL;
+  list_items = nullptr;
+  deleted_items = nullptr;
   
   XtVaSetValues(w,
 	XmNuserData, this,
         XmNautomaticSelection, True,
         XmNselectionPolicy, XmBROWSE_SELECT,
-	NULL);
+	nullptr);
 
     XtAddCallback(w,
 		  XmNbrowseSelectionCallback, 
@@ -88,30 +88,30 @@ void handleTmplSelection(Widget w, XtPointer, XtPointer calldata)
 {
   TemplateListUiItem *item;
   XmListCallbackStruct *list_info = (XmListCallbackStruct *)calldata;
-  char *selection_string = NULL;
+  char *selection_string = nullptr;
   DtVirtArray<PropStringPair *> *list_items;
 
 
   XtVaGetValues(w, 
 	XmNuserData, &item,
-	NULL);  
+	nullptr);  
 
   list_items = item->getItemList();
 
-  if(list_items != NULL)
+  if(list_items != nullptr)
     {                                         // motif index is 1 based
                                               //virtarry is 0 based
       PropStringPair *pair = (*list_items)[list_info->item_position - 1];
 
-      if(pair != NULL)
+      if(pair != nullptr)
 	{
 	  XtVaSetValues(item->getKeyWidget(),
 			XmNvalue,pair->label,
-			NULL);
+			nullptr);
 	  
 	  XtVaSetValues(item->getValueWidget(),
 			XmNvalue,pair->value,
-			NULL);
+			nullptr);
 	}
     }	
 }
@@ -127,9 +127,9 @@ void TemplateListUiItem::writeFromUiToSource()
   DtMail::MailRc * mail_rc = d_session->mailRc(error);
   int i, num_items;
   int total_len = 0;
-  char *cf_str = NULL;
+  char *cf_str = nullptr;
 
-  if(list_items != NULL) {
+  if(list_items != nullptr) {
       if(list_items->length() > 0)
 	{
 	  num_items = list_items->length();
@@ -143,11 +143,11 @@ void TemplateListUiItem::writeFromUiToSource()
 			if (*ptr == ' ') num_blanks++;
 	      // strlen(label) + strlen(value) + space + colon + 
               // potential \'s that precede the blank character
-	      if((*list_items)[i]->label != NULL)
+	      if((*list_items)[i]->label != nullptr)
 		total_len = total_len + 
 		  strlen((*list_items)[i]->label) + (strlen("\\") * num_blanks) + 2;
 
-	      if((*list_items)[i]->value != NULL)
+	      if((*list_items)[i]->value != nullptr)
 		total_len = total_len + strlen((*list_items)[i]->value);
 	    }
 
@@ -155,13 +155,13 @@ void TemplateListUiItem::writeFromUiToSource()
 	  cf_str[0] = '\0';
 
 	  for(i = 0; i < num_items; i++) {
-	      if((*list_items)[i]->label != NULL) {
+	      if((*list_items)[i]->label != nullptr) {
 		if (strchr((char*)(*list_items)[i]->label, ' ')) {
 			char *token, *tmpbuf;
 			tmpbuf = strdup((*list_items)[i]->label);
 			if (token = (char *)strtok(tmpbuf, " ")) {
 				strcat(cf_str, token);
-				while(token = (char *)strtok(NULL, " ")) {
+				while(token = (char *)strtok(nullptr, " ")) {
 					strcat(cf_str, "\\ ");
 					strcat(cf_str, token);
 				}
@@ -172,7 +172,7 @@ void TemplateListUiItem::writeFromUiToSource()
 			strcat(cf_str, (*list_items)[i]->label);
 	      	strcat(cf_str, ":");
 
-	      	if((*list_items)[i]->value != NULL)
+	      	if((*list_items)[i]->value != nullptr)
 			strcat(cf_str, (*list_items)[i]->value);
 	      	strcat(cf_str, " ");
 	      }
@@ -195,17 +195,17 @@ void TemplateListUiItem::writeFromSourceToUi()
   DtMail::Session * d_session = theRoamApp.session()->session();
   DtMail::MailRc * mail_rc = d_session->mailRc(error);
   Widget w = this->getWidget();
-  const char *list_str = NULL;
+  const char *list_str = nullptr;
   DtVirtArray<char *> list_str_list(10);
-  char *buf = NULL;
+  char *buf = nullptr;
   int list_len, i;
-  const char *value = NULL;
+  const char *value = nullptr;
 
   XmListDeleteAllItems(w);
 
   mail_rc->getValue(error, "templates", &value);
 
-  if(list_items != NULL)
+  if(list_items != nullptr)
     delete list_items;
 
   char * expanded_list = d_session->expandPath(error, value);
@@ -222,26 +222,26 @@ void TemplateListUiItem::writeFromSourceToUi()
 
   options_list_init(w, &list_str_list);
 
-  if(value != NULL)
+  if(value != nullptr)
     free((char *)value);
 }
 
 ///////////////////////////////////////////////////////////
 void TemplateListUiItem::handleAddButtonPress()
 {
-  char *key_str = NULL;
-  char *value_str = NULL;
-  PropStringPair *new_pair = NULL;
+  char *key_str = nullptr;
+  char *value_str = nullptr;
+  PropStringPair *new_pair = nullptr;
 
   XtVaGetValues(key_widget,
 		XmNvalue, &key_str,
-		NULL);
+		nullptr);
 
   XtVaGetValues(value_widget,
 		XmNvalue, &value_str,
-		NULL);
+		nullptr);
 
-  if(key_str != NULL)
+  if(key_str != nullptr)
     if(strlen(key_str) > 0)
       {
 	new_pair = new PropStringPair;
@@ -249,16 +249,16 @@ void TemplateListUiItem::handleAddButtonPress()
 
 	new_pair->label = strdup(key_str);
 	
-	if(value_str != NULL)
+	if(value_str != nullptr)
 	  new_pair->value = strdup(value_str);
 	else
-	  new_pair->value = NULL;
+	  new_pair->value = nullptr;
 	
 	if(XmListGetSelectedPos(this->getWidget(),
 				&pos_list,
 				&num_pos))
 	  {
-            if(list_items == NULL)
+            if(list_items == nullptr)
               list_items = new DtVirtArray<PropStringPair *>(10);
 
 	    list_items->insert(new_pair,pos_list[0] - 1); 
@@ -279,7 +279,7 @@ void TemplateListUiItem::handleAddButtonPress()
 	  }	
 	else
 	  {
-            if(list_items == NULL)
+            if(list_items == nullptr)
               list_items = new DtVirtArray<PropStringPair *>(10);
 
 	    list_items->insert(new_pair,0); 
@@ -302,9 +302,9 @@ void TemplateListUiItem::handleAddButtonPress()
 ///////////////////////////////////////////////////////////
 void TemplateListUiItem::handleChangeButtonPress()
 {
-  char *key_str = NULL;
-  char *value_str = NULL;  
-  PropStringPair *new_pair = NULL;
+  char *key_str = nullptr;
+  char *value_str = nullptr;  
+  PropStringPair *new_pair = nullptr;
   XmString replace_string;
   int *pos_list, num_pos;
 
@@ -315,13 +315,13 @@ void TemplateListUiItem::handleChangeButtonPress()
     {
       XtVaGetValues(key_widget,
 		    XmNvalue, &key_str,
-		    NULL);
+		    nullptr);
 
       XtVaGetValues(value_widget,
 		    XmNvalue, &value_str,
-		    NULL);
+		    nullptr);
 
-      if(key_str != NULL)
+      if(key_str != nullptr)
 	if(strlen(key_str) > 0)
 	  {
 
@@ -330,13 +330,13 @@ void TemplateListUiItem::handleChangeButtonPress()
 	    free(new_pair->label);
 	    new_pair->label = strdup(key_str);
   
-	    if(new_pair->value != NULL)
+	    if(new_pair->value != nullptr)
 	      {
 		free(new_pair->value);
-		if(value_str != NULL)
+		if(value_str != nullptr)
 		  new_pair->value = strdup(value_str);
 		else
-		  new_pair->value = NULL;
+		  new_pair->value = nullptr;
 	      }
 
 	    replace_string = XmStringCreateLocalized(
@@ -375,11 +375,11 @@ void TemplateListUiItem::handleDeleteButtonPress()
 
       XtVaSetValues(this->getKeyWidget(),
                         XmNvalue,"",
-                        NULL);
+                        nullptr);
 
       XtVaSetValues(this->getValueWidget(),
                         XmNvalue,"",
-                        NULL);
+                        nullptr);
 
       XmListSelectPos(list_widget,
 		      p_list[0],

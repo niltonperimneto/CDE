@@ -54,7 +54,7 @@ static char *GetTopString(int seq_num)
 DtPrtJobIcon::DtPrtJobIcon(DtMainW *mainW, AnyUI *parent, PrintJob *job,
 			   int seq_num)
    : IconObj((char *) job->ObjectClassName(), parent, job->DisplayName(),
-	     "DtPrtjb", NULL, GetTopString(seq_num),
+	     "DtPrtjb", nullptr, GetTopString(seq_num),
 	     GetBotString(mainW, parent, job))
 {
    mainw = mainW;
@@ -62,7 +62,7 @@ DtPrtJobIcon::DtPrtJobIcon(DtMainW *mainW, AnyUI *parent, PrintJob *job,
    ApplicationData = job;
    strcpy(job_number, job->AttributeValue((char *)JOB_NUMBER));
    print_job = job;
-   props = NULL;
+   props = nullptr;
 }
 
 DtPrtJobIcon::~DtPrtJobIcon()
@@ -108,7 +108,7 @@ void DtPrtJobIcon::PrintJobObj(PrintJob *job)
        {
          props->Visible(false);
          delete props;
-         props = NULL;
+         props = nullptr;
          DisplayProps();
        }
     }

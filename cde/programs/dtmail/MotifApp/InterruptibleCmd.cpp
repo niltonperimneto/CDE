@@ -77,8 +77,8 @@ InterruptibleCmd::InterruptibleCmd ( char *name, char *label, int active ) :
                         NoUndoCmd ( name, label, active )
 {
     _wpId        = 0;   // There is no work procedure yet
-    _callback    = NULL;	   // Callbacks are specified in execute()
-    _clientData  = NULL;
+    _callback    = nullptr;	   // Callbacks are specified in execute()
+    _clientData  = nullptr;
     _done        = FALSE; 
 }
 
@@ -134,7 +134,7 @@ void InterruptibleCmd::execute()
 	theWorkingDialogManager->post (label_str,
 				       "Fetching" , 
 				       (void *) this,
-				       NULL, 
+				       nullptr, 
 				       &InterruptibleCmd::interruptCallback );
 	
 	_wpId = XtAppAddWorkProc ( theApplication->appContext(), 

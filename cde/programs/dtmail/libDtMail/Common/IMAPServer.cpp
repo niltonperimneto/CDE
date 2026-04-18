@@ -289,7 +289,7 @@ IMAPServer::ptrans_parse_response(char *argbuf)
 	if (strstr(buf, "UNSEEN"))
 	  _unseen = atoi(buf+2);
 	if (strstr(buf, "FLAGS"))
-	  _seen = (strstr(buf, "Seen") != (char *)NULL);
+	  _seen = (strstr(buf, "Seen") != (char *)nullptr);
 
     } while (strlen(dtmasTAGGET()) &&
 	     strncmp(buf, dtmasTAGGET(), strlen(dtmasTAGGET())));

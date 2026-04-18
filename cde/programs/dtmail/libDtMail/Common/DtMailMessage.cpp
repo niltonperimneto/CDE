@@ -51,8 +51,8 @@ DtMail::Message::Message(DtMailEnv & error, MailBox * parent)
     _parent = parent;
     _obj_mutex = MutexInit();
 // TOGO    _message = NULL;
-    _envelope = NULL;
-    _session = NULL;
+    _envelope = nullptr;
+    _session = nullptr;
     error.clear();
 }
 
@@ -66,7 +66,7 @@ DtMail::Message::~Message(void)
 	    }
 
 	    lock_scope.unlock_and_destroy();
-	    _obj_mutex = NULL;
+	    _obj_mutex = nullptr;
 	}
     }
 }

@@ -78,7 +78,7 @@ static XtResource resources[] =
    },
    {"session", "Session", XtRString, sizeof(char *), 
 #endif
-    XtOffsetOf (ApplicationArgs, session_file), XmRString, (XtPointer) NULL,
+    XtOffsetOf (ApplicationArgs, session_file), XmRString, (XtPointer) nullptr,
    },
    {XmNshadowThickness, XmCShadowThickness, XmRHorizontalDimension,
     sizeof (Dimension), XtOffsetOf (ApplicationArgs, shadow_thickness),
@@ -89,9 +89,9 @@ static XtResource resources[] =
 static XrmOptionDescRec options[] =
 {
 #ifdef aix
-   {(char *)SESSION_FLAG, (char *)SESSION_NAME, XrmoptionSepArg, NULL}
+   {(char *)SESSION_FLAG, (char *)SESSION_NAME, XrmoptionSepArg, nullptr}
 #else
-   {"-session", "session", XrmoptionSepArg, NULL}
+   {"-session", "session", XrmoptionSepArg, nullptr}
 #endif
 };
 
@@ -103,16 +103,16 @@ Application::Application(char *name,
                          char *appClassName,
                          int *_argc,
 			 char **_argv)
-	: MotifUI(NULL, name, appClassName, appClassName)
+	: MotifUI(nullptr, name, appClassName, appClassName)
 {
 #ifndef NO_CDE
    _DtEnvControl(DT_ENV_SET);
 #endif
 
-   XtSetLanguageProc(NULL, NULL, NULL);
+   XtSetLanguageProc(nullptr, nullptr, nullptr);
    _w = XtVaAppInitialize(&appContext, appClassName, options, XtNumber(options),
-			  _argc, _argv, NULL, XmNallowShellResize, true,
-			  XmNtitle, name, XmNiconName, name, NULL);
+			  _argc, _argv, nullptr, XmNallowShellResize, true,
+			  XmNtitle, name, XmNiconName, name, nullptr);
 
    topLevel = _w;
    display = XtDisplay(_w);
@@ -120,19 +120,19 @@ Application::Application(char *name,
    white = WhitePixelOfScreen(XtScreen(_w));
    black = BlackPixelOfScreen(XtScreen(_w));
    depth = DefaultDepthOfScreen(XtScreen(_w));
-   int numMouseButtons = XGetPointerMapping(display, (unsigned char *)NULL, 0);
+   int numMouseButtons = XGetPointerMapping(display, (unsigned char *)nullptr, 0);
    bMenuButton = (numMouseButtons < 3) ? Button2 : Button3;
    ApplicationArgs application_args;
    XtGetApplicationResources(_w, &application_args, resources,
-			     XtNumber(resources), NULL, 0);
+			     XtNumber(resources), nullptr, 0);
    userFont = application_args.user_font;
    userFont = application_args.system_font;
-   session_info = NULL;
-   attributes = NULL;
-   values = NULL;
+   session_info = nullptr;
+   attributes = nullptr;
+   values = nullptr;
    n_attrs = 0;
-   session_path = NULL;
-   fp = NULL;
+   session_path = nullptr;
+   fp = nullptr;
    if (session_file = application_args.session_file)
     {
       if (*session_file == '/')
@@ -215,7 +215,7 @@ boolean Application::SetName(char *name)
    if (!_w)
       return false;
 
-   XtVaSetValues(_w, XmNtitle, name, XmNiconName, name, NULL);
+   XtVaSetValues(_w, XmNtitle, name, XmNiconName, name, nullptr);
 
    return true;
 }
@@ -228,7 +228,7 @@ boolean Application::SetVisiblity(boolean flag)
    if (flag)
     {
       XtRealizeWidget(_w);
-      XtVaSetValues(_w, XmNallowShellResize, False, NULL);
+      XtVaSetValues(_w, XmNallowShellResize, False, nullptr);
     }
 
    return true;
@@ -253,7 +253,7 @@ void Application::CloseCB(Widget, XtPointer client_data, XtPointer)
 
 void Application::SaveMe(boolean save_as_session)
 {
-   char *path = NULL, *name = NULL;
+   char *path = nullptr, *name = nullptr;
 
    if (save_as_session)
       DtSessionSavePath(topLevel, &path, &name);
@@ -263,24 +263,24 @@ void Application::SaveMe(boolean save_as_session)
       char *path1 = SessionPath();
       path = new char[strlen(path1) + strlen(name) + 2];
       sprintf(path, "%s/%s", path1, name);
-      name = NULL;
+      name = nullptr;
     }
    if (path && (fp = fopen(path, "w")))
     {
       SaveYourSelf();
       fflush(fp);
       fclose(fp);
-      fp = NULL;
+      fp = nullptr;
     }
 
 
    if (save_as_session)
     {
-      char **new_argv = NULL;
+      char **new_argv = nullptr;
       char **_argv;
       int _argc;
 
-      XtVaGetValues(topLevel, XmNargc, &_argc, XmNargv, &_argv, NULL);
+      XtVaGetValues(topLevel, XmNargc, &_argc, XmNargv, &_argv, nullptr);
 
       int i;
       if (path && name)
@@ -291,7 +291,7 @@ void Application::SaveMe(boolean save_as_session)
             for (i = 0; i < _argc; i++)
                new_argv[i] = _argv[i];
             new_argv[2] = name;
-            new_argv[i] = NULL;
+            new_argv[i] = nullptr;
 	  }
          else
           {
@@ -303,7 +303,7 @@ void Application::SaveMe(boolean save_as_session)
             new_argv[2] = name;
             for (i = 1, j = 3; i < _argc; i++, j++)
                new_argv[j] = _argv[i];
-            new_argv[j] = NULL;
+            new_argv[j] = nullptr;
             _argc += 2;
           }
        }
@@ -312,7 +312,7 @@ void Application::SaveMe(boolean save_as_session)
          new_argv = new char *[_argc + 1];
          for (i = 0; i < _argc; i++)
             new_argv[i] = _argv[i];
-         new_argv[i] = NULL;
+         new_argv[i] = nullptr;
        }
       XSetCommand(display, XtWindow(topLevel), new_argv, _argc);
       delete [] new_argv;
@@ -331,7 +331,7 @@ void Application::Save(char *attribute, char *value)
 
 char *Application::Restore(char *attribute)
 {
-   char *value = NULL;
+   char *value = nullptr;
    if (!session_info)
     {
       if (!session_path)
@@ -368,8 +368,8 @@ char *Application::Restore(char *attribute)
             while (s && *s)
 	     {
 	       attributes[i] = s;
-	       values[i] = strtok(NULL, "\n");
-	       s = strtok(NULL, "\n");
+	       values[i] = strtok(nullptr, "\n");
+	       s = strtok(nullptr, "\n");
 	       i++;
 	     }
 	  }

@@ -63,7 +63,7 @@ class TestWindow : public MainWindow
 
    Container *container;
    
-   TestWindow(MotifUI *p,char *name) : MainWindow(p,name,NULL,"Fpprnt.l.pm") { }
+   TestWindow(MotifUI *p,char *name) : MainWindow(p,name,nullptr,"Fpprnt.l.pm") { }
    void Initialize();
 };
 
@@ -84,38 +84,38 @@ void TestWindow::Initialize()
 
    // Edit menu
    menu = new Menu(mbar, "Edit", "E");
-     new Button(menu, "Cut", PUSH_BUTTON, NULL, NULL, "t", "Shift+Del");
-     new Button(menu, "Copy", PUSH_BUTTON, NULL, NULL, "C", "Ctrl+Ins");
-     new Button(menu, "Paste", PUSH_BUTTON, NULL, NULL, "P", "Shift+Ins");
-     new Button(menu, "Delete", PUSH_BUTTON, NULL, NULL, "D");
+     new Button(menu, "Cut", PUSH_BUTTON, nullptr, nullptr, "t", "Shift+Del");
+     new Button(menu, "Copy", PUSH_BUTTON, nullptr, nullptr, "C", "Ctrl+Ins");
+     new Button(menu, "Paste", PUSH_BUTTON, nullptr, nullptr, "P", "Shift+Ins");
+     new Button(menu, "Delete", PUSH_BUTTON, nullptr, nullptr, "D");
 
    // View menu
    menu = new Menu(mbar, "View", "V");
-     new Button(menu, "New", PUSH_BUTTON, NULL, NULL, "N");
+     new Button(menu, "New", PUSH_BUTTON, nullptr, nullptr, "N");
      new Sep(menu);
-     new Button(menu, "Select All", PUSH_BUTTON, NULL, NULL, "S", "Ctrl+/");
-     new Button(menu, "Unselect All", PUSH_BUTTON, NULL, NULL, "U", "Ctrl+\\");
+     new Button(menu, "Select All", PUSH_BUTTON, nullptr, nullptr, "S", "Ctrl+/");
+     new Button(menu, "Unselect All", PUSH_BUTTON, nullptr, nullptr, "U", "Ctrl+\\");
      new Sep(menu);
-     new Button(menu, "Set Preferences...", PUSH_BUTTON, NULL, NULL, "P");
+     new Button(menu, "Set Preferences...", PUSH_BUTTON, nullptr, nullptr, "P");
      new Sep(menu);
-     new Button(menu, "Save Settings...", PUSH_BUTTON, NULL, NULL, "t");
+     new Button(menu, "Save Settings...", PUSH_BUTTON, nullptr, nullptr, "t");
 
    // Actions Menu
    menu = new Menu(mbar, "Actions", "A");
-     new Button(menu, "Monitor", PUSH_BUTTON, NULL, NULL, "M");
-     new Button(menu, "Cancel Job", PUSH_BUTTON, NULL, NULL, "C");
+     new Button(menu, "Monitor", PUSH_BUTTON, nullptr, nullptr, "M");
+     new Button(menu, "Cancel Job", PUSH_BUTTON, nullptr, nullptr, "C");
 
    // Help Menu
    menu = new Menu(mbar, "Help", "H");
-     new Button(menu, "Introduction", PUSH_BUTTON, NULL, NULL, "I");
+     new Button(menu, "Introduction", PUSH_BUTTON, nullptr, nullptr, "I");
      new Sep(menu);
-     new Button(menu, "Tasks", PUSH_BUTTON, NULL, NULL, "T");
-     new Button(menu, "Reference", PUSH_BUTTON, NULL, NULL, "R");
-     new Button(menu, "On Item", PUSH_BUTTON, NULL, NULL, "O");
+     new Button(menu, "Tasks", PUSH_BUTTON, nullptr, nullptr, "T");
+     new Button(menu, "Reference", PUSH_BUTTON, nullptr, nullptr, "R");
+     new Button(menu, "On Item", PUSH_BUTTON, nullptr, nullptr, "O");
      new Sep(menu);
-     new Button(menu, "Using Help", PUSH_BUTTON, NULL, NULL, "U");
+     new Button(menu, "Using Help", PUSH_BUTTON, nullptr, nullptr, "U");
      new Sep(menu);
-     new Button(menu, "Version", PUSH_BUTTON, NULL, NULL, "V");
+     new Button(menu, "Version", PUSH_BUTTON, nullptr, nullptr, "V");
    mbar->SetHelpMenu(menu);
 
    // Debug menu
@@ -132,15 +132,15 @@ int main(int argc,
    TestWindow *window = new TestWindow(app, "Printer");
    window->Initialize();
 
-   window->AddAction("Exit", "PrinterSubSystem", ExitCB, NULL, "x", "Alt+F4");
-   window->AddAction("Properties...", "Queue", NULL, NULL, "p",
+   window->AddAction("Exit", "PrinterSubSystem", ExitCB, nullptr, "x", "Alt+F4");
+   window->AddAction("Properties...", "Queue", nullptr, nullptr, "p",
 		     "Ctrl+Backspace");
    window->AddSep("Queue");
-   window->AddAction("Start", "Queue", NULL, NULL, "S");
-   window->AddAction("Stop", "Queue", NULL, NULL, "t");
+   window->AddAction("Start", "Queue", nullptr, nullptr, "S");
+   window->AddAction("Stop", "Queue", nullptr, nullptr, "t");
    window->AddSep("Queue");
-   window->AddAction("Monitor", "Queue", NULL, NULL, "M");
-   window->AddAction("Cancel", "PrintJob", NULL, NULL, "C");
+   window->AddAction("Monitor", "Queue", nullptr, nullptr, "M");
+   window->AddAction("Cancel", "PrintJob", nullptr, nullptr, "C");
 
    window->RegisterPopup(window->container);
 

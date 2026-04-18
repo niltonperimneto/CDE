@@ -96,7 +96,7 @@ Exceptions::initialize (void *ptr)
 {
   PRINTF (("Initializing exceptions library\n"));
 
-  if (Destructable::g_stack_start != NULL)
+  if (Destructable::g_stack_start != nullptr)
     {
       error (f_msg_initialized_twice, APPLICATION_ERROR);
       terminate();
@@ -181,7 +181,7 @@ Exceptions::error (const char *message, error_type_t error_type)
   }
       
   // Don't use fprintf because it may try to allocate memory.
-  if (Exception::g_current_exception != NULL)
+  if (Exception::g_current_exception != nullptr)
     {
       snprintf (buffer[count++], bufferlen,
 	       "   In exception thrown in file \"%s\", line %d,",
@@ -189,17 +189,17 @@ Exceptions::error (const char *message, error_type_t error_type)
 	       Exception::g_current_exception->f_line);
     }
 
-  if (message != NULL)
+  if (message != nullptr)
     snprintf (buffer[count++], bufferlen, "   %s", message);
 
   // Call user print function if set, otherwise just dump lines.
-  if (g_error_handler != NULL)
+  if (g_error_handler != nullptr)
     {
       mtry
 	{
 	  // Reset global variable to NULL before calling to prevent
 	  // the possibility of recursive calls. 
-	  Exceptions::error_handler_t current = set_error_handler (NULL);
+	  Exceptions::error_handler_t current = set_error_handler (nullptr);
 	  (*current) ((const char**)lines, count);
 	  set_error_handler (current);
 	}
@@ -232,7 +232,7 @@ void
 Exceptions::check_initialized()
 {
   void terminate();
-  if (Destructable::g_stack_start == NULL)
+  if (Destructable::g_stack_start == nullptr)
     {
       // Can't call user defined error handler unless we're initialized.
       // Also can't do lazy initialization because we need the stack

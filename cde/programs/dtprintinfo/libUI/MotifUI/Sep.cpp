@@ -34,13 +34,13 @@
 
 Sep::Sep(MotifUI *parent,
 	 SeparatorStyle style)
-	: MotifUI(parent, "sep", NULL)
+	: MotifUI(parent, "sep", nullptr)
 {
    _style = style;
 
    _w = XtVaCreateManagedWidget("sep", xmSeparatorWidgetClass,
 				parent->InnerWidget(), 
-                                XmNseparatorType, style, NULL);
+                                XmNseparatorType, style, nullptr);
 }
 
 Sep::Sep(char *category,
@@ -52,5 +52,5 @@ Sep::Sep(char *category,
 
    _w = XtVaCreateManagedWidget("sep", xmSeparatorWidgetClass,
 				parent->InnerWidget(), 
-                                XmNseparatorType, style, NULL);
+                                XmNseparatorType, style, nullptr);
 }

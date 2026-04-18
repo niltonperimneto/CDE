@@ -57,10 +57,10 @@ DtPrinterIcon::DtPrinterIcon(DtMainW *mainW, AnyUI *parent, Queue *que,
 {
    app_mode = _app_mode;
    queue = que;
-   status = NULL;
-   dnd = NULL;
+   status = nullptr;
+   dnd = nullptr;
 #ifdef aix
-   _print_device_up = NULL;
+   _print_device_up = nullptr;
 #endif
 
    // Return if initializing printers
@@ -73,7 +73,7 @@ DtPrinterIcon::DtPrinterIcon(DtMainW *mainW, AnyUI *parent, Queue *que,
     {
       struct passwd * pwInfo;
       char *home = getenv("HOME");
-      if (home == NULL || strlen(home) == 0)
+      if (home == nullptr || strlen(home) == 0)
        {
          pwInfo = getpwuid(getuid());
          home = pwInfo->pw_dir;
@@ -103,14 +103,14 @@ DtPrinterIcon::DtPrinterIcon(DtMainW *mainW, AnyUI *parent, Queue *que,
    else if (statbuff.st_mode != 0755)
       chmod(buf, 0755);
    mainw = mainW;
-   props = NULL;
-   container = NULL;
+   props = nullptr;
+   container = nullptr;
    waitForChildren = false;
    if (app_mode == PRINT_MANAGER)
       expand = new Button(this, queue->DisplayName(), PUSH_BUTTON, OpenCloseCB,
-		          NULL, NULL, NULL, NULL, "Dtplus");
+		          nullptr, nullptr, nullptr, nullptr, "Dtplus");
    else
-      expand = NULL;
+      expand = nullptr;
 
    if (app_mode != CONFIG_PRINTERS)
     {
@@ -125,7 +125,7 @@ DtPrinterIcon::DtPrinterIcon(DtMainW *mainW, AnyUI *parent, Queue *que,
       _print_device_up = true;
 #endif
       _print_queue_up = true;
-      flag = new IconObj((char *)STATUS_FLAG, this, NULL, "DtFlag");
+      flag = new IconObj((char *)STATUS_FLAG, this, nullptr, "DtFlag");
       flag->Visible(false);
       details_label = new DtDetailsLabel(this);
       _previous_show_only_my_jobs = mainw->setPrefD->ShowOnlyMyJobs() ?
@@ -134,12 +134,12 @@ DtPrinterIcon::DtPrinterIcon(DtMainW *mainW, AnyUI *parent, Queue *que,
     }
    else
     {
-      flag = NULL;
-      details_label = NULL;
+      flag = nullptr;
+      details_label = nullptr;
     }
    dnd = new DtDND(this, DndCB);
    mainw->RegisterPopup(this);
-   ApplicationData = NULL;
+   ApplicationData = nullptr;
    if (app_mode == SINGLE_PRINTER)
     {
       mainw->IconName((char *)Name());
@@ -354,7 +354,7 @@ void DtPrinterIcon::DndCB(BaseUI *obj, char **value, int * /*len*/,
    else
       printer = (DtPrinterIcon *)obj->Parent();
    DtActionArg ap[1];
-   char *old_LPDEST = NULL;
+   char *old_LPDEST = nullptr;
    ap[0].argClass = DtACTION_FILE;
 
    char *buf = new char[100];
@@ -375,7 +375,7 @@ void DtPrinterIcon::DndCB(BaseUI *obj, char **value, int * /*len*/,
        }
 
       DtActionInvoke(((AnyUI *)printer->mainw->Parent())->BaseWidget(), buf, ap,
-		     1, NULL, NULL, NULL, True, NULL, NULL);
+		     1, nullptr, nullptr, nullptr, True, nullptr, nullptr);
       if (old_LPDEST)
        {
 	 sprintf(buf, "LPDEST=%s", old_LPDEST);
@@ -398,7 +398,7 @@ void DtPrinterIcon::DndCB(BaseUI *obj, char **value, int * /*len*/,
 	  }
        }
       else
-	 *value = NULL;
+	 *value = nullptr;
       break;
    case DROP_ON_ROOT:
       {

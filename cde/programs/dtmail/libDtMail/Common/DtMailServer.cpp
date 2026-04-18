@@ -101,11 +101,11 @@ DtMailServer::DtMailServer(
 					_session, _folder,
 					DTMAS_PROPKEY_PROTOLOGGINGPLUS,
 					(Boolean) False);
-    _errorstring	= NULL;
+    _errorstring	= nullptr;
     _password		= get_mailrc_value(
 					_session, _folder,
 					DTMAS_PROPKEY_PASSWORD,
-					NULL, DTM_TRUE);
+					nullptr, DTM_TRUE);
     _removeafterdelivery
 			= get_mailrc_value(
 					_session, _folder,
@@ -120,9 +120,9 @@ DtMailServer::DtMailServer(
 					_session, _folder,
 					DTMAS_PROPKEY_SERVERNAME,
 					DTMAS_PROPDFLT_SERVERNAME);
-    _shroud		= NULL;
+    _shroud		= nullptr;
     _sizelimit		= 0;
-    _sockfp		= NULL;
+    _sockfp		= nullptr;
     dtmasTAGCLR();
     _transnum		= 0;
     _timeout		= get_mailrc_value(
@@ -148,11 +148,11 @@ DtMailServer::~DtMailServer()
 void
 DtMailServer::set_password(char *password)
 {
-    if (NULL == password) return;
+    if (nullptr == password) return;
 
-    if (NULL != _password) free(_password);
-    _password = NULL;
-    if (NULL != password) _password = strdup(password);
+    if (nullptr != _password) free(_password);
+    _password = nullptr;
+    if (nullptr != password) _password = strdup(password);
 }
 
 //
@@ -203,7 +203,7 @@ DtMailServer::ptrans_retrieve_readandappend(
 	}
 	else
 	{
-	    if (NULL == SockGets(_msgbuf, DTMAS_MSGBUFSIZE, _sockfp))
+	    if (nullptr == SockGets(_msgbuf, DTMAS_MSGBUFSIZE, _sockfp))
 	    {
 	        _logger.logError(DTM_FALSE, "Failed to retrieve %d bytes", len);
                 return DTME_MailServerAccess_SocketIOError;
@@ -274,7 +274,7 @@ DtMailServer::ptrans_retrieve_readandappend(
     _append_mailbox_cb(error, "\n", 1, _append_mailbox_cb_data);
 
     // Sink the file pointer.
-    sigaction(SIGINT, (const struct sigaction *) &o_action, NULL);
+    sigaction(SIGINT, (const struct sigaction *) &o_action, nullptr);
     return DTME_NoError;
 }
 
@@ -379,7 +379,7 @@ DtMailServer::do_transaction(char *fmt, ... )
     ok = ptrans_parse_response(buf);
     if (ok != DTME_NoError)
     {
-      if (NULL == _errorstring)
+      if (nullptr == _errorstring)
         _errorstring = strdup(buf);
     }
     delete [] buf;
@@ -396,11 +396,11 @@ DtMailServer::get_mailrc_value(
 			char *id,
 			int dflt)
 {
-    char	*string = NULL;
+    char	*string = nullptr;
     int		value = 0;
 
-    string = get_mailrc_value(ssn, pfx, id, (char*) NULL);
-    if (NULL == string)
+    string = get_mailrc_value(ssn, pfx, id, (char*) nullptr);
+    if (nullptr == string)
       return dflt;
 
     value = atoi(string);
@@ -420,21 +420,21 @@ DtMailServer::get_mailrc_value(
 {
     DtMailEnv		error;
     DtMail::MailRc	*mailrc = ssn->mailRc(error);
-    const char		*value = NULL;
+    const char		*value = nullptr;
     static char		idbuf[DTMAS_IDSIZE+1];
-    char		*charval = NULL;
+    char		*charval = nullptr;
 
     DTMAS_CONCAT_MAILRC_KEY(idbuf, pfx, id);
     mailrc->getValue(error, idbuf, &value, decrypt);
     if (error.isSet())
     {
-        if (NULL != dflt)
+        if (nullptr != dflt)
           charval = strdup(dflt);
     }
     else
       charval = strdup(value);
 
-    if (NULL != value) free((void*) value);
+    if (nullptr != value) free((void*) value);
     return charval;
 }
 
@@ -450,7 +450,7 @@ DtMailServer::get_mailrc_value(
 {
     DtMailEnv		error;
     DtMail::MailRc	*mailrc = ssn->mailRc(error);
-    const char		*value = NULL;
+    const char		*value = nullptr;
     static char		idbuf[DTMAS_IDSIZE+1];
     Boolean		boolval = FALSE;
 
@@ -461,7 +461,7 @@ DtMailServer::get_mailrc_value(
     else
       boolval = TRUE;
 
-    if (NULL != value) free((void*) value);
+    if (nullptr != value) free((void*) value);
     return boolval;
 }
 
@@ -471,7 +471,7 @@ DtMailServer::get_mailrc_value(
 Boolean
 DtMailServer::is_inbox()
 {
-    if (NULL==_folder || 0==strncmp(_folder, DTMAS_INBOX, strlen(DTMAS_INBOX)))
+    if (nullptr==_folder || 0==strncmp(_folder, DTMAS_INBOX, strlen(DTMAS_INBOX)))
       return TRUE;
     
     return FALSE;
@@ -493,11 +493,11 @@ DtMailServer::send_info_message(DtMailCallbackOp op)
     event.target = DTM_TARGET_MAILBOX;
     event.target_object = _mailbox;
     event.operation = (void*) op;
-    if (NULL != errmsg)
+    if (nullptr != errmsg)
       event.argument = strdup(errmsg);
     else
-      event.argument = NULL;
-    event.event_time = time(NULL);
+      event.argument = nullptr;
+    event.event_time = time(nullptr);
 
     _session->writeEventData(error, &event, sizeof(event));
 #else
@@ -514,8 +514,8 @@ DtMailServer::retrieve_messages(DtMailEnv &error)
     DTMailError_t	ok = DTME_NoError;
     int			js;
     struct sigaction	action, o_action;
-    int			*msgsizes = (int*) NULL;
-    int			*msgisold = (int*) NULL;
+    int			*msgsizes = (int*) nullptr;
+    int			*msgisold = (int*) nullptr;
 
     _transnum = 0;
 
@@ -546,7 +546,7 @@ DtMailServer::retrieve_messages(DtMailEnv &error)
 	int	deletions = 0;
 	int	sockfd = -1;
 
-        if (proto_requires_password() && NULL == _password)
+        if (proto_requires_password() && nullptr == _password)
         {
 	    ok = DTME_MailServerAccess_MissingPassword;
 	    goto restoreSignal;
@@ -554,17 +554,17 @@ DtMailServer::retrieve_messages(DtMailEnv &error)
 
         vtalarm_setitimer(_timeout);
         _info.vSetError(DTME_MailServerAccessInfo_SocketOpen,
-			DTM_FALSE, NULL, _username, _servername);
+			DTM_FALSE, nullptr, _username, _servername);
 	send_info_message(DTMC_SERVERACCESSINFO);
-	if (NULL != _errorstring)
+	if (nullptr != _errorstring)
 	{
 	    free(_errorstring);
-	    _errorstring = NULL;
+	    _errorstring = nullptr;
 	}
 	_sockfp = SockOpen(_servername, proto_port(), &_errorstring);
-	if (NULL == _sockfp)
+	if (nullptr == _sockfp)
 	{
-	    if (NULL == _errorstring)
+	    if (nullptr == _errorstring)
 	      _errorstring = strdup(_logger.errnoMessage());
 	    ok = DTME_MailServerAccess_SocketIOError;
 	    goto restoreSignal;
@@ -583,7 +583,7 @@ DtMailServer::retrieve_messages(DtMailEnv &error)
 	vtalarm_setitimer(_timeout);
 	_shroud = _password;
 	ok = ptrans_authorize(buf);
-	_shroud = (char*) NULL;
+	_shroud = (char*) nullptr;
 	if (ok != DTME_NoError) goto closeServer;
 
 	/* compute number of messages and number of new messages waiting */
@@ -653,7 +653,7 @@ DtMailServer::retrieve_messages(DtMailEnv &error)
 	    if (! nmsgtofetch)
 	    {
                 _info.vSetError(DTME_MailServerAccessInfo_NoMessages,
-			        DTM_FALSE, NULL, _username, _servername);
+			        DTM_FALSE, nullptr, _username, _servername);
 	        send_info_message(DTMC_SERVERACCESSINFO);
 	    }
 
@@ -701,7 +701,7 @@ DtMailServer::retrieve_messages(DtMailEnv &error)
 		    {
         	        _info.vSetError(
 				DTME_MailServerAccessInfo_MessageTooLarge,
-				DTM_FALSE, NULL, msgsizes[num-1]);
+				DTM_FALSE, nullptr, msgsizes[num-1]);
 		        send_info_message(DTMC_SERVERACCESSINFOERROR);
 		    }
 		}
@@ -714,7 +714,7 @@ DtMailServer::retrieve_messages(DtMailEnv &error)
 		     */
 		    fetched++;
                     _info.vSetError(DTME_MailServerAccessInfo_RetrievingMessage,
-				    DTM_FALSE, NULL,
+				    DTM_FALSE, nullptr,
 				    fetched, nmsgtofetch,
 				    _username, _servername);
 	            send_info_message(DTMC_SERVERACCESSINFO);
@@ -776,7 +776,7 @@ DtMailServer::retrieve_messages(DtMailEnv &error)
 	else
 	{
             _info.vSetError(DTME_MailServerAccessInfo_NoMessages,
-			    DTM_FALSE, NULL, _username, _servername);
+			    DTM_FALSE, nullptr, _username, _servername);
 	    send_info_message(DTMC_SERVERACCESSINFO);
 	}
 
@@ -790,18 +790,18 @@ DtMailServer::retrieve_messages(DtMailEnv &error)
           }
 	vtalarm_setitimer(0);
 	SockClose(_sockfp);
-	_sockfp = NULL;
+	_sockfp = nullptr;
 	dtmasTAGCLR();
     }
 
 restoreSignal:
-    _sockfp = NULL;
+    _sockfp = nullptr;
     if (ok != DTME_NoError)
     {
-	if (NULL == _errorstring)
+	if (nullptr == _errorstring)
 	  _errorstring = strdup("");
         error.vSetError(
-			ok, DTM_TRUE, NULL,
+			ok, DTM_TRUE, nullptr,
 			_username, _servername, proto_name(), _errorstring);
         _logger.logError(
 			DTM_TRUE,
@@ -815,11 +815,11 @@ restoreSignal:
     if (_errorstring)
     {
 	free(_errorstring);
-	_errorstring = NULL;
+	_errorstring = nullptr;
     }
-    if (msgsizes != NULL) free(msgsizes);
-    if (msgisold != NULL) free(msgisold);
-    sigaction(SIGNAL_TYPE, (const struct sigaction *) &o_action, NULL);
+    if (msgsizes != nullptr) free(msgsizes);
+    if (msgisold != nullptr) free(msgisold);
+    sigaction(SIGNAL_TYPE, (const struct sigaction *) &o_action, nullptr);
 }
 
 //
@@ -835,7 +835,7 @@ DtMailServer::vtalarm_setitimer(int timeout_seconds)
     ntimeout.it_interval.tv_usec = (TV_USEC_TYPE) 0;
     ntimeout.it_value.tv_sec  = (time_t) timeout_seconds;
     ntimeout.it_value.tv_usec = (TV_USEC_TYPE) 0;
-    setitimer(ITIMER_TYPE, &ntimeout, (struct itimerval*) NULL);
+    setitimer(ITIMER_TYPE, &ntimeout, (struct itimerval*) nullptr);
 }
 
 //

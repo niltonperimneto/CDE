@@ -122,7 +122,7 @@ _SHXbuf::vector()
     for (i = 0; i < vec.size(); i++)
 	vec[i] = &buf[long(vec[i])];
 
-    vec[i] = NULL;
+    vec[i] = nullptr;
 
     return vec.getarr();
 }

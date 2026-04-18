@@ -102,12 +102,12 @@ SelectFileCmd::SelectFileCmd (const char * name,
     _title = (title ? strdup(title) : strdup(name));
     _ok_callback       = ok_callback;
     _ok_clientData     = ok_clientData;
-    _cancel_callback   = NULL;
-    _cancel_clientData = NULL;
-    _fileBrowser       = NULL;
+    _cancel_callback   = nullptr;
+    _cancel_clientData = nullptr;
+    _fileBrowser       = nullptr;
     _parentWidget      = parent;
-    _hidden_button     = NULL;
-    _directory         = NULL;
+    _hidden_button     = nullptr;
+    _directory         = nullptr;
 }
 
 SelectFileCmd::SelectFileCmd (const char * name, 
@@ -128,10 +128,10 @@ SelectFileCmd::SelectFileCmd (const char * name,
     _ok_clientData     = ok_clientData;
     _cancel_callback   = cancel_callback;
     _cancel_clientData = cancel_clientData;
-    _fileBrowser       = NULL;
+    _fileBrowser       = nullptr;
     _parentWidget      = parent;
-    _hidden_button     = NULL;
-    _directory         = NULL;
+    _hidden_button     = nullptr;
+    _directory         = nullptr;
 }
 
 SelectFileCmd::~SelectFileCmd()
@@ -178,7 +178,7 @@ void SelectFileCmd::doit()
 	XtVaSetValues(_fileBrowser,
 		      XmNdialogTitle, title,
 		      XmNokLabelString, ok_str,
-		      NULL);
+		      nullptr);
 	XmStringFree(title);
 	XmStringFree(ok_str);
 	XmString hidden_str = XmStringCreateLocalized(
@@ -190,7 +190,7 @@ void SelectFileCmd::doit()
 				 XmNalignment, XmALIGNMENT_BEGINNING,
 				 XmNnavigationType, XmSTICKY_TAB_GROUP,
 				 XmNsensitive, TRUE,
-				 NULL);
+				 nullptr);
 	XmStringFree(hidden_str);
 
 	printHelpId("_fileBrowser", _fileBrowser);
@@ -236,7 +236,7 @@ void SelectFileCmd::fileSelectedCB(
     SelectFileCmd * obj = (SelectFileCmd *) clientData;
     XmFileSelectionBoxCallbackStruct *cb = 
 	(XmFileSelectionBoxCallbackStruct *) callData;
-    char     *name   = NULL;
+    char     *name   = nullptr;
 
     // XtUnmanageChild ( w );   // Bring the file selection dialog down.
     
@@ -245,7 +245,7 @@ void SelectFileCmd::fileSelectedCB(
 	// Extract the first character string matching the default
 	// character set from the compound string
         name = (char *) _XmStringUngenerate(
-					cb->value, NULL,
+					cb->value, nullptr,
 					XmMULTIBYTE_TEXT, XmMULTIBYTE_TEXT);
          // if the name is a null string ( no file is selected)
          // we should pop up an error dialog to let user know
@@ -253,7 +253,7 @@ void SelectFileCmd::fileSelectedCB(
          // the message cat file is frozen, we can not add any
          // new msg. Just free the name and return.
          // see aix defect 176761.
-         if(NULL == name) return;
+         if(nullptr == name) return;
 	 if (strlen(name)<1)
          {
            free(name);
@@ -287,7 +287,7 @@ void SelectFileCmd::fileSelected ( char *filename )
 void SelectFileCmd::fileCanceled ()
 {
     if ( _cancel_callback )
-	_cancel_callback ( _cancel_clientData, NULL );
+	_cancel_callback ( _cancel_clientData, nullptr );
 }
 
 void
@@ -306,8 +306,8 @@ SelectFileCmd::doHidden(int on)
 {
     XtEnum		style;
     style = (on) ? XmFILTER_NONE : XmFILTER_HIDDEN_FILES;
-    XtVaSetValues(_fileBrowser, XmNfileFilterStyle, style, NULL);
-    XmFileSelectionDoSearch(_fileBrowser, NULL);
+    XtVaSetValues(_fileBrowser, XmNfileFilterStyle, style, nullptr);
+    XmFileSelectionDoSearch(_fileBrowser, nullptr);
 }
 
 char *
@@ -316,13 +316,13 @@ SelectFileCmd::getDirectory()
     XmString	directory;
     char	*path;
 
-    if (NULL == _fileBrowser)
-      return NULL;
+    if (nullptr == _fileBrowser)
+      return nullptr;
 
     // Get the default selection.
-    XtVaGetValues(_fileBrowser, XmNdirectory, &directory, NULL);
+    XtVaGetValues(_fileBrowser, XmNdirectory, &directory, nullptr);
     path = (char *)
-      _XmStringUngenerate(directory, NULL, XmMULTIBYTE_TEXT, XmMULTIBYTE_TEXT);
+      _XmStringUngenerate(directory, nullptr, XmMULTIBYTE_TEXT, XmMULTIBYTE_TEXT);
     XmStringFree(directory);
 
     return path;
@@ -332,15 +332,15 @@ char *
 SelectFileCmd::getSelected()
 {
     Widget	text;
-    char	*path = NULL;
+    char	*path = nullptr;
 
-    if (NULL == _fileBrowser)
-      return NULL;
+    if (nullptr == _fileBrowser)
+      return nullptr;
 
     // Set the default selection.
     text = XtNameToWidget(_fileBrowser, "Text");
-    if (NULL != text)
-      XtVaGetValues(text, XmNvalue, &path, NULL);
+    if (nullptr != text)
+      XtVaGetValues(text, XmNvalue, &path, nullptr);
 
     return path;
 }
@@ -351,10 +351,10 @@ SelectFileCmd::getHidden()
     int			val;
     XtArgVal		current_state;
 
-    if (NULL == _fileBrowser || NULL == _hidden_button)
+    if (nullptr == _fileBrowser || nullptr == _hidden_button)
       return 0;
     
-    XtVaGetValues(_hidden_button, XmNset, &current_state, NULL);
+    XtVaGetValues(_hidden_button, XmNset, &current_state, nullptr);
     val = (current_state == XmSET) ? 1 : 0;
     return val;
 }
@@ -364,12 +364,12 @@ SelectFileCmd::setDirectory(char *path)
 {
     XmString	directory;
 
-    if (NULL == _fileBrowser)
+    if (nullptr == _fileBrowser)
       return;
 
     // Set the default directory where the file selection box points.
     directory = XmStringCreateLocalized(path);
-    XtVaSetValues(_fileBrowser, XmNdirectory, directory, NULL);
+    XtVaSetValues(_fileBrowser, XmNdirectory, directory, nullptr);
     XmStringFree(directory);
 }
 
@@ -378,13 +378,13 @@ SelectFileCmd::setSelected(char *path)
 {
     Widget	text;
 
-    if (NULL == _fileBrowser)
+    if (nullptr == _fileBrowser)
       return;
 
     // Set the default selection.
     text = XtNameToWidget(_fileBrowser, "Text");
-    if (NULL != text)
-      XtVaSetValues(text, XmNvalue, path, NULL);
+    if (nullptr != text)
+      XtVaSetValues(text, XmNvalue, path, nullptr);
 }
 
 void
@@ -393,14 +393,14 @@ SelectFileCmd::setHidden(int on)
     XtArgVal		current_state;
     XtArgVal		desired_state;
 
-    if (NULL == _fileBrowser || NULL == _hidden_button)
+    if (nullptr == _fileBrowser || nullptr == _hidden_button)
       return;
     
     desired_state = (on) ? XmSET : XmUNSET;
-    XtVaGetValues(_hidden_button, XmNset, &current_state, NULL);
+    XtVaGetValues(_hidden_button, XmNset, &current_state, nullptr);
     if (current_state == desired_state)
       return;
 
-    XtVaSetValues(_hidden_button, XmNset, desired_state, NULL);
+    XtVaSetValues(_hidden_button, XmNset, desired_state, nullptr);
     doHidden(on);
 }

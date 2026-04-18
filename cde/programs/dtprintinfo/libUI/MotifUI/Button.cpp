@@ -39,9 +39,9 @@ Button::Button(MotifUI *parent, char *name, ButtonType button_type,
 	       ButtonCallback callback, void * callback_data,
 	       char *mnemonic, char *acceleratorText,
 	       char *accelerator, char *iconFile)
-	: MotifUI(parent, name, NULL)
+	: MotifUI(parent, name, nullptr)
 {
-   CreateButton(parent, name, NULL, button_type, callback, callback_data,
+   CreateButton(parent, name, nullptr, button_type, callback, callback_data,
 	        mnemonic, acceleratorText, accelerator, iconFile);
 }
 
@@ -71,7 +71,7 @@ void Button::IconFile(char *iconFile)
       if (depth == 1)
        {
 	 Pixel bg;
-	 XtVaGetValues(_w, XmNbackground, &bg, NULL);
+	 XtVaGetValues(_w, XmNbackground, &bg, nullptr);
 	 if (bg == black)
             sprintf(s, "%s.m.pm", iconFile);
 	 else
@@ -81,10 +81,10 @@ void Button::IconFile(char *iconFile)
          sprintf(s, "%s.m.pm", iconFile);
       GetPixmaps(_w, s, &pixmap);
       delete [] s;
-      XtVaSetValues(_w, XmNlabelType, XmPIXMAP, XmNlabelPixmap, pixmap, NULL);
+      XtVaSetValues(_w, XmNlabelType, XmPIXMAP, XmNlabelPixmap, pixmap, nullptr);
     }
    else
-      XtVaSetValues(_w, XmNlabelType, XmSTRING, NULL);
+      XtVaSetValues(_w, XmNlabelType, XmSTRING, nullptr);
 }
 
 void Button::CreateButton(MotifUI *parent, char *name, char * /*category*/,
@@ -95,9 +95,9 @@ void Button::CreateButton(MotifUI *parent, char *name, char * /*category*/,
    int IsArrow = false;
    XmString xm_string = StringCreate(name);
    Widget parentW;
-   Widget super_node = NULL;
+   Widget super_node = nullptr;
 
-   _iconFile = NULL;
+   _iconFile = nullptr;
    _button_type = button_type;
 
    if (parent->UIClass() == DIALOG)
@@ -114,13 +114,13 @@ void Button::CreateButton(MotifUI *parent, char *name, char * /*category*/,
                                    XmNlabelString, xm_string,
 		                   XmNaccelerator, accelerator,
 				   XmNmultiClick, XmMULTICLICK_DISCARD,
-                                   GuiNsuperNode, super_node, NULL);
+                                   GuiNsuperNode, super_node, nullptr);
    else if (button_type == TOGGLE_BUTTON)
       _w = XtVaCreateManagedWidget("toggle", xmToggleButtonWidgetClass, parentW,
 				   XmNlabelString, xm_string,
 		                   XmNaccelerator, accelerator,
 				   XmNmultiClick, XmMULTICLICK_DISCARD,
-                                   GuiNsuperNode, super_node, NULL);
+                                   GuiNsuperNode, super_node, nullptr);
    else
     {
       int dir;
@@ -134,18 +134,18 @@ void Button::CreateButton(MotifUI *parent, char *name, char * /*category*/,
        }
       _w = XtVaCreateManagedWidget("arrow", xmArrowButtonWidgetClass, parentW, 
 				   XmNmultiClick, XmMULTICLICK_DISCARD,
-				   XmNarrowDirection, dir, NULL);
+				   XmNarrowDirection, dir, nullptr);
       IsArrow = true;
     }
    StringFree(xm_string);
    if (!IsArrow)
     {
       if (mnemonic)
-         XtVaSetValues(_w, XmNmnemonic, XStringToKeysym(mnemonic), NULL);
+         XtVaSetValues(_w, XmNmnemonic, XStringToKeysym(mnemonic), nullptr);
       if (acceleratorText)
        {
          xm_string = StringCreate(acceleratorText);
-         XtVaSetValues(_w, XmNacceleratorText, xm_string, NULL);
+         XtVaSetValues(_w, XmNacceleratorText, xm_string, nullptr);
          StringFree(xm_string);
        }
     }

@@ -47,7 +47,7 @@ Process::Process()
    pprocs = (char **)malloc(sizeof(char *));
    NumProcs = 0;
    strtok(procs, "\n");
-   while(pprocs[NumProcs] = strtok(NULL, "\n"))
+   while(pprocs[NumProcs] = strtok(nullptr, "\n"))
     {
       NumProcs++;
       pprocs = (char **)realloc(pprocs, sizeof(char *) * (NumProcs + 1));
@@ -83,7 +83,7 @@ char *Process::GetByPid(pid_t _pid)
 	     return pprocs[i];
 	  }
        }
-   return NULL;
+   return nullptr;
 }
 
 pid_t Process::Parent(pid_t pid)
@@ -131,5 +131,5 @@ char *Process::Command(pid_t _pid)
       return s;
     }
    else
-      return NULL;
+      return nullptr;
 }

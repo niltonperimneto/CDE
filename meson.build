@@ -104,7 +104,7 @@ conf_data.set('CDE_VERSION_DEV', '')
 if host_machine.endian() == 'big'
   conf_data.set('WORDS_BIGENDIAN', 1)
 endif
-configure_file(output : 'cde_config.hpp', configuration : conf_data)
+configure_file(output : 'cde_config.h', configuration : conf_data)
 
 # Recurse into subdirectories
 subdir('cde')

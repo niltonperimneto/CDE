@@ -38,17 +38,17 @@
 char *
 strtokx(char *&ptr, const char *sep)
 {
-    if (ptr == NULL)
-	return NULL;
+    if (ptr == nullptr)
+	return nullptr;
 
     // find the beginning of the token
     char *ret = ptr;
-    while (*ret != '\0' && _mb_schr(sep, *ret) != NULL)
+    while (*ret != '\0' && _mb_schr(sep, *ret) != nullptr)
 	ADVANCE(ret);
 
     // find the end of the token
     char *end = ret;
-    while (*end != '\0' && _mb_schr(sep, *end) == NULL)
+    while (*end != '\0' && _mb_schr(sep, *end) == nullptr)
 	ADVANCE(end);
 
     ptr = end;
@@ -62,7 +62,7 @@ strtokx(char *&ptr, const char *sep)
     }
 
     if (*ret == '\0')
-	return NULL;
+	return nullptr;
 
     return ret;
 }

@@ -99,11 +99,11 @@ DtMainW::DtMainW(char *category,
    _fileMenuMnemonic = fileMenuMnemonic;
    _container_type = container_type;
    _select_type = select_type;
-   setModList = NULL;
-   setPrefD = NULL;
-   findD = NULL;
-   helpSystem = NULL;
-   findSetD = NULL;
+   setModList = nullptr;
+   setPrefD = nullptr;
+   findD = nullptr;
+   helpSystem = nullptr;
+   findSetD = nullptr;
    action_data = (ActionData **) malloc(sizeof(ActionData *));
    n_action_data = 0;
 }
@@ -192,7 +192,7 @@ void DtMainW::Initialize()
                            SetPrefCB, setPrefD, MESSAGE(SetOptionsMnemonicL));
     }
    else
-      viewMenu = NULL;
+      viewMenu = nullptr;
    helpMenu = new DtMenu(mbar, MESSAGE(HelpChoiceL), MESSAGE(HelpMnemonicL),
 			 "HelpMenuDE");
    introduction = new Button(helpMenu, MESSAGE(OverviewChoiceL), PUSH_BUTTON,
@@ -250,7 +250,7 @@ void DtMainW::DtAddAction(char *name, char *category, char *actionName,
 {
    BaseUI *action1;
    if (action1 = actionsMenu->FindByName(name))
-      action1->Category(NULL);
+      action1->Category(nullptr);
    else
       actionsMenu->AddAction(name, category, actionName, callback, 
 			     callback_data, mnemonic, acceleratorText,
@@ -262,7 +262,7 @@ void DtMainW::DtAddAction(char *name, char *category, char *actionName,
    action_data[n_action_data]->actionReferenceName = strdup(actionName);
    action_data[n_action_data]->callback_data = callback_data;
    action_data[n_action_data]->actionCallback = callback;
-   Button *action = AddAction(name, category, &DtMainW::ActionCB, NULL,
+   Button *action = AddAction(name, category, &DtMainW::ActionCB, nullptr,
 			      mnemonic, acceleratorText, accelerator); 
    action->ApplicationData = action_data[n_action_data];
    n_action_data++;

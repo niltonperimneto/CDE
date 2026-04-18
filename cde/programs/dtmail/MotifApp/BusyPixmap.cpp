@@ -70,8 +70,8 @@
 
 BusyPixmap::BusyPixmap ( Widget w ) : 
         PixmapCycler ( NUMPIXMAPS, PIXMAPSIZE, PIXMAPSIZE ),
-        _gc(NULL),
-        _inverseGC(NULL)
+        _gc(nullptr),
+        _inverseGC(nullptr)
 {
     _w = w;
 }
@@ -87,7 +87,7 @@ void BusyPixmap::createPixmaps()
     XtVaGetValues ( _w, 
 		   XmNforeground, &gcv.foreground,
 		   XmNbackground, &gcv.background,
-		   NULL );
+		   nullptr );
     
     _gc = XtGetGC ( _w,  GCForeground | GCBackground, &gcv );
     
@@ -97,7 +97,7 @@ void BusyPixmap::createPixmaps()
     XtVaGetValues ( _w, 
 		   XmNforeground, &gcv.background,
 		   XmNbackground, &gcv.foreground,
-		   NULL );
+		   nullptr );
     
     _inverseGC = XtGetGC ( _w,  GCForeground | GCBackground, &gcv );
     

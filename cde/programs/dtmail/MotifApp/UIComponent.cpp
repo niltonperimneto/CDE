@@ -86,13 +86,13 @@ UIComponent::widgetDestroyedCallback( Widget,
 void
 UIComponent::widgetDestroyed()
 {
-    _w = NULL;
+    _w = nullptr;
 }
 
 void
 UIComponent::installDestroyHandler()
 {
-    assert ( _w != NULL );
+    assert ( _w != nullptr );
     XtAddCallback ( _w, 
 		   XmNdestroyCallback,
 		   &UIComponent::widgetDestroyedCallback, 
@@ -102,7 +102,7 @@ UIComponent::installDestroyHandler()
 void
 UIComponent::manage()
 {
-    assert ( _w != NULL );
+    assert ( _w != nullptr );
     assert ( XtHasCallbacks ( _w, XmNdestroyCallback ) ==
 	    XtCallbackHasSome );
     XtManageChild ( _w );
@@ -123,13 +123,13 @@ UIComponent::displayInCurrentWorkspace(Widget shell)
     while (shell && !XtIsShell(shell)) shell = XtParent(shell);
 
     // Make sure the shell is popped up and occupying the current workspace.
-    if (NULL != shell && XtIsShell(shell))
+    if (nullptr != shell && XtIsShell(shell))
     {
 	Atom     pCurrent;
 	Display	*display = XtDisplay(shell);
 	Window	window = XtWindow(shell);
 
-        XtVaSetValues(shell, XmNiconic, False, NULL);
+        XtVaSetValues(shell, XmNiconic, False, nullptr);
 	XRaiseWindow(display, window);
 
 	/* Get the current Workspace */
@@ -138,7 +138,7 @@ UIComponent::displayInCurrentWorkspace(Widget shell)
 					XRootWindowOfScreen(XtScreen(shell)),
 					&pCurrent))
 	{
-	    Atom *ws = NULL;
+	    Atom *ws = nullptr;
 	    unsigned long num = 0;
 	    int k;
 
@@ -188,8 +188,8 @@ UIComponent::getResources( const XtResourceList resources,
 {
     // Check for errors
     
-    assert ( _w != NULL );
-    assert ( resources != NULL );
+    assert ( _w != nullptr );
+    assert ( resources != nullptr );
     
     // Retrieve the requested resources relative to the 
     // parent of this object's base widget
@@ -202,7 +202,7 @@ UIComponent::getResources( const XtResourceList resources,
 			    className(),
 			    resources, 
 			    numResources,
-			    NULL, 
+			    nullptr, 
 			    0 );
     else 
 	XtGetSubresources ( _w , 
@@ -211,7 +211,7 @@ UIComponent::getResources( const XtResourceList resources,
 			    className(),
 			    resources, 
 			    numResources,
-			    NULL, 
+			    nullptr, 
 			    0 );
 }
 
@@ -223,7 +223,7 @@ UIComponent::setDefaultResources( const Widget w,
 {
     int         i;	
     Display    *dpy = XtDisplay ( w );	// Retrieve the display pointer
-    XrmDatabase rdb = NULL;		// A resource data base
+    XrmDatabase rdb = nullptr;		// A resource data base
     
     // Create an empty resource database
 
@@ -232,7 +232,7 @@ UIComponent::setDefaultResources( const Widget w,
     // Add the Component resources, prepending the name of the component
 
     i = 0;
-    while ( resourceSpec[i] != NULL )
+    while ( resourceSpec[i] != nullptr )
 	{
 	    char *buf = new char[1000];
 	    sprintf(buf, "*%s%s", _name, resourceSpec[i++]);

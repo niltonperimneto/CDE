@@ -73,7 +73,7 @@ void PrintSubSystem::InitChildren()
       while (queue && *queue)
        {
          new Queue(this, queue);
-         queue = strtok(NULL, " \n");
+         queue = strtok(nullptr, " \n");
        }
     }
    delete std_out;

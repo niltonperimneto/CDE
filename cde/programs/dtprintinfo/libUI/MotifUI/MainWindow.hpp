@@ -65,15 +65,15 @@ class MainWindow : public MotifUI {
    MainWindow(MotifUI *parent,
 	      char *name,
 	      char *widgetName,
-	      char *icon = NULL,
-	      char *icon_name = NULL);
+	      char *icon = nullptr,
+	      char *icon_name = nullptr);
 
    MainWindow(char *category,
 	      MotifUI *parent,
 	      char *name,
 	      char *widgetName,
-	      char *icon = NULL,
-	      char *icon_name = NULL);
+	      char *icon = nullptr,
+	      char *icon_name = nullptr);
    virtual ~MainWindow();
 
    void IconFile(char *icon);
@@ -82,8 +82,8 @@ class MainWindow : public MotifUI {
    char *IconName() { return icon_name; }
 
    Button *AddAction(char *name, char *category, ButtonCallback callback,
-		     void *callback_data, char *mnemonic = NULL,
-		     char *acceleratorText = NULL, char *accelerator = NULL);
+		     void *callback_data, char *mnemonic = nullptr,
+		     char *acceleratorText = nullptr, char *accelerator = nullptr);
    void RegisterPopup(MotifUI *object);
    void AddSep(char *category);
 

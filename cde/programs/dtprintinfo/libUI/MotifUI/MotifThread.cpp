@@ -53,14 +53,14 @@ MotifThread::MotifThread(MotifUI *obj, int pid, int fd,
                          MotifThreadCallback cb, ThreadCallback cb1,
 			 int buf_len)
 {
-   CreateThread(obj, NULL, pid, fd, cb, cb1, buf_len);
+   CreateThread(obj, nullptr, pid, fd, cb, cb1, buf_len);
 }
 
 MotifThread::MotifThread(MotifUI *obj, int socket,
                          MotifThreadCallback cb, ThreadCallback cb1,
 			 int buf_len)
 {
-   CreateThread(obj, NULL, -1, socket, cb, cb1, buf_len);
+   CreateThread(obj, nullptr, -1, socket, cb, cb1, buf_len);
 }
 
 void MotifThread::CreateThread(MotifUI *_obj, const char *cmd, int _pid,
@@ -72,8 +72,8 @@ void MotifThread::CreateThread(MotifUI *_obj, const char *cmd, int _pid,
    cb = _cb;
    cb1 = _cb1;
    obj = _obj;
-   output = NULL;
-   out1 = NULL;
+   output = nullptr;
+   out1 = nullptr;
    inputID = 0;
    if (_buf_len < 0)
       buf_len = 512;
@@ -97,7 +97,7 @@ void MotifThread::CreateThread(MotifUI *_obj, const char *cmd, int _pid,
          dup(m_stdout[1]);
          close(m_stdout[1]);
 
-         execlp(KORNSHELL, "ksh", "-c", cmd, NULL);
+         execlp(KORNSHELL, "ksh", "-c", cmd, nullptr);
 
          char *msg = strerror(errno);
          write(1, msg, strlen(msg));

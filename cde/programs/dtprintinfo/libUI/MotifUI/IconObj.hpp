@@ -96,19 +96,19 @@ class IconObj : public MotifUI {
    IconObj(MotifUI *parent,
            char *name,
 	   char *icon,
-	   char *details = NULL,
-	   char *topString = NULL,
-	   char *bottomString = NULL,
-	   IconFields fields = NULL);
+	   char *details = nullptr,
+	   char *topString = nullptr,
+	   char *bottomString = nullptr,
+	   IconFields fields = nullptr);
 
    IconObj(char *category,
 	   MotifUI *parent,
            char *name,
 	   char *icon,
-	   char *details = NULL,
-	   char *topString = NULL,
-	   char *bottomString = NULL,
-	   IconFields fields = NULL);
+	   char *details = nullptr,
+	   char *topString = nullptr,
+	   char *bottomString = nullptr,
+	   IconFields fields = nullptr);
 
    ~IconObj();
 

@@ -81,11 +81,11 @@ PromptDialogManager::PromptDialogManager ( char   *name ) :
 
 Widget PromptDialogManager::createDialog ( Widget parent )
 {
-  Widget dialog = XmCreatePromptDialog ( parent, _name, NULL, 0);
+  Widget dialog = XmCreatePromptDialog ( parent, _name, nullptr, 0);
     
   XtVaSetValues ( dialog,
 		  XmNdialogStyle, XmDIALOG_FULL_APPLICATION_MODAL,
-		  NULL );
+		  nullptr );
   
   return dialog;
 }
@@ -107,7 +107,7 @@ PromptDialogManager::post( char *title,
     // Make sure the dialog exists, and that it is an XmMessageBox
     // or subclass, since the callbacks assume this widget type
     
-    assert ( dialog != NULL );
+    assert ( dialog != nullptr );
     assert ( XtIsSubclass ( dialog, xmSelectionBoxWidgetClass ) );
 	
 	// Convert the text string to a compound string and 
@@ -118,7 +118,7 @@ PromptDialogManager::post( char *title,
     XtVaSetValues ( dialog, 
 		    XmNmessageString, xmstr,
 		    XmNdialogTitle, titleStr,
-		    NULL );
+		    nullptr );
     XmStringFree ( xmstr );
     XmStringFree ( titleStr );
     
@@ -196,7 +196,7 @@ PromptDialogManager::post( char *title,
     // Make sure the dialog exists, and that it is an XmMessageBox
     // or subclass, since the callbacks assume this widget type
     
-    assert ( dialog != NULL );
+    assert ( dialog != nullptr );
     assert ( XtIsSubclass ( dialog, xmSelectionBoxWidgetClass ) );
 	
 	// Convert the text string to a compound string and 
@@ -207,7 +207,7 @@ PromptDialogManager::post( char *title,
     XtVaSetValues ( dialog, 
 		    XmNmessageString, xmstr,
 		    XmNdialogTitle, titleStr,
-		    NULL );
+		    nullptr );
     XmStringFree ( xmstr );
     XmStringFree ( titleStr );
     

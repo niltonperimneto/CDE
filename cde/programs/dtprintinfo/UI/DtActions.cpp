@@ -68,7 +68,7 @@ DtAction::DtAction(char *category,
 		   char *actionName,
 	           ActionCallback callbackCB,
 		   void *callback_data)
-	: Button(category, parent, name, PUSH_BUTTON, NULL, NULL, 
+	: Button(category, parent, name, PUSH_BUTTON, nullptr, nullptr, 
                  mnemonic, acceleratorText, accelerator)
 {
    actionReferenceName = strdup(actionName);

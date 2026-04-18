@@ -40,7 +40,7 @@ Pixmap DtDetailsLabel::blank_mask;
 XmString DtDetailsLabel::bottom_label[2];
 
 DtDetailsLabel::DtDetailsLabel(MotifUI *parent)
-	: MotifUI(parent, "Details", NULL)
+	: MotifUI(parent, "Details", nullptr)
 {
    if (first_time)
     {
@@ -58,12 +58,12 @@ DtDetailsLabel::DtDetailsLabel(MotifUI *parent)
       XtArgVal arg;
       Dimension highlight;
       XtVaGetValues(parent->BaseWidget(),
-		    XmNhighlightThickness, &arg, NULL);
+		    XmNhighlightThickness, &arg, nullptr);
       highlight = (Dimension)arg;
       int height = 21 + 2 * highlight;
       blank_pixmap = XCreatePixmap(display, root, 1, height, depth);
       blank_mask = XCreatePixmap(display, root, 1, height, 1);
-      GC gc_mask = XCreateGC(display, blank_mask, 0, NULL);
+      GC gc_mask = XCreateGC(display, blank_mask, 0, nullptr);
       XSetForeground(display, gc_mask, 0);
       XFillRectangle(display, blank_mask, gc_mask, 0, 0, 1, height);
 
@@ -76,7 +76,7 @@ DtDetailsLabel::DtDetailsLabel(MotifUI *parent)
    XmString label_string = StringCreate(MESSAGE(JobNameL));
    Widget p = XtParent(parent->BaseWidget());
    XtArgVal bg;
-   XtVaGetValues(p, XmNbackground, &bg, NULL);
+   XtVaGetValues(p, XmNbackground, &bg, nullptr);
    _w = XtVaCreateManagedWidget("DtDetailsLabel", iconWidgetClass, p,
 				GuiNsuperNode, parent->BaseWidget(),
 				XmNalignment, XmALIGNMENT_END,
@@ -89,11 +89,11 @@ DtDetailsLabel::DtDetailsLabel(MotifUI *parent)
 				XmNlabelPixmap, blank_pixmap,
 				GuiNiconMask, blank_mask,
 				GuiNpixmapPlacement, GuiPIXMAP_LEFT,
-				NULL);
+				nullptr);
    StringFree(top_string);
    StringFree(label_string);
-   XtAddCallback(_w, GuiNsingleClickCallback, &DtDetailsLabel::ClickCB, NULL);
-   XtAddCallback(_w, GuiNdoubleClickCallback, &DtDetailsLabel::ClickCB, NULL);
+   XtAddCallback(_w, GuiNsingleClickCallback, &DtDetailsLabel::ClickCB, nullptr);
+   XtAddCallback(_w, GuiNdoubleClickCallback, &DtDetailsLabel::ClickCB, nullptr);
 }
 
 void DtDetailsLabel::Update(boolean show_only_my_jobs)
@@ -101,10 +101,10 @@ void DtDetailsLabel::Update(boolean show_only_my_jobs)
    int i = 1;
    if (show_only_my_jobs)
       i = 0;
-   XtVaSetValues(_w, GuiNbottomLabelString, bottom_label[i], NULL);
+   XtVaSetValues(_w, GuiNbottomLabelString, bottom_label[i], nullptr);
 }
 
 void DtDetailsLabel::ClickCB(Widget w, XtPointer, XtPointer)
 {
-   XtVaSetValues(w, GuiNselected, False, NULL);
+   XtVaSetValues(w, GuiNselected, False, nullptr);
 }

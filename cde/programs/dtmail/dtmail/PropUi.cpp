@@ -62,8 +62,8 @@ PropUiItem::PropUiItem( Widget		w,
   _uiValueValidator = validator;
   _uiValueValidatorData = validator_data;
   DtMailEnv error;
-  DtMail::Session * d_session = NULL;
-  DtMail::MailRc * m_rc = NULL;
+  DtMail::Session * d_session = nullptr;
+  DtMail::MailRc * m_rc = nullptr;
 
   switch (source)
   {
@@ -74,7 +74,7 @@ PropUiItem::PropUiItem( Widget		w,
       break;
       
     default:
-      prop_source = NULL;
+      prop_source = nullptr;
       fprintf(stderr, "Error in PropUiItem ctor\n");
       break; 
   };
@@ -95,6 +95,6 @@ PropUiItem::~PropUiItem()
 ////////////////////////////////////////////////////////////////
 char * PropUiItem::uiValueIsValid()
 {
-    if (NULL == _uiValueValidator) return NULL;
+    if (nullptr == _uiValueValidator) return nullptr;
     return _uiValueValidator(this, _uiValueValidatorData);
 }

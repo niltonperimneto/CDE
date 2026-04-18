@@ -69,7 +69,7 @@ DtFindSet::DtFindSet(DtMainW *parent, char *name, CallerCallback _callback)
    mainw = parent;
    callback = _callback;
    last_position = -1;
-   helpSystem = NULL;
+   helpSystem = nullptr;
    char *output;
    Invoke *_thread = new Invoke(GET_DIRS, &output);
    char *s, *s1 = output;
@@ -85,7 +85,7 @@ DtFindSet::DtFindSet(DtMainW *parent, char *name, CallerCallback _callback)
       delete [] output;
       struct passwd * pwInfo;
       char *home = getenv("HOME");
-      if (home == NULL || strlen(home) == 0)
+      if (home == nullptr || strlen(home) == 0)
        {
          pwInfo = getpwuid(getuid());
          home = pwInfo->pw_dir;
@@ -107,7 +107,7 @@ DtFindSet::DtFindSet(DtMainW *parent, char *name, CallerCallback _callback)
       *s++ = '\0';
       dirs[i] = strdup(s1);
       filenames[i] = new FileNamesStruct;
-      filenames[i]->icons = NULL;
+      filenames[i]->icons = nullptr;
       filenames[i]->read_it = true;
       filenames[i]->n_icons = 0;
     }
@@ -165,7 +165,7 @@ void DtFindSet::InitComboBox(BaseUI *obj, void * /*data*/)
 boolean DtFindSet::SetVisiblity(boolean flag)
 {
    if (last_position == -1)
-      AddTimeOut(&DtFindSet::InitComboBox, NULL, 1000);
+      AddTimeOut(&DtFindSet::InitComboBox, nullptr, 1000);
    Dialog::SetVisiblity(flag);
    return true;
 }

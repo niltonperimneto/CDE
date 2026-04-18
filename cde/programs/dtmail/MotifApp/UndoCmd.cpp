@@ -78,12 +78,12 @@ void UndoCmd::doit()
 {
     // If there is a current command, undo it
     
-    if ( _lastCmd != NULL )
+    if ( _lastCmd != nullptr )
     {
 	// Undo the previous command
 	
 	_lastCmd->undo();
 	
-	_lastCmd = NULL; // Make sure we can't undo twice
+	_lastCmd = nullptr; // Make sure we can't undo twice
     }
 }

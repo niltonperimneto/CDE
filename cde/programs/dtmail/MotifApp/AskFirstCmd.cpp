@@ -72,9 +72,9 @@ AskFirstCmd::AskFirstCmd ( char *name,
 			   char *label, 
 			   int active ) : Cmd ( name, label, active )
 {
-    _dialog = NULL;
-    _question = NULL;
-    _dialogParentWidget = NULL;
+    _dialog = nullptr;
+    _question = nullptr;
+    _dialogParentWidget = nullptr;
     setQuestion ( CATGETS(catd, 1, 1,
 	   "Do you really want to execute this command?"));
 }

@@ -41,7 +41,7 @@ public: // functions
 
   CC_String() 
   {
-    f_string = NULL;
+    f_string = nullptr;
   }
 
   virtual ~CC_String () { delete [] f_string; }

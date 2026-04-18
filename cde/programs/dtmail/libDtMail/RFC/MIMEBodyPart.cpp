@@ -78,7 +78,7 @@ MIMEBodyPart::MIMEBodyPart(DtMailEnv & error,
 			   const char * start,
 			   const char ** end,
 			   const char * boundary)
-: RFCBodyPart(error, parent, start, 0, NULL)
+: RFCBodyPart(error, parent, start, 0, nullptr)
 {
     error.clear();
 
@@ -98,7 +98,7 @@ MIMEBodyPart::MIMEBodyPart(DtMailEnv & error,
 
 	// Need a bogus envelope for other uses.
 	//
-	_body_env = new RFCEnvelope(error, parent, NULL, 0);
+	_body_env = new RFCEnvelope(error, parent, nullptr, 0);
 	return;
     }
 
@@ -204,7 +204,7 @@ MIMEBodyPart::checksum(DtMailEnv & error)
     }
 
 
-    if (_body_type == NULL) {
+    if (_body_type == nullptr) {
 	getDtType(error);
 	if (error.isSet()) {
 	    return(DtMailCheckUnknown);
@@ -227,7 +227,7 @@ MIMEBodyPart::checksum(DtMailEnv & error)
     //
     char * text_type = DtDtsDataTypeToAttributeValue(_body_type,
 						     DtDTS_DA_IS_TEXT,
-						     NULL);
+						     nullptr);
 
     unsigned char digest[16];
     if (text_type && strcasecmp(text_type, "true") == 0) {
@@ -334,7 +334,7 @@ MIMEBodyPart::getDtType(DtMailEnv & error)
     // don't have any thing to use. If we have several hits, then we have
     // no idea which type is the correct type.
     //
-    if (NULL != types) {
+    if (nullptr != types) {
         if (countTypes(types) == 1) {
 	    // We will use the first name. It may be wrong, but
 	    // it is the best we can do at this point.
@@ -366,14 +366,14 @@ MIMEBodyPart::getDtType(DtMailEnv & error)
     // again using the name "text".
     //
     if ( (0 == strcasecmp(mime_type, "text/plain")) &&
-	 (NULL == type || 0 == strcasecmp(type, "DATA")) )
+	 (nullptr == type || 0 == strcasecmp(type, "DATA")) )
     {
         if (type)
           DtDtsFreeDataType(type);
         type = DtDtsBufferToDataType(_body, _body_decoded_len, "text");
     }
 
-    if (NULL != type)
+    if (nullptr != type)
       _body_type = strdup(type);
     else
       _body_type = strdup("UNKNOWN");
@@ -391,7 +391,7 @@ void
 MIMEBodyPart::loadBody(DtMailEnv & error)
 {
 // For CHARSET
-	char *cs = NULL, *to_cs = NULL, *from_cs = NULL;
+	char *cs = nullptr, *to_cs = nullptr, *from_cs = nullptr;
 
 // There is no reason to clear the error object because it is assumed 
 // that whoever instantiated it, cleared it.
@@ -454,18 +454,18 @@ MIMEBodyPart::loadBody(DtMailEnv & error)
 
 // For CHARSET
 	// Get charset from content-type field
-	char *ret = NULL;
+	char *ret = nullptr;
 	value.clear();
 	_body_env->getHeader(error, "Content-Type", DTM_FALSE, value);
 	if (error.isNotSet()) {
        cs = csFromContentType(value);
-       if ( cs == NULL ) {
+       if ( cs == nullptr ) {
 	      // Random allocation for cs
 		  cs = (char *)calloc(128, sizeof(char));
 		  DtXlateOpToStdLocale(DtLCX_OPER_SETLOCALE,
-			 setlocale(LC_CTYPE, NULL),
-			 NULL,
-			 NULL,
+			 setlocale(LC_CTYPE, nullptr),
+			 nullptr,
+			 nullptr,
 			 &ret);
 		  strcpy(cs, "DEFAULT");
 		  strcat(cs, ".");
@@ -478,9 +478,9 @@ MIMEBodyPart::loadBody(DtMailEnv & error)
 	   // Random allocation for cs
 	   cs = (char *)calloc(128, sizeof(char));
 	   DtXlateOpToStdLocale(DtLCX_OPER_SETLOCALE,
-		 setlocale(LC_CTYPE, NULL),
-		 NULL,
-		 NULL,
+		 setlocale(LC_CTYPE, nullptr),
+		 nullptr,
+		 nullptr,
 		 &ret);
 	   strcpy(cs, "DEFAULT");
 	   strcat(cs, ".");
@@ -493,11 +493,11 @@ MIMEBodyPart::loadBody(DtMailEnv & error)
 	}  // RFC approved and private names are not treated differently.
 
 	// Get iconv name from charset - this is the "from" name.
-    from_cs = NULL;
+    from_cs = nullptr;
     from_cs = csToConvName(cs);
 
 	// Get current locale's iconv name - this is the "to" name.
-	to_cs = NULL;
+	to_cs = nullptr;
 	to_cs = locToConvName();
 
     if ( from_cs && to_cs ) {
@@ -656,7 +656,7 @@ MIMEBodyPart::getDescription(DtMailEnv &)
 // been cleared by the caller and nothing has touched it in this method.
 //    error.clear();
 
-    return(NULL);
+    return(nullptr);
 }
 
 char *
@@ -664,11 +664,11 @@ MIMEBodyPart::getNameHeaderVal(DtMailEnv & error)
 {
     DtMailValueSeq value;
 
-    if (_body_env == NULL) {
+    if (_body_env == nullptr) {
         // No need to clear the error object...it is unchanged from the 
         // state we received it in.
         //error.clear();
-	return(NULL);
+	return(nullptr);
     }
 
     // The current standard seems to be to use the "Content-Disposition"
@@ -677,7 +677,7 @@ MIMEBodyPart::getNameHeaderVal(DtMailEnv & error)
     _body_env->getHeader(error, "Content-Disposition", DTM_FALSE, value);
     if (error.isNotSet()) {
         char *param = parameterValue(value, "filename", DTM_FALSE);
-        if (NULL != param)
+        if (nullptr != param)
 	    return strdup(param);
     }
     error.clear();
@@ -699,7 +699,7 @@ MIMEBodyPart::getNameHeaderVal(DtMailEnv & error)
     _body_env->getHeader(error, "Content-Type", DTM_FALSE, value);
     if (error.isNotSet()) {
         char *param = parameterValue(value, "name", DTM_FALSE);
-        if (NULL != param)
+        if (nullptr != param)
 	    return strdup(param);
     }
     error.clear();
@@ -730,7 +730,7 @@ MIMEBodyPart::getNameHeaderVal(DtMailEnv & error)
 
     // No name for this body part
     //
-    return(NULL);
+    return(nullptr);
 }
 
 char *
@@ -753,7 +753,7 @@ MIMEBodyPart::getName(DtMailEnv & error)
 
     char * pat = DtDtsDataTypeToAttributeValue(_body_type,
 					       "NAME_TEMPLATE",
-					       NULL);
+					       nullptr);
 
     if (pat) {
 	int max_len = strlen(pat) + 20;
@@ -852,7 +852,7 @@ MIMEBodyPart::getBody(DtMailEnv & error)
 	// leave it alone on the chance that loadBody() will someday
 	// return an error condition.
 	if (error.isSet()) {
-	    return(NULL);
+	    return(nullptr);
 	}
     }
 
@@ -917,8 +917,8 @@ MIMEBodyPart::getBody(DtMailEnv & error)
 char *
 MIMEBodyPart::csFromContentType(DtMailValueSeq &value)
 {
-   char *cs_str = NULL;
-   char *val_ptr = NULL;
+   char *cs_str = nullptr;
+   char *val_ptr = nullptr;
    int quoted = 0;
 
    // value[0] should be valid else error would have occurred before
@@ -929,19 +929,19 @@ MIMEBodyPart::csFromContentType(DtMailValueSeq &value)
    // Check to see if Content-Type field specifies text/plain data.
    // If so, look for charset value
    // else, returns value in Content-Type field
-   if ( strstr(val, "text") == NULL ) {
-      if ( strstr(val, "TEXT") == NULL ) {
+   if ( strstr(val, "text") == nullptr ) {
+      if ( strstr(val, "TEXT") == nullptr ) {
 		cs_str = strdup(val);
 		return cs_str;
       }
    } 
    // Get charset value
    val_ptr = const_cast <char *> (strstr(val, "charset="));
-   if ( val_ptr == NULL ) {
+   if ( val_ptr == nullptr ) {
      val_ptr = const_cast <char *> (strstr(val, "CHARSET="));
    }
-   if ( val_ptr == NULL ) {
-	  return NULL;
+   if ( val_ptr == nullptr ) {
+	  return nullptr;
    }
    val_ptr = val_ptr+8;
 
@@ -968,14 +968,14 @@ MIMEBodyPart::parameterValue(
 			const char * parameter,
 			DtMailBoolean isCaseSensitive)
 {
-    char *lasts=NULL;
+    char *lasts=nullptr;
     char *ptok, *vtok;
     char *parm, *val;
     int rtn = 0;
 
     val = strdup(*(value[0]));
     vtok = strrchr(val, ';');
-    while (NULL != vtok)
+    while (nullptr != vtok)
     {
 	*vtok = '\0';
         vtok++;
@@ -991,10 +991,10 @@ MIMEBodyPart::parameterValue(
         if (0 == rtn)
         {
             ptok = strrchr(vtok, '=');
-            if (NULL == ptok)
+            if (nullptr == ptok)
 	    {
 		free(val);
-                return NULL;
+                return nullptr;
 	    }
 
             ptok++;
@@ -1014,5 +1014,5 @@ MIMEBodyPart::parameterValue(
     }
 
     free(val);
-    return NULL;
+    return nullptr;
 }

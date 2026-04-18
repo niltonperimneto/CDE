@@ -62,7 +62,7 @@ getNamedHeader(DtMailEnv		& error,
 	       RFCMessage	* message)
 {
   DtMailValueSeq	  value;
-  char			* results = NULL;
+  char			* results = nullptr;
   RFCEnvelope		* env = (RFCEnvelope *)message->getEnvelope(error);
 
   if (error.isNotSet()) {
@@ -108,7 +108,7 @@ getNamedValueString(const char *string, const char *name)
 {
   int		  	  stringLen = strlen(string);
   int		  	  nameLen = strlen(name);
-  const char		* results = NULL;
+  const char		* results = nullptr;
   char			* stringEnd;
   unsigned int	  offset;
 
@@ -123,7 +123,7 @@ getNamedValueString(const char *string, const char *name)
 	if (*results == '"') {
 	  results++;
 	  stringEnd = const_cast <char *> (strchr(results, '"'));
-	  if (stringEnd != NULL) {
+	  if (stringEnd != nullptr) {
 	    *stringEnd = '\0';
 	  }
 	}
@@ -140,12 +140,12 @@ RFCMailBox::_isPartial(DtMailEnv	& error,
 		       RFCMessage	* message)
 {
   DtMailBoolean		  results = DTM_FALSE;
-  RFCMessage		* messageArray = NULL;
+  RFCMessage		* messageArray = nullptr;
 
   char		* type;
 
-  if (message != NULL
-      && (type = getNamedHeader(error, contentType, message)) != NULL) {
+  if (message != nullptr
+      && (type = getNamedHeader(error, contentType, message)) != nullptr) {
     
     if (error.isNotSet()) {
       if (strncasecmp(type, partial, 15) == 0) {
@@ -165,11 +165,11 @@ RFCMailBox::_isPartial(DtMailEnv	& error,
 	// back together. Total is optional except for the last part
 	// where it is required.
 	//
-	if (newData->number > 0 && newData->id != NULL) {
+	if (newData->number > 0 && newData->id != nullptr) {
 	  _partialList = (_partialData **)realloc(_partialList,
 						  sizeof(_partialData *)
 						   *(_partialListCount+1));
-	  if (_partialList != NULL) {
+	  if (_partialList != nullptr) {
 	    _partialList[_partialListCount] = newData;
 	    _partialListCount++;
 	    results = DTM_TRUE;
@@ -196,9 +196,9 @@ RFCMailBox::_assemblePartial(DtMailEnv	& error,
 
   RFCMessage		* msg = message;
 
-  _partialData		* data = NULL;
+  _partialData		* data = nullptr;
 
-  if (message != NULL) {
+  if (message != nullptr) {
     char		* type = getNamedHeader(error, contentType, message);
 
     //
@@ -214,7 +214,7 @@ RFCMailBox::_assemblePartial(DtMailEnv	& error,
     //
     // Now look for the total for this message-id.
     //
-    if (data != NULL) {
+    if (data != nullptr) {
       for (offset = 0 ; offset < _partialListCount ; offset++) {
 	if (strcasecmp(_partialList[offset]->id, data->id) == 0) {
 	  totalParts = 	_partialList[offset]->total;
@@ -257,12 +257,12 @@ RFCMailBox::_assemblePartial(DtMailEnv	& error,
       char		*messageLength;
 
       for (offset = 0 ; offset < totalParts ; offset++) {
-	if (messages[offset] == NULL) {
+	if (messages[offset] == nullptr) {
 	  break;	// Found a missing part, do not assemble.
 	}
 	messageLength = getNamedHeader(error, "Content-Length",
 				       messages[offset]);
-	if (messageLength == NULL || error.isSet()) {
+	if (messageLength == nullptr || error.isSet()) {
 	  break;	// No way to assemble if we do not know the size.
 	}
 	totalSize += atoi(messageLength);	// Bump the total size.
@@ -314,7 +314,7 @@ RFCMailBox::_assemblePartial(DtMailEnv	& error,
 	DtMailHeaderHandle	  headerHandle;
 	DtMailValueSeq		  headerValue;
 	char			* headerName;
-	const char		* unixFromLine = NULL;
+	const char		* unixFromLine = nullptr;
 
 	unsigned int	  	  duplicateCount;
 	int			  fromLen;
@@ -328,7 +328,7 @@ RFCMailBox::_assemblePartial(DtMailEnv	& error,
 	  headerHandle = env->getFirstHeader(error, &headerName, headerValue);
 
 	  unixFromLine = env->unixFrom(error, fromLen);
-	  if (unixFromLine != NULL) {
+	  if (unixFromLine != nullptr) {
 	    strncat(newMessage, unixFromLine, fromLen);
 	    newMessage[fromLen] = '\0';
 	  }
@@ -355,7 +355,7 @@ RFCMailBox::_assemblePartial(DtMailEnv	& error,
 		  //
 		  // Skip if the first line is a from.
 		  //
-		  if (unixFromLine != NULL && headerNumber == 0) {
+		  if (unixFromLine != nullptr && headerNumber == 0) {
 		    continue;
 		  }
 		  strcat(newMessage, headerName);
@@ -381,7 +381,7 @@ RFCMailBox::_assemblePartial(DtMailEnv	& error,
 	      //
 	      // getNextHeader returns NULL where there are no more.
 	      //
-	    } while(error.isNotSet() && headerHandle != NULL);
+	    } while(error.isNotSet() && headerHandle != nullptr);
 
 	    //
 	    headerValue.clear();
@@ -410,7 +410,7 @@ RFCMailBox::_assemblePartial(DtMailEnv	& error,
 	    //
 	    if (error.isNotSet()) {
 	      bp->getContents(error, &contents, &length,
-			      NULL, NULL, NULL, NULL);
+			      nullptr, nullptr, nullptr, nullptr);
 
 	      if (error.isNotSet()) {
 		//
@@ -422,9 +422,9 @@ RFCMailBox::_assemblePartial(DtMailEnv	& error,
 		embHeader1St = (const char *)contents;
 		endHeader = const_cast <char *> (strstr((const char *)contents, "\n\n"));
 
-		if (endHeader != NULL) {
+		if (endHeader != nullptr) {
 		  RFCEnvelope	embEnv(error,
-				       (DtMail::Message *)NULL,
+				       (DtMail::Message *)nullptr,
 				       (const char *)contents,
 				       (int)((unsigned long)endHeader
 					     - (unsigned long)contents));
@@ -477,7 +477,7 @@ RFCMailBox::_assemblePartial(DtMailEnv	& error,
 			//
 			// getNextHeader returns NULL where there are no more.
 			//
-		      } while(error.isNotSet() && headerHandle != NULL);
+		      } while(error.isNotSet() && headerHandle != nullptr);
 		      //
 		      headerValue.clear();
 		      strcat(newMessage, "\n");	// End of headers.
@@ -510,7 +510,7 @@ RFCMailBox::_assemblePartial(DtMailEnv	& error,
 		  }
 
 		  bp->getContents(error, &contents, &length,
-				  NULL, NULL, NULL, NULL);
+				  nullptr, nullptr, nullptr, nullptr);
 		  if (error.isSet()) {
 		    break;
 		  }
@@ -542,14 +542,14 @@ RFCMailBox::_assemblePartial(DtMailEnv	& error,
 		  // we just marked for delete !!!!!
 		  //
 
-		  messages[offset] = NULL;
+		  messages[offset] = nullptr;
 		}
 	      }
 	    }
 	  }
 	}
       }
-      if (messages != NULL) {
+      if (messages != nullptr) {
 	free(messages);
       }
     }

@@ -76,9 +76,9 @@ FindDialog::clear()
   unsigned int		offset;
 
   //
-  if (_text_labels != NULL) {
+  if (_text_labels != nullptr) {
     for (offset = 0; offset < _num_text_fields; offset++) {
-      if (_text_labels[offset] != NULL) {
+      if (_text_labels[offset] != nullptr) {
 	free(_text_labels[offset]);
       }
     }
@@ -86,9 +86,9 @@ FindDialog::clear()
   }
 
   //
-  if (_text_values != NULL) {
+  if (_text_values != nullptr) {
     for (offset = 0; offset < _num_text_fields; offset++) {
-      if (_text_values[offset] != NULL) {
+      if (_text_values[offset] != nullptr) {
 	free(_text_values[offset]);
       }
     }
@@ -96,9 +96,9 @@ FindDialog::clear()
   }
 
   //
-  if (_text_abstract_name != NULL) {
+  if (_text_abstract_name != nullptr) {
     for (offset = 0; offset < _num_text_fields; offset++) {
-      if (_text_abstract_name[offset] != NULL) {
+      if (_text_abstract_name[offset] != nullptr) {
 	free(_text_abstract_name[offset]);
       }
     }
@@ -107,20 +107,20 @@ FindDialog::clear()
 
 
   //
-  if (_buttonData != NULL) {
+  if (_buttonData != nullptr) {
     for (offset = 0; offset < _num_buttons; offset++) {
-      if (_buttonData[offset].label != NULL) {
+      if (_buttonData[offset].label != nullptr) {
 	free(_buttonData[offset].label);
       }
     }
     delete _buttonData;
   }
 
-  if (_text_fields != NULL) {
+  if (_text_fields != nullptr) {
     delete _text_fields;
   }
 
-  if (_text_names != NULL) {
+  if (_text_names != nullptr) {
     delete _text_names;
   }
 }
@@ -133,7 +133,7 @@ FindDialog::FindDialog(RoamMenuWindow *parent) : Dialog("find", parent)
   _roamWindow = parent;
   _num_text_fields = 4;
   _num_buttons = 5;
-  _status_text = NULL;
+  _status_text = nullptr;
 
   //
   // Allocate storage for labels, widgets, and data.
@@ -214,7 +214,7 @@ FindDialog::setStatus(const char * str)
  
     XtVaSetValues(_status_text,
                   XmNlabelString, label,
-                  NULL);
+                  nullptr);
  
     XmUpdateDisplay(baseWidget());
     XmStringFree(label);
@@ -249,7 +249,7 @@ FindDialog::createWorkArea(Widget dialog)
 	/*
 	XtVaSetValues (dialog,
 			XmNdialogStyle,	XmDIALOG_FULL_APPLICATION_MODAL,
-			NULL);
+			nullptr);
 	*/
 
   	printHelpId("dialog", dialog);
@@ -262,7 +262,7 @@ FindDialog::createWorkArea(Widget dialog)
 				dialog,
 				XmNsashWidth,	1,
 				XmNsashHeight,	1,
-				NULL);
+				nullptr);
 
 	printHelpId ("fd_pane", fd_pane);
 	// add help callback
@@ -272,7 +272,7 @@ FindDialog::createWorkArea(Widget dialog)
 				xmFormWidgetClass,
 				fd_pane,
 				XmNfractionBase,	100,
-				NULL);
+				nullptr);
 
 	printHelpId ("fd_form", fd_form);
 	// add help callback
@@ -293,7 +293,7 @@ FindDialog::createWorkArea(Widget dialog)
 				XmNisAligned,		True,
 				XmNentryAlignment,	XmALIGNMENT_END,
 				XmNentryVerticalAlignment,	XmALIGNMENT_CENTER,
-				NULL); 
+				nullptr); 
 	printHelpId ("_fd_labelbox", _fd_labelbox);
 	// add help callback
 	// XtAddCallback (_fd_labelbox, XmNhelpCallback, HelpCB, helpId);
@@ -308,7 +308,7 @@ FindDialog::createWorkArea(Widget dialog)
 					_text_labels [_fd_i],
 					xmLabelGadgetClass,
 					_fd_labelbox,
-					NULL);
+					nullptr);
 
 		printHelpId ("_fd_labels [%s]", _fd_labels [_fd_i]);
 		// naturally, this is bogus --must be fixed to return proper label
@@ -322,7 +322,7 @@ FindDialog::createWorkArea(Widget dialog)
 					_text_names [_fd_i],
 					xmTextFieldWidgetClass,
 					_fd_labelbox,
-					NULL);
+					nullptr);
 		printHelpId ("_text_fields [%s]", _text_fields [_fd_i]);
 		// naturally, this is bogus --must be fixed to return proper label
 		// add help callback
@@ -342,8 +342,8 @@ FindDialog::createWorkArea(Widget dialog)
 			       0,		// Initial selection
 			       directionCallback,
 				//NULL,
-			       XmVaRADIOBUTTON, strForward, NULL, NULL, NULL,
-			       XmVaRADIOBUTTON, strBackward, NULL, NULL, NULL,
+			       XmVaRADIOBUTTON, strForward, nullptr, nullptr, nullptr,
+			       XmVaRADIOBUTTON, strBackward, nullptr, nullptr, nullptr,
 			       XmNuserData,	this,
 				XmNsensitive,	True,
 				XmNtopAttachment,	XmATTACH_WIDGET,
@@ -351,7 +351,7 @@ FindDialog::createWorkArea(Widget dialog)
 				XmNorientation,	XmHORIZONTAL,
 				XmNleftAttachment,	XmATTACH_POSITION,
 				XmNleftPosition,	33,
-			       NULL);
+			       nullptr);
 	 printHelpId ("fd_direction", fd_direction);
 	// add help callback
 	//XtAddCallback (fd_direction, XmNhelpCallback, HelpCB, helpId);
@@ -372,7 +372,7 @@ FindDialog::createWorkArea(Widget dialog)
 				 XmNleftAttachment,	XmATTACH_FORM,
 				 XmNrightAttachment,	XmATTACH_FORM,
 				 XmNfractionBase, TIGHTNESS * _num_buttons-1,
-				 NULL);
+				 nullptr);
 	 printHelpId ("actionArea", fd_action);
 	// add help callback
 	//XtAddCallback (fd_action, XmNhelpCallback, HelpCB, helpId);
@@ -394,14 +394,14 @@ FindDialog::createWorkArea(Widget dialog)
 				     TIGHTNESS * offset + (TIGHTNESS - 1),
 
 				     XmNshowAsDefault,	offset == 0,
-				     NULL);
+				     nullptr);
 
 	// again, bogus -- doesn't each one need a unique tag?
 	 printHelpId ("widget", widget);
 	// add help callback
 	//XtAddCallback (widget, XmNhelpCallback, HelpCB, helpId);
 
-    if (_buttonData[offset].callback != NULL) {
+    if (_buttonData[offset].callback != nullptr) {
       XtAddCallback(widget, XmNactivateCallback,
 		    _buttonData[offset].callback,
 		    _buttonData[offset].data);
@@ -412,14 +412,14 @@ FindDialog::createWorkArea(Widget dialog)
       Dimension		height;
       Dimension		margin;
 
-      XtVaGetValues(fd_action, XmNmarginHeight, &margin, NULL);
-      XtVaGetValues(widget, XmNheight, &height, NULL);
+      XtVaGetValues(fd_action, XmNmarginHeight, &margin, nullptr);
+      XtVaGetValues(widget, XmNheight, &height, nullptr);
       height +=2 * margin;
       XtVaSetValues(fd_action,
 		    XmNdefaultButton,	widget,
 		    XmNpaneMaximum,	height,
 		    XmNpaneMinimum,	height,
-		    NULL);
+		    nullptr);
 
     }
   }
@@ -429,17 +429,17 @@ FindDialog::createWorkArea(Widget dialog)
                                            XmNrightAttachment, XmATTACH_FORM,
                                            XmNleftAttachment, XmATTACH_FORM,
                                            XmNalignment, XmALIGNMENT_BEGINNING,
-                                           NULL);
+                                           nullptr);
 	    
   Dimension height;
   XtWidgetGeometry size;
 
   size.request_mode = CWHeight;
-  XtQueryGeometry(_status_text, NULL, &size);
+  XtQueryGeometry(_status_text, nullptr, &size);
   XtVaSetValues(_status_text,
 		XmNpaneMaximum, size.height,
 		XmNpaneMinimum, size.height,
-		NULL);
+		nullptr);
  
   clearStatus();
 
@@ -452,11 +452,11 @@ FindDialog::createWorkArea(Widget dialog)
 
   // Make sure get the height of the dialog after it has been
   // managed.
-  XtVaGetValues(dialog, XmNheight, &height, NULL);
+  XtVaGetValues(dialog, XmNheight, &height, nullptr);
   XtVaSetValues(dialog, 
 		XmNmappedWhenManaged, True,
 		XmNminHeight, height,
-		NULL);
+		nullptr);
   XtRealizeWidget(dialog);
 
   return (fd_pane);
@@ -480,7 +480,7 @@ FindDialog::findMatching(Boolean findAll)
 
   setStatus(CATGETS(DT_catd, 1, 231, "Searching..."));
   busyCursor();
-  theRoamApp.busyAllWindows(NULL);
+  theRoamApp.busyAllWindows(nullptr);
 
   //
   // Get the active list.
@@ -500,7 +500,7 @@ FindDialog::findMatching(Boolean findAll)
     //
     // A pointer to the currently interesting message.
     //
-    DtMailMessageHandle	  currentHandle = NULL;
+    DtMailMessageHandle	  currentHandle = nullptr;
 
     //
     // The offset of the currentHandle in the MsgScrollingList.
@@ -523,7 +523,7 @@ FindDialog::findMatching(Boolean findAll)
     //
     // Up to all of them can match, allocate and clear the list.
     //
-    DtMailMessageHandle	* matchList = NULL;
+    DtMailMessageHandle	* matchList = nullptr;
     if (findAll) {
       matchList = new DtMailMessageHandle[numberMessages+1];
     }
@@ -631,7 +631,7 @@ FindDialog::findMatching(Boolean findAll)
 
       // Clean up.
       delete matchList;
-      matchList = NULL;
+      matchList = nullptr;
     }
   }
 
@@ -663,7 +663,7 @@ FindDialog::compareMessage(DtMailMessageHandle	  handle)
   // Check for something to do.
   //
   for (offset = 0; offset < _num_text_fields; offset++) {
-    if (_text_values[offset] != NULL) {
+    if (_text_values[offset] != nullptr) {
       break;
     }
   }
@@ -673,7 +673,7 @@ FindDialog::compareMessage(DtMailMessageHandle	  handle)
 	return TRUE;
   }
 
-  if (offset < _num_text_fields && handle != NULL) {
+  if (offset < _num_text_fields && handle != nullptr) {
 
     // TODO - CHECK ERROR!!!
     DtMailEnv		error;
@@ -695,8 +695,8 @@ FindDialog::compareMessage(DtMailMessageHandle	  handle)
     DtMailValueSeq	  header;
 
     for (offset = 0; offset < _num_text_fields; offset++) {
-      if (_text_values[offset] != NULL) {
-	if (_text_abstract_name[offset] != NULL) {
+      if (_text_values[offset] != nullptr) {
+	if (_text_abstract_name[offset] != nullptr) {
 	  envelope->getHeader(error, _text_abstract_name[offset],
 			      DTM_TRUE, header);
 	  found = TRUE;
@@ -737,7 +737,7 @@ FindDialog::compareMessage(DtMailMessageHandle	  handle)
 const char	*
 FindDialog::strcasestr(const char *str, const char *toFind)
 {
-  const char	*result = NULL;		// Default to not found.
+  const char	*result = nullptr;		// Default to not found.
 
   if (str && toFind) {		// Sanity check
     int	offset = 0;
@@ -776,7 +776,7 @@ FindDialog::compareHeader(DtMailEnv		& error,
   error.clear();
 
   while(headerOffset >= 0) {
-    if ((strcasestr(*(header[headerOffset]), cmpToString)) != NULL) {
+    if ((strcasestr(*(header[headerOffset]), cmpToString)) != nullptr) {
       return(TRUE);
     }
     headerOffset--;
@@ -793,13 +793,13 @@ FindDialog::getAllFields()
   unsigned int		offset;
 
   for (offset = 0; offset < _num_text_fields; offset++) {
-    if (_text_fields[offset] != NULL) {
+    if (_text_fields[offset] != nullptr) {
       _text_values[offset] = XmTextFieldGetString(_text_fields[offset]);
 
       // Ignore zero length strings.
-      if (_text_values[offset] != NULL) {
+      if (_text_values[offset] != nullptr) {
 	if (strlen(_text_values[offset]) == 0) {
-	  _text_values[offset] = NULL;
+	  _text_values[offset] = nullptr;
 	}
       }
     }
@@ -840,7 +840,7 @@ FindDialog::directionCallback(Widget	widget,
   FindDialog	*find; 
   
   // Client data is actually on the @!$?@* parent, not the toggle item
-  XtVaGetValues(XtParent(widget), XmNuserData, &find, NULL);
+  XtVaGetValues(XtParent(widget), XmNuserData, &find, nullptr);
 
   if (which == 0) {
     find->setSearchForward(TRUE);
@@ -885,7 +885,7 @@ FindDialog::clearCallback(Widget	/*button*/,
   unsigned int		offset;
 
   for (offset = 0; offset < findData->_num_text_fields; offset++) {
-    if (findData->_text_fields[offset] != NULL) {
+    if (findData->_text_fields[offset] != nullptr) {
       XmTextFieldSetString(findData->_text_fields[offset], "");
     }
   }

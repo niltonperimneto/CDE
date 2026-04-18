@@ -82,9 +82,9 @@ MsgScrollingList::MsgScrollingList(
     _selected_item_position=-1;
     _displayed_item_position=-1;
     _selection_on = FALSE;
-    _xmstr_collector = NULL;
-    _xtarg_collector = NULL;
-    _selected_items = NULL;
+    _xmstr_collector = nullptr;
+    _xtarg_collector = nullptr;
+    _selected_items = nullptr;
     _sorter = new Sort ();
 
     XtAddCallback( _w,
@@ -113,13 +113,13 @@ MsgScrollingList::MsgScrollingList(
     DtMail::MailRc * mailrc = d_session->mailRc(mail_error);
 
     if (mailrc) {
-    	const char * value = NULL;
+    	const char * value = nullptr;
     	mailrc->getValue(mail_error, "showto", &value);
 	if (mail_error.isNotSet())
 	  _header_info.number_of_names = 5;
     	else 
 	  _header_info.number_of_names = 4;
-	if (NULL != value)
+	if (nullptr != value)
 	  free((void*) value);
     }
     else
@@ -132,11 +132,11 @@ MsgScrollingList::MsgScrollingList(
 
     _header_info.header_name = new (char* [5]);
 
-    _header_info.header_name[0] = NULL;
-    _header_info.header_name[1] = NULL;
-    _header_info.header_name[2] = NULL;
-    _header_info.header_name[3] = NULL;
-    _header_info.header_name[4] = NULL;
+    _header_info.header_name[0] = nullptr;
+    _header_info.header_name[1] = nullptr;
+    _header_info.header_name[2] = nullptr;
+    _header_info.header_name[3] = nullptr;
+    _header_info.header_name[4] = nullptr;
 
     _header_info.header_name[0] = strdup(DtMailMessageSender);
     _header_info.header_name[1] = strdup(DtMailMessageReceivedTime);
@@ -155,7 +155,7 @@ MsgScrollingList::~MsgScrollingList()
         if (_header_info.header_name[i])
 	{
             free(_header_info.header_name[i]);
-            _header_info.header_name[i] = NULL;
+            _header_info.header_name[i] = nullptr;
         }
     }
     delete _header_info.header_name;
@@ -193,7 +193,7 @@ MsgScrollingList::items(
     XtVaSetValues( _w,
 		   XmNitems, items,
 		   XmNitemCount, count,
-		   NULL );
+		   nullptr );
 }
 
 #ifdef DEAD_WOOD
@@ -228,7 +228,7 @@ MsgScrollingList::select_next_item()
 
     XtVaGetValues( _w,
 		   XmNitemCount, &num_msgs,
-		   NULL );
+		   nullptr );
     
     _selected_item_position = _displayed_item_position + 1;
 
@@ -236,7 +236,7 @@ MsgScrollingList::select_next_item()
 	_selected_item_position > 0 ) {
 
 	tmpMS = get_message_struct(_selected_item_position);
-	if (tmpMS == NULL) {
+	if (tmpMS == nullptr) {
 	    return;
 	}
 	else {
@@ -271,7 +271,7 @@ MsgScrollingList::select_prev_item()
 
     XtVaGetValues( _w,
 		   XmNitemCount, &num_msgs,
-		   NULL );
+		   nullptr );
     
     if( _displayed_item_position != 1 )
 	_selected_item_position = _displayed_item_position - 1 ;
@@ -280,7 +280,7 @@ MsgScrollingList::select_prev_item()
     
     if (_selected_item_position >= 1) {
 	tmpMS = get_message_struct(_selected_item_position);
-	if (tmpMS == NULL) {
+	if (tmpMS == nullptr) {
 	    return;
 	}
 	else {
@@ -308,7 +308,7 @@ MsgScrollingList::msgno(
 		     ) 
 { 
     if (index <= 0) {
-	return(NULL);
+	return(nullptr);
     }
     else {
 	return _msgs->at(index-1)->message_handle; 
@@ -321,7 +321,7 @@ MsgScrollingList::get_message_struct(
 				 ) 
 { 
     if (index <= 0) {
-	return(NULL);
+	return(nullptr);
     }
     else {
 	return(_msgs->at(index-1));
@@ -449,7 +449,7 @@ MsgScrollingList::load_headers(
     // Allocate memory for the XmString array and initialize it.
 
     int visible;
-    XtVaGetValues(_w, XmNvisibleItemCount, &visible, NULL);
+    XtVaGetValues(_w, XmNvisibleItemCount, &visible, nullptr);
 
     // Retrieve the message_handles, and from them their headers.
     // Create an XmString and toss it into the XmStrCollector. 
@@ -536,13 +536,13 @@ MsgScrollingList::load_headers(
     if (_selected_items)
     {
 	XmStringFree (_selected_items);
-	_selected_items = NULL;
+	_selected_items = nullptr;
     }
 
     delete _xtarg_collector;
     delete _xmstr_collector;
-    _xtarg_collector = NULL;
-    _xmstr_collector = NULL;
+    _xtarg_collector = nullptr;
+    _xmstr_collector = nullptr;
 
     return(num_items);
 }
@@ -585,7 +585,7 @@ MsgScrollingList::load_headers(
 
     // Allocate memory for the XmString array and initialize it.
 
-    XtVaGetValues(_w, XmNvisibleItemCount, &num_items, NULL);
+    XtVaGetValues(_w, XmNvisibleItemCount, &num_items, nullptr);
 
     MsgStruct *ms;
 
@@ -646,13 +646,13 @@ MsgScrollingList::load_headers(
     if (_selected_items)
     {
 	XmStringFree (_selected_items);
-	_selected_items = NULL;
+	_selected_items = nullptr;
     }
 
     delete _xtarg_collector;
     delete _xmstr_collector;
-    _xtarg_collector = NULL;
-    _xmstr_collector = NULL;
+    _xtarg_collector = nullptr;
+    _xmstr_collector = nullptr;
 }
 
 void MsgScrollingList::do_list_vis_adjustment()
@@ -665,10 +665,10 @@ void MsgScrollingList::do_list_vis_adjustment()
     int cItmCnt, pItmCnt, sItmCnt;
     int cFocItm, cTopItm, cBotItm, cInvItm;
  
-    XtVaGetValues(list, XmNvisibleItemCount, &numItems, NULL);
-    XtVaGetValues(list, XmNitemCount, &cItmCnt, NULL);
-    XtVaGetValues(list, XmNselectedItemCount, &sItmCnt, NULL);
-    XtVaGetValues(list, XmNtopItemPosition, &cTopItm, NULL);
+    XtVaGetValues(list, XmNvisibleItemCount, &numItems, nullptr);
+    XtVaGetValues(list, XmNitemCount, &cItmCnt, nullptr);
+    XtVaGetValues(list, XmNselectedItemCount, &sItmCnt, nullptr);
+    XtVaGetValues(list, XmNtopItemPosition, &cTopItm, nullptr);
     pItmCnt = cItmCnt - numNew;
  
     cBotItm = cTopItm + numItems - 1; //[cTopItm...cBotItm is our window
@@ -738,7 +738,7 @@ MsgScrollingList::deleteSelected(Boolean silent)
     // Initialize the mail_error.
     mail_error.clear();
 
-    XtVaGetValues( _w, XmNitemCount, &num_msgs, NULL );
+    XtVaGetValues( _w, XmNitemCount, &num_msgs, nullptr );
     any_selected = XmListGetSelectedPos(_w, &position_list, &position_count);
     if (!any_selected) return;
 
@@ -851,7 +851,7 @@ MsgScrollingList::deleteSelected(Boolean silent)
     {
 	XmListSelectPos(_w, _selected_item_position, FALSE);
 	tmpMS = this->get_message_struct(_selected_item_position);
-	if (tmpMS == NULL)
+	if (tmpMS == nullptr)
 	{
 	    free(position_list);
 	    return;
@@ -891,7 +891,7 @@ MsgScrollingList::deleteSelected(Boolean silent)
 	delete [] status_message;
     }
 
-    updateListItems(-1, TRUE, NULL);
+    updateListItems(-1, TRUE, nullptr);
     display_message_summary();
 
     XtFree((char*) position_list);
@@ -950,7 +950,7 @@ MsgScrollingList::copySelected(
 	display_no_message();
 	if (! silent)
 	{
-            char * helpId = NULL;
+            char * helpId = nullptr;
 	    DtMailGenDialog *dialog = _parent->genDialog();
 
 	    dialog->setToErrorDialog(
@@ -984,18 +984,18 @@ MsgScrollingList::copySelected(
 	target = theRoamApp.session()->open(mail_error,
 					path,
 					copyCallback,
-					NULL,
+					nullptr,
 					DTM_TRUE,  
 					DTM_FALSE,
 					DTM_FALSE);
 	free(newdestname);
 	free(path);
-	newdestname = NULL;
+	newdestname = nullptr;
     } else {
 	target = theRoamApp.session()->open(mail_error,
 					destname,
 					copyCallback,
-					NULL,
+					nullptr,
 					DTM_TRUE,  
 					DTM_FALSE,
 					DTM_FALSE);
@@ -1132,7 +1132,7 @@ MsgScrollingList::selected()
 
     // If nothing selected, return
 
-    if (!any_selected) return NULL;
+    if (!any_selected) return nullptr;
 
     //  Allocate memory for position_count number of messageStructs
     // in MsgHndArray.
@@ -1179,12 +1179,12 @@ MsgScrollingList::show_with_attachments(DtMail::Message * msg)
       return DTM_TRUE;
 
     bp = msg->getFirstBodyPart(error);
-    bp->getContents(error, NULL, NULL, &type, NULL, NULL, NULL);
-    if (NULL != type)
+    bp->getContents(error, nullptr, nullptr, &type, nullptr, nullptr, nullptr);
+    if (nullptr != type)
     {
 	char *attr;
 
-	attr = DtDtsDataTypeToAttributeValue(type, DtDTS_DA_IS_TEXT, NULL);
+	attr = DtDtsDataTypeToAttributeValue(type, DtDTS_DA_IS_TEXT, nullptr);
 	if (attr && strcasecmp(attr, "true") != 0)
 	  has_attachments = DTM_TRUE;
 	
@@ -1295,7 +1295,7 @@ MsgScrollingList::display_message(
 
 	XtVaGetValues(_w,
 	    XmNselectedItemCount, &num_selected,
-	    NULL);
+	    nullptr);
 
 	if (num_selected > 1) {
 	    // Change to MULTIPLE_SELECT.
@@ -1304,7 +1304,7 @@ MsgScrollingList::display_message(
 	    XtVaSetValues (_w,
 		XmNselectionPolicy, XmMULTIPLE_SELECT,
 		XmNselectionMode,   XmNORMAL_MODE,
-		NULL);
+		nullptr);
 	  
 	   // When loading mail headers, we need to make sure that
 	   // the XmList resources are all set at the same time to
@@ -1333,7 +1333,7 @@ MsgScrollingList::display_message(
 	        XtVaSetValues (_w,
 		    XmNselectionPolicy, XmEXTENDED_SELECT,
 		    XmNselectionMode,   XmNORMAL_MODE,
-		    NULL);
+		    nullptr);
 	    }
 	}
 	else {
@@ -1508,7 +1508,7 @@ MsgScrollingList::select_all_and_display_last(
 
     if (this->get_selected_item() == 0) return;
 
-    XtVaSetValues (_w, XmNselectionPolicy, XmMULTIPLE_SELECT, NULL);
+    XtVaSetValues (_w, XmNselectionPolicy, XmMULTIPLE_SELECT, nullptr);
     //
     // We have to go to the end of the list and go backwards.
     // We display the last one, and select the rest.
@@ -1517,7 +1517,7 @@ MsgScrollingList::select_all_and_display_last(
     //
  
     XmListDeselectAllItems(baseWidget());
-    XtVaGetValues(baseWidget(), XmNitemCount, &num_items, NULL);
+    XtVaGetValues(baseWidget(), XmNitemCount, &num_items, nullptr);
  
     for (item_pos = 1; item_pos < num_items; item_pos++) {
         XmListSelectPos(baseWidget(), item_pos, FALSE);
@@ -1526,8 +1526,8 @@ MsgScrollingList::select_all_and_display_last(
     // Invoke the selection callback on the last item.
     display_and_select_message(error, 
 				msgHandles->at(item_pos-1)->message_handle);
-    XtVaSetValues (_w, XmNselectionPolicy, XmEXTENDED_SELECT, NULL);
-    XtVaSetValues (_w, XmNselectionMode, XmNORMAL_MODE, NULL);
+    XtVaSetValues (_w, XmNselectionPolicy, XmEXTENDED_SELECT, nullptr);
+    XtVaSetValues (_w, XmNselectionMode, XmNORMAL_MODE, nullptr);
 }
 
 void
@@ -1542,7 +1542,7 @@ MsgScrollingList::select_all_and_display_last(
 
   error.clear();
 
-  XtVaSetValues (_w, XmNselectionPolicy, XmMULTIPLE_SELECT, NULL);
+  XtVaSetValues (_w, XmNselectionPolicy, XmMULTIPLE_SELECT, nullptr);
   //
   // We have to go to the end of the list and go backwards.
   // We display the last one, and select the rest.
@@ -1570,8 +1570,8 @@ MsgScrollingList::select_all_and_display_last(
       XmListSelectPos(_w, item_pos + 1, FALSE);
     }
   }
-  XtVaSetValues (_w, XmNselectionPolicy, XmEXTENDED_SELECT, NULL);
-  XtVaSetValues (_w, XmNselectionMode, XmNORMAL_MODE, NULL);
+  XtVaSetValues (_w, XmNselectionPolicy, XmEXTENDED_SELECT, nullptr);
+  XtVaSetValues (_w, XmNselectionMode, XmNORMAL_MODE, nullptr);
   return;
 }
 
@@ -1617,7 +1617,7 @@ MsgScrollingList::viewInSeparateWindow(DtMailEnv &mail_error)
     DtMailEnv		 error;
     DtMail::Session	*d_session = theRoamApp.session()->session();
     DtMail::MailRc	*mail_rc = d_session->mailRc(error);
-    const char		*value = NULL;  
+    const char		*value = nullptr;  
  
     // If no message selected, return.
     if (this->get_selected_item() <= 0) return;
@@ -1629,12 +1629,12 @@ MsgScrollingList::viewInSeparateWindow(DtMailEnv &mail_error)
     for (int a_msg_num = 0; a_msg_num < selected_msgs->length(); a_msg_num++)
     {
 	tmpMS = selected_msgs->at(a_msg_num);
-	if (tmpMS == NULL) return;
+	if (tmpMS == nullptr) return;
 	   
 	msgHandle = tmpMS->message_handle;
 	newview = parent()->ifViewExists(msgHandle);
 	   
-	if (newview != NULL)
+	if (newview != nullptr)
 	{
             /* NL_COMMENT
 	     * The current mail message selected is already displayed in a
@@ -1763,7 +1763,7 @@ MsgScrollingList::defaultAction(Widget, XtPointer, XmListCallbackStruct *cbs)
    _selected_item_position = cbs->item_position;
 
    tmpMS = get_message_struct(_selected_item_position);
-   if (tmpMS == NULL)
+   if (tmpMS == nullptr)
      return;
    else
    {
@@ -1934,7 +1934,7 @@ MsgScrollingList::extended_selection(
    _selected_item_position = position;
 
    tmpMS = get_message_struct(_selected_item_position);
-   if (tmpMS == NULL) {
+   if (tmpMS == nullptr) {
        return;
     }
    else {
@@ -1992,7 +1992,7 @@ MsgScrollingList::scroll_to_position(
         XtVaGetValues( _w,
 		   XmNtopItemPosition, &top,
 		   XmNvisibleItemCount, &visible,
-		   NULL );
+		   nullptr );
 	total = _xmstr_collector->GetNumItems();
     }
     else
@@ -2001,7 +2001,7 @@ MsgScrollingList::scroll_to_position(
 		   XmNtopItemPosition, &top,
 		   XmNvisibleItemCount, &visible,
 		   XmNitemCount, &total,
-		   NULL );
+		   nullptr );
     }
 
     if (( position < top ) || ( position >= top+visible )) {
@@ -2071,7 +2071,7 @@ MsgScrollingList::undelete_messages(MsgHndArray *tmpMHlist)
     
     XmListDeselectAllItems(_w);
 
-    XtVaSetValues (_w, XmNselectionPolicy, XmMULTIPLE_SELECT, NULL);
+    XtVaSetValues (_w, XmNselectionPolicy, XmMULTIPLE_SELECT, nullptr);
 
     for (i = 0; i < num_entries; i++)
     {
@@ -2135,8 +2135,8 @@ MsgScrollingList::undelete_messages(MsgHndArray *tmpMHlist)
     // Display this message and select it.
 
     this->display_message(mail_error, tmpMS->message_handle);
-    XtVaSetValues (_w, XmNselectionPolicy, XmEXTENDED_SELECT, NULL);
-    XtVaSetValues (_w, XmNselectionMode, XmNORMAL_MODE, NULL);
+    XtVaSetValues (_w, XmNselectionPolicy, XmEXTENDED_SELECT, nullptr);
+    XtVaSetValues (_w, XmNselectionMode, XmNORMAL_MODE, nullptr);
 
     if (mail_error.isSet()) return;
 
@@ -2257,7 +2257,7 @@ MsgScrollingList::undelete_last_deleted()
     this->display_and_select_message(mail_error, tmpMS->message_handle);
     if (mail_error.isSet()) return;
 
-    updateListItems(-1, TRUE, NULL);
+    updateListItems(-1, TRUE, nullptr);
     display_message_summary();
 }
 
@@ -2281,7 +2281,7 @@ MsgScrollingList::checkDisplayProp(void)
     mbox = parent()->mailbox();
     mailrc = mbox->session()->mailRc(mail_error);
 
-    const char * value = NULL;
+    const char * value = nullptr;
     mailrc->getValue(mail_error, "showto", &value);
     if (mail_error.isNotSet()) {
 	// showto is set...if number_of_names is 4 then they
@@ -2296,7 +2296,7 @@ MsgScrollingList::checkDisplayProp(void)
 	_header_info.number_of_names = 4;
 	state_changed = TRUE;
     }
-    if (NULL != value)
+    if (nullptr != value)
       free((void*) value);
 
     // Here we need to adjust the header labels to maintain them left
@@ -2307,12 +2307,12 @@ MsgScrollingList::checkDisplayProp(void)
     // reverse logic. ugly...
     DtMailBoolean use_msg_numbers;
 
-    value = NULL;
+    value = nullptr;
     mail_error.clear();
     mailrc->getValue(mail_error, "showmsgnum", &value);
 
     use_msg_numbers = (mail_error.isNotSet()) ? DTM_TRUE : DTM_FALSE;
-    if (NULL != value) free((void*) value);
+    if (nullptr != value) free((void*) value);
 
     if (use_msg_numbers != _numbered) 
     {
@@ -2386,10 +2386,10 @@ MsgScrollingList::updateListItems(int current,
 				  Boolean renumber_only,
 				  MsgHndArray *selected_messages)
 {
-    DtMail::MailBox * mbox = NULL;
+    DtMail::MailBox * mbox = nullptr;
     DtMail::MailRc * mailrc;
     DtMailEnv mail_error;
-    const char * value = NULL;
+    const char * value = nullptr;
     int		nmsgs;
 
     mbox = parent()->mailbox();
@@ -2402,7 +2402,7 @@ MsgScrollingList::updateListItems(int current,
     if (mail_error.isSet() && renumber_only) return;
 
     if (selected_messages)
-      XtVaSetValues (_w, XmNselectionPolicy, XmMULTIPLE_SELECT, NULL);
+      XtVaSetValues (_w, XmNselectionPolicy, XmMULTIPLE_SELECT, nullptr);
 
     //
     // We need to build a new list of strings to display
@@ -2436,7 +2436,7 @@ MsgScrollingList::updateListItems(int current,
 	  fprintf(stderr,
 	   "dtmail: getMessageSummary: Couldn't get summary for msg # %d\n", m);
 
-	if (msg == NULL)
+	if (msg == nullptr)
 	{
 		// Error
 		;
@@ -2479,13 +2479,13 @@ MsgScrollingList::updateListItems(int current,
 		  XmListSelectPos(_w, m+1, FALSE);
 	    }
         }
-        XtVaSetValues (_w, XmNselectionPolicy, XmEXTENDED_SELECT, NULL);
+        XtVaSetValues (_w, XmNselectionPolicy, XmEXTENDED_SELECT, nullptr);
     }
     else
       XmListSelectPos(_w, _displayed_item_position, FALSE);
 
-    XtVaSetValues (_w, XmNselectionPolicy, XmEXTENDED_SELECT, NULL);
-    XtVaSetValues (_w, XmNselectionMode, XmNORMAL_MODE, NULL);
+    XtVaSetValues (_w, XmNselectionPolicy, XmEXTENDED_SELECT, nullptr);
+    XtVaSetValues (_w, XmNselectionMode, XmNORMAL_MODE, nullptr);
     delete newList;
 }
 
@@ -2497,16 +2497,16 @@ MsgScrollingList::formatHeader(DtMailHeaderLine & info,
 {
     char *buf = new char[BUFSIZ];
     memset(buf, 0, BUFSIZ);
-    const char *from=NULL;
+    const char *from=nullptr;
     char *subject;
     int contentLength;
     char contentStr[20];
     char *date = new char[BUFSIZ];
     int msg_num = sess_num + 1;
-    static XmString attachment_glyph = NULL;
-    static XmString no_attachment_glyph = NULL;
-    static XmString new_status = NULL;
-    static XmString read_status = NULL;
+    static XmString attachment_glyph = nullptr;
+    static XmString no_attachment_glyph = nullptr;
+    static XmString new_status = nullptr;
+    static XmString read_status = nullptr;
     static unsigned char attach_symbol[16];
     Boolean showto = FALSE;
 
@@ -2529,8 +2529,8 @@ MsgScrollingList::formatHeader(DtMailHeaderLine & info,
     // or a Reply-To: or Received-From:, IMAP doesn't tell us who
     // it is from.  In such cases, we set it to "???".
     
-    DtMailAddressSeq * addr_seq = NULL;
-    DtMailValueAddress * addr = NULL;
+    DtMailAddressSeq * addr_seq = nullptr;
+    DtMailValueAddress * addr = nullptr;
     
     if (info.header_values[0].length() != 0) {
 	addr_seq = ((info.header_values[0])[0])->toAddress();
@@ -2541,7 +2541,7 @@ MsgScrollingList::formatHeader(DtMailHeaderLine & info,
 		const char *ptr;
         	passwd pw;
 		GetPasswordEntry(pw);
-       		if ((ptr = strchr(addr->dtm_address, '@')) != NULL) {
+       		if ((ptr = strchr(addr->dtm_address, '@')) != nullptr) {
 			if (strncmp(pw.pw_name, addr->dtm_address, 
 				ptr-addr->dtm_address) == 0) {
 				from = *((info.header_values[4])[0]);
@@ -2554,7 +2554,7 @@ MsgScrollingList::formatHeader(DtMailHeaderLine & info,
 				showto = TRUE;
 			}
 	}
-        if (from == NULL) {
+        if (from == nullptr) {
                 if (addr && addr->dtm_person)
                         from = addr->dtm_person;
                 else if (addr && addr->dtm_address)
@@ -2619,7 +2619,7 @@ MsgScrollingList::formatHeader(DtMailHeaderLine & info,
 	    SafeLocaltime(&ds.dtm_date, tm_struct);
 
             // Refer to strftime man page for explanation of the date format.
-	    now = time(NULL);
+	    now = time(nullptr);
 	    if (USE_YEAR_FORMAT_SECONDS < now - ds.dtm_date)
 	      dateformat = CATGETS(DT_catd, 1, 259, "%a %b %d  %Y");
 	    else
@@ -2649,7 +2649,7 @@ MsgScrollingList::formatHeader(DtMailHeaderLine & info,
     }
     
     if (info.header_values[2].length() > 0) {
-	contentLength = (int) strtol(*((info.header_values[2])[0]), NULL, 10);
+	contentLength = (int) strtol(*((info.header_values[2])[0]), nullptr, 10);
     }
     else {
 	contentLength = 0;
@@ -2676,7 +2676,7 @@ MsgScrollingList::formatHeader(DtMailHeaderLine & info,
     mbox = parent()->mailbox();
     mailrc = mbox->session()->mailRc(mail_error);
 
-    const char * value = NULL;
+    const char * value = nullptr;
     mailrc->getValue(mail_error, "showmsgnum", &value);
     if (mail_error.isSet()) {
         // No message numbers ... keep usual "35" col. "Subject".
@@ -2709,7 +2709,7 @@ MsgScrollingList::formatHeader(DtMailHeaderLine & info,
                       date,
                       contentStr);
     }
-    if (NULL != value)
+    if (nullptr != value)
       free((void*) value);
 
     XmString header_text = XmStringCreateLocalized(buf);
@@ -2733,7 +2733,7 @@ MsgScrollingList::formatHeader(DtMailHeaderLine & info,
 	XmStringFree(item);
     }
 
-    value = NULL;
+    value = nullptr;
     mailrc->getValue(mail_error, "showmsgnum", &value);
     if (mail_error.isSet()) {
 //	complete_header = XmStringCopy(item2);
@@ -2743,7 +2743,7 @@ MsgScrollingList::formatHeader(DtMailHeaderLine & info,
     else {
 	char num_buf[64];
 
-        if (NULL != value)
+        if (nullptr != value)
           free((void*) value);
 
 	mailrc->getValue(mail_error, "nerdmode", &value);
@@ -2760,7 +2760,7 @@ MsgScrollingList::formatHeader(DtMailHeaderLine & info,
 	XmStringFree(num_str);
 	_numbered = DTM_TRUE;
     }
-    if (NULL != value)
+    if (nullptr != value)
       free((void*) value);
 
     delete addr_seq;
@@ -2804,7 +2804,7 @@ MsgScrollingList::lastMsg()
 	return((_msgs->at(_msgs->length() - 1))->message_handle);
     }
     else {  // Currently an empty folder
-	return(NULL);
+	return(nullptr);
     }
 }
 #endif /* DEAD_WOOD */
@@ -2873,7 +2873,7 @@ MsgScrollingList::current_msg_handle()
     if ( _displayed_item_position > 0 )
 	msg_number=msgno( _displayed_item_position );
     else
-	msg_number=NULL;
+	msg_number=nullptr;
 
     return msg_number;
 }
@@ -3013,7 +3013,7 @@ MsgScrollingList::layoutLabels()
     // List uses a fixed width font. Therefore all characters are the
     // same size.  So we use a space to determine the width of a char
     xmstr = XmStringCreateLocalized(" ");
-    XtVaGetValues(_w, XmNfontList, &font_list, NULL);
+    XtVaGetValues(_w, XmNfontList, &font_list, nullptr);
     char_width = XmStringWidth(font_list, xmstr);
 
     if (_numbered) {
@@ -3030,26 +3030,26 @@ MsgScrollingList::layoutLabels()
 
     XtWidgetGeometry geom;
     geom.request_mode = CWX;
-    XtQueryGeometry(_sender_lbl, NULL, &geom);
+    XtQueryGeometry(_sender_lbl, nullptr, &geom);
     if (geom.x != (n * char_width)) {
         geom.x = (n * char_width);
         XtMoveWidget(_sender_lbl, geom.x, geom.y);
     } // Move the X location of the sender title
 
-    XtVaSetValues(_sender_lbl, XmNx, n * char_width, NULL);
+    XtVaSetValues(_sender_lbl, XmNx, n * char_width, nullptr);
     n += sender_width;
 
-    XtQueryGeometry(_subject_lbl, NULL, &geom);
+    XtQueryGeometry(_subject_lbl, nullptr, &geom);
     if (geom.x != (n * char_width)) {
         geom.x = (n * char_width);
         XtMoveWidget(_subject_lbl, geom.x, geom.y);
     } // Move the X location of the subject title
 
-    XtVaSetValues(_subject_lbl, XmNx, n * char_width, NULL);
+    XtVaSetValues(_subject_lbl, XmNx, n * char_width, nullptr);
     n += subject_width;
-    XtVaSetValues(_date_lbl, XmNx, n * char_width, NULL);
+    XtVaSetValues(_date_lbl, XmNx, n * char_width, nullptr);
     n += date_width;
-    XtVaSetValues(_size_lbl, XmNx, n * char_width, NULL);
+    XtVaSetValues(_size_lbl, XmNx, n * char_width, nullptr);
 
     XmStringFree(xmstr);
 

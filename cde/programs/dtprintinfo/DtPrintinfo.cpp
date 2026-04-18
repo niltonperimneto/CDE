@@ -38,7 +38,7 @@ extern "C" {
 
 // Message header
 #include "dtprintinfomsg.h"
-nl_catd dtprintinfo_cat = NULL;
+nl_catd dtprintinfo_cat = nullptr;
 
 #include <stdlib.h> // This is for the getenv function
 #include <unistd.h> // This is for the getuid function
@@ -75,7 +75,7 @@ int main(int argc, char **argv)
          dtprintinfo_cat = (nl_catd) -1;
     }
 
-   if (dtprintinfo_cat == NULL) {
+   if (dtprintinfo_cat == nullptr) {
       dtprintinfo_cat = (nl_catd) -1;
    }
 
@@ -107,14 +107,14 @@ int main(int argc, char **argv)
 	 return 1;
        }
 
-      PrintSubSystem *prt = new PrintSubSystem(NULL);
+      PrintSubSystem *prt = new PrintSubSystem(nullptr);
       int n_queues = prt->NumChildren();
       // Get Print Subsystem children, (these are queues)
       Queue **queues = (Queue **)prt->Children();
       int i;
       for (i = 0; i < n_queues; i++)
        {
-         DtPrinterIcon *icon = new DtPrinterIcon(NULL, NULL, queues[i],
+         DtPrinterIcon *icon = new DtPrinterIcon(nullptr, nullptr, queues[i],
 						 INITIALIZE_PRINTERS);
 	 icon->CreateActionFile();
 	 delete icon;

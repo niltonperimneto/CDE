@@ -100,15 +100,15 @@ Queue::Queue(BaseObj *parent,
   }
 
 #ifdef aix
-   local_devices = NULL;
+   local_devices = nullptr;
    n_devices = 0;
 #endif
-   remote_server = NULL;
-   remote_printer = NULL;
+   remote_server = nullptr;
+   remote_printer = nullptr;
    is_remote = false;
    _loaded_attributes = false;
 
-   char *Help = NULL, *ContextualHelp = NULL, *Listing = NULL;
+   char *Help = nullptr, *ContextualHelp = nullptr, *Listing = nullptr;
    Characteristics Mask = EDITABLE_AFTER_CREATE;
    ValueList ValueListType = NO_LIST;
 
@@ -201,7 +201,7 @@ void Queue::LoadAttributes(int /*n_attrs*/, Attribute **attrs)
              {
 	       sprintf(device, MESSAGE(DeviceNL), n_devices + 1);
                AddAttribute(QUEUE_DEVICE, device,
-		            NULL, NULL, OPTIONAL, NO_LIST, NULL);
+		            nullptr, nullptr, OPTIONAL, NO_LIST, nullptr);
                if (s1 = strchr(s, ','))
                   *s1++ = '\0';
                _attributes[i]->Value = strdup(s);
@@ -241,7 +241,7 @@ char *Queue::Device(int index)
    if (index >= 0 && index <= n_devices)
       return local_devices[index];
    else
-      return NULL;
+      return nullptr;
 }
 
 int Queue::NumberDevices()
@@ -277,14 +277,14 @@ int Queue::Start(BaseObj *obj, char **output, BaseObj * /*requestor*/)
       strcat(cmd, " ; do ");
       strcat(cmd, command);
       strcat(cmd, "; done");
-      rc = queue->RunCommand(cmd, NULL, output);
+      rc = queue->RunCommand(cmd, nullptr, output);
       delete [] cmd;
     }
    else
 #endif
     {
       sprintf(command, START_QUEUE_CMD, queue->Name());
-      rc = queue->RunCommand(command, NULL, output);
+      rc = queue->RunCommand(command, nullptr, output);
     }
     delete [] command;
     return rc;
@@ -314,14 +314,14 @@ int Queue::Stop(BaseObj *obj, char **output, BaseObj * /*requestor*/)
       strcat(cmd, " ; do ");
       strcat(cmd, command);
       strcat(cmd, "; done");
-      rc = queue->RunCommand(cmd, NULL, output);
+      rc = queue->RunCommand(cmd, nullptr, output);
       delete [] cmd;
     }
    else
 #endif
     {
         snprintf(command, 100, STOP_QUEUE_CMD, queue->Name());
-      rc = queue->RunCommand(command, NULL, output);
+      rc = queue->RunCommand(command, nullptr, output);
     }
     delete [] command;
     return rc;
@@ -335,7 +335,7 @@ int Queue::StartPrint(BaseObj *obj, char **output, BaseObj * /*requestor*/)
    int rc;
 
    sprintf(command, STOP_PRINTING_CMD, queue->Name());
-   rc = queue->RunCommand(command, NULL, output);
+   rc = queue->RunCommand(command, nullptr, output);
    delete [] command;
    return rc;
 }
@@ -347,7 +347,7 @@ int Queue::StopPrint(BaseObj *obj, char **output, BaseObj * /*requestor*/)
    int rc;
 
    sprintf(command, STOP_PRINTING_CMD, queue->Name());
-   rc = queue->RunCommand(command, NULL, output);
+   rc = queue->RunCommand(command, nullptr, output);
    delete [] command;
    return rc;
 }
@@ -400,18 +400,18 @@ void Queue::ParseOutput(char *job_list, int n_jobs)
    char *printer = DtStrtok(job_list, "|");
    for (i = 0; i < n_jobs; i++)
     {
-      char *JobName = DtStrtok(NULL, "|");
-      char *JobNumber = DtStrtok(NULL, "|");
-      char *Owner = DtStrtok(NULL, "|");
-      char *Date = DtStrtok(NULL, "|");
-      char *Time = DtStrtok(NULL, "|");
-      char *tmp = DtStrtok(NULL, "\n");
+      char *JobName = DtStrtok(nullptr, "|");
+      char *JobNumber = DtStrtok(nullptr, "|");
+      char *Owner = DtStrtok(nullptr, "|");
+      char *Date = DtStrtok(nullptr, "|");
+      char *Time = DtStrtok(nullptr, "|");
+      char *tmp = DtStrtok(nullptr, "\n");
       char *Size = new char [strlen(tmp) + strlen(MESSAGE(BytesL)) + 2];
       sprintf(Size, "%s %s", tmp, MESSAGE(BytesL));
 
       new PrintJob(this, JobName, JobNumber, Owner, Date, Time, Size);
       delete [] Size;
-      printer = DtStrtok(NULL, "|");
+      printer = DtStrtok(nullptr, "|");
     }
 }
 

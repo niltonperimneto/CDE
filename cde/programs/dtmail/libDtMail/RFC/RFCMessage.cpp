@@ -71,7 +71,7 @@ static unsigned long RFCMessageSignature = 0xff83421e;
 RFCMessage::RFCMessage(DtMailEnv & error,
 		       const char * alt_start,
 		       const char * alt_end)
-: DtMail::Message(error, NULL), _bp_cache(8), _alt_msg_cache(0)
+: DtMail::Message(error, nullptr), _bp_cache(8), _alt_msg_cache(0)
 {
   error.clear();
 
@@ -84,8 +84,8 @@ RFCMessage::RFCMessage(DtMailEnv & error,
   _alternativeValid = DTM_FALSE;	// msg is not valid (maybe later)
   _msg_start = alt_start;
   _msg_end = alt_end;
-  _msg_buf = NULL;
-  _body_start = NULL;
+  _msg_buf = nullptr;
+  _body_start = nullptr;
 
   // parse the message, creating an envelope to encompass the first headers
   // found and setting up the body part boundaries
@@ -154,7 +154,7 @@ RFCMessage::RFCMessage(DtMailEnv & error,
 		       void * arg,
 		       DtMailCallback,
 		       void *)
-: DtMail::Message(error, NULL), _bp_cache(8), _alt_msg_cache(8)
+: DtMail::Message(error, nullptr), _bp_cache(8), _alt_msg_cache(8)
 {
     // We do different processing, depending on the space for the
     // object.
@@ -192,8 +192,8 @@ RFCMessage::RFCMessage(DtMailEnv & error,
 	  else {
 	      // We need to construct an empty message.
 	      //
-	      _msg_start = _msg_end = _body_start = NULL;
-    	      _envelope = new RFCEnvelope(error, this, NULL, 0);
+	      _msg_start = _msg_end = _body_start = nullptr;
+    	      _envelope = new RFCEnvelope(error, this, nullptr, 0);
 	  }
       }
       break;
@@ -232,10 +232,10 @@ RFCMessage::~RFCMessage(void)
     if (_alternativeMultipart == DTM_TRUE)
       while (_alt_msg_cache.length()) {
 	AlternativeMessageCache * amc = _alt_msg_cache[0];
-	assert(amc != NULL);
-	assert(amc->amc_msg != NULL);
+	assert(amc != nullptr);
+	assert(amc->amc_msg != nullptr);
 	delete amc->amc_msg;
-	assert(amc->amc_body != NULL);
+	assert(amc->amc_body != nullptr);
 	delete amc->amc_body;
 	delete amc;
 	_alt_msg_cache.remove(0);
@@ -250,7 +250,7 @@ RFCMessage::toBuffer(DtMailEnv & error, DtMailBuffer & buf)
 
     buf.size = _msg_end - _msg_start + 1;
     buf.buffer = new char[buf.size];
-    if (buf.buffer == NULL) {
+    if (buf.buffer == nullptr) {
 	error.setError(DTME_NoMemory);
 	return;
     }
@@ -305,7 +305,7 @@ RFCMessage::getFirstBodyPart(DtMailEnv & error)
     }
     
     if (_bp_cache.length() == 0) {
-	return(NULL);
+	return(nullptr);
     }
 
     return(bodyPart(error, 0));
@@ -318,7 +318,7 @@ RFCMessage::getNextBodyPart(DtMailEnv & error, DtMail::BodyPart * last)
     
     int slot = lookupByBody(last);
     if (slot < 0 || (slot + 1) >= _bp_cache.length()) {
-	return(NULL);
+	return(nullptr);
     }
     
     slot += 1;
@@ -338,13 +338,13 @@ RFCMessage::newBodyPart(DtMailEnv & error, DtMail::BodyPart * after)
 
     RFCBodyPart * bp = new MIMEBodyPart(error,
 					this,
-					NULL,
+					nullptr,
 					0,
-					NULL);
+					nullptr);
 
     BodyPartCache * bpc = new BodyPartCache;
     bpc->body = bp;
-    bpc->body_start = NULL;
+    bpc->body_start = nullptr;
 
     if (slot < 0) {
 	_bp_cache.append(bpc);
@@ -372,7 +372,7 @@ RFCMessage::setFlag(DtMailEnv & error, const DtMailMessageState flag)
       case DtMailMessageDeletePending:
 	// Start the delete time out by setting the X-Delete-Time header.
 	//
-	now = time(NULL);
+	now = time(nullptr);
 	sprintf(str_time, "%08lX", (long)now);
 	_envelope->setHeader(error, RFCDeleteHeader, DTM_TRUE, str_time);
 	break;
@@ -501,7 +501,7 @@ RFCMessage::getDeleteTime(DtMailEnv & error)
     DtMailValueSeq value;
     _envelope->getHeader(error, RFCDeleteHeader, DTM_FALSE, value);
     if (error.isNotSet()) {
-	delete_time = (time_t) strtol(*(value[0]), NULL, 16);
+	delete_time = (time_t) strtol(*(value[0]), nullptr, 16);
     }
 
     error.clear();
@@ -625,7 +625,7 @@ RFCMessage::pinMessageDown(char ** msgHeaderStart, long & msgHeaderLen,
   const size_t fudgeAtEnd = 102;	// two extra \n's at end of msg + slop
   size_t msgNewHeaderSize = (maxHeaderLength+fudgeAtEnd);
   *msgHeaderStart = (char *)malloc(msgNewHeaderSize);
-  assert(*msgHeaderStart != NULL);
+  assert(*msgHeaderStart != nullptr);
 
   char * end = ((RFCEnvelope *)_envelope)->writeHeaders(*msgHeaderStart);
   end += 1;
@@ -1164,7 +1164,7 @@ RFCMessage::parseMIMEMultipartSubtype(DtMailEnv & error,
   else		// unknown types handled as Multipart/mixed
     parseMIMEMultipartMixed(error, boundary);
 
-  assert(boundary != NULL);
+  assert(boundary != nullptr);
   free((void *)boundary);
   return;
 }
@@ -1346,7 +1346,7 @@ void
 RFCMessage::parseMIMEMultipartAlternative(DtMailEnv & error, const char * boundary)
 {
   assert(_alternativeMessage == DTM_FALSE);
-  assert(boundary != NULL);
+  assert(boundary != nullptr);
 
   // Chew through anything that appears before the first boundary.
   //
@@ -1433,7 +1433,7 @@ RFCMessage::parseMIMEMultipartAlternative(DtMailEnv & error, const char * bounda
 void
 RFCMessage::parseMIMEMultipartMixed(DtMailEnv & error, const char * boundary)
 {
-  assert(boundary != NULL);
+  assert(boundary != nullptr);
   
   // Chew through anything that appears before the first boundary.
   //
@@ -1607,7 +1607,7 @@ RFCMessage::extractBoundary(const char * content_type)
 
     if (!content_type) {
 	char * new_bdry = (char *)malloc(78);
-	sprintf(new_bdry, "%p-%08lx-%p", new_bdry, (long)time(NULL), &new_bdry);
+	sprintf(new_bdry, "%p-%08lx-%p", new_bdry, (long)time(nullptr), &new_bdry);
     }
 
     // We will need the boundary to find the message boundaries.
@@ -1618,7 +1618,7 @@ RFCMessage::extractBoundary(const char * content_type)
 	}
     }
     if (!*boundary) {
-	return(NULL);
+	return(nullptr);
     }
     
     // Get past uninteresting cruft.

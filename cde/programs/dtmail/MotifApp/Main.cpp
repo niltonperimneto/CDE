@@ -81,10 +81,10 @@ void _signal( int Sig )
 {
     if ( getenv( "_ILS_DEBUG_" ) ) {
         printf( "Got signal[%d]. Generate full core...\n", Sig );
-	sigaction( SIGIOT, NULL, &action );
+	sigaction( SIGIOT, nullptr, &action );
 	action.sa_flags |= SA_FULLDUMP;
 	action.sa_flags &= ~SA_PARTDUMP;
-	sigaction( SIGIOT, &action, NULL );
+	sigaction( SIGIOT, &action, nullptr );
 	abort();
     }
 }
@@ -114,7 +114,7 @@ int main ( int argc, char **argv )
     // Make sure the programmer has remembered to 
     // instantiate an Application object
     
-    assert ( theApplication != NULL ); 
+    assert ( theApplication != nullptr ); 
     
     // Init Intrinsics, build all windows, and enter event loop
     

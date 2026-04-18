@@ -56,7 +56,7 @@ ListUiItem::ListUiItem(Widget w,
   data_source = source;
 #endif /* DEAD_WOOD */
   
-  if(alias_list != NULL)
+  if(alias_list != nullptr)
      options_list_init(w, alias_list);
 
 }

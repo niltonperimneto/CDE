@@ -69,7 +69,7 @@ main (int argc, char **argv)
 	int	c;
 	extern char *optarg;
 	extern int optind;
-	char	*ffile = NULL;
+	char	*ffile = nullptr;
 	int	aflag = 0, pgflag = 0;
 	int	errflag = 0;
 
@@ -139,7 +139,7 @@ main (int argc, char **argv)
 	if (handleError (dmxenv, "new session") == B_TRUE)
 		exit (1);
 
-	if (session == NULL)
+	if (session == nullptr)
 	{
 		fprintf (stderr, "Error opening session...exiting.\n");
 		exit (1);
@@ -158,9 +158,9 @@ main (int argc, char **argv)
 	char buf [BUFSIZ];
 	int n = 0;
 	char 	*name;
-	FILE	*msgFile=NULL;
+	FILE	*msgFile=nullptr;
 
-	if (ffile == NULL)
+	if (ffile == nullptr)
 	{
                 static char *tmpdir = new char[MAXPATHLEN+1];
 
@@ -171,7 +171,7 @@ main (int argc, char **argv)
 			DtPERSONAL_TMP_DIRECTORY);
 
 	        name = tempnam(tmpdir, "dtmpr");
-		if ((msgFile = fopen (name, "w+")) == NULL)
+		if ((msgFile = fopen (name, "w+")) == nullptr)
 		{
 			perror ("tmpfile");
 			exit (1);
@@ -197,16 +197,16 @@ main (int argc, char **argv)
 	} else {
 		name = ffile;
 	}
-	DtMail::MailBox		*mailbox = NULL;
+	DtMail::MailBox		*mailbox = nullptr;
 
 	// try to construct mbox
 	mailbox = session->mailBoxConstruct (
 				dmxenv,
 				DtMailFileObject,
 				name,
-				NULL,
-				NULL,
-				NULL);
+				nullptr,
+				nullptr,
+				nullptr);
 
 	if (handleError (dmxenv, "new DtMail::MailBox") == B_TRUE)
 		exit (1);

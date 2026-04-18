@@ -59,7 +59,7 @@ extern "C" {
 
 #define ISIDENT(CH) (isalnum(CH) || (CH) == '_')
 
-static _SHXbuf *buf = NULL;
+static _SHXbuf *buf = nullptr;
 static const char *getvar(const char *var, char *);
 
 // Make this a global someday:
@@ -78,10 +78,10 @@ parsemeta(int ch, _StringIO &in, char *ifs, unsigned opts, char *meta)
     _DtSvcProcessLock();
     if (buf->quote() != NOQUOTE) {
 	_DtSvcProcessUnlock();
-	return NULL;		// normal character
+	return nullptr;		// normal character
     }
 
-    if (!(opts & SHX_NOSPACE) && strchr(ifs, ch) != NULL) {
+    if (!(opts & SHX_NOSPACE) && strchr(ifs, ch) != nullptr) {
 	_DtSvcProcessUnlock();
 	return " ";		// whitespace
     }
@@ -124,7 +124,7 @@ parsemeta(int ch, _StringIO &in, char *ifs, unsigned opts, char *meta)
     }
 
     _DtSvcProcessUnlock();
-    return NULL; // normal character
+    return nullptr; // normal character
 }
 
 // Takes the name of a variable, and looks up it's value.  Someday,
@@ -210,7 +210,7 @@ static boolean
 pushenv(_StringIO &in, char const *name)
 {
     char *str = getenv(name);
-    if (str == NULL || *str == '\0')
+    if (str == nullptr || *str == '\0')
 	return FALSE;
     else
     {
@@ -255,7 +255,7 @@ pushtilde(_StringIO &in)
 	  memset((char*) &pwd_buf, 0, sizeof(_Xgetpwparams));
 	  struct passwd * pwd_ret = _XGetpwnam(str, pwd_buf);
 
-	  if (pwd_ret == NULL)
+	  if (pwd_ret == nullptr)
 	    return FALSE;
 	  tmp.push(pwd_ret->pw_dir);
 	}
@@ -309,7 +309,7 @@ pushgrave(_StringIO &in, const char endchar, boolean quotes, privbuf_charbuf &re
     result.reset();
 
     FILE *fp = popen(cmd.getarr(), "r");
-    if (fp == NULL)
+    if (fp == nullptr)
 	return;
     while ((ch = getc(fp)) != EOF)
 	result.end() = ch;
@@ -332,11 +332,11 @@ shellscan(char const *str, int *argc, unsigned opts)
 
     char *ifs = getenv("IFS");
 
-    if (ifs == NULL)
+    if (ifs == nullptr)
 	ifs = " \t\n";
 
     _DtSvcProcessLock();
-    if (buf == NULL)
+    if (buf == nullptr)
 	buf = new _SHXbuf;
     buf->reset((boolean)!(opts & SHX_NOGLOB), (boolean)(opts & SHX_COMPLETE));
 
@@ -451,7 +451,7 @@ shellscan(char const *str, int *argc, unsigned opts)
 
 	    char *meta = parsemeta(ch, in, ifs, curr_opts, meta_buff);
 
-	    if (meta != NULL)	// is it a meta-character?
+	    if (meta != nullptr)	// is it a meta-character?
 	    {
 		// Terminate current token, if any
 		if (!buf->new_token())
@@ -471,7 +471,7 @@ shellscan(char const *str, int *argc, unsigned opts)
 	buf->append(ch);
     } while (ch != '\0');
 
-    if (argc != NULL)
+    if (argc != nullptr)
 	*argc = buf->ntokens();
 
     _DtSvcProcessUnlock();

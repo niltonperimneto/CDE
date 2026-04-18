@@ -104,11 +104,11 @@ struct DefaultHeaders {
 
 static int		isInitializedDefaultHeaderList = 0;
 static DefaultHeaders	DefaultHeaderList[] = {
-{ 1, 241, "To",		NULL, DtMailMessageTo,	SendMsgDialog::SMD_ALWAYS }, 
-{ 1, 242, "Subject",	NULL, DtMailMessageSubject, SendMsgDialog::SMD_ALWAYS },
-{ 1, 243, "Cc",		NULL, DtMailMessageCc,	SendMsgDialog::SMD_ALWAYS },
-{ 1, 244, "Bcc",	NULL, DtMailMessageBcc,	SendMsgDialog::SMD_HIDDEN },
-{ 0, 0,   NULL,		NULL, NULL,		SendMsgDialog::SMD_NEVER  }
+{ 1, 241, "To",		nullptr, DtMailMessageTo,	SendMsgDialog::SMD_ALWAYS }, 
+{ 1, 242, "Subject",	nullptr, DtMailMessageSubject, SendMsgDialog::SMD_ALWAYS },
+{ 1, 243, "Cc",		nullptr, DtMailMessageCc,	SendMsgDialog::SMD_ALWAYS },
+{ 1, 244, "Bcc",	nullptr, DtMailMessageBcc,	SendMsgDialog::SMD_HIDDEN },
+{ 0, 0,   nullptr,		nullptr, nullptr,		SendMsgDialog::SMD_NEVER  }
 };
 
 // These headers can never be controlled by the user. They are generated
@@ -123,7 +123,7 @@ static const char * BlockedHeaders[] = {
     "Content-Transfer-Encoding",
     "Mime-Version",
     "X-Sun-Charset",
-    NULL
+    nullptr
 };
 
 
@@ -145,20 +145,20 @@ Compose theCompose;   // Manages all compose windows.
 
 SendMsgDialog::HeaderList::HeaderList(void)
 {
-    label = NULL;
-    header = NULL;
-    value = NULL;
+    label = nullptr;
+    header = nullptr;
+    value = nullptr;
     show = SMD_NEVER;
-    form_widget = NULL;
-    label_widget = NULL;
-    field_widget = NULL;
+    form_widget = nullptr;
+    label_widget = nullptr;
+    field_widget = nullptr;
 }
 
 SendMsgDialog::HeaderList::HeaderList(const HeaderList & other)
 {
-    label = NULL;
-    header = NULL;
-    value = NULL;
+    label = nullptr;
+    header = nullptr;
+    value = nullptr;
     show = other.show;
     form_widget = other.form_widget;
     label_widget = other.label_widget;
@@ -204,64 +204,64 @@ SendMsgDialog::SendMsgDialog()
 : MenuWindow ( "ComposeDialog", True ),
 _header_list(16)
 {
-    _main_form = NULL;
+    _main_form = nullptr;
     _num_sendAs = 0;
-    _genDialog = NULL;
+    _genDialog = nullptr;
 
     _show_attach_area = FALSE;
     _takeDown = FALSE;
     _first_time = TRUE;
     _already_sending = FALSE;
 
-    _separator = NULL;
+    _separator = nullptr;
 
     // Alias Popup menus
-    _aliasList = NULL;
-    _bccPopupCmdlist = NULL;
-    _bccPopupMenu = NULL;
-    _bccPopupMenuBar = NULL;
-    _ccPopupCmdlist = NULL;
-    _ccPopupMenu = NULL;
-    _ccPopupMenuBar = NULL;
-    _toPopupCmdlist = NULL;
-    _toPopupMenu = NULL;
-    _toPopupMenuBar = NULL;
+    _aliasList = nullptr;
+    _bccPopupCmdlist = nullptr;
+    _bccPopupMenu = nullptr;
+    _bccPopupMenuBar = nullptr;
+    _ccPopupCmdlist = nullptr;
+    _ccPopupMenu = nullptr;
+    _ccPopupMenuBar = nullptr;
+    _toPopupCmdlist = nullptr;
+    _toPopupMenu = nullptr;
+    _toPopupMenuBar = nullptr;
 
     // Attachment menu
-    _attachmentActionsList = NULL;
-    _attachmentMenu = NULL;
-    _attachmentMenuList = NULL;
-    _attachmentPopupMenuList = NULL;
-    _textPopupMenuList = NULL;
+    _attachmentActionsList = nullptr;
+    _attachmentMenu = nullptr;
+    _attachmentMenuList = nullptr;
+    _attachmentPopupMenuList = nullptr;
+    _textPopupMenuList = nullptr;
     
-    _att_show_pane = NULL;
-    _att_select_all = NULL;
-    _att_save = NULL;
-    _att_add = NULL;
-    _att_delete = NULL;
-    _att_undelete = NULL;
-    _att_rename = NULL;
-    _att_select_all = NULL;
+    _att_show_pane = nullptr;
+    _att_select_all = nullptr;
+    _att_save = nullptr;
+    _att_add = nullptr;
+    _att_delete = nullptr;
+    _att_undelete = nullptr;
+    _att_rename = nullptr;
+    _att_select_all = nullptr;
     _auto_save_interval = 0;
-    _auto_save_path = NULL;
-    _auto_save_file = NULL;
-    _dead_letter_buf = NULL;
+    _auto_save_path = nullptr;
+    _auto_save_file = nullptr;
+    _dead_letter_buf = nullptr;
     
-    _file_include = NULL;
-    _file_save_as = NULL;
-    _file_send = NULL;
-    _file_log = NULL;
-    _file_close = NULL;
+    _file_include = nullptr;
+    _file_save_as = nullptr;
+    _file_send = nullptr;
+    _file_log = nullptr;
+    _file_close = nullptr;
 
-    _format_word_wrap = NULL;
-    _format_settings = NULL;
-    _format_find_change = NULL;
-    _format_spell = NULL;
-    _format_menu = NULL;
-    _format_cmds = NULL;
-    _format_cascade = NULL;
-    _format_separator = NULL;
-    _templateList = NULL;
+    _format_word_wrap = nullptr;
+    _format_settings = nullptr;
+    _format_find_change = nullptr;
+    _format_spell = nullptr;
+    _format_menu = nullptr;
+    _format_cmds = nullptr;
+    _format_cascade = nullptr;
+    _format_separator = nullptr;
+    _templateList = nullptr;
 
     // Now we need to get the additional headers from the property system.
     //   
@@ -269,7 +269,7 @@ _header_list(16)
     DtMail::Session * d_session = theRoamApp.session()->session();
     DtMail::MailRc * mail_rc = d_session->mailRc(error);
  
-    const char * value = NULL;  
+    const char * value = nullptr;  
     mail_rc->getValue(error, "additionalfields", &value);
  
     DtVirtArray<PropStringPair *> results(8);
@@ -278,7 +278,7 @@ _header_list(16)
         parsePropString(value, results);
     }
  
-    if (NULL != value)
+    if (nullptr != value)
       free((void*) value);
 
     // Load the header list with the predefined/fixed headers.
@@ -323,7 +323,7 @@ _header_list(16)
 	}
     }
     else 
-	_additionalfields = NULL;
+	_additionalfields = nullptr;
 
 }
 
@@ -432,20 +432,20 @@ SendMsgDialog::makeMessage(void)
     DtMail::Session * d_session = theRoamApp.session()->session();
     DtMailBuffer mbuf;
     
-    mbuf.buffer = NULL;
+    mbuf.buffer = nullptr;
     mbuf.size = 0;
     
     DtMail::Message * msg = d_session->messageConstruct(error,
 							DtMailBufferObject,
 							&mbuf,
-							NULL,
-							NULL,
-							NULL);
+							nullptr,
+							nullptr,
+							nullptr);
     if (error.isSet() || !msg) {
-	return(NULL);
+	return(nullptr);
     }
     
-    DtMail::BodyPart * bp = msg->newBodyPart(error, NULL);
+    DtMail::BodyPart * bp = msg->newBodyPart(error, nullptr);
     
     // For now, reserve the first body part for text.
     setFirstBPHandled(TRUE);
@@ -470,7 +470,7 @@ SendMsgDialog::updateMsgHnd()
     if (widget_text && *widget_text == '\0') {
 	textLen = 0;
 	XtFree(widget_text);
-	widget_text = NULL;
+	widget_text = nullptr;
     }
     else if(widget_text) {
 	textLen = strlen(widget_text);
@@ -481,10 +481,10 @@ SendMsgDialog::updateMsgHnd()
 
     // Get FirstBodyPart and fill it up.
     DtMail::BodyPart *bp = _msgHandle->getFirstBodyPart(error);
-    bp->setContents(error, widget_text, textLen, NULL, NULL, 0, NULL);
+    bp->setContents(error, widget_text, textLen, nullptr, nullptr, 0, nullptr);
     setFirstBPHandled(TRUE);
     
-    if (NULL != widget_text)
+    if (nullptr != widget_text)
       XtFree(widget_text);
 }
 
@@ -497,7 +497,7 @@ SendMsgDialog::updateMsgHnd()
 void
 SendMsgDialog::updateMsgHndAtt()
 {
-    if ( _inclMsgHandle == NULL )
+    if ( _inclMsgHandle == nullptr )
 	return;    // No attachments
     
     DtMailEnv error;
@@ -527,7 +527,7 @@ SendMsgDialog::updateMsgHndAtt()
     }
     
     // Continue to get the next body part and start copy.
-    while ((inclBP = _inclMsgHandle->getNextBodyPart(error, inclBP)) != NULL) {
+    while ((inclBP = _inclMsgHandle->getNextBodyPart(error, inclBP)) != nullptr) {
 	inclBP->getContents(error, &contents, &len, &type, &name, &mode, &desc);
 	if ( _firstBPHandled ) {
 	    msgBP = _msgHandle->newBodyPart(error, _lastAttBP); 
@@ -562,9 +562,9 @@ void
 SendMsgDialog::setMsgHnd()
 {
     _msgHandle = makeMessage();
-    _inclMsgHandle = NULL;
+    _inclMsgHandle = nullptr;
     _inclMsgHasText = FALSE;
-    _lastAttBP = NULL;
+    _lastAttBP = nullptr;
 }
 
 // Set timeout to ten minutes (as milliseconds)
@@ -592,7 +592,7 @@ SendMsgDialog::stopAutoSave(void)
     
     unlink(_auto_save_file);
     free(_auto_save_file);
-    _auto_save_file = NULL;
+    _auto_save_file = nullptr;
 }
 
 static const char * DEAD_LETTER_DIR = "~/dead_letter";
@@ -608,10 +608,10 @@ SendMsgDialog::mkAutoSavePath(void)
     if (!_auto_save_path) {
 	DtMail::Session * d_session = theRoamApp.session()->session();
 	DtMailEnv error;
-    	const char *save_path = NULL;
+    	const char *save_path = nullptr;
 
     	d_session->mailRc(error)->getValue(error, "deaddir", &save_path);
-  	if (error.isNotSet() && save_path != NULL && *save_path != '\0')
+  	if (error.isNotSet() && save_path != nullptr && *save_path != '\0')
 	    _auto_save_path = d_session->expandPath(error, save_path);
 	else {
 	
@@ -620,7 +620,7 @@ SendMsgDialog::mkAutoSavePath(void)
 	    	_auto_save_path = d_session->expandPath(error, BACKUP_DEAD_LETTER);
     	}
 
-        if (NULL != save_path)
+        if (nullptr != save_path)
           free((void*) save_path);
     }
     
@@ -635,13 +635,13 @@ SendMsgDialog::mkAutoSavePath(void)
 	    // Not an error we can overcome here.
 	    //
 	    free(_auto_save_path);
-	    _auto_save_path = NULL;
+	    _auto_save_path = nullptr;
 	    return;
 	}
 	
 	if (mkdir(_auto_save_path, 0700) < 0) {
 	    free(_auto_save_path);
-	    _auto_save_path = NULL;
+	    _auto_save_path = nullptr;
 	    return;
 	}
     }
@@ -698,7 +698,7 @@ SendMsgDialog::doAutoSave(char *filename)
 
     updateMsgHnd();
     
-    assert((NULL != filename));
+    assert((nullptr != filename));
     RFCWriteMessage(error, d_session, filename, _msgHandle);
     if((DTMailError_t) error == DTME_OutOfSpace )
     {
@@ -726,16 +726,16 @@ SendMsgDialog::getAutoSaveInterval(void)
     DtMail::MailRc * mail_rc = d_session->mailRc(error);
     
     int save_interval;
-    const char * value = NULL;
+    const char * value = nullptr;
     mail_rc->getValue(error, "composeinterval", &value);
-    if (error.isSet() || value == NULL) {
+    if (error.isSet() || value == nullptr) {
 	save_interval = 10 * 60 * 1000; // 10 minutes
     }
     else {
-	save_interval = (int) strtol(value, NULL, 10) * 60 * 1000;
+	save_interval = (int) strtol(value, nullptr, 10) * 60 * 1000;
 	save_interval = (save_interval <= 0) ? 10 * 60 * 1000 : save_interval;
     }
-    if (NULL != value)
+    if (nullptr != value)
       free((void*) value);
     
     return(save_interval);
@@ -775,7 +775,7 @@ SendMsgDialog::setHeader(const char * name, const char * value)
     if (hl->field_widget) {
 	XtVaSetValues(hl->field_widget,
 		      XmNvalue, value,
-		      NULL);
+		      nullptr);
 	if (hl->show == SMD_HIDDEN) {
 	    changeHeaderState(name);
 	}
@@ -906,7 +906,7 @@ SendMsgDialog::storeHeaders(DtMail::Message * input)
 	char * value;
 	XtVaGetValues(hl->field_widget,
 		      XmNvalue, &value,
-		      NULL);
+		      nullptr);
 	// If the header has a value, we want to set the value
 	// in the back end.  Otherwise, we don't want to send
 	// out a blank header, so we remove it.
@@ -940,7 +940,7 @@ SendMsgDialog::changeHeaderState(const char * name)
 	char * value;
 	XtVaGetValues(hl->field_widget,
 		      XmNvalue, &value,
-		      NULL);
+		      nullptr);
 	if (strlen(value) > 0) {
 	    if (!hl->value || strcmp(value, hl->value) != 0) {
 		char *buf = new char[256];
@@ -1007,7 +1007,7 @@ SendMsgDialog::setStatus(const char * str)
 
     XtVaSetValues(_status_text,
 		  XmNlabelString, label,
-		  NULL);
+		  nullptr);
 
     XmUpdateDisplay(baseWidget());
     XmStringFree(label);
@@ -1037,7 +1037,7 @@ void
 SendMsgDialog::sendmailErrorProc (int, int status, void *data)
 {
     SendMsgDialog *smd = (SendMsgDialog *)data;
-    char *helpId = NULL;
+    char *helpId = nullptr;
     char *buf = new char[2048];
 
     smd->_first_time = TRUE;
@@ -1120,7 +1120,7 @@ SendMsgDialog::send_message(const char * trans_impl, int trans_type)
     DtMailEditor *editor = this->get_editor();
     AttachArea *attachArea = editor->attachArea();
     int numPendingActions, answer;
-    char *helpId = NULL;
+    char *helpId = nullptr;
     char *buf = new char[2048];
     static int first_time = 1;
 
@@ -1260,7 +1260,7 @@ SendMsgDialog::send_message(const char * trans_impl, int trans_type)
 		_transfds[0], (XtPointer)XtInputReadMask,
 	        (XtInputCallbackProc)
 		    (theRoamApp.default_transport()->getSendmailReturnProc()),
-		NULL);
+		nullptr);
 	    first_time = 0;
 	}
 
@@ -1295,7 +1295,7 @@ SendMsgDialog::send_message(const char * trans_impl, int trans_type)
 	    XtAppAddInput(XtWidgetToApplicationContext(this->_main_form),
 		_transfds[0], (XtPointer)XtInputReadMask,
 		(XtInputCallbackProc)(mail_transport->getSendmailReturnProc()),
-		NULL);
+		nullptr);
 	    first_time = 0;
 	}
 
@@ -1316,7 +1316,7 @@ SendMsgDialog::send_message(const char * trans_impl, int trans_type)
 void
 SendMsgDialog::popupMemoryError(DtMailEnv &error)
 {
-    char *helpId = NULL;
+    char *helpId = nullptr;
     char *buf = new char[2048];
 
     _takeDown = FALSE;
@@ -1368,13 +1368,13 @@ SendMsgDialog::createWorkArea ( Widget parent )
     
     // Create the parent form
     
-    _main_form = XmCreateForm( parent, "Work_Area", NULL, 0 );
-    XtVaSetValues(_main_form, XmNresizePolicy, XmRESIZE_NONE, NULL);
+    _main_form = XmCreateForm( parent, "Work_Area", nullptr, 0 );
+    XtVaSetValues(_main_form, XmNresizePolicy, XmRESIZE_NONE, nullptr);
     
     printHelpId("form", _main_form);
     /* add help callback */
     XtAddCallback(_main_form, XmNhelpCallback, HelpCB, (void *)DTMAILCOMPOSEWINDOW);
-    XtVaSetValues(_main_form, XmNallowResize, True, NULL);
+    XtVaSetValues(_main_form, XmNallowResize, True, nullptr);
     
     
     // Create the area for status messages.
@@ -1386,7 +1386,7 @@ SendMsgDialog::createWorkArea ( Widget parent )
 					   XmNrightOffset, 2,
 					   XmNleftAttachment, XmATTACH_FORM,
 					   XmNleftOffset, 2,
-					   NULL);
+					   nullptr);
 
     _status_text = XtVaCreateManagedWidget("StatusLabel",
 					   xmLabelWidgetClass, _status_form,
@@ -1395,7 +1395,7 @@ SendMsgDialog::createWorkArea ( Widget parent )
 					   XmNrightAttachment, XmATTACH_FORM,
 					   XmNleftAttachment, XmATTACH_FORM,
 					   XmNalignment, XmALIGNMENT_BEGINNING,
-					   NULL);
+					   nullptr);
 
     clearStatus();
 
@@ -1406,7 +1406,7 @@ SendMsgDialog::createWorkArea ( Widget parent )
 					   XmNtopWidget, _status_form,
 					   XmNleftAttachment, XmATTACH_FORM,
 					   XmNrightAttachment, XmATTACH_FORM,
-					   NULL);
+					   nullptr);
     
     _header_form = XtVaCreateManagedWidget("HeaderArea",
 					   xmFormWidgetClass, _main_form,
@@ -1414,7 +1414,7 @@ SendMsgDialog::createWorkArea ( Widget parent )
 					   XmNtopWidget, s_sep,
 					   XmNleftAttachment, XmATTACH_FORM,
 					   XmNrightAttachment, XmATTACH_FORM,
-					   NULL);
+					   nullptr);
     printHelpId("header_form", _header_form);
 
     createHeaders(_header_form);
@@ -1427,7 +1427,7 @@ SendMsgDialog::createWorkArea ( Widget parent )
 					  XmNtopOffset, 1,
 					  XmNrightAttachment, XmATTACH_FORM,
 					  XmNleftAttachment, XmATTACH_FORM,
-					  NULL);
+					  nullptr);
 
     // Create the editor and attach it to the header_form
     
@@ -1441,7 +1441,7 @@ SendMsgDialog::createWorkArea ( Widget parent )
     // Create a RowCol widget that contains buttons
     
     send_form =  XtCreateManagedWidget("SendForm", 
-				       xmFormWidgetClass, _main_form, NULL, 0);
+				       xmFormWidgetClass, _main_form, nullptr, 0);
     
     
     // Create the Send and Close buttons as children of rowCol
@@ -1458,7 +1458,7 @@ SendMsgDialog::createWorkArea ( Widget parent )
 		  XmNleftOffset, OFFSET,
 		  XmNbottomAttachment, XmATTACH_FORM,
 		  XmNbottomOffset, 5,
-		  NULL);
+		  nullptr);
     
     Widget send_bw = ci->baseWidget();
     XtManageChild(send_bw);
@@ -1477,7 +1477,7 @@ SendMsgDialog::createWorkArea ( Widget parent )
 		  XmNleftWidget, send_bw,
 		  XmNbottomAttachment, XmATTACH_FORM,
 		  XmNbottomOffset, 5,
-		  NULL);
+		  nullptr);
     
     XtManageChild(ci->baseWidget());
     ci->manage();
@@ -1496,11 +1496,11 @@ SendMsgDialog::createWorkArea ( Widget parent )
 		  XmNtopOffset, 1,
 		  XmNbottomAttachment, XmATTACH_WIDGET,
 		  XmNbottomWidget, send_form,
-		  NULL);
+		  nullptr);
     
     XtVaSetValues(send_form,
 		  XmNbottomAttachment, XmATTACH_FORM,
-		  NULL);
+		  nullptr);
     
     
     // Set focus 
@@ -1520,7 +1520,7 @@ SendMsgDialog::createWorkArea ( Widget parent )
 void
 SendMsgDialog::createHeaders(Widget header_form)
 {
-    Widget	previous_form = NULL;
+    Widget	previous_form = nullptr;
     char	*field_name = new char[50];
 
     for (int header = 0; header < _header_list.length(); header++) {
@@ -1539,15 +1539,15 @@ SendMsgDialog::createHeaders(Widget header_form)
 	    if (hl->value)
 	    	XtVaSetValues(hl->field_widget,
                           XmNvalue, hl->value,
-                          NULL);
+                          nullptr);
  	    else
 	    	XtVaSetValues(hl->field_widget,
                           XmNvalue, "",
-                          NULL);
+                          nullptr);
 	    continue;
 	}
 
-	if (previous_form == NULL) {
+	if (previous_form == nullptr) {
 	    // Create a form, attaching it to the top. This is a special
 	    // case. Other lines are created attached to the form above
 	    // them.
@@ -1564,7 +1564,7 @@ SendMsgDialog::createHeaders(Widget header_form)
 				 XmNleftOffset, 3,
 				 XmNrightAttachment, XmATTACH_FORM,
 				 XmNrightOffset, 3,
-				 NULL);
+				 nullptr);
 
 	}
 	else {
@@ -1581,7 +1581,7 @@ SendMsgDialog::createHeaders(Widget header_form)
 				 XmNleftOffset, 3,
 				 XmNrightAttachment, XmATTACH_FORM,
 				 XmNrightOffset, 3,
-				 NULL);
+				 nullptr);
 
 	}
 
@@ -1598,7 +1598,7 @@ SendMsgDialog::createHeaders(Widget header_form)
 				    XmNbottomAttachment, XmATTACH_FORM,
 				    XmNleftAttachment, XmATTACH_FORM,
 				    XmNlabelString, label,
-				    NULL);
+				    nullptr);
 	XmStringFree(label);
 	
 	strcpy(field_name, "field_");
@@ -1614,7 +1614,7 @@ SendMsgDialog::createHeaders(Widget header_form)
 				    XmNrightAttachment, XmATTACH_FORM,
 				    XmNleftAttachment, XmATTACH_WIDGET,
 				    XmNleftWidget, hl->label_widget,
-				    NULL);
+				    nullptr);
 
 	if (hl->show != SMD_HIDDEN) {
 	    XtManageChild(hl->form_widget);
@@ -1622,13 +1622,13 @@ SendMsgDialog::createHeaders(Widget header_form)
 	else {
 	    XtVaSetValues(hl->form_widget,
 			  XmNtopAttachment, XmATTACH_NONE,
-			  NULL);
+			  nullptr);
 	}
 
 	XtAddCallback(hl->field_widget,
 		      XmNactivateCallback,
 		      header_form_traverse,
-		      NULL);
+		      nullptr);
 
 	XtAddCallback(hl->field_widget,
 		      XmNvalueChangedCallback,
@@ -1638,7 +1638,7 @@ SendMsgDialog::createHeaders(Widget header_form)
 	if (hl->value) {
 	    XtVaSetValues(hl->field_widget,
 			  XmNvalue, hl->value,
-			  NULL);
+			  nullptr);
 	}
 
 	previous_form = hl->form_widget;
@@ -1739,7 +1739,7 @@ SendMsgDialog::include_file(
     
     // I don't need to open the file to see if it's readable if loadFile()
     // returns error status.
-    if ( (fp = fopen(selection, "r")) == NULL ) {
+    if ( (fp = fopen(selection, "r")) == nullptr ) {
 	sprintf(buf, CATGETS(DT_catd, 2, 18, "Error: Cannot include file %s"),
 		selection);
 	theInfoDialogManager->post(
@@ -1761,7 +1761,7 @@ SendMsgDialog::get_confirm_attachment_threshold()
 {
     DtMailEnv        error;
     DtMail::Session *m_session = theRoamApp.session()->session();
-    const char      *value = NULL;
+    const char      *value = nullptr;
     int              threshold;
 
     m_session->mailRc(error)->getValue(error, "confirmattachments", &value);
@@ -1769,7 +1769,7 @@ SendMsgDialog::get_confirm_attachment_threshold()
 
     m_session->mailRc(error)->getValue(error, "confirmattachmentthreshold",
 					&value);
-    if (error.isNotSet() && NULL!=value)
+    if (error.isNotSet() && nullptr!=value)
       threshold = 1024 * atoi(value);
     else
       threshold = 1024 * 64;
@@ -1789,7 +1789,7 @@ SendMsgDialog::confirm_add_attachment(char *file, int size)
 	     "The attachment '%s' is %d kilobytes.\nAdd as attachment?");
     sprintf(buf, format, file, size/1024);
     _genDialog->setToQuestionDialog(CATGETS(DT_catd, 5, 2, "Mailer"), buf);
-    answer = _genDialog->post_and_return(NULL);
+    answer = _genDialog->post_and_return(nullptr);
     return (answer==1);
 }
 
@@ -1798,7 +1798,7 @@ SendMsgDialog::add_att_cb( void *client_data, char *selection )
 {
     SendMsgDialog *obj = (SendMsgDialog *)client_data;
     obj->add_att(selection);
-    if (NULL != selection)
+    if (nullptr != selection)
       free(selection);
 }
 
@@ -1815,7 +1815,7 @@ SendMsgDialog::add_att(char *file)
 
     // Activate Attachment menu???
     this->get_editor()->attachArea()->
-      addAttachment(_msgHandle, _lastAttBP, file, NULL);
+      addAttachment(_msgHandle, _lastAttBP, file, nullptr);
     this->setLastAttBP();
     this->activate_default_attach_menu();
 
@@ -1844,7 +1844,7 @@ SendMsgDialog::add_att(char *name, DtMailBuffer buf)
 void
 SendMsgDialog::add_att(DtMailBuffer buf)
 {
-    char *name = NULL;
+    char *name = nullptr;
     add_att(name, buf);
 }
 
@@ -1870,10 +1870,10 @@ SendMsgDialog::save_selected_attachment(
     Attachment *attachment = attarea->getSelectedAttachment(); 
     
     // Get selected attachment, if none selected, then return.
-    if ( attachment == NULL ) {
+    if ( attachment == nullptr ) {
 	// Let User know that no attachment has been selected???
 	int answer = 0;
-	char *helpId = NULL;
+	char *helpId = nullptr;
 	
 	
 	_genDialog->setToErrorDialog(
@@ -1897,7 +1897,7 @@ void
 SendMsgDialog::propsChanged(void)
 {
     DtMail::Session *m_session = theRoamApp.session()->session();
-    const char * value = NULL;
+    const char * value = nullptr;
     DtMailEnv error;
 
     enableWorkAreaResize();
@@ -1914,15 +1914,15 @@ SendMsgDialog::propsChanged(void)
         	_show_attach_area = TRUE;
 		this->showAttachArea();
 	}
-    if (NULL != value)
+    if (nullptr != value)
       free((void*) value);
 
     _confirm_attachment_threshold = get_confirm_attachment_threshold();
 
     // Reset Log State
-    const char * logfile = NULL;
+    const char * logfile = nullptr;
     m_session->mailRc(error)->getValue(error, "record", &logfile);
-    if (logfile == NULL)
+    if (logfile == nullptr)
 	_file_log->deactivate();
     else
 	_file_log->activate();
@@ -1930,7 +1930,7 @@ SendMsgDialog::propsChanged(void)
     _my_editor->textEditor()->update_display_from_props();
 
     m_session->mailRc(error)->getValue(error, "dontlogmessages", &value);
-    if (logfile == NULL || error.isNotSet()) {
+    if (logfile == nullptr || error.isNotSet()) {
         // logfile is not specified or "dontlogmessages" is TRUE
         setLogState(DTM_FALSE);
         ((ToggleButtonCmd *)_file_log)->setButtonState(FALSE, TRUE);
@@ -1940,26 +1940,26 @@ SendMsgDialog::propsChanged(void)
         ((ToggleButtonCmd *)_file_log)->setButtonState(TRUE, TRUE);
     }
 
-    if (NULL != logfile)
+    if (nullptr != logfile)
       free((void*) logfile);
-    if (NULL != value)
+    if (nullptr != value)
       free((void*) value);
 
-    value = NULL;
+    value = nullptr;
     m_session->mailRc(error)->getValue(error, "templates", &value);
-    if  ( (value == NULL && _templateList != NULL) ||
-          (value != NULL &&
-          (_templateList == NULL || strcmp(value, _templateList)) != 0) ) {
+    if  ( (value == nullptr && _templateList != nullptr) ||
+          (value != nullptr &&
+          (_templateList == nullptr || strcmp(value, _templateList)) != 0) ) {
 	// Template list has changed
-        if (_templateList != NULL)
+        if (_templateList != nullptr)
 		free (_templateList);
-	if (value != NULL && *value != '\0')
+	if (value != nullptr && *value != '\0')
   		_templateList = strdup(value);
 	else
-		_templateList = NULL;
+		_templateList = nullptr;
     	createFormatMenu();
     }
-    if (NULL != value)
+    if (nullptr != value)
       free((void*) value);
 
     // Alias Popup Menus
@@ -2007,7 +2007,7 @@ SendMsgDialog::createMenuPanes()
     CmdList *cmdList;
     Cardinal n = 0;
     DtMailEnv error;
-    const char * value = NULL;
+    const char * value = nullptr;
 
     
     _separator = new SeparatorCmd( "Separator","Separator", TRUE );
@@ -2057,7 +2057,7 @@ SendMsgDialog::createMenuPanes()
     // Find out how many transports there are and build sub menu dynamically.
     DtMail::Session *d_session;
 
-    if ( theRoamApp.session() == NULL ) {
+    if ( theRoamApp.session() == nullptr ) {
 	 MailSession *new_session = new MailSession(
 						error, 
 						theApplication->appContext());
@@ -2198,7 +2198,7 @@ SendMsgDialog::createMenuPanes()
     delete cmdList;
 
     // Alias Popup Menus
-    if (NULL != _aliasList) delete _aliasList;
+    if (nullptr != _aliasList) delete _aliasList;
     _aliasList = new DtVirtArray<PropStringPair*> (10);
     createAliasList(_aliasList);
     createAliasPopupMenus();
@@ -2288,11 +2288,11 @@ SendMsgDialog::createMenuPanes()
 //  delete subcmdList1;
     delete cmdList;
     
-    value = NULL;
+    value = nullptr;
     d_session->mailRc(error)->getValue(error, "templates", &value);
-    if (value != NULL && *value != '\0')
+    if (value != nullptr && *value != '\0')
 	_templateList = strdup(value);
-    if (NULL != value)
+    if (nullptr != value)
       free((void*) value);
 
     createFormatMenu();
@@ -2415,7 +2415,7 @@ SendMsgDialog::createAliasList(DtVirtArray<PropStringPair*> *aliases)
 
     if (nalias = aliases->length())
     {
-	PropStringPair	**prop_pairs = NULL;
+	PropStringPair	**prop_pairs = nullptr;
 
 	prop_pairs = (PropStringPair**) malloc(nalias*sizeof(PropStringPair*));
 	int i;
@@ -2464,7 +2464,7 @@ static void map_alias_menu(Widget menu, XtPointer, XtPointer)
 		XmNwidth, &w,
 		XmNy, &y,
 		XmNnumColumns, &columns,
-		NULL);
+		nullptr);
 
     if ((h + fudgefact) > (screenheight / 2))
     {
@@ -2478,7 +2478,7 @@ static void map_alias_menu(Widget menu, XtPointer, XtPointer)
         if (newcols > maxcols)
           newcols = maxcols;
 
-        XtVaSetValues(menu, XmNnumColumns, newcols, NULL);
+        XtVaSetValues(menu, XmNnumColumns, newcols, nullptr);
     }
 }
 
@@ -2507,7 +2507,7 @@ SendMsgDialog::createAliasPopupMenu(
 				CmdList **cmdlist,
 				DtVirtArray<PropStringPair*> *aliases)
 {
-    Widget		menu = NULL;
+    Widget		menu = nullptr;
     OtherAliasesCmd	*otherAliases =
 			  new OtherAliasesCmd(
 				"Other Aliases...",
@@ -2557,12 +2557,12 @@ SendMsgDialog::createAliasPopupMenu(
 		menu,
 		XmNpacking, XmPACK_COLUMN,
 		XmNorientation, XmVERTICAL,
-		NULL);
+		nullptr);
 
     XtAddCallback(
 		menu,
 		XmNmapCallback, &map_alias_menu,
-		NULL);
+		nullptr);
 
     return menu;
 }
@@ -2584,7 +2584,7 @@ SendMsgDialog::destroyAliasPopupMenu(
     XtRemoveCallback(
 		menu,
 		XmNmapCallback, &map_alias_menu,
-		NULL);
+		nullptr);
 
     XtDestroyWidget(menu);
 
@@ -2603,7 +2603,7 @@ SendMsgDialog::getHeaderWidget(const char *hdrname)
 	  return hdritem->field_widget;
     }
 
-    return NULL;
+    return nullptr;
 }
 
 void
@@ -2612,7 +2612,7 @@ SendMsgDialog::createAliasPopupMenus(void)
     Widget	w;
 
     w = getHeaderWidget(DtMailMessageTo);
-    if (NULL != w)
+    if (nullptr != w)
       _toPopupMenu = createAliasPopupMenu(
 					w,
 					&_toPopupMenuBar,
@@ -2620,7 +2620,7 @@ SendMsgDialog::createAliasPopupMenus(void)
 					_aliasList);
 
     w = getHeaderWidget(DtMailMessageCc);
-    if (NULL != w)
+    if (nullptr != w)
       _ccPopupMenu = createAliasPopupMenu(
 					w,
 					&_ccPopupMenuBar,
@@ -2628,7 +2628,7 @@ SendMsgDialog::createAliasPopupMenus(void)
 					_aliasList);
 
     w = getHeaderWidget(DtMailMessageBcc);
-    if (NULL != w)
+    if (nullptr != w)
       _bccPopupMenu = createAliasPopupMenu(
 					w,
 					&_bccPopupMenuBar,
@@ -2643,21 +2643,21 @@ SendMsgDialog::destroyAliasPopupMenus(void)
 
     w = getHeaderWidget(DtMailMessageTo);
     destroyAliasPopupMenu(w, _toPopupMenuBar, _toPopupCmdlist, _toPopupMenu);
-    _toPopupMenuBar = NULL;
-    _toPopupCmdlist = NULL;
-    _toPopupMenu = NULL;
+    _toPopupMenuBar = nullptr;
+    _toPopupCmdlist = nullptr;
+    _toPopupMenu = nullptr;
 
     w = getHeaderWidget(DtMailMessageCc);
     destroyAliasPopupMenu(w, _ccPopupMenuBar, _ccPopupCmdlist, _ccPopupMenu);
-    _ccPopupMenuBar = NULL;
-    _ccPopupCmdlist = NULL;
-    _ccPopupMenu = NULL;
+    _ccPopupMenuBar = nullptr;
+    _ccPopupCmdlist = nullptr;
+    _ccPopupMenu = nullptr;
 
     w = getHeaderWidget(DtMailMessageBcc);
     destroyAliasPopupMenu(w, _bccPopupMenuBar, _bccPopupCmdlist, _bccPopupMenu);
-    _bccPopupMenuBar = NULL;
-    _bccPopupCmdlist = NULL;
-    _bccPopupMenu = NULL;
+    _bccPopupMenuBar = nullptr;
+    _bccPopupCmdlist = nullptr;
+    _bccPopupMenu = nullptr;
 }
 
 void
@@ -2710,7 +2710,7 @@ SendMsgDialog::addTemplates(CmdList * subCmd)
 
     _template_count = 0;
     
-    if (_templateList == NULL)
+    if (_templateList == nullptr)
         return;
 
     DtMail::Session *m_session = theRoamApp.session()->session();
@@ -2746,7 +2746,7 @@ SendMsgDialog::initialize()
 {
     Cardinal n = 0;
     Arg args[1];
-    const char * hideAttachPane = NULL;
+    const char * hideAttachPane = nullptr;
     DtMailEnv error;
     
     // Without the TearOffModelConverter call, there will be warning messages:
@@ -2780,22 +2780,22 @@ SendMsgDialog::initialize()
 
 	this->hideAttachArea();
     }
-    if (NULL != hideAttachPane)
+    if (nullptr != hideAttachPane)
       free((void*) hideAttachPane);
 
     _confirm_attachment_threshold = get_confirm_attachment_threshold();
     
     // Log Message Toggle button.  A LogMsgCmd is a ToggleButtonCmd....
-    const char * logfile = NULL;
-    const char * value = NULL;
+    const char * logfile = nullptr;
+    const char * value = nullptr;
     m_session->mailRc(error)->getValue(error, "record", &logfile);
-    if(logfile == NULL)
+    if(logfile == nullptr)
 	_file_log->deactivate();
     else
 	_file_log->activate();
 
     m_session->mailRc(error)->getValue(error, "dontlogmessages", &value);
-    if (logfile == NULL || error.isNotSet()) {
+    if (logfile == nullptr || error.isNotSet()) {
 	// logfile is not specified or "dontlogmessages" is TRUE
 	setLogState(DTM_FALSE);
 	((ToggleButtonCmd *)_file_log)->setButtonState(FALSE, TRUE);
@@ -2805,9 +2805,9 @@ SendMsgDialog::initialize()
 	((ToggleButtonCmd *)_file_log)->setButtonState(TRUE, TRUE);
     }
     
-    if (NULL != logfile)
+    if (nullptr != logfile)
       free((void*) logfile);
-    if (NULL != value)
+    if (nullptr != value)
       free((void*) value);
 
     // Word Wrap Toggle button.  A WordWrapCmd is a ToggleButtonCmd...
@@ -2873,10 +2873,10 @@ SendMsgDialog::reset()
 
     // Need to destroy current Message handle.
     delete _msgHandle;    // All its body parts are deleted.
-    _msgHandle = NULL;
-    _lastAttBP = NULL;    // So just set this to NULL.
+    _msgHandle = nullptr;
+    _lastAttBP = nullptr;    // So just set this to NULL.
     // Delete or set to NULL ???
-    _inclMsgHandle = NULL; 
+    _inclMsgHandle = nullptr; 
     _inclMsgHasText = 0;
 
     for (int clear = 0; clear < _header_list.length(); clear++) {
@@ -2891,28 +2891,28 @@ SendMsgDialog::reset()
 	if (hl->value) {
 	    XtVaSetValues(hl->field_widget,
 			  XmNvalue, hl->value,
-			  NULL);
+			  nullptr);
 	}
 	else {
 	    XtVaSetValues(hl->field_widget,
 			  XmNvalue, "",
-			  NULL);
+			  nullptr);
 	}
     }
     // Reset the Log state in case the user happened to change it.
     DtMail::Session *m_session = theRoamApp.session()->session();
-    const char * logfile = NULL;
-    const char * value = NULL;
+    const char * logfile = nullptr;
+    const char * value = nullptr;
     DtMailEnv error;
 
     m_session->mailRc(error)->getValue(error, "record", &logfile);
-    if(logfile == NULL)
+    if(logfile == nullptr)
 	_file_log->deactivate();
     else
 	_file_log->activate();
 
     m_session->mailRc(error)->getValue(error, "dontlogmessages", &value);
-    if (logfile == NULL || error.isNotSet()) {
+    if (logfile == nullptr || error.isNotSet()) {
         // logfile is not specified or "dontlogmessages" is TRUE
         setLogState(DTM_FALSE);
         ((ToggleButtonCmd *)_file_log)->setButtonState(FALSE, TRUE);
@@ -2922,9 +2922,9 @@ SendMsgDialog::reset()
         ((ToggleButtonCmd *)_file_log)->setButtonState(TRUE, TRUE);
     }
 	
-    if (NULL != logfile)
+    if (nullptr != logfile)
       free((void*) logfile);
-    if (NULL != value)
+    if (nullptr != value)
       free((void*) value);
 }
 
@@ -2943,14 +2943,14 @@ SendMsgDialog::quit(Boolean delete_win)
     // For (3), we call goAway() which sets the _takeDown depending on
     // a dialog negotiation if SMD has contents.
 
-     if (_file_include->fileBrowser() != NULL) 
+     if (_file_include->fileBrowser() != nullptr) 
          XtPopdown(XtParent(_file_include->fileBrowser())); 
-     if (_att_add->fileBrowser() != NULL) 
+     if (_att_add->fileBrowser() != nullptr) 
          XtPopdown(XtParent(_att_add->fileBrowser())); 
 
-     if (_file_save_as->fileBrowser() != NULL) 
+     if (_file_save_as->fileBrowser() != nullptr) 
          XtPopdown(XtParent(_file_save_as->fileBrowser())); 
-     if (_att_save->fileBrowser() != NULL) 
+     if (_att_save->fileBrowser() != nullptr) 
          XtPopdown(XtParent(_att_save->fileBrowser())); 
 
     if (!_takeDown) {
@@ -2979,7 +2979,7 @@ SendMsgDialog::quit(Boolean delete_win)
 	id = XtAppAddTimeOut(
 			theApplication->appContext(), 
 			(unsigned long)DESTRUCT_TIMEOUT, 
-			Self_destruct, NULL);
+			Self_destruct, nullptr);
 	theCompose.putTimeOutId(id);
     }
 #endif
@@ -3051,9 +3051,9 @@ SendMsgDialog::parseNplace(char *contents, int len)
     DtMail::Message * msg = d_session->messageConstruct(error,
 							DtMailBufferObject,
 							&mbuf,
-							NULL,
-							NULL,
-							NULL);
+							nullptr,
+							nullptr,
+							nullptr);
     if ( !msg ) {
 	return;
     } else if ( error.isSet() ) {
@@ -3210,12 +3210,12 @@ SendMsgDialog::all_attachments_selected()
     _att_save->deactivate();
     _att_rename->deactivate();
 
-    if (_attachmentActionsList != NULL) {
+    if (_attachmentActionsList != nullptr) {
 	_menuBar->removeCommands(_attachmentMenu, _attachmentActionsList);
 	_menuPopupAtt->removeCommands(_attachmentPopupMenu, 
 				_attachmentActionsList);
 	delete _attachmentActionsList;
-	_attachmentActionsList = NULL;
+	_attachmentActionsList = nullptr;
     }
 
 }
@@ -3228,12 +3228,12 @@ SendMsgDialog::all_attachments_deselected()
     _att_delete->deactivate();
     _att_rename->deactivate();
     
-    if (_attachmentActionsList != NULL) {
+    if (_attachmentActionsList != nullptr) {
 	_menuBar->removeCommands(_attachmentMenu, _attachmentActionsList);
 	_menuPopupAtt->removeCommands(_attachmentPopupMenu, 
 				_attachmentActionsList);
 	delete _attachmentActionsList;
-	_attachmentActionsList = NULL;
+	_attachmentActionsList = nullptr;
     }
     
 }
@@ -3249,7 +3249,7 @@ SendMsgDialog::addAttachmentActions(
     char *anAction;
     AttachmentActionCmd *attachActionCmd;
     
-    if (_attachmentActionsList == NULL) { 
+    if (_attachmentActionsList == nullptr) { 
 	_attachmentActionsList = new CmdList("AttachmentActions", "AttachmentActions");
     }
     else {
@@ -3358,7 +3358,7 @@ SendMsgDialog::delete_selected_attachments()
 	_menuPopupAtt->removeCommands(_attachmentPopupMenu, 
 				      _attachmentActionsList);
 	delete _attachmentActionsList;
-	_attachmentActionsList = NULL;
+	_attachmentActionsList = nullptr;
     }
 }
 
@@ -3473,7 +3473,7 @@ SendMsgDialog::reattachHeaders(void)
 	    XtVaSetValues(hl->form_widget,
 			  XmNtopAttachment, XmATTACH_WIDGET,
 			  XmNtopWidget, previous_form,
-			  NULL);
+			  nullptr);
 	    previous_form = hl->form_widget;
 	    break;
 
@@ -3504,7 +3504,7 @@ SendMsgDialog::justifyHeaders(void)
 	XtVaGetValues(hl->label_widget,
 		      XmNwidth, &w,
 		      XmNmarginLeft, &margin,
-		      NULL);
+		      nullptr);
 	w -= margin;
 	if ( w > longest ) {
 	    longest = w;
@@ -3520,9 +3520,9 @@ SendMsgDialog::justifyHeaders(void)
 	XtVaGetValues(hl->label_widget,
 		      XmNwidth, &w,
 		      XmNmarginLeft, &margin,
-		      NULL);
+		      nullptr);
 	w -= margin;
-	XtVaSetValues(hl->label_widget, XmNmarginLeft, (longest-w) > 0 ? longest-w : 1, NULL );
+	XtVaSetValues(hl->label_widget, XmNmarginLeft, (longest-w) > 0 ? longest-w : 1, nullptr );
     }
 }
 
@@ -3538,17 +3538,17 @@ SendMsgDialog::forceFormResize(Widget form)
 		  XmNwidth, &width,
 		  XmNheight, &height,
 		  XmNborderWidth, &border,
-		  NULL);
+		  nullptr);
 
     XtVaSetValues(form,
 		  XmNwidth, width + 1,
 		  XmNheight, height + 1,
-		  NULL);
+		  nullptr);
 
     XtVaSetValues(form,
 		  XmNwidth, width,
 		  XmNheight, height,
-		  NULL);
+		  nullptr);
 }
 
 
@@ -3563,10 +3563,10 @@ SendMsgDialog::unfilled_headers()
 	    continue;
 	}
 
-	char * value = NULL;
+	char * value = nullptr;
 	XtVaGetValues(hl->field_widget,
 		      XmNvalue, &value,
-		      NULL);
+		      nullptr);
 	if (value) {
 	  if (strlen(value) > 0) {
 	      XtFree(value);
@@ -3603,13 +3603,13 @@ SendMsgDialog::handleQuitDialog()
     char *helpId;
 
     DtMail::Session *m_session = theRoamApp.session()->session();
-    const char * value = NULL;
+    const char * value = nullptr;
     DtMailEnv error;
 
     m_session->mailRc(error)->getValue(error, "expert", &value);
-    if (error.isNotSet() && value != NULL)
+    if (error.isNotSet() && value != nullptr)
     {
-        if (NULL != value)
+        if (nullptr != value)
           free((void*) value);
 
 	return (TRUE); 
@@ -3706,7 +3706,7 @@ SendMsgDialog::unmanage()
 
 Compose::Compose()
 {
-    _compose_head = NULL;
+    _compose_head = nullptr;
     _not_in_use = 0;
     _num_created = 0;
     _timeout_id = 0;
@@ -3737,8 +3737,8 @@ Compose::~Compose()
 void
 Compose::putWin(SendMsgDialog *smd, Boolean in_use)
 {
-    Compose::Compose_Win* a_node = NULL; 
-    Compose::Compose_Win *tmp = NULL;
+    Compose::Compose_Win* a_node = nullptr; 
+    Compose::Compose_Win *tmp = nullptr;
 
     //
     // Update the _not_in_use count.
@@ -3761,11 +3761,11 @@ Compose::putWin(SendMsgDialog *smd, Boolean in_use)
     // Need new node with smd.
     tmp = (Compose::Compose_Win *)malloc(sizeof(Compose::Compose_Win));
     tmp->win = smd;
-    tmp->next = NULL;
+    tmp->next = nullptr;
     tmp->in_use = in_use;
 
     // If nothing is cached so far, add this Compose window to the head.
-    if (NULL == _compose_head)
+    if (nullptr == _compose_head)
     {
 	_compose_head = tmp;
 	return;
@@ -3774,7 +3774,7 @@ Compose::putWin(SendMsgDialog *smd, Boolean in_use)
     // There exists a cache.  Add this compose window to the tail.
     for (a_node=_compose_head; a_node; a_node=a_node->next)
     {
-	if (NULL == a_node->next)
+	if (nullptr == a_node->next)
 	{
 	    a_node->next = tmp;
 	    return;
@@ -3785,10 +3785,10 @@ Compose::putWin(SendMsgDialog *smd, Boolean in_use)
 SendMsgDialog*
 Compose::getUnusedWin()
 {
-    if (NULL == _compose_head) return NULL;
+    if (nullptr == _compose_head) return nullptr;
    
-    Compose::Compose_Win* a_node = NULL; 
-    Compose::Compose_Win* the_node = NULL; 
+    Compose::Compose_Win* a_node = nullptr; 
+    Compose::Compose_Win* the_node = nullptr; 
     
     // Find a node with unused smd.  Return smd
     for (a_node=_compose_head; a_node; a_node=a_node->next)
@@ -3801,7 +3801,7 @@ Compose::getUnusedWin()
 	}
     }
 
-   return NULL;
+   return nullptr;
 }
 
 // Get a compose window either by creating a new SendMsgDialog or
@@ -3809,7 +3809,7 @@ Compose::getUnusedWin()
 SendMsgDialog *
 Compose::getWin()
 {
-    SendMsgDialog *newsend = NULL;
+    SendMsgDialog *newsend = nullptr;
     
 #ifdef DTMAIL_TOOLTALK
     if (_timeout_id)
@@ -3870,18 +3870,18 @@ void
 SendMsgDialog::resetHeaders(void)
 {
     DtMail::Session *m_session = theRoamApp.session()->session();
-    const char * value = NULL;
+    const char * value = nullptr;
     DtMailEnv error;
     int i, j;
 
     m_session->mailRc(error)->getValue(error, "additionalfields", &value);
 
     // Return if no props were applied and headers did not change.
-    if ((_additionalfields == NULL && value == NULL) ||
-	( _additionalfields != NULL && value != NULL &&
+    if ((_additionalfields == nullptr && value == nullptr) ||
+	( _additionalfields != nullptr && value != nullptr &&
 	  strcmp (_additionalfields, value) == 0))
     {
-        if (NULL != value)
+        if (nullptr != value)
           free((void*) value);
 
 	return;
@@ -3911,9 +3911,9 @@ SendMsgDialog::resetHeaders(void)
     		if (slot != -1) 
 			hl->show = SMD_NEVER;
 	}
-	else if (hl->value != NULL) {
+	else if (hl->value != nullptr) {
 		free(hl->value);
-		hl->value = NULL;
+		hl->value = nullptr;
 	}
     }
     while(results.length()) {
@@ -3922,12 +3922,12 @@ SendMsgDialog::resetHeaders(void)
     	results.remove(0);
     }
 
-    if (_additionalfields != NULL) 
+    if (_additionalfields != nullptr) 
 	free(_additionalfields);
-    if (value != NULL && *value != '\0')
+    if (value != nullptr && *value != '\0')
 	_additionalfields = strdup(value);
     else
-	_additionalfields = NULL;
+	_additionalfields = nullptr;
 
     parsePropString(value, results);
 
@@ -3940,11 +3940,11 @@ SendMsgDialog::resetHeaders(void)
 		HeaderList * hl = _header_list[slot];
 		if (!reservedHeader(hl->label)) 
                 	hl->show = SMD_HIDDEN;
-		if (hl->value != NULL) {
+		if (hl->value != nullptr) {
 			free(hl->value);
-			hl->value = NULL;
+			hl->value = nullptr;
 		}
-		if (psp->value != NULL)
+		if (psp->value != nullptr)
 			hl->value = strdup(psp->value);
 		continue;
     	}	
@@ -3965,7 +3965,7 @@ SendMsgDialog::resetHeaders(void)
     createHeaders(_header_form);
     doDynamicHeaderMenus();
 
-    if (NULL != value)
+    if (nullptr != value)
       free((void*) value);
 }
 
@@ -4016,10 +4016,10 @@ SendMsgDialog::hasAddressee()
     if ((strcmp(hl->label, "To") == 0) ||
 	(strcmp(hl->label, "Cc") == 0) || 
 	(strcmp(hl->label, "Bcc") == 0)) {
-      char * value = NULL;
+      char * value = nullptr;
       XtVaGetValues(hl->field_widget,
 		    XmNvalue, &value,
-		    NULL);
+		    nullptr);
       if (value) {
 	for (char *cv = value; *cv; cv++) {
 	  if (!isspace(*cv)) {

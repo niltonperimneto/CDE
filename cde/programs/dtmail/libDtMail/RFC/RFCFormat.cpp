@@ -83,7 +83,7 @@ RFCFormat::msgToBuffer(DtMailEnv & error,
     // and other content based headers need to be computed before
     // being written.
     //
-    char * extra_headers = NULL;
+    char * extra_headers = nullptr;
     formatBodies(error, msg, include_content_length, &extra_headers, body);
     if (error.isSet()) {
 	return;
@@ -114,7 +114,7 @@ RFCFormat::writeHeaders(DtMailEnv & error,
 	return;
     }
 
-    char * name = NULL;
+    char * name = nullptr;
     DtMailValueSeq value;
 
     hnd = env->getFirstHeader(error, &name, value);
@@ -146,7 +146,7 @@ RFCFormat::writeHeaders(DtMailEnv & error,
 	}
 	error.clear();
 
-	time_t now = time(NULL);
+	time_t now = time(nullptr);
 	char time_format[30];
 	
 	SafeCtime(&now, time_format, sizeof(time_format));
@@ -221,7 +221,7 @@ RFCFormat::rfc1522cpy(Buffer & buf, const char * value)
 void
 RFCFormat::getCharSet(char * charset)
 {
-	char *mimeCS = NULL;
+	char *mimeCS = nullptr;
 
         mimeCS = _session->targetTagName();
 
@@ -236,7 +236,7 @@ RFCFormat::getCharSet(char * charset)
 void
 RFCFormat::getCharSet(char * charset, char *special)
 {
-	char *mimeCS = NULL;
+	char *mimeCS = nullptr;
 
         mimeCS = _session->targetTagName(special);
 

@@ -39,7 +39,7 @@ char *strupper(char *str)
 {
     int len;
 
-    if (str != NULL)
+    if (str != nullptr)
       {
 	for (char *s = str; *s != '\0'; s++)
 	  if ((len = mblen(s, MB_CUR_MAX)) > 1)
@@ -55,7 +55,7 @@ char *strlower(char *str)
 {
     int len;
 
-    if (str != NULL)
+    if (str != nullptr)
       {
 	for (char *s = str; *s != '\0'; s++)
 	  if ((len = mblen(s, MB_CUR_MAX)) > 1)

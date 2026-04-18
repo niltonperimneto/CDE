@@ -117,9 +117,9 @@ ComposeFamily::Display_entire_msg(DtMailMessageHandle msgno,
     DtMail::MailBox *mbox = _menuwindow->mailbox();
     DtMail::Message *msg = mbox->getMessage(error, msgno);
     DtMail::Envelope *env = msg->getEnvelope(error);
-    DtMail::BodyPart *tmpBP = NULL;
+    DtMail::BodyPart *tmpBP = nullptr;
     DtMailBuffer tmpBuffer;
-    void *buffer = NULL;
+    void *buffer = nullptr;
     unsigned long size = 0;
     
     Editor::InsertFormat ins_format = Editor::IF_NONE;
@@ -184,14 +184,14 @@ ComposeFamily::Display_entire_msg(DtMailMessageHandle msgno,
 	    }
 	    
 	    char *name;
-	    while (tmpBP != NULL) {
+	    while (tmpBP != nullptr) {
 		tmpBP->getContents(
 				    error, (const void **) &tmpBuffer.buffer,
 				    &tmpBuffer.size,
-				    NULL,
+				    nullptr,
 				    &name,
-				    NULL,
-				    NULL);
+				    nullptr,
+				    nullptr);
 		if (error.isSet()) {
 		    // Do something
 		}
@@ -247,7 +247,7 @@ ComposeFamily::Display_entire_msg(DtMailMessageHandle msgno,
 	      tmpBP = msg->getNextBodyPart(error, tmpBP);
 	    
 	    editor->append_to_contents(att, strlen(att));
-	    while (tmpBP != NULL)
+	    while (tmpBP != nullptr)
 	    {
 	        editor->set_attachment(tmpBP, ins_format, brackets);
 		tmpBP = msg->getNextBodyPart(error, tmpBP);
@@ -269,7 +269,7 @@ ComposeFamily::appendSignature(SendMsgDialog * compose)
     DtMail::Session * d_session = theRoamApp.session()->session();
     DtMail::MailRc * mail_rc = d_session->mailRc(error);
 
-    const char * value = NULL;
+    const char * value = nullptr;
     mail_rc->getValue(error, "signature", &value);
     if (error.isSet()) {
 	return;
@@ -277,9 +277,9 @@ ComposeFamily::appendSignature(SendMsgDialog * compose)
 
     char * fullpath = d_session->expandPath(error, value);
     compose->get_editor()->textEditor()->append_to_contents(fullpath);
-    if (NULL != fullpath)
+    if (nullptr != fullpath)
       free((void*) fullpath);
-    if (NULL != value)
+    if (nullptr != value)
       free((void*) value);
 
     compose->get_editor()->textEditor()->set_to_top();
@@ -337,7 +337,7 @@ ComposeCmd::ComposeCmd(
 			RoamMenuWindow *window
 			) : ComposeFamily( name, label, active, window )
 {
-    _parent = NULL;
+    _parent = nullptr;
 }
 
 // Put up a blank compose window.
@@ -345,7 +345,7 @@ void
 ComposeCmd::doit()
 {
     SendMsgDialog * newsend = theCompose.getWin();
-    if (newsend == NULL) {
+    if (newsend == nullptr) {
 	DtMailGenDialog * dialog = _parent->genDialog();
 	
 	dialog->setToErrorDialog(CATGETS(DT_catd, 1, 203, "Mailer"),
@@ -368,7 +368,7 @@ ForwardCmd::ForwardCmd(
 			) : ComposeFamily(name, label, active, window)
 {
     _forward = forward;
-    _parent = NULL;
+    _parent = nullptr;
 }
 
 // Forward or Include selected messages.
@@ -384,7 +384,7 @@ ForwardCmd::doit()
     
     // Get a Compose window.
     SendMsgDialog *newsend = theCompose.getWin();
-    if ( newsend == NULL ) {
+    if ( newsend == nullptr ) {
 	DtMailGenDialog * dialog = _parent->genDialog();
 	
 	dialog->setToErrorDialog(CATGETS(DT_catd, 1, 205, "Mailer"),
@@ -441,7 +441,7 @@ ReplyCmd::ReplyCmd (
 		     ) : ComposeFamily ( name, label, active, window )
 {
     _include = include;
-    _parent = NULL;
+    _parent = nullptr;
 }
 
 // For each message selected, reply to sender.
@@ -466,7 +466,7 @@ ReplyCmd::doit()
 	    tmpMS = msgList->at(i);
 	    msgno = tmpMS->message_handle;
 	    SendMsgDialog *newsend = theCompose.getWin();
-	    if ( newsend == NULL ) {
+	    if ( newsend == nullptr ) {
 		DtMailGenDialog * dialog = _parent->genDialog();
 		
 		dialog->setToErrorDialog(CATGETS(DT_catd, 1, 207, "Mailer"),
@@ -577,7 +577,7 @@ ReplyAllCmd::ReplyAllCmd(
 			  ) : ComposeFamily( name, label, active, window )
 {
     _include = include;
-    _parent = NULL;
+    _parent = nullptr;
 }
 
 // For each message selected, reply to everybody.
@@ -610,7 +610,7 @@ ReplyAllCmd::doit()
 	    tmpMS = msgList->at(k);
 	    msgno = tmpMS->message_handle;
 	    newsend = theCompose.getWin();
-	    if ( newsend == NULL ) {
+	    if ( newsend == nullptr ) {
 		dialog = _parent->genDialog();
 		
 		dialog->setToErrorDialog(CATGETS(DT_catd, 1, 209, "Mailer"),
@@ -738,7 +738,7 @@ TemplateCmd::TemplateCmd(char *name,
     if (*file != '/' && *file != '~') {
         // Relative path.  Should be relative to home directory
         _file = (char *)malloc(strlen(file) + 4);
-        if (_file != NULL) {
+        if (_file != nullptr) {
                 strcpy(_file, "~/");
                 strcat(_file, file);
         }
@@ -797,7 +797,7 @@ TemplateCmd::doit()
     if (mbuf.buffer == (char *)-1) {
 	free_buf = 1;
 	mbuf.buffer = new char[mbuf.size];
-	if (mbuf.buffer == NULL) {
+	if (mbuf.buffer == nullptr) {
 	    dialog->setToErrorDialog(CATGETS(DT_catd, 1, 215, "Mailer"),
 				     CATGETS(DT_catd, 1, 216, "There is not enough memory to load the template."));
 	    char * helpId = DTMAILHELPNOMEMTEMPLATE;
@@ -825,9 +825,9 @@ TemplateCmd::doit()
     DtMail::Message * msg = d_session->messageConstruct(error,
 							DtMailBufferObject,
 							&mbuf,
-							NULL,
-							NULL,
-							NULL);
+							nullptr,
+							nullptr,
+							nullptr);
     if (error.isSet()) {
 	_compose->get_editor()->textEditor()->append_to_contents((char *)mbuf.buffer,
 							       mbuf.size);
@@ -843,10 +843,10 @@ TemplateCmd::doit()
 	    bp->getContents(error,
 			    &contents,
 			    &length,
-			    NULL,
-			    NULL,
-			    NULL,
-			    NULL);
+			    nullptr,
+			    nullptr,
+			    nullptr,
+			    nullptr);
 
 	    _compose->get_editor()->textEditor()->append_to_contents(
 						(char *)contents, length);

@@ -98,14 +98,14 @@ DmxPrintOutput::DmxPrintOutput (
     Widget		w;
     DtMailBoolean	parse_error;
 
-    _w = NULL;
+    _w = nullptr;
     _pshell = pshell;
 
     w = XtVaCreateWidget("Page",
 			xmFormWidgetClass,
 			_pshell,
 			XmNresizePolicy, XmRESIZE_NONE,
-			NULL);
+			nullptr);
     _form = w;
     _w = _form;
 		 
@@ -113,7 +113,7 @@ DmxPrintOutput::DmxPrintOutput (
 			xmFormWidgetClass,
 			_form,
 			XmNresizePolicy, XmRESIZE_NONE,
-			NULL);
+			nullptr);
     _inner_form = w;
 		 
     w = XtVaCreateManagedWidget("HeaderLeft",
@@ -122,7 +122,7 @@ DmxPrintOutput::DmxPrintOutput (
 				  XmNalignment, XmALIGNMENT_BEGINNING,
 				  XmNleftAttachment, XmATTACH_FORM,
 				  XmNtopAttachment, XmATTACH_FORM,
-				  NULL);
+				  nullptr);
     _header_left = w;
 
     w = XtVaCreateManagedWidget("HeaderRight",
@@ -133,7 +133,7 @@ DmxPrintOutput::DmxPrintOutput (
 				  XmNleftAttachment, XmATTACH_WIDGET,
 				  XmNleftWidget, _header_left,
 				  XmNtopAttachment, XmATTACH_FORM,
-				  NULL);
+				  nullptr);
     _header_right = w;
 		 
     w = XtVaCreateManagedWidget("Editor",
@@ -152,7 +152,7 @@ DmxPrintOutput::DmxPrintOutput (
 				  XmNrightAttachment, XmATTACH_FORM,
 				  XmNtopAttachment, XmATTACH_WIDGET,
 				  XmNtopWidget, _header_left,
-				  NULL);
+				  nullptr);
     _editor = w;
 		 
     w = XtVaCreateManagedWidget("FooterLeft",
@@ -161,7 +161,7 @@ DmxPrintOutput::DmxPrintOutput (
 				  XmNalignment, XmALIGNMENT_BEGINNING,
 				  XmNleftAttachment, XmATTACH_FORM,
 				  XmNbottomAttachment, XmATTACH_FORM,
-				  NULL);
+				  nullptr);
     _footer_left = w;
 
     w = XtVaCreateManagedWidget("FooterRight",
@@ -172,14 +172,14 @@ DmxPrintOutput::DmxPrintOutput (
 				  XmNleftWidget, _footer_left,
 				  XmNrightAttachment, XmATTACH_FORM,
 				  XmNbottomAttachment, XmATTACH_FORM,
-				  NULL);
+				  nullptr);
     _footer_right = w;
 
     XtVaSetValues(
 		_editor,
 		XmNbottomAttachment, XmATTACH_WIDGET,
 		XmNbottomWidget, _footer_left,
-		NULL);
+		nullptr);
 
     installDestroyHandler();
     XtManageChild(_inner_form);
@@ -207,7 +207,7 @@ void DmxPrintOutput::hideFooters (void)
 {
     XtUnmanageChild(_footer_left);
     XtUnmanageChild(_footer_right);
-    XtVaSetValues(_editor, XmNbottomAttachment, XmATTACH_FORM, NULL);
+    XtVaSetValues(_editor, XmNbottomAttachment, XmATTACH_FORM, nullptr);
 }
 
 void DmxPrintOutput::showFooters (void)
@@ -218,14 +218,14 @@ void DmxPrintOutput::showFooters (void)
 		_editor,
 		XmNbottomAttachment, XmATTACH_WIDGET,
 		XmNbottomWidget, _footer_left,
-		NULL);
+		nullptr);
 }
 
 void DmxPrintOutput::hideHeaders (void)
 {
     XtUnmanageChild(_header_left);
     XtUnmanageChild(_header_right);
-    XtVaSetValues(_editor, XmNtopAttachment, XmATTACH_FORM, NULL);
+    XtVaSetValues(_editor, XmNtopAttachment, XmATTACH_FORM, nullptr);
 }
 
 void DmxPrintOutput::showHeaders (void)
@@ -236,7 +236,7 @@ void DmxPrintOutput::showHeaders (void)
 		_editor,
 		XmNtopAttachment, XmATTACH_WIDGET,
 		XmNtopWidget, _header_left,
-		NULL);
+		nullptr);
 }
 
 
@@ -246,7 +246,7 @@ DmxPrintOutput::setHdrFtrString (_DtPrintHdrFtrEnum which, char *label)
     Widget	w;
     XmString	xms;
 
-    if (label == (char *) NULL)
+    if (label == (char *) nullptr)
       return;
 
     switch (which)
@@ -269,7 +269,7 @@ DmxPrintOutput::setHdrFtrString (_DtPrintHdrFtrEnum which, char *label)
     }
 
     xms = XmStringCreateLocalized(label);
-    XtVaSetValues(w, XmNlabelString, xms, NULL);
+    XtVaSetValues(w, XmNlabelString, xms, nullptr);
     XmStringFree(xms);
 }
 
@@ -286,28 +286,28 @@ DmxPrintOutput::setHdrFtrStrings (
     if (hdr_left)
     {
         xms = XmStringCreateLocalized(hdr_left);
-        XtVaSetValues(_header_left, XmNlabelString, xms, NULL);
+        XtVaSetValues(_header_left, XmNlabelString, xms, nullptr);
         XmStringFree(xms);
     }
 
     if (hdr_right)
     {
         xms = XmStringCreateLocalized(hdr_right);
-        XtVaSetValues(_header_right, XmNlabelString, xms, NULL);
+        XtVaSetValues(_header_right, XmNlabelString, xms, nullptr);
         XmStringFree(xms);
     }
 
     if (ftr_left)
     {
         xms = XmStringCreateLocalized(ftr_left);
-        XtVaSetValues(_footer_left, XmNlabelString, xms, NULL);
+        XtVaSetValues(_footer_left, XmNlabelString, xms, nullptr);
         XmStringFree(xms);
     }
 
     if (ftr_right)
     {
         xms = XmStringCreateLocalized(ftr_right);
-        XtVaSetValues(_footer_right, XmNlabelString, xms, NULL);
+        XtVaSetValues(_footer_right, XmNlabelString, xms, nullptr);
         XmStringFree(xms);
     }
 }
@@ -535,9 +535,9 @@ void
 DmxPrintOutput::setWrapToFit (DtMailBoolean onoff)
 {
 #ifdef USE_DTEDITOR
-    XtVaSetValues(_editor, DtNwordWrap, onoff, NULL);
+    XtVaSetValues(_editor, DtNwordWrap, onoff, nullptr);
 #else
-    XtVaSetValues(_editor, XmNwordWrap, onoff, NULL);
+    XtVaSetValues(_editor, XmNwordWrap, onoff, nullptr);
 #endif
 }
 
@@ -548,9 +548,9 @@ int DmxPrintOutput::getCharactersPerLine ()
     XtArgVal	columns = 0;
 
 #ifdef USE_DTEDITOR
-    XtVaGetValues(_editor, DtNcolumns, &columns, NULL);
+    XtVaGetValues(_editor, DtNcolumns, &columns, nullptr);
 #else
-    XtVaGetValues(_editor, XmNcolumns, &columns, NULL);
+    XtVaGetValues(_editor, XmNcolumns, &columns, nullptr);
 #endif
     return((int) columns);
 }
@@ -563,7 +563,7 @@ int DmxPrintOutput::getNumLines ()
 
 #ifdef USE_DTEDITOR
 #else
-    XtVaGetValues(_editor, XmNtotalLines, &total, NULL);
+    XtVaGetValues(_editor, XmNtotalLines, &total, nullptr);
     //
     // Correct for off by one error.
     //
@@ -590,7 +590,7 @@ int DmxPrintOutput::getTopPosition ()
     XmTextPosition top;
 
 #ifdef USE_DTEDITOR
-    XtVaGetValues(_editor, DtNtopCharacter, &top, NULL);
+    XtVaGetValues(_editor, DtNtopCharacter, &top, nullptr);
 #else
     top = XmTextGetTopCharacter(_editor);
 #endif
@@ -632,7 +632,7 @@ void DmxPrintOutput::setTopPosition ( int pos )
     XmTextPosition top = (XmTextPosition) pos;
 
 #ifdef USE_DTEDITOR
-    XtVaSetValues(_editor, DtNtopCharacter, top, NULL);
+    XtVaSetValues(_editor, DtNtopCharacter, top, nullptr);
 #else
     XmTextSetTopCharacter(_editor, top);
 #endif
@@ -711,7 +711,7 @@ void DmxPrintOutput::clearContents (void)
     DtEditorContentRec	content;
 
     content.type = DtEDITOR_TEXT;
-    rec.value.string = NULL;
+    rec.value.string = nullptr;
     status = DtEditorSetContents(my_text, &content);
 #else
     XmTextSetString(_editor, "");
@@ -727,7 +727,7 @@ DmxPrintOutput::doGetLinesPerPage ()
 {
     XtArgVal /* Dimension */	lpp;
 
-    XtVaGetValues(_editor, XmNrows, &lpp, NULL);
+    XtVaGetValues(_editor, XmNrows, &lpp, nullptr);
     return ((int) lpp);
 }
 
@@ -748,18 +748,18 @@ DmxPrintOutput::setInnerPageDimensions (
     XtVaGetValues(_form,
 		  XmNheight, &height0,
 		  XmNwidth, &width0,
-		  NULL);
+		  nullptr);
     outer_height = (Dimension)height0;
     outer_width = (Dimension)width0;
 
     XtVaGetValues(_header_left,
 		  XmNheight, &height0,
-		  NULL);
+		  nullptr);
     header_height = (Dimension)height0;
 
     XtVaGetValues(_footer_left,
 		  XmNheight, &height0,
-		  NULL);
+		  nullptr);
     footer_height = (Dimension)height0;
 
     inner_x = left;
@@ -774,7 +774,7 @@ DmxPrintOutput::setInnerPageDimensions (
 			(inner_height - (header_height + footer_height)) :
 			inner_height;
     
-    XtVaSetValues(_editor, XmNheight, editor_height, NULL);
+    XtVaSetValues(_editor, XmNheight, editor_height, nullptr);
 
     XtVaSetValues(_inner_form,
 		XmNleftAttachment, XmATTACH_NONE,
@@ -783,7 +783,7 @@ DmxPrintOutput::setInnerPageDimensions (
 		XmNy, inner_y,
 		XmNheight, inner_height,
 		XmNwidth, inner_width,
-		NULL);
+		nullptr);
 
     _lines_per_page = doGetLinesPerPage();
 }

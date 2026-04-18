@@ -54,7 +54,7 @@
 #include "MemUtils.hh"
 #include "RoamMenuWindow.h"
 
-DtMail::Session * MailSession::_app_session = NULL;
+DtMail::Session * MailSession::_app_session = nullptr;
 int MailSession::_num_deactivated = 0;
 
 MailSession::MailSession(DtMailEnv & error, XtAppContext context)
@@ -125,7 +125,7 @@ MailSession::getRMW(const char *path)
     int slot = locate(path);
     if (slot >= 0)
       return(_open_mailboxes[slot]->rmw);
-    return NULL;
+    return nullptr;
 }
 
 RoamMenuWindow *
@@ -157,11 +157,11 @@ MailSession::open(
     if (slot >= 0)
     {
         error.setError(DTME_AlreadyOpened);
-        if (client_data == NULL)
+        if (client_data == nullptr)
 	{
             _open_mailboxes[slot]->open_ref_count += 1;
             return _open_mailboxes[slot]->handle;
-        } else return NULL;
+        } else return nullptr;
     }
 
     // Create a handle for determining what to do next. This will
@@ -175,7 +175,7 @@ MailSession::open(
     {
 	error.setError(DTME_ObjectCreationFailed);
 	delete mailbox;
-	return NULL;
+	return nullptr;
     }
     
     // Does this file exist? If it doesn't and create is
@@ -196,7 +196,7 @@ MailSession::open(
     if (error.isSet())
     {
 	delete mailbox;
-	return(NULL);
+	return(nullptr);
     }
 
     addToList(mailbox, path, (RoamMenuWindow *) client_data);

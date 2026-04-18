@@ -169,22 +169,22 @@ Attachment::Attachment(
     _index(indx),
     _canKillSelf(TRUE),
     _myActionIds(5),
-    _myAllocContents(NULL),
-    _myContents(NULL),
+    _myAllocContents(nullptr),
+    _myContents(nullptr),
     _myContentsSize(0),
     _haveContents(FALSE),
-    _myType(NULL),
-    _subtype(NULL),
-    _myActionsList(NULL)
+    _myType(nullptr),
+    _subtype(nullptr),
+    _myActionsList(nullptr)
 {
-    if(strchr(name, '/') == NULL) // The name does not include a slash
+    if(strchr(name, '/') == nullptr) // The name does not include a slash
 	_label = XmStringCreateLocalized(name);
     else			   // The name does include a slash
 	_label = XmStringCreateLocalized(strrchr(name, '/')+1);
 
     _key = theRoamApp.session()->session()->newObjectKey();
     
-    myIcon = NULL;
+    myIcon = nullptr;
     _background = 0;
     _foreground = 0;
     _attachmentWidth = 0;
@@ -194,9 +194,9 @@ Attachment::Attachment(
     _deleted = false;
     _selected = false;
     _row = 0;
-    _saveAsFilename = NULL;
-    _ce_name = NULL;
-    _ce_type = NULL;
+    _saveAsFilename = nullptr;
+    _ce_name = nullptr;
+    _ce_type = nullptr;
     _type = 0;
     _binary = false;
     _executable = false;
@@ -226,8 +226,8 @@ Attachment::~Attachment(
     if (_myAllocContents) {
 	delete [] _myAllocContents;
     }
-    _myAllocContents = NULL;
-    _myContents = NULL;
+    _myAllocContents = nullptr;
+    _myContents = nullptr;
     _myContentsSize = 0;
 }
 
@@ -244,7 +244,7 @@ Attachment::initialize()
 {
     Widget widgetparent;
 
-    assert( _parent != NULL);
+    assert( _parent != nullptr);
 
     this->setContents();
 
@@ -325,7 +325,7 @@ Attachment::name_to_type()
     // If the type and subtype are already set then we don't need to
     // map a classing engine type to a MIME type; We already have
     // the MIME type, so just return
-    if(_subtype != NULL)
+    if(_subtype != nullptr)
 	return;
     if(equal(_ce_name, "text")) {			// text
 	_type = TYPETEXT;
@@ -420,14 +420,14 @@ Attachment::name_to_type()
 void
 Attachment::invokeAction(int index)
 {
-    char		*actionCommand = NULL;
-    DtActionArg		*actionArg = NULL;
+    char		*actionCommand = nullptr;
+    DtActionArg		*actionArg = nullptr;
     DtActionBuffer	 bufArg;
 
-    char		*exble = NULL;
-    char		*type = NULL;
+    char		*exble = nullptr;
+    char		*type = nullptr;
 
-    if (_myActionsList == NULL || NULL == _myActionsList[index]) return;
+    if (_myActionsList == nullptr || nullptr == _myActionsList[index]) return;
 
     this->setContents();
     actionCommand = _myActionsList[index];
@@ -452,7 +452,7 @@ Attachment::invokeAction(int index)
     // If this is the default action (aka Run) and the attachment is executable,
     // display a dialog informing the user of the risks of executing it.
     exble = DtDtsDataTypeToAttributeValue(type, DtDTS_DA_IS_EXECUTABLE, _name);
-    if (0 == index && NULL != exble && DtDtsIsTrue(exble))
+    if (0 == index && nullptr != exble && DtDtsIsTrue(exble))
     {
 	int answer;
 	char *buf = new char[2048];
@@ -478,7 +478,7 @@ Attachment::invokeAction(int index)
     DtActionInvoke(
 		_parent->ownerShellWidget(),
 		actionCommand, actionArg,
-		1, NULL, NULL, NULL, 1,
+		1, nullptr, nullptr, nullptr, 1,
  	       (DtActionCallbackProc)& Attachment::actionCallback, acb);
 }
 
@@ -524,8 +524,8 @@ const Attachment &
 void
 Attachment::set_selected()
 {
-    char	*actions_list = NULL;	//Comma separated list of actions
-    char*	anAction=NULL;
+    char	*actions_list = nullptr;	//Comma separated list of actions
+    char*	anAction=nullptr;
     int		numActions = 0;
 
     _selected = TRUE;
@@ -546,20 +546,20 @@ Attachment::set_selected()
     actions_list = DtDtsDataTypeToAttributeValue(
 				_myType,
 				DtDTS_DA_ACTION_LIST,
-				NULL
+				nullptr
 		   );
 
     char **tmpActionCommand = _myActionsList;
 
-    if (actions_list != NULL)
+    if (actions_list != nullptr)
     	anAction = strtok(actions_list, ",");
-    if (anAction == NULL) {
+    if (anAction == nullptr) {
 	return;
     }
 
     *tmpActionCommand = strdup(anAction);
 
-    while (*tmpActionCommand != NULL) {
+    while (*tmpActionCommand != nullptr) {
 	
 	// strtok() requires that calls other than the first have NULL as
 	// the first arg..
@@ -567,9 +567,9 @@ Attachment::set_selected()
 	tmpActionCommand++;
 	numActions++;
 
-	anAction = strtok(NULL, ",");
-	if (anAction == NULL) {
-	    *tmpActionCommand = NULL;
+	anAction = strtok(nullptr, ",");
+	if (anAction == nullptr) {
+	    *tmpActionCommand = nullptr;
 	}
 	else {
 	    *tmpActionCommand = strdup(anAction);
@@ -596,7 +596,7 @@ Attachment::saveToFile(DtMailEnv &, char *filename)
 {
     int answer;
     char *buf = new char[2048];
-    char *helpId = NULL;
+    char *helpId = nullptr;
 
     if (SafeAccess(filename, F_OK) == 0) {
 
@@ -765,7 +765,7 @@ Attachment::action(
     DtMailEnv	mail_error;
     int answer;
     char *buf = new char[2048];
-    const void * lclContents(NULL);
+    const void * lclContents(nullptr);
     unsigned long lclContentsSize(0);
 
     // Initialize the mail_error.
@@ -790,7 +790,7 @@ Attachment::action(
 	// with the data type.  Is this an Actions bug? Could be, but 
 	// we check for it anyway.
 
-	if (actionArg != NULL && _parent->isOwnerShellEditable() && !_deleted) {
+	if (actionArg != nullptr && _parent->isOwnerShellEditable() && !_deleted) {
 	    if (actionArg->argClass == DtACTION_BUFFER) {
 		bufArg = actionArg->u.buffer;
 		if (bufArg.writable) {
@@ -804,7 +804,7 @@ Attachment::action(
 					mail_error, 
 					(char *)bufArg.bp,
 					bufArg.size,
-					NULL, NULL, 0, NULL);
+					nullptr, nullptr, 0, nullptr);
 			
 // 		    if (mail_error.isSet()) {
 // 			//handle error
@@ -819,14 +819,14 @@ Attachment::action(
 //
 		    if (_myType) {
 			free(_myType);
-			_myType = NULL;
+			_myType = nullptr;
 		    }
 		    _body_part->getContents(
 					mail_error,
 					&lclContents,
 					&lclContentsSize,
 					&_myType, 
-					NULL, 0, NULL);
+					nullptr, 0, nullptr);
 // 		    if (mail_error.isSet()) {
 // 			//handle error
 // 		    }
@@ -859,7 +859,7 @@ Attachment::action(
 		_body_part->setContents(mail_error,
 					tmp_buf,
 					stat_buf.st_size,
-					NULL, NULL, 0, NULL);
+					nullptr, nullptr, 0, nullptr);
 			
 		assert(mail_error.isNotSet());
 
@@ -868,14 +868,14 @@ Attachment::action(
 
 		if (_myType) {
 		    free(_myType);
-		    _myType = NULL;
+		    _myType = nullptr;
 		}
 
 		_body_part->getContents(mail_error,
 					&lclContents,
 					&lclContentsSize,
 					&_myType,
-					NULL, 0, NULL);
+					nullptr, 0, nullptr);
 
 		assert(mail_error.isNotSet());
 		_setMyContents(lclContents, int(lclContentsSize));
@@ -914,7 +914,7 @@ Attachment::action(
 	// Check if ownerShell is an SMD.  Make sure the message has not
 	// been sent before attempting to update things.
 
-	if(actionArg != NULL && _parent->isOwnerShellEditable() && !_deleted) {
+	if(actionArg != nullptr && _parent->isOwnerShellEditable() && !_deleted) {
 	    if (actionArg->argClass == DtACTION_BUFFER) {
 		bufArg = actionArg->u.buffer;
 		if (bufArg.writable) {
@@ -928,7 +928,7 @@ Attachment::action(
 					mail_error, 
 					(char *)bufArg.bp,
 					bufArg.size,
-					NULL, NULL, 0, NULL);
+					nullptr, nullptr, 0, nullptr);
 			
 // 		    if (mail_error.isSet()) {
 // 			//handle error
@@ -938,14 +938,14 @@ Attachment::action(
 
 		    if (_myType) {
 			free(_myType);
-			_myType = NULL;
+			_myType = nullptr;
 		    }
 		    _body_part->getContents(
 					mail_error, 
 					&lclContents,
 					&lclContentsSize,
 					&_myType, 
-					NULL, 0, NULL);
+					nullptr, 0, nullptr);
 // 		    if (mail_error.isSet()) {
 // 			//handle error
 // 		    }
@@ -979,20 +979,20 @@ Attachment::action(
 		_body_part->setContents(mail_error,
 					(char *)tmp_buf,
 					(int) stat_buf.st_size,
-					NULL, NULL, 0, NULL);
+					nullptr, nullptr, 0, nullptr);
 			
 		assert(mail_error.isNotSet());
 
 		if (_myType) {
 		    free(_myType);
-		    _myType = NULL;
+		    _myType = nullptr;
 		}
 
 		_body_part->getContents(mail_error,
 					&lclContents,
 					&lclContentsSize,
 					&_myType,
-					NULL, 0, NULL);
+					nullptr, 0, nullptr);
 
 		assert(mail_error.isNotSet());
 		_setMyContents(lclContents, int(lclContentsSize));
@@ -1006,7 +1006,7 @@ Attachment::action(
 	unregisterAction(id);	
 	_parent->setPendingAction(FALSE);
 
-	if (actionArg != NULL) {
+	if (actionArg != nullptr) {
 		XtFree((char *)(actionArg->u.buffer.bp));
 	}
     }
@@ -1150,18 +1150,18 @@ Attachment::rename(
     XmString new_name
 )
 {
-    char *name = NULL;
+    char *name = nullptr;
     DtMailEnv mail_error;
     
     mail_error.clear();
 
-    name = (char *) _XmStringUngenerate(new_name, NULL,
+    name = (char *) _XmStringUngenerate(new_name, nullptr,
 					XmMULTIBYTE_TEXT, XmMULTIBYTE_TEXT);
     
     _body_part->setContents(
 			mail_error,
-			NULL, 1, NULL,
-			name, 0, NULL);
+			nullptr, 1, nullptr,
+			name, 0, nullptr);
 
     this->setLabel(new_name);
 }
@@ -1178,14 +1178,14 @@ Attachment::setContents()
 
     if (_myType) {
 	free(_myType);
-	_myType = NULL;
+	_myType = nullptr;
     }
     _body_part->getContents(
 			mail_error,
 			&lclContents,
 			&lclContentsSize,
 			&_myType,
-			NULL, 0, NULL);
+			nullptr, 0, nullptr);
 
     // BE has returned an error condition...
 
@@ -1238,7 +1238,7 @@ Attachment::setContents()
 	    // Generate a new content string by prepending an
 	    // "From UNKNOWN" header.
 
-	    char	*buffer = NULL;
+	    char	*buffer = nullptr;
 	    char	*from_hdr = "From UNKNOWN";
 	    int		size = 0;
 	    
@@ -1307,9 +1307,9 @@ Attachment::_setMyContents(const void * data, int size)
     }
     else {
 	new_size = 0;
-	new_contents = NULL;
+	new_contents = nullptr;
     }
-    if (_myAllocContents != NULL) {
+    if (_myAllocContents != nullptr) {
 	delete [] _myAllocContents;
     }
     _myAllocContents = new_contents;

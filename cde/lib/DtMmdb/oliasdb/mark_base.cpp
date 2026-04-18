@@ -57,7 +57,7 @@
 mark_base::mark_base(user_base::rw_flag_t rw) : 
 	user_base(MARK_SPEC, rw)
 {
-   mark_set_hd = NULL;
+   mark_set_hd = nullptr;
 }
 
 
@@ -69,7 +69,7 @@ mark_base::mark_base( const char* base_dir,
 	user_base(base_dir, base_nm, base_ds, MARK_SPEC, rw) 
 {
    if ( checking_status != SUCC ) {
-      mark_set_hd = NULL;
+      mark_set_hd = nullptr;
       return;
    }
 

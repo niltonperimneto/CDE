@@ -62,7 +62,7 @@ class _JobIcon : public IconObj
 };
 
 _JobIcon::_JobIcon(AnyUI *parent, DtPrtJobIcon *obj, IconFields fields)
-	: IconObj(parent, (char *)obj->Name(), "DtPrtjb", NULL, NULL, NULL,
+	: IconObj(parent, (char *)obj->Name(), "DtPrtjb", nullptr, nullptr, nullptr,
 		  fields)
 {
    job_icon = obj;
@@ -114,7 +114,7 @@ DtFindD::DtFindD(MotifUI *parent,
    if (getuid() == 0) // check to see if we are root
       match_any_user = new Button(rc, MESSAGE(OnlyRootJobsL), TOGGLE_BUTTON);
    else
-      match_any_user = NULL;
+      match_any_user = nullptr;
    ignore_case = new Button(rc, MESSAGE(IgnoreCaseL), TOGGLE_BUTTON);
    ignore_case->Selected(true);
    exact_match = new Button(rc, MESSAGE(ExactMatchL), TOGGLE_BUTTON);
@@ -194,7 +194,7 @@ boolean DtFindD::SetVisiblity(boolean flag)
       int offset = (width - (w1 + w2)) / 3;
       goto_job->AttachLeft(offset);
       cancel_jobs->AttachRight(offset);
-      cancel_jobs->AttachLeft(NULL, 0);
+      cancel_jobs->AttachLeft(nullptr, 0);
     }
    found_container->DeleteChildren();
    cancel_jobs->Active(false);
@@ -257,7 +257,7 @@ void DtFindD::Start()
       _prev_visible = icon->Visible();
       _prev_opened = icon->Open();
     }
-   AddTimeOut(CheckQueue, NULL, 200);
+   AddTimeOut(CheckQueue, nullptr, 200);
 }
 
 void DtFindD::Cancel()
@@ -288,7 +288,7 @@ void DtFindD::Stop()
     {
        int n_matches;
        BaseUI **matches;
-       char *value1 = NULL;
+       char *value1 = nullptr;
        char *value = prompt->Value();
        if (!value || *value == '\0')
 	  value = ".*";
@@ -317,9 +317,9 @@ void DtFindD::Stop()
 	  fields->fields = new char *[n_fields]; 
 	  fields->fields_widths = new int[n_fields];
 	  fields->alignments = new LabelType[n_fields];
-	  fields->draw_fields = NULL;
-	  fields->selected = NULL;
-	  fields->active = NULL;
+	  fields->draw_fields = nullptr;
+	  fields->selected = nullptr;
+	  fields->active = nullptr;
 
 	  fields->name_width = StringWidth(MESSAGE(JobName1L));
 	  fields->fields_widths[0] = StringWidth(MESSAGE(PrinterL));
@@ -436,7 +436,7 @@ void DtFindD::UpdateQueue()
       else
        {
 	 int n_matches;
-         char *value1 = NULL;
+         char *value1 = nullptr;
          char *value = prompt->Value();
          if (!value || *value == '\0')
 	    value = ".*";
@@ -446,7 +446,7 @@ void DtFindD::UpdateQueue()
 	    sprintf(value1, ".%s", value);
 	    value = value1;
           }
-         icon1->FindByName(value, 0, &n_matches, NULL, _select_proc,
+         icon1->FindByName(value, 0, &n_matches, nullptr, _select_proc,
                            exact_match->Selected() ? false : true,
 			   ignore_case->Selected() ? false : true);
 	 delete value1;
@@ -469,7 +469,7 @@ void DtFindD::UpdateQueue()
          _prev_visible = icon->Visible();
          _prev_opened = icon->Open();
        }
-      AddTimeOut(CheckQueue, NULL, 200);
+      AddTimeOut(CheckQueue, nullptr, 200);
     }
    else if (_cur_obj == mainw->container->NumChildren())
       Stop();
@@ -499,7 +499,7 @@ BaseUI *DtFindD::FindJob(BaseUI *obj)
 			       MESSAGE(NotFoundMessageL), INFORMATION,
 			       MESSAGE(OKL));
    dialog->Visible(true);
-   return NULL;
+   return nullptr;
 }
 
 void DtFindD::GotoCB(void *data)
@@ -601,7 +601,7 @@ void DtFindD::UpdatePrinter(BaseUI *printer)
    _JobIcon **children = (_JobIcon **)found_container->Children();
    int i, w1;
    int width = StringWidth(MESSAGE(PrinterL));
-   BaseUI *last_printer = NULL;
+   BaseUI *last_printer = nullptr;
    for (i = 0; i < n_children; i++)
     {
       if (last_printer != children[i]->printer)
@@ -618,7 +618,7 @@ void DtFindD::UpdatePrinter(BaseUI *printer)
    // row column to the width + margin space.  I have to do this because
    // the row column widget does not resize itself correctly.
    Dimension wid;
-   XtVaGetValues(found_container->InnerWidget(), XmNwidth, &wid, NULL);
+   XtVaGetValues(found_container->InnerWidget(), XmNwidth, &wid, nullptr);
    wid -= field2->Width();
    wid += width;
    new LabelObj(found_container, " ");
@@ -627,7 +627,7 @@ void DtFindD::UpdatePrinter(BaseUI *printer)
    n_children++;
    children[0]->Width((int)wid);
    wid += 6;
-   XtVaSetValues(found_container->InnerWidget(), XmNwidth, (int)wid, NULL);
+   XtVaSetValues(found_container->InnerWidget(), XmNwidth, (int)wid, nullptr);
 
    field2->Width(width + 20);
    for (i = 1; i < n_children; i++)
@@ -635,7 +635,7 @@ void DtFindD::UpdatePrinter(BaseUI *printer)
       if (printer == children[i]->printer)
 	 children[i]->Field(0, (char *)printer->Name(), width);
       else
-	 children[i]->Field(0, NULL, width);
+	 children[i]->Field(0, nullptr, width);
     }
    delete children[0];
 }

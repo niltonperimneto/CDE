@@ -68,7 +68,7 @@ extern "C" void * V3MetaFactory(const char * op);
 static const SymTable symbol_table[] = {
 { "RFCMetaFactory",	(void *)RFCMetaFactory },
 { "V3MetaFactory",	(void *)V3MetaFactory },
-{ NULL,			NULL }
+{ nullptr,			nullptr }
 };
 
 void *
@@ -80,5 +80,5 @@ NotDynamic::getSym(const char * sym)
 	}
     }
 
-    return(NULL);
+    return(nullptr);
 }

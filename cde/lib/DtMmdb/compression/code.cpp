@@ -52,7 +52,7 @@
 #include "compression/code.hpp"
 
 encoding_unit::encoding_unit(std::string* w, unsigned int f) :
-   word(w), bits(0), freq(f), code(0), leaf_htr_node(NULL)
+   word(w), bits(0), freq(f), code(0), leaf_htr_node(nullptr)
 {
 }
 

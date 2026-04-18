@@ -63,10 +63,10 @@ Editor::~Editor()
 
 
 AbstractEditorParent::AbstractEditorParent() {
-	_attachmentPopupMenu = NULL;
-	_textPopupMenu = NULL;
-	_menuPopupAtt = NULL;
-	_menuPopupText = NULL;
+	_attachmentPopupMenu = nullptr;
+	_textPopupMenu = nullptr;
+	_menuPopupAtt = nullptr;
+	_menuPopupText = nullptr;
 }
 
 AbstractEditorParent::~AbstractEditorParent() 
@@ -86,7 +86,7 @@ Editor::set_message(DtMail::Message * msg,
     DtMail::Session *m_session = theRoamApp.session()->session(); 
     DtMail::MailRc * mail_rc = m_session->mailRc(error);
 
-    *status_string = NULL;
+    *status_string = nullptr;
 
     DtMail::Envelope *env = msg->getEnvelope(error);
 
@@ -96,7 +96,7 @@ Editor::set_message(DtMail::Message * msg,
 
     // Here is not the place for getting the indent string 
     // but it'll do for now.
-    const char *indent_str = NULL;
+    const char *indent_str = nullptr;
     mail_rc->getValue(error, "indentprefix", &indent_str);
     if (error.isSet()) 
       indent_str = strdup("> ");
@@ -204,23 +204,23 @@ Editor::set_message(DtMail::Message * msg,
     char *type;
     DtMailBoolean firstBPHandled = DTM_FALSE;
 
-    bp->getContents(error, NULL, NULL, &type, NULL, NULL, NULL);
+    bp->getContents(error, nullptr, nullptr, &type, nullptr, nullptr, nullptr);
     if ( type ) {
 	char *attr = DtDtsDataTypeToAttributeValue(
 					type, 
 					DtDTS_DA_IS_TEXT, 
-					NULL);
+					nullptr);
 	if ((attr && strcasecmp(attr, "true") == 0)
 	    || strcoll(type, DtDTS_DT_UNKNOWN) == 0 ) {
 	    const void *contents;
 	    unsigned long size;
 	    bp->lockContents(error, DtMailLockRead);
-	    bp->getContents(error, &contents, &size, NULL, NULL, NULL, NULL);
+	    bp->getContents(error, &contents, &size, nullptr, nullptr, nullptr, nullptr);
 
 	    if (format == IF_INDENTED) {
 		int byte_count = 0;
 		int content_count = (int) size;
-		const char *last = NULL, *content_ptr = NULL;
+		const char *last = nullptr, *content_ptr = nullptr;
 		// Parse the result of getContents().
 		// Spit out indent string with each line.
 		// Is contents NULL terminated???
@@ -257,7 +257,7 @@ Editor::set_message(DtMail::Message * msg,
 	}
 	if (attr) {
 	    DtDtsFreeAttributeValue(attr);
-	    attr = NULL;
+	    attr = nullptr;
 	}
 	free(type);
 
@@ -288,7 +288,7 @@ Editor::set_message(DtMail::Message * msg,
 
     enable_redisplay();
 
-    if (NULL != indent_str)
+    if (nullptr != indent_str)
       free((void*) indent_str);
 
     return(firstBPHandled);
@@ -313,7 +313,7 @@ Editor::set_attachment(
     DtMailValueSeq value;
 
     char		*input, *name, *dttype, *description, *mimetype;
-    const char		*indent_str = NULL;
+    const char		*indent_str = nullptr;
     unsigned long	len;
 
     if (format == IF_INDENTED)
@@ -339,11 +339,11 @@ Editor::set_attachment(
         append_newline_to_contents();
     }
 
-    bp->getContents(error, NULL, &len, &dttype, &name, NULL, &description);
+    bp->getContents(error, nullptr, &len, &dttype, &name, nullptr, &description);
     
-    if ((NULL != name) && (0 != strlen(name)))
+    if ((nullptr != name) && (0 != strlen(name)))
     {
-        if (NULL != indent_str)
+        if (nullptr != indent_str)
           append_to_contents(indent_str, strlen(indent_str));
 	input = CATGETS(DT_catd, 1, 251, "       Attachment Name:  ");
         append_to_contents(input, strlen(input));
@@ -351,9 +351,9 @@ Editor::set_attachment(
         append_newline_to_contents();
     }
 
-    if ((NULL != dttype) && (0 != strlen(dttype)))
+    if ((nullptr != dttype) && (0 != strlen(dttype)))
     {
-        if (NULL != indent_str)
+        if (nullptr != indent_str)
           append_to_contents(indent_str, strlen(indent_str));
 	input = CATGETS(DT_catd, 1, 252, "     Attachment DtType:  ");
         append_to_contents(input, strlen(input));
@@ -362,9 +362,9 @@ Editor::set_attachment(
     }
 
     bp->getContentType(error, &mimetype);
-    if ((NULL != mimetype) && (0 != strlen(mimetype)))
+    if ((nullptr != mimetype) && (0 != strlen(mimetype)))
     {
-        if (NULL != indent_str)
+        if (nullptr != indent_str)
           append_to_contents(indent_str, strlen(indent_str));
 	input = CATGETS(DT_catd, 1, 253, "Attachment ContentType:  ");
         append_to_contents(input, strlen(input));
@@ -372,9 +372,9 @@ Editor::set_attachment(
         append_newline_to_contents();
     }
 
-    if ((NULL != description) && (0 != strlen(description)))
+    if ((nullptr != description) && (0 != strlen(description)))
     {
-        if (NULL != indent_str)
+        if (nullptr != indent_str)
           append_to_contents(indent_str, strlen(indent_str));
 	input = CATGETS(DT_catd, 1, 254, "Attachment Description:  ");
         append_to_contents(input, strlen(input));
@@ -398,15 +398,15 @@ Editor::set_attachment(
     }
     enable_redisplay();
 
-    if (NULL != indent_str)
+    if (nullptr != indent_str)
       free((void*) indent_str);
-    if (NULL != name)
+    if (nullptr != name)
       free((void*) name);
-    if (NULL != dttype)
+    if (nullptr != dttype)
       free((void*) dttype);
-    if (NULL != mimetype)
+    if (nullptr != mimetype)
       free((void*) mimetype);
-    if (NULL != description)
+    if (nullptr != description)
       free((void*) description);
 }
 
@@ -417,23 +417,23 @@ Editor::update_display_from_props(void)
     DtMailEnv  error;
     DtMail::Session * d_session = theRoamApp.session()->session();
     DtMail::MailRc * mailrc = d_session->mailRc(error);
-    const char * value = NULL;
+    const char * value = nullptr;
 
     mailrc->getValue(error, "popuplines", &value);
     if (error.isSet()) {
 	value = strdup("24");
     }
-    rows = (int) strtol(value, NULL, 10);
+    rows = (int) strtol(value, nullptr, 10);
     free((void*) value);
     set_rows(rows);
 
     // If toolcols is set, overwrite the column width with "toolcols" value.
     // Otherwise, default resource value will be used.
-    value = NULL;
+    value = nullptr;
     error.clear();
     mailrc->getValue(error, "toolcols", &value);
     if (!error.isSet()){
-        cols = (int) strtol(value, NULL, 10);      
+        cols = (int) strtol(value, nullptr, 10);      
         free((void*) value);
     } else {
 	/*
@@ -459,7 +459,7 @@ AbstractEditorParent::postAttachmentPopup(XEvent *event)
 void 
 AbstractEditorParent::postTextPopup(XEvent *event)
 {
-	if (_textPopupMenu == NULL)
+	if (_textPopupMenu == nullptr)
 		return;
 
 	XmMenuPosition(_textPopupMenu, (XButtonEvent *)event);

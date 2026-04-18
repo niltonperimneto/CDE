@@ -62,23 +62,23 @@
 //
 
 
-RFCValue::RFCValue(const char * str, int size) : DtMailValue(NULL)
+RFCValue::RFCValue(const char * str, int size) : DtMailValue(nullptr)
 {
     _value = (char *)malloc(size + 1);
     memcpy(_value, str, size);
     _value[size] = 0;
 
-    _decoded = NULL;
-    _session = NULL;
+    _decoded = nullptr;
+    _session = nullptr;
 }
 
-RFCValue::RFCValue(const char * str, int size, DtMail::Session *s) : DtMailValue(NULL)
+RFCValue::RFCValue(const char * str, int size, DtMail::Session *s) : DtMailValue(nullptr)
 {
     _value = (char *)malloc(size + 1);
     memcpy(_value, str, size);
     _value[size] = 0;
 
-    _decoded = NULL;
+    _decoded = nullptr;
 	_session = s;
 }
 
@@ -165,9 +165,9 @@ decode1522(const char * enc_start, const char * max_end, char **output, DtMail::
         }
     }
 
-    if (NULL != from_cs)
+    if (nullptr != from_cs)
 	free( from_cs );
-    if (NULL != to_cs)
+    if (nullptr != to_cs)
 	free ( to_cs );
     free(cs_name);
 
@@ -191,7 +191,7 @@ RFCValue::operator= (const char * str)
 {
     if (_decoded) {
 	free(_decoded);
-	_decoded = NULL;
+	_decoded = nullptr;
     }
 
     if (_value) {
@@ -253,17 +253,17 @@ parseTime(const char * start, const char * end, tm & val)
     strncpy(num_buf, start, 2);
     num_buf[2] = 0;
 
-    val.tm_hour = (int) strtol(num_buf, NULL, 10);
+    val.tm_hour = (int) strtol(num_buf, nullptr, 10);
 
     strncpy(num_buf, &start[3], 2);
     num_buf[2] = 0;
 
-    val.tm_min = (int) strtol(num_buf, NULL, 10);
+    val.tm_min = (int) strtol(num_buf, nullptr, 10);
 
     if (size > 6) {
 	strncpy(num_buf, &start[6], 2);
 	num_buf[2] = 0;
-	val.tm_sec = (int) strtol(num_buf, NULL, 10);
+	val.tm_sec = (int) strtol(num_buf, nullptr, 10);
     }
     else {
 	val.tm_sec = 0;
@@ -334,11 +334,11 @@ parseTZ(const char * start, const char * end)
 	char num_buf[10];
 	strncpy(num_buf, &start[1], 2);
 	num_buf[2] = 0;
-	int hours = (int) strtol(num_buf, NULL, 10);
+	int hours = (int) strtol(num_buf, nullptr, 10);
 
 	strncpy(num_buf, &start[3], 2);
 	num_buf[2] = 0;
-	int minutes = (int) strtol(num_buf, NULL, 10);
+	int minutes = (int) strtol(num_buf, nullptr, 10);
 
 	return(sign * ((hours * 3600) + (minutes * 60)));
     }
@@ -381,7 +381,7 @@ RFCValue::toDate(void)
     const char *token_end[12];
     int	n_tokens = 0;
 
-    token_end[0] = NULL;
+    token_end[0] = nullptr;
 
     // Look for the end of each token. Date tokens are white space
     // separated.
@@ -457,7 +457,7 @@ RFCValue::toDate(void)
 
 	strncpy(num_buf, token_begin[this_token], 2);
 	num_buf[2] = 0;
-	new_time.tm_mday = (int) strtol(num_buf, NULL, 10);
+	new_time.tm_mday = (int) strtol(num_buf, nullptr, 10);
 
 	this_token += 1;
 	if (this_token == n_tokens) {
@@ -484,7 +484,7 @@ RFCValue::toDate(void)
 	strncpy(num_buf, token_begin[this_token], 4);
 	// Don't remove last digit from year and get bad dates in header.
 	num_buf[token_end[this_token] - token_begin[this_token] + 1] = 0;
-	new_time.tm_year = (int) strtol(num_buf, NULL, 10);
+	new_time.tm_year = (int) strtol(num_buf, nullptr, 10);
 	if (new_time.tm_year > 1900) {
 	    new_time.tm_year -= 1900;
 	}
@@ -502,7 +502,7 @@ RFCValue::toDate(void)
 	char num_buf[20];
 	strncpy(num_buf, token_begin[this_token], 2);
 	num_buf[2] = 0;
-	new_time.tm_mday = (int) strtol(num_buf, NULL, 10);
+	new_time.tm_mday = (int) strtol(num_buf, nullptr, 10);
 
 	this_token += 1;
 	if (this_token == n_tokens) {
@@ -521,7 +521,7 @@ RFCValue::toDate(void)
 	int t_size = token_end[this_token] - token_begin[this_token] + 1;
 	strncpy(num_buf, token_begin[this_token], t_size);
 	num_buf[t_size] = 0;
-	new_time.tm_year = (int) strtol(num_buf, NULL, 10);
+	new_time.tm_year = (int) strtol(num_buf, nullptr, 10);
 	if (new_time.tm_year > 1900) {
 	    new_time.tm_year -= 1900;
 	}
@@ -587,7 +587,7 @@ findParenComment(const char * value)
     }
 
     if (*sparen != '(') {
-	return(NULL);
+	return(nullptr);
     }
 
     in_quote = 0;
@@ -610,7 +610,7 @@ findParenComment(const char * value)
     }
 
     if (*lparen != ')') {
-	return(NULL);
+	return(nullptr);
     }
 
     char * comment = (char *)malloc(lparen - sparen + 1);
@@ -638,7 +638,7 @@ stripAngleAddr(const char * value)
 	if (*lt == '<') break;
     }
 
-    if (*lt != '<') return(NULL);
+    if (*lt != '<') return(nullptr);
 
     in_quote = 0;
 
@@ -656,7 +656,7 @@ stripAngleAddr(const char * value)
 
     }
 
-    if (*gt != '>') return(NULL);
+    if (*gt != '>') return(nullptr);
 
     // Copy everything not in the angle brackets.
     //
@@ -675,7 +675,7 @@ stripAngleAddr(const char * value)
     if (strlen(name) == 0)
     {
 	free(name);
-	return(NULL);
+	return(nullptr);
     }
 
     return(name);
@@ -685,8 +685,8 @@ static char *
 stripQuotesWhiteSpace(const char * value)
 {
     int   found_alphanum = 0;
-    char *name = NULL;
-    char *out = NULL;
+    char *name = nullptr;
+    char *out = nullptr;
 
     //
     // Skip past leading white space.
@@ -709,7 +709,7 @@ stripQuotesWhiteSpace(const char * value)
     cp++;
 
     out = name = (char*) malloc(strlen(value)+1);
-    if (NULL == out) return NULL;
+    if (nullptr == out) return nullptr;
 
     while (*cp != '"')
     {
@@ -785,7 +785,7 @@ RFCValue::decodeValue(void)
     *output = 0;
     char * cur_c = output;
     
-    char *buf = NULL;
+    char *buf = nullptr;
     
     // Scan the value, looking for =? which indicates the start
     // of a encoded string.

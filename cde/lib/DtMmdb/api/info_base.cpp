@@ -286,10 +286,10 @@ int stdin_sgml_data_getchar(unsigned char* buf, int max_sz)
    static char loc_buf[LBUFSIZ];
 
    if ( remain_chars == 0 ) {
-      if ( fgets(loc_buf, LBUFSIZ, stdin) == NULL )
+      if ( fgets(loc_buf, LBUFSIZ, stdin) == nullptr )
          return 0;
 
-      if ( fgets(loc_buf, LBUFSIZ, stdin) == NULL )
+      if ( fgets(loc_buf, LBUFSIZ, stdin) == nullptr )
          throw(stringException("no locator line"));
 
       if ( fscanf(stdin, "%d", &remain_chars) != 1 )
@@ -343,10 +343,10 @@ void info_base::build_dict(char* agent_name)
    if ( x == 0 )
       throw(stringException("info_base::build_dict(): unknown compress agent"));
 
-   if ( strstr(agent_name, ".sgml.") != NULL ) {
+   if ( strstr(agent_name, ".sgml.") != nullptr ) {
       (*x) -> build_dict(sgmllex, stdin_sgml_data_getchar);
    } else
-   if ( strstr(agent_name, ".ps.") != NULL ) {
+   if ( strstr(agent_name, ".ps.") != nullptr ) {
       (*x) -> build_dict(pslex, stdin_ps_data_getchar);
    } else
       throw(stringException("info_base::build_dict(): unknown compress target"));

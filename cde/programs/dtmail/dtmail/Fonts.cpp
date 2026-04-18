@@ -60,7 +60,7 @@ get_font(
 {
     XmFontContext	 fl_context;
     XmFontListEntry	 fl_entry;
-    XtPointer	 	 fl_entry_font = NULL, font_to_use = NULL;
+    XtPointer	 	 fl_entry_font = nullptr, font_to_use = nullptr;
     char		*fl_entry_font_tag;
     Boolean		 found_font_set = False,
 			 found_font_struct = False,
@@ -69,7 +69,7 @@ get_font(
     *type_return = XmFONT_IS_FONT;
 
     if (!XmFontListInitFontContext(&fl_context, font_list))
-      		return (XtPointer)NULL;
+      		return (XtPointer)nullptr;
 
     do
     {
@@ -112,12 +112,12 @@ get_font(
 		found_font_struct = True;
 	    }
 	}
-    } while (fl_entry != NULL);
+    } while (fl_entry != nullptr);
 
     XmFontListFreeFontContext(fl_context);
 
     if (!found_font_set && !found_font_struct)
-      return (XtPointer)NULL;
+      return (XtPointer)nullptr;
 
     return (XtPointer)font_to_use;
 }
@@ -152,7 +152,7 @@ fontlist_to_font(
 
 /*
  * Determine the pixel size of the user font.  Try to match a symbol
- * font to that size.  If one can't be found, return NULL, calling
+ * font to that size.  If one can't be found, return nullptr, calling
  * function will probably default to the user font.
  */
 void
@@ -215,7 +215,7 @@ load_app_font(
 	    font_names = XListFonts(dpy, font_name, 1, &nnames);
 	}
 	if (!nnames) {
-	    *fontname = NULL;
+	    *fontname = nullptr;
 	    return;
 	}
 

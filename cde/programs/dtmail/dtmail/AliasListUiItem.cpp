@@ -61,21 +61,21 @@ AliasListUiItem::AliasListUiItem(Widget w,
 		       int source, 
 		       char *search_key,
 		       Widget key_entry_widget,
-		       Widget value_entry_widget):ListUiItem(w, source, search_key, NULL)
+		       Widget value_entry_widget):ListUiItem(w, source, search_key, nullptr)
 {
   source = source; search_key = search_key;
 
   key_widget = key_entry_widget;
   value_widget = value_entry_widget;
 
-  list_items = NULL;
-  deleted_items = NULL;
+  list_items = nullptr;
+  deleted_items = nullptr;
 
   XtVaSetValues(w,
 	XmNuserData, this,
         XmNautomaticSelection, True,
         XmNselectionPolicy, XmBROWSE_SELECT,
-	NULL);
+	nullptr);
 
     XtAddCallback(w,
 		  XmNbrowseSelectionCallback, 
@@ -89,29 +89,29 @@ void handleAliasSelection(Widget w, XtPointer, XtPointer calldata)
 {
   AliasListUiItem *item;
   XmListCallbackStruct *list_info = (XmListCallbackStruct *)calldata;
-  char *selection_string = NULL;
+  char *selection_string = nullptr;
   DtVirtArray<PropStringPair *> *list_items;
 
   XtVaGetValues(w, 
 	XmNuserData, &item,
-	NULL);  
+	nullptr);  
 
   list_items = item->getItemList();
 
-  if(list_items != NULL)
+  if(list_items != nullptr)
     {                                         // motif index is 1 based
                                               //virtarry is 0 based
       PropStringPair *pair = (*list_items)[list_info->item_position - 1];
 
-      if(pair != NULL)
+      if(pair != nullptr)
 	{
 	  XtVaSetValues(item->getKeyWidget(),
 			XmNvalue,pair->label,
-			NULL);
+			nullptr);
 	  
 	  XtVaSetValues(item->getValueWidget(),
 			XmNvalue,pair->value,
-			NULL);
+			nullptr);
 	}
     }	
 }
@@ -127,7 +127,7 @@ void AliasListUiItem::writeFromUiToSource()
   DtMail::MailRc * mail_rc = d_session->mailRc(error);
   int i, num_items;
 
-  if(deleted_items != NULL)
+  if(deleted_items != nullptr)
     {
       num_items = deleted_items->length();
 
@@ -137,7 +137,7 @@ void AliasListUiItem::writeFromUiToSource()
 	}
     }
 
-  if(list_items != NULL)
+  if(list_items != nullptr)
     {
       num_items = list_items->length();
       for(i = 0; i < num_items; i++)
@@ -149,10 +149,10 @@ void AliasListUiItem::writeFromUiToSource()
     }
   
   
-  if(deleted_items != NULL)
+  if(deleted_items != nullptr)
     {
       delete deleted_items;
-      deleted_items = NULL;
+      deleted_items = nullptr;
     }
 }
 
@@ -175,22 +175,22 @@ void AliasListUiItem::writeFromSourceToUi()
   DtMail::Session * d_session = theRoamApp.session()->session();
   DtMail::MailRc * mail_rc = d_session->mailRc(error);
   Widget w = this->getWidget();
-  const char *list_str = NULL;
+  const char *list_str = nullptr;
   DtVirtArray<char *> list_str_list(10);
-  char *buf = NULL;
+  char *buf = nullptr;
   int list_len, i;
-  const char *value = NULL;
-  PropStringPair **prop_pairs = NULL;
+  const char *value = nullptr;
+  PropStringPair **prop_pairs = nullptr;
 
   XmListDeleteAllItems(w);
 
-  if (deleted_items != NULL)
+  if (deleted_items != nullptr)
     {
       delete deleted_items;
-      deleted_items = NULL;
+      deleted_items = nullptr;
     }
 
-  if (list_items != NULL)
+  if (list_items != nullptr)
     delete list_items;
 
   list_items = new DtVirtArray<PropStringPair *>(10);
@@ -247,19 +247,19 @@ void alias_stuffing_func(char * key, void * data, void * client_data)
 ///////////////////////////////////////////////////////////
 void AliasListUiItem::handleAddButtonPress()
 {
-  char *key_str = NULL;
-  char *value_str = NULL;
-  PropStringPair *new_pair = NULL;
+  char *key_str = nullptr;
+  char *value_str = nullptr;
+  PropStringPair *new_pair = nullptr;
 
   XtVaGetValues(key_widget,
 		XmNvalue, &key_str,
-		NULL);
+		nullptr);
 
   XtVaGetValues(value_widget,
 		XmNvalue, &value_str,
-		NULL);
+		nullptr);
 
-  if(key_str != NULL)
+  if(key_str != nullptr)
     if(strlen(key_str) > 0)
       {
 	new_pair = new PropStringPair;
@@ -267,16 +267,16 @@ void AliasListUiItem::handleAddButtonPress()
 
 	new_pair->label = strdup(key_str);
 	
-	if(value_str != NULL)
+	if(value_str != nullptr)
 	  new_pair->value = strdup(value_str);
 	else
-	  new_pair->value = NULL;
+	  new_pair->value = nullptr;
 	
 	if(XmListGetSelectedPos(this->getWidget(),
 				&pos_list,
 				&num_pos))
 	  {
-            if(list_items == NULL)
+            if(list_items == nullptr)
               list_items = new DtVirtArray<PropStringPair *>(10);
 
 	    list_items->insert(new_pair,pos_list[0] - 1); 
@@ -297,7 +297,7 @@ void AliasListUiItem::handleAddButtonPress()
 	  }	
 	else
 	  {
-            if(list_items == NULL)
+            if(list_items == nullptr)
               list_items = new DtVirtArray<PropStringPair *>(10);
 
 	    list_items->insert(new_pair,0); 
@@ -320,9 +320,9 @@ void AliasListUiItem::handleAddButtonPress()
 ///////////////////////////////////////////////////////////
 void AliasListUiItem::handleChangeButtonPress()
 {
-  char *key_str = NULL;
-  char *value_str = NULL;  
-  PropStringPair *new_pair = NULL;
+  char *key_str = nullptr;
+  char *value_str = nullptr;  
+  PropStringPair *new_pair = nullptr;
   XmString replace_string;
   int *pos_list, num_pos;
 
@@ -333,19 +333,19 @@ void AliasListUiItem::handleChangeButtonPress()
     {
       XtVaGetValues(key_widget,
 		    XmNvalue, &key_str,
-		    NULL);
+		    nullptr);
 
       XtVaGetValues(value_widget,
 		    XmNvalue, &value_str,
-		    NULL);
+		    nullptr);
 
-      if(key_str != NULL)
+      if(key_str != nullptr)
 	if(strlen(key_str) > 0)
 	  {
 
 	    new_pair = (*list_items)[pos_list[0] - 1];
 
-	    if(deleted_items == NULL)
+	    if(deleted_items == nullptr)
 	      {
 		deleted_items = new DtVirtArray<char *>(10);
 	      }	
@@ -355,13 +355,13 @@ void AliasListUiItem::handleChangeButtonPress()
 	    free(new_pair->label);
 	    new_pair->label = strdup(key_str);
 
-	    if(new_pair->value != NULL)
+	    if(new_pair->value != nullptr)
 	      {
 		free(new_pair->value);
-		if(value_str != NULL)
+		if(value_str != nullptr)
 		  new_pair->value = strdup(value_str);
 		else
-		  new_pair->value = NULL;
+		  new_pair->value = nullptr;
 	      }
 
 	    replace_string = XmStringCreateLocalized(
@@ -392,7 +392,7 @@ void AliasListUiItem::handleDeleteButtonPress()
 			  &p_count))
     {
       
-      if(deleted_items == NULL)
+      if(deleted_items == nullptr)
 	{
 	  deleted_items = new DtVirtArray<char *>(10);
 	}	
@@ -407,11 +407,11 @@ void AliasListUiItem::handleDeleteButtonPress()
 
       XtVaSetValues(this->getKeyWidget(),
                         XmNvalue,"",
-                        NULL);
+                        nullptr);
 
       XtVaSetValues(this->getValueWidget(),
                         XmNvalue,"",
-                        NULL);
+                        nullptr);
 
       XmListSelectPos(list_widget,
 		      p_list[0],

@@ -83,14 +83,14 @@ static int G_AIX_LOCAL = 0;
 int RemotePrintJobs(char *server, char *printer, char **job_list, int *n_jobs)
 {
    *n_jobs = 0;
-   *job_list = NULL;
+   *job_list = nullptr;
 
    // hookup to Server
    int sockfd;
    if ((sockfd = ConnectToPrintServer(server, 15)) == -1)
       return 0;
 
-   char *output = NULL;
+   char *output = nullptr;
    int rc = 0;
    if (SendPrintJobStatusReguest(sockfd, printer))
     {
@@ -136,7 +136,7 @@ int ParseRemotePrintJobs(char *printer, char *jobs, char **job_list,
 			 int *n_jobs)
 {
    *n_jobs = 0;
-   *job_list = NULL;
+   *job_list = nullptr;
 
    int rc = 0;
    if (jobs && *jobs)
@@ -180,7 +180,7 @@ int ConnectToPrintServer(const char *rhost, int timeout)
       unsigned long tmpaddr = inet_addr(rhost);
       hp = gethostbyaddr((char *)&tmpaddr, sizeof(tmpaddr), AF_INET);
     }
-   if (hp == NULL)
+   if (hp == nullptr)
       return -1;
    if (!(sp = getservbyname("printer", "tcp")))
       return -1;
@@ -257,9 +257,9 @@ JobOutputType DetermineOutput(char *output)
 
    if (first_time)
     {
-      aixv2_pattern = regcmp("dev.*arg.*status.*request", (char *)NULL);
-      aixv3_pattern = regcmp("Queue.*Dev.*Status.*Job", (char *)NULL);
-      bsd_pattern = regcmp(":.*\\[.*\\]", (char *)NULL);
+      aixv2_pattern = regcmp("dev.*arg.*status.*request", (char *)nullptr);
+      aixv3_pattern = regcmp("Queue.*Dev.*Status.*Job", (char *)nullptr);
+      bsd_pattern = regcmp(":.*\\[.*\\]", (char *)nullptr);
       first_time = 0;
     }
 #else
@@ -296,11 +296,11 @@ JobOutputType DetermineOutput(char *output)
 	 return AIX_V2_OUTPUT;
       }
 #else
-      if (!regexec(&bsd_pattern, s, (size_t)0, NULL, 0))
+      if (!regexec(&bsd_pattern, s, (size_t)0, nullptr, 0))
 	 return BSD_OUTPUT;
-      if (!regexec(&aixv3_pattern, s, (size_t)0, NULL, 0))
+      if (!regexec(&aixv3_pattern, s, (size_t)0, nullptr, 0))
 	 return AIX_V3_OUTPUT;
-      if (!regexec(&aixv2_pattern, s, (size_t)0, NULL, 0))
+      if (!regexec(&aixv2_pattern, s, (size_t)0, nullptr, 0))
 	 return AIX_V2_OUTPUT;
 #endif
       s = s1;
@@ -379,9 +379,9 @@ void LocalPrintJobs(char *printer, char **return_job_list, int *return_n_jobs)
    int current_size;
    int len;
 
-   static char *job_list1 = NULL;
+   static char *job_list1 = nullptr;
    static int prev_buf_size = 0;
-   static StatusLineList job_list = NULL;
+   static StatusLineList job_list = nullptr;
    static int prev_n_jobs = 0;
 
    if (prev_buf_size == 0)
@@ -404,7 +404,7 @@ void LocalPrintJobs(char *printer, char **return_job_list, int *return_n_jobs)
       chdir(TMP_DIR);
    if (!(lp_tmp_dir = opendir(".")))
     {
-      *return_job_list = NULL;
+      *return_job_list = nullptr;
       *return_n_jobs = 0;
       chdir(oldpwd);
       SETEUID(getuid());
@@ -699,13 +699,13 @@ do \
   line = rest; \
   if (line && (rest = strchr(line, '\n'))) \
     *rest++ = '\0'; \
-} while (NULL != line && 0 == *line);
+} while (nullptr != line && 0 == *line);
 
 void LocalPrintJobs(char *printer, char **return_job_list, int *return_n_jobs)
 {
    char *buf = new char[1000];
    char *s, *s1, *c;
-   char *qname = NULL;
+   char *qname = nullptr;
    char *jname;
    char *jnumber;
    char *owner;
@@ -722,7 +722,7 @@ void LocalPrintJobs(char *printer, char **return_job_list, int *return_n_jobs)
    int len;
    int has_pri = 0;
 
-   static char *job_list = NULL;
+   static char *job_list = nullptr;
    static int prev_buf_size = 0;
 
 #if defined(__linux__) || defined(__OpenBSD__) || defined(__NetBSD__)
@@ -755,9 +755,9 @@ void LocalPrintJobs(char *printer, char **return_job_list, int *return_n_jobs)
        if (0 == strncmp(s, opt_requests_on_line, strlen(opt_requests_on_line)))
        {
            char *requests	= strtok(s, " ");
-           char *on		= strtok(NULL, " ");
+           char *on		= strtok(nullptr, " ");
 
-           qname = strtok(NULL, " :\n");
+           qname = strtok(nullptr, " :\n");
            if (0 != strncmp(qname, printer, strlen(qname)))
 	     fprintf(
 		stderr,
@@ -774,11 +774,11 @@ void LocalPrintJobs(char *printer, char **return_job_list, int *return_n_jobs)
    //
    {
        hostname = strtok(s, ":");
-       day = strtok(NULL, " ");
-       month = strtok(NULL, " ");
-       date = strtok(NULL, " ");
-       stime = strtok(NULL, " ");
-       year = strtok(NULL, " \n");
+       day = strtok(nullptr, " ");
+       month = strtok(nullptr, " ");
+       date = strtok(nullptr, " ");
+       stime = strtok(nullptr, " ");
+       year = strtok(nullptr, " \n");
    }
 
    NEXT_OUTPUT_LINE(s,s1);
@@ -809,11 +809,11 @@ void LocalPrintJobs(char *printer, char **return_job_list, int *return_n_jobs)
        if (0 == strncmp(s, opt_status_line, strlen(opt_status_line)))
        {
            qname = strtok(s, " \t");
-           strtok(NULL, " ");
-           strtok(NULL, " ");
-           strtok(NULL, " ");
-           strtok(NULL, " ");
-           strtok(NULL, " ");
+           strtok(nullptr, " ");
+           strtok(nullptr, " ");
+           strtok(nullptr, " ");
+           strtok(nullptr, " ");
+           strtok(nullptr, " ");
            network = strtok(s, " \n");
 
            NEXT_OUTPUT_LINE(s,s1);
@@ -835,28 +835,28 @@ void LocalPrintJobs(char *printer, char **return_job_list, int *return_n_jobs)
        if (strcmp(tmp, "Rank"))
          fprintf(stderr, "Unexpected legend column: %s != Rank\n", tmp);
 
-       tmp = strtok(NULL, " ");
+       tmp = strtok(nullptr, " ");
        if (0 == strcmp(tmp, "Pri"))
        {
            has_pri = TRUE;
-           tmp = strtok(NULL, " ");
+           tmp = strtok(nullptr, " ");
        }
        if (strcmp(tmp, "Owner"))
          fprintf(stderr, "Unexpected legend column: %s != Owner\n", tmp);
        
-       tmp = strtok(NULL, " ");
+       tmp = strtok(nullptr, " ");
        if (strcmp(tmp, "Job"))
          fprintf(stderr, "Unexpected legend column: %s != Job\n", tmp);
        
-       tmp = strtok(NULL, " ");
+       tmp = strtok(nullptr, " ");
        if (strcmp(tmp, "Files"))
          fprintf(stderr, "Unexpected legend column: %s != Files\n", tmp);
        
-       tmp = strtok(NULL, " ");
+       tmp = strtok(nullptr, " ");
        if (strcmp(tmp, "Total"))
          fprintf(stderr, "Unexpected legend column: %s != Total\n", tmp);
        
-       tmp = strtok(NULL, " \n");
+       tmp = strtok(nullptr, " \n");
        if (strcmp(tmp, "Size"))
          fprintf(stderr, "Unexpected legend column: %s != Size\n", tmp);
    }
@@ -874,19 +874,19 @@ void LocalPrintJobs(char *printer, char **return_job_list, int *return_n_jobs)
    {
       strtok(s, " \t");
       if (has_pri)
-        strtok(NULL, " ");
-      owner = strtok(NULL, " ");
-      jnumber = strtok(NULL, " ");
-      jname = strtok(NULL," ");
-      jsize = strtok(NULL," ");
+        strtok(nullptr, " ");
+      owner = strtok(nullptr, " ");
+      jnumber = strtok(nullptr, " ");
+      jname = strtok(nullptr," ");
+      jsize = strtok(nullptr," ");
 
-      if (NULL == owner || NULL == jnumber || NULL == jname || NULL == jsize)
+      if (nullptr == owner || nullptr == jnumber || nullptr == jname || nullptr == jsize)
       {
           NEXT_OUTPUT_LINE(s,s1);
 	  continue;
       }
 
-      if (NULL == qname)
+      if (nullptr == qname)
 	qname = printer;
 
       if (hostname && strcmp(qname, hostname))
@@ -946,7 +946,7 @@ int ParseBSDPrintJobs(char *printer, char *jobs,
    int current_size;
    int len;
    char *buf = new char[300];
-   static char *job_list = NULL;
+   static char *job_list = nullptr;
    static int prev_buf_size = 0;
    static int first_time = 1;
    int rc = 1;
@@ -963,7 +963,7 @@ int ParseBSDPrintJobs(char *printer, char *jobs,
 
    if (first_time)
     {
-      bsd_pattern = regcmp(":.*\\[.*\\]", (char *)NULL);
+      bsd_pattern = regcmp(":.*\\[.*\\]", (char *)nullptr);
       first_time = 0;
     }
 #else
@@ -994,7 +994,7 @@ int ParseBSDPrintJobs(char *printer, char *jobs,
 #ifdef NO_REGCOMP
       if (regex(bsd_pattern, s))
 #else
-      if (!regexec(&bsd_pattern, s, (size_t)0, NULL, 0))
+      if (!regexec(&bsd_pattern, s, (size_t)0, nullptr, 0))
 #endif
        {
 	 owner = s;
@@ -1013,7 +1013,7 @@ int ParseBSDPrintJobs(char *printer, char *jobs,
 	 else
 	    *(strchr(hostname, ']')) = '\0';
 
-         s = strtok(NULL, "\n");
+         s = strtok(nullptr, "\n");
 	 for (s1 = s; *s1 == ' ' || *s1 == '\t'; s1++)
 	    ;
 	 jname = s1;
@@ -1039,7 +1039,7 @@ int ParseBSDPrintJobs(char *printer, char *jobs,
 	 if (strstr(s, "down"))
 	    rc = 0;
        }
-      s = strtok(NULL, "\n");
+      s = strtok(nullptr, "\n");
     }
    *(job_list + current_size) = '\0';
    prev_buf_size = prev_buf_size > current_size ? prev_buf_size : current_size;
@@ -1099,7 +1099,7 @@ int ParseAIXv3PrintJobs(char *_printer, char *jobs,
    char printer[60];
    int rc = 1;
 
-   static char *job_list = NULL;
+   static char *job_list = nullptr;
    static int prev_buf_size = 0;
 
    snprintf(printer, sizeof(printer), "%s", _printer);
@@ -1132,10 +1132,10 @@ int ParseAIXv3PrintJobs(char *_printer, char *jobs,
       dollar1 = strtok(s, " ");
       if (!strncmp(dollar1, printer, strlen(dollar1)))
        {
-         strtok(NULL, " ");
-         strtok(NULL, " ");
+         strtok(nullptr, " ");
+         strtok(nullptr, " ");
        }
-      jnumber = strtok(NULL, " ");
+      jnumber = strtok(nullptr, " ");
       if (!(jnumber && *jnumber))
        {
          s = s1;
@@ -1143,7 +1143,7 @@ int ParseAIXv3PrintJobs(char *_printer, char *jobs,
             *s1++ = '\0';
 	 continue;
        }
-      jname = strtok(NULL, "\n");
+      jname = strtok(nullptr, "\n");
       if (!(jname && *jname))
        {
          s = s1;
@@ -1171,10 +1171,10 @@ int ParseAIXv3PrintJobs(char *_printer, char *jobs,
       if (s1 = strchr(s, '\n'))
          *s1++ = '\0';
       sdate = strtok(s, " ");
-      stime = strtok(NULL, " ");
-      strtok(NULL, " ");
-      strtok(NULL, " ");
-      jsize = strtok(NULL, " ");
+      stime = strtok(nullptr, " ");
+      strtok(nullptr, " ");
+      strtok(nullptr, " ");
+      jsize = strtok(nullptr, " ");
       s = s1;
       if (s1 = strchr(s, '\n'))
          *s1++ = '\0';
@@ -1243,7 +1243,7 @@ int ParseAIXv2PrintJobs(char *printer, char *jobs,
    int len;
    int rc = 1;
 
-   static char *job_list = NULL;
+   static char *job_list = nullptr;
    static int prev_buf_size = 0;
 
    if (prev_buf_size == 0)
@@ -1268,8 +1268,8 @@ int ParseAIXv2PrintJobs(char *printer, char *jobs,
    while (s)
     {
       device = strtok(s, " ");
-      tmp = strtok(NULL, " ");
-      c = strtok(NULL, " ");
+      tmp = strtok(nullptr, " ");
+      c = strtok(nullptr, " ");
       if (!strcmp(tmp, printer))
        {
 	 if (strstr(c, "OFF"))
@@ -1294,12 +1294,12 @@ int ParseAIXv2PrintJobs(char *printer, char *jobs,
                *s1++ = '\0';
 	 continue;
        }
-      owner = strtok(NULL, " ");
-      jname = strtok(NULL, " ");
-      jsize = strtok(NULL, " ");
-      strtok(NULL, " ");
-      strtok(NULL, " ");
-      stime = strtok(NULL, " ");
+      owner = strtok(nullptr, " ");
+      jname = strtok(nullptr, " ");
+      jsize = strtok(nullptr, " ");
+      strtok(nullptr, " ");
+      strtok(nullptr, " ");
+      stime = strtok(nullptr, " ");
       if (c = strchr(owner, '.'))
          *c = '\0';
       sprintf(buf, "%s|%s|%s|%s|%s|%s|%d\n", printer, jname, jnumber,

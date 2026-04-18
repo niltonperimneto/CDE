@@ -40,7 +40,7 @@ char *Exception::g_next_avail = Exception::g_temp_space;
 // /////////////////////////////////////////////////////////////////
 
 Exception::Exception()
-: f_thrown(0), f_thrown_as_pointer(1), f_temporary(0), f_file(NULL), f_line(0), f_previous_exception(NULL)
+: f_thrown(0), f_thrown_as_pointer(1), f_temporary(0), f_file(nullptr), f_line(0), f_previous_exception(nullptr)
 {
   PRINTF (("Constructed Exception obj @ %p\n", this));
 }
@@ -165,7 +165,7 @@ Exception::do_throw (unsigned int line, const char *file, int debugging)
 Exception &
 Exception::current_exception()
 {
-  if (g_current_exception == NULL)
+  if (g_current_exception == nullptr)
     {
       Exceptions::error (Exceptions::f_msg_no_current_exception,
 			 Exceptions::APPLICATION_ERROR);

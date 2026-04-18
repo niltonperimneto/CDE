@@ -130,8 +130,8 @@ RFCTransport::RFCTransport(DtMailEnv & error,
     // process exits and do the right thing.
     signalRegister();
     
-    _error_proc = NULL;
-    _smd = NULL;
+    _error_proc = nullptr;
+    _smd = nullptr;
 }
 
 RFCTransport::~RFCTransport(void)
@@ -147,10 +147,10 @@ RFCTransport::submit(DtMailEnv & error, DtMail::Message * msg, DtMailBoolean log
     int child_pid;
 
     // Create a list of information about all child processes.
-    if ((new_we = (waitentry_t *) malloc(sizeof(waitentry_t))) == NULL)
+    if ((new_we = (waitentry_t *) malloc(sizeof(waitentry_t))) == nullptr)
     {
 	error.setError (DTME_NoMemory);
-	return(NULL);
+	return(nullptr);
     }
 
     // fork a new process
@@ -185,11 +185,11 @@ RFCTransport::submit(DtMailEnv & error, DtMail::Message * msg, DtMailBoolean log
 	    new_we->data = this->_smd;
 	    new_we->next = _waitlist;
 	    _waitlist = new_we;
-	    return(NULL);
+	    return(nullptr);
 	}
     }
 
-    return(NULL);
+    return(nullptr);
 }
 
 void
@@ -201,9 +201,9 @@ RFCTransport::format(DtMailEnv & error, DtMail::Message * dtmsg, DtMailBoolean l
 //    thr_error->clear();
 
     DtMailValueSeq value;
-    char * to = NULL;
-    char * cc = NULL;
-    char * bcc = NULL;
+    char * to = nullptr;
+    char * cc = nullptr;
+    char * bcc = nullptr;
 
     DtMail::Envelope * env = dtmsg->getEnvelope(error);
 
@@ -320,7 +320,7 @@ RFCTransport::format(DtMailEnv & error, DtMail::Message * dtmsg, DtMailBoolean l
       BufferMemory logHeaders(1024);
       BufferMemory logBodies(8192);
 
-      assert(log_files != NULL);	// if log files open, must have array
+      assert(log_files != nullptr);	// if log files open, must have array
 
       //
       // Mark the message as having been read.
@@ -359,7 +359,7 @@ RFCTransport::format(DtMailEnv & error, DtMail::Message * dtmsg, DtMailBoolean l
     packet.target_object = this;
     packet.operation = (void *)ThreadSelf();
     packet.argument = thr_error;
-    packet.event_time = time(NULL);
+    packet.event_time = time(nullptr);
 
     if (_object_valid->state()) {
 	_session->writeEventData(error, &packet, sizeof(DtMailEventPacket));
@@ -390,7 +390,7 @@ RFCTransport::deliver(DtMailEnv & error,
 
     const char * value;
 
-    assert(log_files != NULL);		// must provide -> log_files ->
+    assert(log_files != nullptr);		// must provide -> log_files ->
     
     // We want to make an argv list that is big enough to hold all
     // of the addresses. Of course, this may need to be expanded
@@ -404,7 +404,7 @@ RFCTransport::deliver(DtMailEnv & error,
 
     if (log_msg == DTM_TRUE) {
 	const char * log;
-	char *buf = NULL;
+	char *buf = nullptr;
 
     	_session->mailRc(merror)->getValue(merror, "record", &log);
 	if (merror.isSet()) {
@@ -415,7 +415,7 @@ RFCTransport::deliver(DtMailEnv & error,
 
 	    _session->mailRc(merror)->getValue(merror, "outfolder", &value);
 	    buf = (char *)malloc(strlen(log) + 3);
-	    if (buf != NULL) {
+	    if (buf != nullptr) {
 	        if (merror.isSet()) {
 	            // "outfolder" is not set. Relative to home directory
 		    strcpy(buf, "~/");
@@ -435,7 +435,7 @@ RFCTransport::deliver(DtMailEnv & error,
 	    (*log_files)[log_count++] = fd;
 	}
 	
-	if (buf != NULL) {
+	if (buf != nullptr) {
 		free(buf);
 	}
     }
@@ -497,7 +497,7 @@ RFCTransport::deliver(DtMailEnv & error,
 	}
     }
     
-    argv[argc] = NULL;
+    argv[argc] = nullptr;
 
     launchSendmail(error, headers, bodies, argv);
     
@@ -632,7 +632,7 @@ RFCTransport::arpaPhrase(const char * name, DtMailAddressSeq & tokens)
 		addr->dtm_address = (char *)malloc(tok_len + 1);
 		memcpy(addr->dtm_address, tok_start, tok_len);
 		addr->dtm_address[tok_len] = 0;
-		addr->dtm_person = NULL;
+		addr->dtm_person = nullptr;
 		addr->dtm_namespace = strdup(DtMailAddressDefault);
 		skin_comma(addr->dtm_address);
 		tokens.append(addr);
@@ -695,7 +695,7 @@ RFCTransport::arpaPhrase(const char * name, DtMailAddressSeq & tokens)
     if (cp2 > tok_start) {
 	addr = new DtMailValueAddress;
 	addr->dtm_address = strdup(tok_start);
-	addr->dtm_person = NULL;
+	addr->dtm_person = nullptr;
 	addr->dtm_namespace = strdup(DtMailAddressDefault);
 	skin_comma(addr->dtm_address);
 	tokens.append(addr);
@@ -755,7 +755,7 @@ RFCTransport::launchSendmail(DtMailEnv & error,
     // If we have only one arg, then everything goes to the log files.
     // Don't do the fork and exec.
     //
-    if (argv[1] == NULL)
+    if (argv[1] == nullptr)
       return;
  
     // We need a pipe to write the message to sendmail.
@@ -801,7 +801,7 @@ RFCTransport::launchSendmail(DtMailEnv & error,
 #if 0
 	printf("Command:  %s\n",mailer);
 	int k=0;
-	while (NULL != argv[k])
+	while (nullptr != argv[k])
 	{
 	  printf("Command line %d:  %s\n", k, argv[k]);
 	  k++;
@@ -980,7 +980,7 @@ RFCTransport::signalRegister(void)
     sigaddset(&act.sa_mask, SIGCHLD);
     act.sa_flags = 0;
    
-    sigaction(SIGCHLD, &act, NULL);
+    sigaction(SIGCHLD, &act, nullptr);
 
     return;
 }
@@ -1211,7 +1211,7 @@ RFCTransport::openLogFile(const char * path)
 
     char *from_buf = new char[256];
     char *time_buf = new char[256];
-    time_t now = time(NULL);
+    time_t now = time(nullptr);
     SafeCtime(&now, time_buf, sizeof(time_buf));
 
     sprintf(from_buf, "From %s %s", pw.pw_name, time_buf);

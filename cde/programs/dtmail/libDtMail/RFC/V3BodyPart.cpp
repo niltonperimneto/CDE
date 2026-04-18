@@ -105,7 +105,7 @@ V3BodyPart::V3BodyPart(DtMailEnv & error,
 		       DtMail::Message * parent,
 		       const char * start,
 		       const char ** end)
-: RFCBodyPart(error, parent, start, 0, NULL)
+: RFCBodyPart(error, parent, start, 0, nullptr)
 {
     // Get past the boundary separator.
     //
@@ -169,7 +169,7 @@ V3BodyPart::V3BodyPart(DtMailEnv & error,
       // If we come to the end of the message altogether, or to the start
       // of another header body, then we know we have bounded this body part.
       //
-      int content_length = (int) strtol(*(value[0]), NULL, 10);
+      int content_length = (int) strtol(*(value[0]), nullptr, 10);
       body_end = _body_text + content_length;	// "supposed" end of body part
 
       for (int i = 0; i < 2; i++) {
@@ -237,7 +237,7 @@ V3BodyPart::V3BodyPart(DtMailEnv & error,
 	// until the specified number of lines have been passed. This
 	// is the determined end of the body part.
 	//
-	int content_lines = (int) strtol(*(value[0]), NULL, 10);
+	int content_lines = (int) strtol(*(value[0]), nullptr, 10);
 	int lines = 0;
 	for (body_end = _body_text;
 	     body_end <= *end && lines < content_lines; body_end++) {
@@ -330,7 +330,7 @@ countTypes(char ** types)
 {
     int count;
 
-    if (NULL == types) return 0;
+    if (nullptr == types) return 0;
 
     for (count = 0; *types; types++, count++) {
 	continue;
@@ -398,7 +398,7 @@ V3BodyPart::getDtType(DtMailEnv & error)
 
     char ** types = DtDtsFindAttribute("SUNV3_TYPE", v3_type);
 
-    if (NULL != types)
+    if (nullptr != types)
     {
         if (countTypes(types) == 1) {
 	    // We will use the first name. It may be wrong, but
@@ -450,7 +450,7 @@ void
 V3BodyPart::loadBody(DtMailEnv &)
 {
 // For CHARSET
-    char *to_cs = NULL, *from_cs = NULL;
+    char *to_cs = nullptr, *from_cs = nullptr;
     char *cs = new char[64];
 
 // End of For CHARSET
@@ -493,8 +493,8 @@ V3BodyPart::loadBody(DtMailEnv &)
 	// If Content-Type and X-Sun-Data-Type are missing, then assume text so get
 	// charset and do conversion.
 	// Else don't need codeset conversion.
-    const char *cstmp = NULL;
-	const char *ct = NULL;
+    const char *cstmp = nullptr;
+	const char *ct = nullptr;
 	value.clear();
 	_body_env->getHeader(lerror, "Content-Type", DTM_FALSE, value);
 	if (lerror.isNotSet()) {
@@ -567,7 +567,7 @@ V3BodyPart::loadBody(DtMailEnv &)
 	   lerror.clear();
 	   }
 	}
-	if (cstmp == NULL) {
+	if (cstmp == nullptr) {
 	value.clear();
     // Get charset from charset field
 	_body_env->getHeader(lerror, "X-Sun-Charset", DTM_FALSE, value);
@@ -579,12 +579,12 @@ V3BodyPart::loadBody(DtMailEnv &)
 	   // is text, then we get charset but if charset is missing, we'll try to
 	   // convert from the locale specific default codeset.
 	   lerror.clear();
-	   char *ret = NULL;
+	   char *ret = nullptr;
 	   strcpy(cs, "DEFAULT");
 	   DtXlateOpToStdLocale(DtLCX_OPER_SETLOCALE,
-		  setlocale(LC_CTYPE, NULL),
-		  NULL,
-		  NULL,
+		  setlocale(LC_CTYPE, nullptr),
+		  nullptr,
+		  nullptr,
 		  &ret);
 	   strcpy(cs, "DEFAULT");
 	   strcat(cs, ".");
@@ -599,11 +599,11 @@ V3BodyPart::loadBody(DtMailEnv &)
 	}  // RFC approved and private names are not treated differently.
 
 	// Get iconv name from charset - this is the "from" name.
-	from_cs = NULL;
+	from_cs = nullptr;
 	from_cs = csToConvName(cs);
 
 	// Get current locale's iconv name - this is the "to" name.
-	to_cs = NULL;
+	to_cs = nullptr;
 	to_cs = locToConvName();
 
 	if ( from_cs && to_cs ) {
@@ -637,7 +637,7 @@ V3BodyPart::getDescription(DtMailEnv & error)
 	return(strdup(*(value[0])));
     }
     error.clear();	// clear error so it doesn't propogate back up.
-    return(NULL);
+    return(nullptr);
 }
 
 char *
@@ -698,5 +698,5 @@ V3BodyPart::writeBodyParts(char *buf)
 char *
 V3BodyPart::csFromContentType(DtMailValueSeq&)
 {
-   return NULL;
+   return nullptr;
 }

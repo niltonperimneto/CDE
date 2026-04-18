@@ -81,34 +81,34 @@ ViewMsgDialog::ViewMsgDialog (RoamMenuWindow *parent, WidgetClass wc) :
 DialogShell ("DtMail_SecWin", parent, wc)
 {
     _parent = parent;
-    _workArea = NULL;
-    _menuBar = NULL;
-    my_editor = NULL;
-    _genDialog  = NULL;
+    _workArea = nullptr;
+    _menuBar = nullptr;
+    my_editor = nullptr;
+    _genDialog  = nullptr;
 
-    _edit_copy = NULL;
-    _edit_select_all = NULL;
+    _edit_copy = nullptr;
+    _edit_select_all = nullptr;
     
-    _attach_save_as = NULL;
-    _attach_select_all = NULL;
+    _attach_save_as = nullptr;
+    _attach_select_all = nullptr;
 
-    _attachmentActionsList = NULL;
-    _attachmentMenu = NULL;
-    _attachmentMenuList = NULL;
-    _attachmentPopupMenuList = NULL;
-    _textPopupMenuList = NULL;
+    _attachmentActionsList = nullptr;
+    _attachmentMenu = nullptr;
+    _attachmentMenuList = nullptr;
+    _attachmentPopupMenuList = nullptr;
+    _textPopupMenuList = nullptr;
 
-    _main = NULL;
-    _overview = NULL;
-    _tasks = NULL;
-    _reference = NULL;
-    _on_item = NULL;
-    _using_help = NULL;
-    _about_mailer = NULL;
-    _text = NULL;
-    _msgno = NULL;
+    _main = nullptr;
+    _overview = nullptr;
+    _tasks = nullptr;
+    _reference = nullptr;
+    _on_item = nullptr;
+    _using_help = nullptr;
+    _about_mailer = nullptr;
+    _text = nullptr;
+    _msgno = nullptr;
 
-    assert( theApplication != NULL );
+    assert( theApplication != nullptr );
 
 }
 
@@ -141,7 +141,7 @@ ViewMsgDialog::createWorkArea ( Widget shell )
 
     Widget form = XtCreateWidget(
 			"Work_Area", xmFormWidgetClass,
-			shell, NULL, 0);
+			shell, nullptr, 0);
 
     _main = XtVaCreateManagedWidget ("separateViewWindow", 
 		xmMainWindowWidgetClass,
@@ -150,10 +150,10 @@ ViewMsgDialog::createWorkArea ( Widget shell )
 		XmNtopAttachment, XmATTACH_FORM,
 		XmNbottomAttachment, XmATTACH_FORM,
 		XmNrightAttachment, XmATTACH_FORM,
-		NULL);
+		nullptr);
 
     Widget form1 = XtCreateWidget("Work_Area", xmFormWidgetClass,
- 				  _main, NULL, 0);
+ 				  _main, nullptr, 0);
     printHelpId("form", form1);
     /* add help callback */
     // XtAddCallback(form1, XmNhelpCallback, HelpCB, helpId);
@@ -171,7 +171,7 @@ ViewMsgDialog::createWorkArea ( Widget shell )
   	XmNleftAttachment,XmATTACH_FORM, 
   	XmNtopAttachment,XmATTACH_FORM, 
   	XmNbottomAttachment, XmATTACH_FORM,
-  	NULL );
+  	nullptr );
 
     XtManageChild(form1);
 
@@ -215,12 +215,12 @@ ViewMsgDialog::popped_up()
     XtVaGetValues(text,
 	XmNwidth, &width,
 	XmNheight, &height,
-	NULL);
+	nullptr);
 
     XtVaSetValues(_w,
 	XmNx, _parent->x() + (_parent->width() / 2),
 	XmNy, _parent->y() + (_parent->height() /2),
-	NULL );
+	nullptr );
 
 }
 
@@ -237,7 +237,7 @@ ViewMsgDialog::initialize()
 
     XtVaSetValues ( _main, 
 		   XmNmenuBar, _menuBar->baseWidget(),
-		   NULL);
+		   nullptr);
 
     this->construct_edit_menu();
     this->construct_text_popup();
@@ -326,12 +326,12 @@ void
 ViewMsgDialog::all_attachments_selected()
 {
     _attach_save_as->deactivate();
-    if (_attachmentActionsList != NULL) {
+    if (_attachmentActionsList != nullptr) {
 	_menuBar->removeCommands(_attachmentMenu, _attachmentActionsList);
 	_menuPopupAtt->removeCommands(_attachmentPopupMenu, 
 				_attachmentActionsList);
 	delete _attachmentActionsList;
-	_attachmentActionsList = NULL;
+	_attachmentActionsList = nullptr;
     }
 }
 
@@ -339,12 +339,12 @@ void
 ViewMsgDialog::all_attachments_deselected()
 {
     _attach_save_as->deactivate();
-    if (_attachmentActionsList != NULL) {
+    if (_attachmentActionsList != nullptr) {
 	_menuBar->removeCommands(_attachmentMenu, _attachmentActionsList);
 	_menuPopupAtt->removeCommands(_attachmentPopupMenu, 
 			_attachmentActionsList);
 	delete _attachmentActionsList;
-	_attachmentActionsList = NULL;
+	_attachmentActionsList = nullptr;
     }
 }
 
@@ -528,10 +528,10 @@ ViewMsgDialog::save_selected_attachment(
     Attachment *attachment = attacharea->getSelectedAttachment();
 
    // Get selected attachment, if none selected, then return.
-   if ( attachment == NULL ) {
+   if ( attachment == nullptr ) {
 	  // Let User know that no attachment has been selected???
 	  int answer = 0;
-	  char *helpId = NULL;
+	  char *helpId = nullptr;
 
 
 	  _genDialog->setToErrorDialog(
@@ -563,12 +563,12 @@ ViewMsgDialog::manage()
     XtVaGetValues(text,
 	XmNwidth, &width,
 	XmNheight, &height,
-	NULL);
+	nullptr);
 
     XtVaSetValues(_w,
 	XmNx, _parent->x() + (_parent->width() / 2),
 	XmNy, _parent->y() + (_parent->height() /2),
-	NULL );
+	nullptr );
 
     DialogShell::manage();
 
@@ -584,7 +584,7 @@ ViewMsgDialog::addAttachmentActions(
     char *anAction;
     AttachmentActionCmd *attachActionCmd;
     
-    if (_attachmentActionsList == NULL) { 
+    if (_attachmentActionsList == nullptr) { 
 	_attachmentActionsList = new CmdList("AttachmentActions",
 					     "AttachmentActions");
     }

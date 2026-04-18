@@ -56,7 +56,7 @@ XmStrCollector::XmStrCollector()
     num_items = 0;
     max_num_items = 0;
     increment = 10;
-    list = NULL;
+    list = nullptr;
 }
 
 XmStrCollector::~XmStrCollector() 

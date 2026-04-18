@@ -113,7 +113,7 @@ void IndexedOptionMenuUiItem::writeFromSourceToUi()
   
   value = (char *)prop_source->getValue();
   _iom->setSpec((void*) value);
-  if (NULL != value)
+  if (nullptr != value)
     free((void*) value);
 }
 

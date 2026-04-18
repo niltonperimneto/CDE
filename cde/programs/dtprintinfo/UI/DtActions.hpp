@@ -54,12 +54,12 @@ class DtActions : public Menu
 
    DtActions(AnyUI *parent,
 	     char *name,
-	     char *mnemonic = NULL);
+	     char *mnemonic = nullptr);
 
    void AddAction(char *name, char *category, 
 		  char *actionReferenceName, ActionCallback callback,
-		  void *callback_data, char *mnemonic = NULL,
-		  char *acceleratorText = NULL, char *accelerator = NULL);
+		  void *callback_data, char *mnemonic = nullptr,
+		  char *acceleratorText = nullptr, char *accelerator = nullptr);
    void AddSep(char *category);
    BaseUI *SelectedObject() { return selected_object; }
    boolean HandleHelpRequest(void);

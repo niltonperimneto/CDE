@@ -55,19 +55,19 @@ pathcollapse(const char *src, char *dst, boolean show_dir)
     char *dstp,  *sep;
     char *components[MAXPATHLEN / 2 + 1];
     char **comp = components;
-    int length = src == NULL ? 0 : strlen(src);
+    int length = src == nullptr ? 0 : strlen(src);
     int dir_comp;		/* TRUE if last component was . or .. */
     wchar_t __nlh_char[1];
 
     if (length == 0 || length > MAXPATHLEN)
     {
 	errno = EINVAL;
-	return NULL;
+	return nullptr;
     }
 
-    if (dst == NULL)
-	if ((dst = (char *)malloc(length + 1)) == NULL)
-	    return NULL;
+    if (dst == nullptr)
+	if ((dst = (char *)malloc(length + 1)) == nullptr)
+	    return nullptr;
 
     srcp = src;
     dstp = dst;

@@ -61,11 +61,11 @@ QueryDialogManager::QueryDialogManager ( char   *name )
 Widget QueryDialogManager::createDialog ( Widget parent )
 {
 
-    Widget dialog = XmCreateQuestionDialog ( parent, _name, NULL, 0);
+    Widget dialog = XmCreateQuestionDialog ( parent, _name, nullptr, 0);
     
     XtVaSetValues ( dialog,
 		   XmNdialogStyle, XmDIALOG_FULL_APPLICATION_MODAL,
-		   NULL );
+		   nullptr );
     
     return dialog;
 

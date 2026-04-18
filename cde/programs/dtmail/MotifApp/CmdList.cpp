@@ -73,7 +73,7 @@ CmdList::CmdList() : Cmd("CmdList", "CmdList", 1)
 {
    _contents = 0;
    _numElements = 0;
-   _pane = NULL;
+   _pane = nullptr;
 }
 
 CmdList::CmdList(char *name, char *label ) : Cmd(name, label, 1)
@@ -82,7 +82,7 @@ CmdList::CmdList(char *name, char *label ) : Cmd(name, label, 1)
     
     _contents    = 0;
     _numElements = 0;
-    _pane        = NULL;
+    _pane        = nullptr;
 }
 
 CmdList::~CmdList()

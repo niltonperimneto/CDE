@@ -52,7 +52,7 @@ options_checkbox_init(
     Boolean		*dirty_bit
 )
 {
-    XtVaSetValues(checkbox, XmNuserData,(XtArgVal)OPTIONS_EDIT , NULL);
+    XtVaSetValues(checkbox, XmNuserData,(XtArgVal)OPTIONS_EDIT , nullptr);
     XtAddCallback(checkbox, XmNvalueChangedCallback,
 		  options_setting_chgCB, (XtPointer)dirty_bit);
 }
@@ -66,13 +66,13 @@ options_checkbox_set_value(
 {
   if (!set_dirty_bit)
     /* Set state so dirty-bit is not triggered */
-    XtVaSetValues(checkbox, XmNuserData, (XtArgVal)OPTIONS_LOAD, NULL);
+    XtVaSetValues(checkbox, XmNuserData, (XtArgVal)OPTIONS_LOAD, nullptr);
 
   XmToggleButtonSetState(checkbox, b_value, set_dirty_bit? TRUE : FALSE);
   
   if (!set_dirty_bit)
     /* Reset state */
-    XtVaSetValues(checkbox, XmNuserData, (XtArgVal)OPTIONS_EDIT, NULL);
+    XtVaSetValues(checkbox, XmNuserData, (XtArgVal)OPTIONS_EDIT, nullptr);
 
 return OK;
 }
@@ -98,7 +98,7 @@ options_radiobox_init(
 
     for (i=0; i < num_items; i++)
     {
-	XtVaSetValues(items[i], XmNuserData, (XtArgVal)item_values[i], NULL);
+	XtVaSetValues(items[i], XmNuserData, (XtArgVal)item_values[i], nullptr);
 	XtAddCallback(items[i], XmNvalueChangedCallback, 
 			options_setting_chgCB, (XtPointer)dirty_bit);
 	XtAddCallback(items[i], XmNvalueChangedCallback, 
@@ -107,8 +107,8 @@ options_radiobox_init(
 	/* Ensure Radiobox has a default Value set */
 	if (i == 0)
 	{
-	    XtVaSetValues(items[i], XmNset, True, NULL);
-	    XtVaSetValues(radiobox, XmNuserData, (XtArgVal)item_values[i], NULL);
+	    XtVaSetValues(items[i], XmNset, True, nullptr);
+	    XtVaSetValues(radiobox, XmNuserData, (XtArgVal)item_values[i], nullptr);
 	}
     }
 
@@ -121,7 +121,7 @@ options_radiobox_get_value(
 {
     XtArgVal value;
 
-    XtVaGetValues(radiobox, XmNuserData, &value, NULL);
+    XtVaGetValues(radiobox, XmNuserData, &value, nullptr);
 
     return((int)value);
 }
@@ -134,7 +134,7 @@ options_radiobox_set_value(
 )
 {
     int         num_children = 0;
-    WidgetList  children = NULL;
+    WidgetList  children = nullptr;
     XtArgVal    childval = 0;
     Boolean     found = FALSE;
     int         i = 0;
@@ -143,16 +143,16 @@ options_radiobox_set_value(
     XtVaGetValues(radiobox,
         XtNnumChildren,    &num_children,
         XtNchildren,       &children,
-        NULL);
+        nullptr);
 
     for (i = 0; i < num_children; i++)
     {
-        XtVaGetValues(children[i], XmNuserData, &childval, NULL);
+        XtVaGetValues(children[i], XmNuserData, &childval, nullptr);
         XmToggleButtonSetState(children[i], childval == value? TRUE : FALSE, FALSE);
         if (childval == value)
         {
             found = TRUE;
-            XtVaSetValues(radiobox, XmNuserData, (XtArgVal)value, NULL);
+            XtVaSetValues(radiobox, XmNuserData, (XtArgVal)value, nullptr);
         }
     }    
     if (!found)
@@ -197,7 +197,7 @@ options_radiobox_itemCB(
     if (state->set)
     {
     	excl_setting = XtParent(item);
-    	XtVaSetValues(excl_setting, XmNuserData, (XtArgVal)value, NULL);
+    	XtVaSetValues(excl_setting, XmNuserData, (XtArgVal)value, nullptr);
     }
 
 }
@@ -211,7 +211,7 @@ options_field_init(
     XtAddCallback(field, XmNvalueChangedCallback, 
 		options_field_chgCB, (XtPointer)dirty_bit);
 
-    XtVaSetValues(field, XmNuserData, (XtArgVal)OPTIONS_EDIT, NULL);
+    XtVaSetValues(field, XmNuserData, (XtArgVal)OPTIONS_EDIT, nullptr);
 
 }
 
@@ -237,14 +237,14 @@ options_field_set_value(
 {
     if (!set_dirty_bit)
     	/* Set state so dirty-bit is not triggered */
-    	XtVaSetValues(field, XmNuserData, (XtArgVal)OPTIONS_LOAD, NULL);
+    	XtVaSetValues(field, XmNuserData, (XtArgVal)OPTIONS_LOAD, nullptr);
 
     /* Set field value */
     XmTextFieldSetString(field, value);
 
     if (!set_dirty_bit)
     	/* Reset state */
-   	XtVaSetValues(field, XmNuserData, (XtArgVal)OPTIONS_EDIT, NULL);
+   	XtVaSetValues(field, XmNuserData, (XtArgVal)OPTIONS_EDIT, nullptr);
 
     return OK;
 
@@ -261,7 +261,7 @@ options_field_chgCB(
      XtArgVal    field_mode;
 
      calldata = calldata;
-     XtVaGetValues(widget, XmNuserData, &field_mode, NULL);
+     XtVaGetValues(widget, XmNuserData, &field_mode, nullptr);
      if (field_mode == OPTIONS_EDIT)
 	*dirty_bit = TRUE;
      props_changed = TRUE;
@@ -292,7 +292,7 @@ options_spinbox_modCB(
      char	*textvalue;
      XmTextVerifyCallbackStruct *cbs = (XmTextVerifyCallbackStruct*) calldata;
      
-     if (NULL == cbs->text->ptr) return;
+     if (nullptr == cbs->text->ptr) return;
      if (!all_digits(cbs->text->ptr))
      {
          cbs->doit = FALSE;
@@ -305,8 +305,8 @@ options_spinbox_modCB(
      strcat(text, cbs->text->ptr);
      strcat(text, textvalue+cbs->endPos);
 
-     XtVaGetValues(spinbox, XmNmaximumValue, &mvalue, NULL); 
-     value = (int) strtol(text, NULL, 10);
+     XtVaGetValues(spinbox, XmNmaximumValue, &mvalue, nullptr); 
+     value = (int) strtol(text, nullptr, 10);
      if (value > mvalue)
      {
          cbs->doit = FALSE;
@@ -325,19 +325,19 @@ options_spinbox_chgCB(
 {
      Widget  spinbox = (Widget) clientdata;
      int             mvalue, value = 
-			(int) strtol(XmTextGetString(widget), NULL, 10);
+			(int) strtol(XmTextGetString(widget), nullptr, 10);
      Display         *dpy = XtDisplayOfObject(widget);
      calldata = calldata;
      
      props_changed = TRUE;
      if (!all_digits(XmTextGetString(widget))){
-	XtVaSetValues(spinbox, XmNposition, 1, NULL);
+	XtVaSetValues(spinbox, XmNposition, 1, nullptr);
 	XBell(dpy, 50);
 	return;
      }
-     XtVaGetValues(spinbox, XmNmaximumValue, &mvalue, NULL); 
+     XtVaGetValues(spinbox, XmNmaximumValue, &mvalue, nullptr); 
      if (value > mvalue) {
-	XtVaSetValues(spinbox, XmNposition, mvalue, NULL);
+	XtVaSetValues(spinbox, XmNposition, mvalue, nullptr);
 	XBell(dpy, 50);
 	return;
      }
@@ -346,7 +346,7 @@ options_spinbox_chgCB(
      // if entered. So if we made it here it is a valid entry. We
      // also have to reset the insertion point! Another spinbox bug
      // we have to work around. 
-     XtVaSetValues(spinbox, XmNposition, value, NULL);
+     XtVaSetValues(spinbox, XmNposition, value, nullptr);
      int shift = 1;
      while ((value /= 10) > 0)
 	shift++; 
@@ -362,13 +362,13 @@ options_spinbox_init(
     Widget textfield;
     dirty_bit = dirty_bit;
 
-    XtVaGetValues(spinbox, XmNtextField, &textfield, NULL);
+    XtVaGetValues(spinbox, XmNtextField, &textfield, nullptr);
     XtAddCallback(textfield, XmNvalueChangedCallback, 
 		options_spinbox_chgCB, spinbox);
     XtAddCallback(textfield, XmNmodifyVerifyCallback, 
 		options_spinbox_modCB, spinbox);
 
-    XtVaSetValues(spinbox, XmNuserData, (XtArgVal)OPTIONS_EDIT, NULL);
+    XtVaSetValues(spinbox, XmNuserData, (XtArgVal)OPTIONS_EDIT, nullptr);
 
 }
 
@@ -382,7 +382,7 @@ options_spinbox_get_value(
  
     XtVaGetValues(spinbox,
 		  XmNposition, &value,
-		  NULL);
+		  nullptr);
 
     return value; 
 } 
@@ -396,14 +396,14 @@ options_spinbox_set_value(
 {
     if (!set_dirty_bit)
       /* Set state so dirty-bit is not triggered */
-      XtVaSetValues(spinbox, XmNuserData, (XtArgVal)OPTIONS_LOAD, NULL);
+      XtVaSetValues(spinbox, XmNuserData, (XtArgVal)OPTIONS_LOAD, nullptr);
 
     /* Set spinbox value */
-    XtVaSetValues(spinbox, XmNposition, value, NULL);
+    XtVaSetValues(spinbox, XmNposition, value, nullptr);
 
     if (!set_dirty_bit)
     	/* Reset state */
-   	XtVaSetValues(spinbox, XmNuserData, (XtArgVal)OPTIONS_EDIT, NULL);
+   	XtVaSetValues(spinbox, XmNuserData, (XtArgVal)OPTIONS_EDIT, nullptr);
 
     return OK;
 
@@ -418,7 +418,7 @@ options_list_init(Widget list,
   int 		i;
   XmStringTable str_list;
 
-  if(item_list == NULL)
+  if(item_list == nullptr)
     return;
 
   num_items = item_list->length();
@@ -432,7 +432,7 @@ options_list_init(Widget list,
   XtVaSetValues(list,
 		XmNitemCount, num_items,
 		XmNitems, str_list,
-		NULL);
+		nullptr);
 
   for(i = 0; i < num_items; i++)
     XmStringFree(str_list[i]);
@@ -511,7 +511,7 @@ options_scale_get_value(
 { 
     int      value; 
  
-    XtVaGetValues(scale, XmNvalue, &value, NULL);
+    XtVaGetValues(scale, XmNvalue, &value, nullptr);
  
     return value; 
 } 
@@ -527,16 +527,16 @@ options_scale_set_value(
 
     if (!set_dirty_bit)
     	/* Set state so dirty-bit is not triggered */
-    	XtVaSetValues(scale, XmNuserData, (XtArgVal)OPTIONS_LOAD, NULL);
+    	XtVaSetValues(scale, XmNuserData, (XtArgVal)OPTIONS_LOAD, nullptr);
 
-    val_int = (int) strtol(value, NULL, 10);
+    val_int = (int) strtol(value, nullptr, 10);
     /* Set scale value */
 
-    XtVaSetValues(scale,  XmNvalue, val_int, NULL);
+    XtVaSetValues(scale,  XmNvalue, val_int, nullptr);
 
     if (!set_dirty_bit)
     	/* Reset state */
-   	XtVaSetValues(scale, XmNuserData, (XtArgVal)OPTIONS_EDIT, NULL);
+   	XtVaSetValues(scale, XmNuserData, (XtArgVal)OPTIONS_EDIT, nullptr);
 
     return OK;
 

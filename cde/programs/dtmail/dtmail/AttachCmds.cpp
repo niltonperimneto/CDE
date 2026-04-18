@@ -103,19 +103,19 @@ void AttachAddCmd::doit()
     struct passwd *pwd;
 
     fsdialog = _attachArea->getFsDialog();
-    if(fsdialog == NULL) {
-	fsdialog = XmCreateFileSelectionDialog(_parent, "fsdialog", NULL, 0);
+    if(fsdialog == nullptr) {
+	fsdialog = XmCreateFileSelectionDialog(_parent, "fsdialog", nullptr, 0);
 	XtUnmanageChild(
 		XmFileSelectionBoxGetChild(fsdialog, XmDIALOG_HELP_BUTTON));
 	XtVaSetValues(XmFileSelectionBoxGetChild(fsdialog, XmDIALOG_LIST),
 	    XmNselectionPolicy, XmBROWSE_SELECT,
-	    NULL);
+	    nullptr);
 	pwd = getpwuid(getuid());
 	home = pwd->pw_dir;
 	XtVaSetValues(fsdialog,
 	    XtVaTypedArg, XmNdirectory, XtRString,
 	    home, strlen(home)+1,
-	    NULL);
+	    nullptr);
 	_attachArea->setFsDialog(fsdialog);
 	XtAddCallback(fsdialog, XmNcancelCallback, 
 			  &AttachAddCmd::cancelCallback,
@@ -139,12 +139,12 @@ void AttachAddCmd::doit()
 	}
 	XtVaSetValues(XtParent(fsdialog),
 		XmNtitle, CATGETS(DT_catd, 14, 1, "Add Attachment"),
-		NULL);
+		nullptr);
 	XtManageChild(fsdialog);
     }
     XtVaSetValues(fsdialog, 
 		    XmNfileTypeMask, XmFILE_REGULAR, 
-		    NULL);
+		    nullptr);
     _attachArea->setFsState(ADD);
     _attachArea->activateDeactivate();
     XRaiseWindow(XtDisplay(fsdialog), XtWindow(XtParent(fsdialog)) );
@@ -176,22 +176,22 @@ void AttachAddCmd::ok( Widget , XtPointer callData )
 			XmDIALOG_LIST),
 	XmNselectedItems, &string_table,
 	XmNselectedItemCount, &count,
-	NULL);
+	nullptr);
 
     if(count == 0) {
-	filename = NULL;
+	filename = nullptr;
         filename = (char *) _XmStringUngenerate(
-					cbs->value, NULL,
+					cbs->value, nullptr,
 					XmMULTIBYTE_TEXT, XmMULTIBYTE_TEXT);
-	if (NULL == filename) return; // internal error
+	if (nullptr == filename) return; // internal error
 	add_file(filename);
     } else {
 	for(i=0;i<count;i++) {
-	    filename = NULL;
+	    filename = nullptr;
             filename = (char *) _XmStringUngenerate(
-					string_table[i], NULL,
+					string_table[i], nullptr,
 					XmMULTIBYTE_TEXT, XmMULTIBYTE_TEXT);
-	    if (NULL == filename) return; // internal error
+	    if (nullptr == filename) return; // internal error
 	    add_file(filename);
 	}
     }
@@ -455,13 +455,13 @@ AttachRenameCmd::AttachRenameCmd ( AttachArea *attachArea,
     XmString message;
 
     _attachArea = attachArea;
-    renameDialog = XmCreatePromptDialog(parent, "renameDialog", NULL, 0);
+    renameDialog = XmCreatePromptDialog(parent, "renameDialog", nullptr, 0);
     message = XmStringCreateLocalized(attachArea->getRenameMessageString());
-    XtVaSetValues(renameDialog, XmNselectionLabelString, message, NULL);
+    XtVaSetValues(renameDialog, XmNselectionLabelString, message, nullptr);
     XmStringFree(message);
     XtVaSetValues(XtParent(renameDialog),
 	    XmNtitle, CATGETS(DT_catd, 14, 9, "Mailer - Rename Attachment"),
-	    NULL);
+	    nullptr);
     XtUnmanageChild(
 	XmSelectionBoxGetChild(renameDialog, XmDIALOG_HELP_BUTTON)
     );
@@ -514,7 +514,7 @@ void AttachRenameCmd::ok( XtPointer callData )
 {
     XmSelectionBoxCallbackStruct *cbs = 
 	    (XmSelectionBoxCallbackStruct *)callData;
-    String label = NULL;
+    String label = nullptr;
 
     if(_attachArea->getIconSelectedCount() != 1) {
 // 	theInfoDialogManager->post(
@@ -547,13 +547,13 @@ AttachDescriptionCmd::AttachDescriptionCmd ( AttachArea *attachArea,
     XmString message;
 
     _attachArea = attachArea;
-    descriptionDialog = XmCreatePromptDialog(parent, "descriptionDialog", NULL, 0);
+    descriptionDialog = XmCreatePromptDialog(parent, "descriptionDialog", nullptr, 0);
     message = XmStringCreateLocalized(attachArea->getDescriptionMessageString());
-    XtVaSetValues(descriptionDialog, XmNselectionLabelString, message, NULL);
+    XtVaSetValues(descriptionDialog, XmNselectionLabelString, message, nullptr);
     XmStringFree(message);
     XtVaSetValues(XtParent(descriptionDialog),
 	    XmNtitle, CATGETS(DT_catd, 14, 10, "Description"),
-	    NULL);
+	    nullptr);
     XtUnmanageChild(XmSelectionBoxGetChild(descriptionDialog, XmDIALOG_HELP_BUTTON));
     _attachArea->setDescriptionDialog(descriptionDialog);
     XtAddCallback(descriptionDialog, XmNcancelCallback, 
@@ -616,7 +616,7 @@ void AttachDescriptionCmd::ok( XtPointer callData )
 {
     XmSelectionBoxCallbackStruct *cbs = 
 	    (XmSelectionBoxCallbackStruct *)callData;
-    String label = NULL;
+    String label = nullptr;
 
     if(_attachArea->getIconSelectedCount() != 1) {
 // 	theInfoDialogManager->post(
@@ -658,19 +658,19 @@ void AttachSaveAsCmd::doit()
     char *home;
     
     fsdialog = _attachArea->getFsDialog();
-    if(fsdialog == NULL) {
-	fsdialog = XmCreateFileSelectionDialog(_parent, "fsdialog", NULL, 0);
+    if(fsdialog == nullptr) {
+	fsdialog = XmCreateFileSelectionDialog(_parent, "fsdialog", nullptr, 0);
 	XtUnmanageChild(
 		XmFileSelectionBoxGetChild(fsdialog, XmDIALOG_HELP_BUTTON));
 	XtVaSetValues(XmFileSelectionBoxGetChild(fsdialog, XmDIALOG_LIST),
 	    XmNselectionPolicy, XmBROWSE_SELECT,
-	    NULL);
+	    nullptr);
 	pwd = getpwuid(getuid());
 	home = pwd->pw_dir;
 	XtVaSetValues(fsdialog,
 	    XtVaTypedArg, XmNdirectory, XtRString,
 	    home, strlen(home)+1,
-	    NULL);
+	    nullptr);
 	_attachArea->setFsDialog(fsdialog);
 	XtAddCallback(fsdialog, XmNcancelCallback, 
 			  &AttachSaveAsCmd::cancelCallback,
@@ -695,12 +695,12 @@ void AttachSaveAsCmd::doit()
 	}
 	XtVaSetValues(XtParent(fsdialog),
 		XmNtitle, CATGETS(DT_catd, 14, 11, "Save Attachment As"),
-		NULL);
+		nullptr);
 	XtManageChild(fsdialog);
     }
     XtVaSetValues(fsdialog, 
 		    XmNfileTypeMask, XmFILE_DIRECTORY, 
-		    NULL);
+		    nullptr);
     _attachArea->setFsState(SAVEAS);
     _attachArea->activateDeactivate();
     XRaiseWindow( XtDisplay(fsdialog), XtWindow(XtParent(fsdialog)) );
@@ -766,7 +766,7 @@ void AttachSaveAsCmd::ok( XtPointer callData )
 {
     XmFileSelectionBoxCallbackStruct *cbs = 
 	    (XmFileSelectionBoxCallbackStruct *)callData;
-    char *dirname = NULL;
+    char *dirname = nullptr;
 //    struct stat s;
 //     Attachment **list = _attachArea->getList();
 //     char error[1024];
@@ -1019,8 +1019,8 @@ AttachInfoCmd::AttachInfoCmd ( AttachArea *attachArea,
 			: Cmd ( name, label, active )
 {
     _attachArea = attachArea;
-    _info_dialog = NULL;
-    _attachInfoDialogManager = NULL;
+    _info_dialog = nullptr;
+    _attachInfoDialogManager = nullptr;
 }
 
 void AttachInfoCmd::doit()

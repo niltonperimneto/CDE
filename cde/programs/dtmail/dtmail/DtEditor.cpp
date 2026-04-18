@@ -69,17 +69,17 @@ CDEM_DtWidgetEditor::CDEM_DtWidgetEditor(
 {
     my_parent   = parent;
     my_owner	= owner_of_editor;
-    my_text     = NULL;
-    my_text_core = NULL;
-    _modified_text = NULL;
+    my_text     = nullptr;
+    my_text_core = nullptr;
+    _modified_text = nullptr;
     _modified_text_buflen = 0;
 
-    begin_ins_bracket = NULL;
-    indent_str = NULL;
-    end_ins_bracket = NULL;
+    begin_ins_bracket = nullptr;
+    indent_str = nullptr;
+    end_ins_bracket = nullptr;
     _auto_show_cursor = FALSE;
 
-    _buffer     = NULL;
+    _buffer     = nullptr;
     _buf_len    = (unsigned long) 0;
     text_already_selected = FALSE;
 }
@@ -100,18 +100,18 @@ CDEM_DtWidgetEditor::~CDEM_DtWidgetEditor()
     }
     if (_buffer) {
 	delete _buffer;
-	_buffer = NULL;
+	_buffer = nullptr;
     }
 
     if(_modified_text )  {
 	if(_modified_text->ptr)  {
 		free(_modified_text->ptr);
-		_modified_text->ptr = NULL;
+		_modified_text->ptr = nullptr;
 	}
 	free(_modified_text);
-	_modified_text = NULL;
+	_modified_text = nullptr;
     }
-    if (NULL != indent_str)
+    if (nullptr != indent_str)
       free((void*) indent_str);
 }
 
@@ -130,23 +130,23 @@ CDEM_DtWidgetEditor::initialize()
     DtMail::Session * d_session = theRoamApp.session()->session();
     DtMail::MailRc * mailrc = d_session->mailRc(error);
 
-    const char * value = NULL;
+    const char * value = nullptr;
     mailrc->getValue(error, "popuplines", &value);
     if (error.isSet()) {
 	value = strdup("24");
     }
-    rows = strtol(value, NULL, 10);
-    if (NULL != value)
+    rows = strtol(value, nullptr, 10);
+    if (nullptr != value)
       free((void*) value);
 
     // If toolcols is set, overwrite the column width with "toolcols" value.
     // Otherwise, default resource value will be used.
-    value = NULL;
+    value = nullptr;
     mailrc->getValue(error, "toolcols", &value);
     if (!error.isSet()){
-        cols = strtol(value, NULL, 10);      
+        cols = strtol(value, nullptr, 10);      
         XtSetArg(args[i], DtNcolumns, cols); i++;
-        if (NULL != value)
+        if (nullptr != value)
           free((void*) value);
     } else {
 	/*
@@ -159,7 +159,7 @@ CDEM_DtWidgetEditor::initialize()
 	else
 	    value = "40";
 
-        cols = strtol(value, NULL, 10);      
+        cols = strtol(value, nullptr, 10);      
         XtSetArg(args[i], DtNcolumns, cols); i++;
     }
 #endif
@@ -272,7 +272,7 @@ CDEM_DtWidgetEditor::clear_contents()
     DtEditorErrorCode status;
 
     content.type = DtEDITOR_TEXT;
-    content.value.string = NULL;
+    content.value.string = nullptr;
     status = DtEditorSetContents(my_text, &content);
 
 }
@@ -357,7 +357,7 @@ CDEM_DtWidgetEditor::get_text_foreground()
     
     XtVaGetValues(my_text,
 	DtNtextForeground, &fg,
-	NULL);
+	nullptr);
 
     return(fg);
 }
@@ -377,7 +377,7 @@ CDEM_DtWidgetEditor::get_text_background()
     
     XtVaGetValues(my_text,
 	DtNtextBackground, &bg,
-	NULL);
+	nullptr);
     
     return(bg);
 }
@@ -389,7 +389,7 @@ CDEM_DtWidgetEditor::get_text_fontList()
     
     XtVaGetValues(my_text,
 	DtNtextFontList, &fl,
-	NULL);
+	nullptr);
 
     return(fl);
 }
@@ -401,7 +401,7 @@ CDEM_DtWidgetEditor::get_text_width()
     
     XtVaGetValues(my_text,
         XmNwidth, &wid,
-	NULL);
+	nullptr);
     return (wid);
 }
 
@@ -416,7 +416,7 @@ int
 CDEM_DtWidgetEditor::get_columns()
 {
   short ncolumns;
-  XtVaGetValues(my_text, DtNcolumns, &ncolumns, NULL);
+  XtVaGetValues(my_text, DtNcolumns, &ncolumns, nullptr);
   return (int) ncolumns;
 }
 
@@ -425,7 +425,7 @@ int
 CDEM_DtWidgetEditor::get_rows()
 {
   short nrows;
-  XtVaGetValues(my_text, DtNrows, &nrows, NULL);
+  XtVaGetValues(my_text, DtNrows, &nrows, nullptr);
   return (int) nrows;
 }
 
@@ -435,21 +435,21 @@ CDEM_DtWidgetEditor::set_editable(Boolean bval)
    XtVaSetValues(my_text,
 		DtNeditable, bval,
 		DtNcursorPositionVisible, bval,
-		NULL);
+		nullptr);
 }
 
 
 void
 CDEM_DtWidgetEditor::set_columns(int ncolumns)
 {
-  XtVaSetValues(my_text, DtNcolumns, ncolumns, NULL);
+  XtVaSetValues(my_text, DtNcolumns, ncolumns, nullptr);
 }
 
 
 void
 CDEM_DtWidgetEditor::set_rows(int nrows)
 {
-  XtVaSetValues(my_text, DtNrows, nrows, NULL);
+  XtVaSetValues(my_text, DtNrows, nrows, nullptr);
 }
 
 void
@@ -508,7 +508,7 @@ CDEM_DtWidgetEditor::paste_special_from_clipboard(
     do {
 	status = XmClipboardRetrieve(
 			dpy, window, "STRING", clipboard_data, 
-			length,  &recvd, NULL
+			length,  &recvd, nullptr
 			);
     } while (status == ClipboardLocked);
     
@@ -577,7 +577,7 @@ CDEM_DtWidgetEditor::set_word_wrap(
     Boolean bval
 )
 {
-   XtVaSetValues(my_text, DtNwordWrap, bval, NULL);
+   XtVaSetValues(my_text, DtNwordWrap, bval, nullptr);
 }
 
 void
@@ -586,7 +586,7 @@ CDEM_DtWidgetEditor::set_to_top()
     XtVaSetValues(my_text, 
 	DtNtopCharacter, 0, 
 	DtNcursorPosition, 0,
-	NULL);
+	nullptr);
 }
 
 
@@ -722,7 +722,7 @@ CDEM_DtWidgetEditor::modifyData(
     Editor::InsertFormat insert_format
 )
 {
-    if(_modified_text == NULL)
+    if(_modified_text == nullptr)
 	_modified_text = (XmTextBlockRec *)calloc(1,sizeof(XmTextBlockRec));
 
     char *maxsp = sp  + length; // maxmimum source ptr
@@ -734,7 +734,7 @@ CDEM_DtWidgetEditor::modifyData(
 	(size_req <  CDEM_DtWidgetEditor::MAXBUFSZ)) 	)
 	reallocPasteBuf(size_req);
     
-    if(_modified_text->ptr == NULL)
+    if(_modified_text->ptr == nullptr)
 	    return; // No memory available
 
     switch( insert_format) {
@@ -746,7 +746,7 @@ CDEM_DtWidgetEditor::modifyData(
 		// Get the indent prefix string
           DtMail::Session *m_session = theRoamApp.session()->session();
 	  m_session->mailRc(error)->getValue(error,"indentprefix", &indent_str);
-	  if (error.isSet() || NULL == indent_str) 
+	  if (error.isSet() || nullptr == indent_str) 
 	    indent_str = strdup("> ");
 
 	  size_t indlen = strlen(indent_str);
@@ -760,7 +760,7 @@ CDEM_DtWidgetEditor::modifyData(
 		  size_req = (size_t)((((_modified_text_buflen + 
 		      indlen+2)/BUFINC)+1)*BUFINC);
 		  reallocPasteBuf(size_req);
-		  if(_modified_text->ptr == NULL)
+		  if(_modified_text->ptr == nullptr)
 		      return; // No memory available
 	      }
 
@@ -802,7 +802,7 @@ CDEM_DtWidgetEditor::modifyData(
 	    reallocPasteBuf(size_req);
 	}
 
-	if(_modified_text->ptr == NULL)
+	if(_modified_text->ptr == nullptr)
 	    return;
 
 	strcpy(_modified_text->ptr, begin_ins_bracket);

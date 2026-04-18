@@ -74,16 +74,16 @@ XmTextEditor::XmTextEditor(
 {
     my_parent   = parent;
     my_owner	= owner_of_editor;
-    _w    = NULL;
-	my_text = NULL;
+    _w    = nullptr;
+	my_text = nullptr;
 
-    _buffer = NULL;
+    _buffer = nullptr;
     _buf_len = 0;
-    _modified_text = NULL;
+    _modified_text = nullptr;
     _modified_text_buflen = 0;
-    begin_ins_bracket = NULL;
-    indent_str = NULL;
-    end_ins_bracket = NULL;
+    begin_ins_bracket = nullptr;
+    indent_str = nullptr;
+    end_ins_bracket = nullptr;
     _auto_show_cursor = FALSE;
     text_already_selected = FALSE;
 }
@@ -92,18 +92,18 @@ XmTextEditor::~XmTextEditor()
 {
     if (_buffer) {
 	delete _buffer;
-	_buffer = NULL;
+	_buffer = nullptr;
     }
 
     if(_modified_text )  {
 	if(_modified_text->ptr)  {
 		free(_modified_text->ptr);
-		_modified_text->ptr = NULL;
+		_modified_text->ptr = nullptr;
 	}
 	free(_modified_text);
-	_modified_text = NULL;
+	_modified_text = nullptr;
     }
-    if (NULL != indent_str)
+    if (nullptr != indent_str)
       free((void*) indent_str);
 }
 
@@ -124,18 +124,18 @@ XmTextEditor::initialize()
     if (error.isSet()) {
 	value = strdup("24");
     }
-    rows = (short) strtol(value, NULL, 10);
-    if (NULL != value)
+    rows = (short) strtol(value, nullptr, 10);
+    if (nullptr != value)
       free((void*) value);
 
     // If toolcols is set, overwrite the column width with "toolcols" value.
     // Otherwise, default resource value will be used.
-    value = NULL;
+    value = nullptr;
     mailrc->getValue(error, "toolcols", &value);
     if (!error.isSet()){
-        cols = (short) strtol(value, NULL, 10);
+        cols = (short) strtol(value, nullptr, 10);
         XtSetArg(args[n], XmNcolumns, cols); n++;
-        if (NULL != value)
+        if (nullptr != value)
           free((void*) value);
     } else {
 	/*
@@ -273,7 +273,7 @@ XmTextEditor::get_text_foreground()
     
     XtVaGetValues(_w,
 	XmNforeground, &fg,
-	NULL);
+	nullptr);
     return(fg);
 }
 
@@ -285,7 +285,7 @@ XmTextEditor::get_text_background()
     
     XtVaGetValues(_w,
 	XmNbackground, &bg,
-	NULL);
+	nullptr);
     return(bg);
 }
 
@@ -296,7 +296,7 @@ XmTextEditor::get_text_fontList()
     
     XtVaGetValues(_w,
 	XmNfontList, &fl,
-	NULL);
+	nullptr);
     return(fl);
 }
 
@@ -307,7 +307,7 @@ XmTextEditor::get_text_width()
     
     XtVaGetValues(_w,
         XmNwidth, &wid,
-	NULL);
+	nullptr);
     return (wid);
 }
 
@@ -325,7 +325,7 @@ XmTextEditor::set_editable(
   XmTextSetEditable( _w, bval);
 
   // If not editable, turn off the cursor?
-  XtVaSetValues(_w, XmNcursorPositionVisible, bval, NULL);
+  XtVaSetValues(_w, XmNcursorPositionVisible, bval, nullptr);
 }
 
 
@@ -333,7 +333,7 @@ int
 XmTextEditor::get_columns()
 {
   short ncolumns = 0;;
-  XtVaGetValues(_w, XmNcolumns, &ncolumns, NULL);
+  XtVaGetValues(_w, XmNcolumns, &ncolumns, nullptr);
   return ncolumns;
 }
 
@@ -342,21 +342,21 @@ int
 XmTextEditor::get_rows()
 {
   short nrows = 0;
-  XtVaGetValues(_w, XmNrows, &nrows, NULL);
+  XtVaGetValues(_w, XmNrows, &nrows, nullptr);
   return nrows;
 }
 
 void
 XmTextEditor::set_columns(int ncolumns)
 {
-  XtVaSetValues(_w, XmNcolumns, ncolumns, NULL);
+  XtVaSetValues(_w, XmNcolumns, ncolumns, nullptr);
 }
 
 
 void
 XmTextEditor::set_rows(int nrows)
 {
-  XtVaSetValues(_w, XmNrows, nrows, NULL);
+  XtVaSetValues(_w, XmNrows, nrows, nullptr);
 }
 
 
@@ -380,12 +380,12 @@ XmTextEditor::auto_show_cursor_off()
     // Get the original value of XmNautoShowCursorPosition
     XtVaGetValues(_w,
 		  XmNautoShowCursorPosition, &_auto_show_cursor,
-		  NULL);
+		  nullptr);
 
     // Set it to false so we don't scroll with the cursor.
     XtVaSetValues(_w,
 		  XmNautoShowCursorPosition, FALSE,
-		  NULL);
+		  nullptr);
 }
 
 void
@@ -394,7 +394,7 @@ XmTextEditor::auto_show_cursor_restore()
     // Restore the original value of XmNautoShowCursorPosition.
     XtVaSetValues(_w,
 		  XmNautoShowCursorPosition, _auto_show_cursor,
-		  NULL);
+		  nullptr);
 }
 
 void
@@ -435,7 +435,7 @@ XmTextEditor::obtained_focus()
     // text is unhighlighted when the widget gets the focus
     // next.  Need to disable the parent's menu items now.
 
-    if (XmTextGetSelection(_w) != NULL) {
+    if (XmTextGetSelection(_w) != nullptr) {
 	text_already_selected = TRUE;
     }
 
@@ -594,7 +594,7 @@ XmTextEditor::clear_selection()
 	   char *sel = XmTextGetSelection( _w );
 	   // NOTE:  Modifying buffer returned by XmTextGetSelection.
 	   // Future Motif implementation might return read only buffer.
-	   if (sel != NULL) {
+	   if (sel != nullptr) {
 	   	memset( sel, ' ', strlen(sel) );
 	   	// XmTextInsert( _w, left, sel );
 	   	XmTextReplace( _w, left, right, sel );
@@ -693,7 +693,7 @@ XmTextEditor::modify_verify_callback(
 			(XmTextVerifyCallbackStruct *)call_data;
 
 	// Make sure we are being called programmatically
-	if(modify_info->event != (XEvent *)NULL)
+	if(modify_info->event != (XEvent *)nullptr)
 		return;
 
 	cd->obj->modifyPasteData(modify_info, cd->insert_format);
@@ -713,7 +713,7 @@ XmTextEditor::modifyPasteData(
 	if(modify_info->text->format == XmFMT_16_BIT)
 		return;
 
-	if(_modified_text == NULL)
+	if(_modified_text == nullptr)
 		_modified_text = (XmTextBlockRec *)calloc(1,sizeof(XmTextBlockRec));
 
 	char *sp = modify_info->text->ptr; // source pointer to the insert string 
@@ -727,7 +727,7 @@ XmTextEditor::modifyPasteData(
 			(size_req <  XmTextEditor::MAXBUFSZ)) 	)
 		reallocPasteBuf(size_req);
 
-	if(_modified_text->ptr == NULL)
+	if(_modified_text->ptr == nullptr)
 		return; // No memory available
 
 	switch( insert_format) {
@@ -755,7 +755,7 @@ XmTextEditor::modifyPasteData(
 				size_req = (size_t)((((_modified_text_buflen + 
 						indlen+2)/BUFINC)+1)*BUFINC);
 				reallocPasteBuf(size_req);
-				if(_modified_text->ptr == NULL)
+				if(_modified_text->ptr == nullptr)
 					return; // No memory available
 			}
 
@@ -797,7 +797,7 @@ XmTextEditor::modifyPasteData(
 			reallocPasteBuf(size_req);
 		}
 
-		if(_modified_text->ptr == NULL)
+		if(_modified_text->ptr == nullptr)
 			return;
 
 		strcpy(_modified_text->ptr, begin_ins_bracket);

@@ -58,17 +58,17 @@
 DmxMsg::DmxMsg (void)
 {
 	// initialize everything
-	message = NULL;
-	addlInfo = NULL;
+	message = nullptr;
+	addlInfo = nullptr;
 	numBPs = 0;
 	cachedValues = B_FALSE;
 	isCurrent = B_FALSE;
 	hasAttachments = B_FALSE;
 	isNew = B_FALSE;
-        msgHandle = NULL;
-        msgHeader.header_values = NULL;
+        msgHandle = nullptr;
+        msgHeader.header_values = nullptr;
         msgHeader.number_of_names = 0;
-        bodyParts = NULL;
+        bodyParts = nullptr;
 
 	return;
 }
@@ -198,17 +198,17 @@ DmxMsg::display (void)
 {
 	DtMailEnv			env;
 	boolean_t		FirstIsText = B_FALSE;
-	DtMail::BodyPart	*firstPart = NULL, *nextpart = NULL;
+	DtMail::BodyPart	*firstPart = nullptr, *nextpart = nullptr;
 	char			*type;
-	char			*description = NULL;
-	char			*sunDataDescription = NULL;
-	char			*name = NULL;
-	void * contents = NULL;
+	char			*description = nullptr;
+	char			*sunDataDescription = nullptr;
+	char			*name = nullptr;
+	void * contents = nullptr;
 	unsigned long length = 0;
 	int mode = 0;
-	char *buf = NULL;
+	char *buf = nullptr;
 // For CHARSET
-	char *mime_cs = NULL, *from_cs = NULL, *to_cs = NULL;
+	char *mime_cs = nullptr, *from_cs = nullptr, *to_cs = nullptr;
 	char *v3_cs = new char [64];
 	
 	if (cachedValues != B_TRUE)
@@ -219,10 +219,10 @@ DmxMsg::display (void)
 	firstPart->getContents(env,
 		(const void **) &contents, 
 		&length,
-		NULL,	//type
-		NULL,	//name
-		NULL,	//mode
-		NULL);	//description
+		nullptr,	//type
+		nullptr,	//name
+		nullptr,	//mode
+		nullptr);	//description
 
 	if (handleError (env, "getContents") == B_TRUE)
 		exit (1);
@@ -252,7 +252,7 @@ DmxMsg::display (void)
 // has only one bodypart, then in this case the charset header maybe
 // among the message's envelope (main message headers).
 // Get the envelope of the message (in order to access the headers)
-   DtMail::Envelope *envelope = NULL;
+   DtMail::Envelope *envelope = nullptr;
    if (err == B_TRUE) {
 	  envelope = message->getEnvelope(env);
 	  err = B_FALSE;
@@ -260,7 +260,7 @@ DmxMsg::display (void)
       env.logError(DTM_FALSE, "DEBUG dtmailpr: Looking at main message header\n");
 #endif
    }
-   if (envelope != NULL) {
+   if (envelope != nullptr) {
 //   Check for MIME charset header and then for V3 charset header
      envelope->getHeader(env, DtMailMessageContentType, DTM_TRUE, value);
      if (env.isNotSet()) {
@@ -269,7 +269,7 @@ DmxMsg::display (void)
 	    err = B_TRUE;
 	    env.clear();
      }
-     if (mime_cs == NULL || err == B_TRUE) {
+     if (mime_cs == nullptr || err == B_TRUE) {
         value.clear();
         envelope->getHeader(env, DtMailMessageV3charset, DTM_TRUE, value);
         if (env.isNotSet()) {
@@ -287,12 +287,12 @@ DmxMsg::display (void)
    }
 
 // Default codeset in case mime_cs and v3_cs are both null.
-   if ((mime_cs == NULL) && (strlen(v3_cs) == 0)) {
-	  char *ret = NULL;
+   if ((mime_cs == nullptr) && (strlen(v3_cs) == 0)) {
+	  char *ret = nullptr;
 	  firstPart->DtXlateOpToStdLocale(DtLCX_OPER_SETLOCALE,
-		 setlocale(LC_CTYPE, NULL),
-		 NULL,
-		 NULL,
+		 setlocale(LC_CTYPE, nullptr),
+		 nullptr,
+		 nullptr,
 		 &ret);
 	  strcpy(v3_cs, "DEFAULT");
 	  strcat(v3_cs, ".");
@@ -316,12 +316,12 @@ DmxMsg::display (void)
    to_cs = firstPart->locToConvName();
 
 #ifdef DEBUG
-   if ( from_cs == NULL )
+   if ( from_cs == nullptr )
    env.logError(DTM_FALSE, "DEBUG dtmailpr: from_cs is NULL\n");
    else
    env.logError(DTM_FALSE, "DEBUG dtmailpr: from_cs = %s\n", from_cs);
 
-   if ( to_cs == NULL )
+   if ( to_cs == nullptr )
    env.logError(DTM_FALSE, "DEBUG dtmailpr: to_cs is NULL\n");
    else
    env.logError(DTM_FALSE, "DEBUG dtmailpr: to_cs = %s\n", to_cs);
@@ -377,14 +377,14 @@ DmxMsg::display (void)
 
 	int	i = 0;
 
-	char	*attbuf = NULL;
+	char	*attbuf = nullptr;
 
 	printf ("\n");
 	for (i = 1; i < numBPs ; i++)
 	{
 		nextpart = bodyParts [i];
 
-		if (nextpart == NULL)
+		if (nextpart == nullptr)
 			fprintf (stderr, "Error getting part!\n");
 
 		length = 0;
@@ -394,15 +394,15 @@ DmxMsg::display (void)
 		name = "";
 		mode = -1;
 		
-		nextpart->getContents(env, NULL, &length, &type,
+		nextpart->getContents(env, nullptr, &length, &type,
 				&name, &mode, &sunDataDescription);
 		if (handleError (env, "getContents") == B_TRUE)
 			exit (1);
 
-		if (type == NULL)
+		if (type == nullptr)
 			type = "(unknown)";
 
-		if (sunDataDescription == NULL)
+		if (sunDataDescription == nullptr)
 		{
 			description = "";
 		} else {
@@ -412,13 +412,13 @@ DmxMsg::display (void)
 			description = attbuf;
 		}
 
-		if (name == NULL)
+		if (name == nullptr)
 			name = "(name)";
 
 		printf ("[%d] \"%s\"%s, ", i, name, description);
 		printf ("%s, %lu bytes\n", type, length);
 
-		if (attbuf != NULL)
+		if (attbuf != nullptr)
 			delete [] attbuf;
 
 	}
@@ -434,8 +434,8 @@ DmxMsg::parse (void)
 
 	DtMailEnv			env;
 	boolean_t		FirstIsText = B_FALSE;
-	DtMail::BodyPart	*part = NULL, *nextpart = NULL;
-	char			*type = NULL, *attr = NULL;
+	DtMail::BodyPart	*part = nullptr, *nextpart = nullptr;
+	char			*type = nullptr, *attr = nullptr;
 
 	int	bc = message->getBodyCount (env);
 	if (handleError (env, "getBodyCount") == B_TRUE)
@@ -445,7 +445,7 @@ DmxMsg::parse (void)
 	if (handleError (env, "getFirstBodyPart") == B_TRUE)
 		exit (1);
 
-	part->getContents (env, NULL, NULL, &type, NULL, NULL, NULL);
+	part->getContents (env, nullptr, nullptr, &type, nullptr, nullptr, nullptr);
 	if (handleError (env, "getContents") == B_TRUE)
 		exit (1);
 
@@ -457,12 +457,12 @@ DmxMsg::parse (void)
 	numBPs++;
 
 
-	if (type != NULL)
+	if (type != nullptr)
 	{
 		attr = DtDtsDataTypeToAttributeValue (type,
 						DtDTS_DA_IS_TEXT,
-						NULL);
-		if (attr != NULL)
+						nullptr);
+		if (attr != nullptr)
 		{
 			FirstIsText = B_TRUE;
 		}
@@ -479,13 +479,13 @@ DmxMsg::parse (void)
 
 	for (i = 1; i < bc; i++)
 	{
-		nextpart = NULL;
+		nextpart = nullptr;
 		nextpart = message->getNextBodyPart (env,
 						part);
 		if (handleError (env, "getNextBodyPart") == B_TRUE)
 			exit (1);
 
-		if (nextpart == NULL)
+		if (nextpart == nullptr)
 			fprintf (stderr, "Error getting part!\n");
 
 

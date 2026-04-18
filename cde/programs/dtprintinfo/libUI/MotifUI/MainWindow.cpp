@@ -51,7 +51,7 @@ class PopupMenuContainer : public MotifUI
 };
 
 PopupMenuContainer::PopupMenuContainer(MotifUI *parent) : 
-      MotifUI(parent, "PopupMenuContainer", NULL)
+      MotifUI(parent, "PopupMenuContainer", nullptr)
 {
    _w = parent->BaseWidget();
 }
@@ -61,7 +61,7 @@ MainWindow::MainWindow(MotifUI *parent,
 		       char *widgetName,
 		       char *icon,
 		       char *icon_name)
-	: MotifUI(parent, name, NULL, widgetName)
+	: MotifUI(parent, name, nullptr, widgetName)
 {
    CreateMainWindow(parent, name, widgetName, icon, icon_name);
 }
@@ -82,16 +82,16 @@ void MainWindow::CreateMainWindow(MotifUI *parent, char * /*name*/,
 				  char *_icon_name)
 {
    _w = XtVaCreateManagedWidget(widgetName, xmMainWindowWidgetClass, 
-			        parent->BaseWidget(), NULL);
+			        parent->BaseWidget(), nullptr);
    XtAppAddActions(appContext, actions, XtNumber(actions));
    trans = XtParseTranslationTable("#override\n <Key> osfMenu: PopupMenu()");
    XtAddEventHandler(_w, ButtonPressMask, FALSE, PopupMenu, (XtPointer) this);
    XtOverrideTranslations(_w, trans);
    popups = new PopupMenuContainer(this);
-   XtVaSetValues(_w, XmNuserData, this, NULL);
-   LastPopupMenu = NULL;
-   icon = NULL;
-   icon_name = NULL;
+   XtVaSetValues(_w, XmNuserData, this, nullptr);
+   LastPopupMenu = nullptr;
+   icon = nullptr;
+   icon_name = nullptr;
    IconFile(_icon);
    IconName(_icon_name);
    InstallHelpCB();
@@ -113,14 +113,14 @@ void MainWindow::IconFile(char *_icon)
       if (pixmap != XmUNSPECIFIED_PIXMAP)
        {
          if (depth == 1)
-            XtVaSetValues(XtParent(_w), XmNiconPixmap, pixmap, NULL);
+            XtVaSetValues(XtParent(_w), XmNiconPixmap, pixmap, nullptr);
          else
             XtVaSetValues(XtParent(_w), XmNiconPixmap, pixmap,
-		          (mask ? XmNiconMask : NULL), mask, NULL);
+		          (mask ? XmNiconMask : nullptr), mask, nullptr);
          icon = STRDUP(_icon);
        }
       else
-	 icon = NULL;
+	 icon = nullptr;
     }
 }
 
@@ -132,12 +132,12 @@ void MainWindow::IconName(char *_icon_name)
    else
       icon_name = STRDUP(_icon_name);
    if (icon_name)
-      XtVaSetValues(XtParent(_w), XmNiconName, icon_name, NULL);
+      XtVaSetValues(XtParent(_w), XmNiconName, icon_name, nullptr);
 }
 
 void MainWindow::SetWorkWindow(MotifUI *obj)
 {
-   XtVaSetValues(_w, XmNworkWindow, obj->BaseWidget(), NULL);
+   XtVaSetValues(_w, XmNworkWindow, obj->BaseWidget(), nullptr);
 }
 
 Button *MainWindow::AddAction(char *name, char *category,
@@ -148,8 +148,8 @@ Button *MainWindow::AddAction(char *name, char *category,
    Menu *menu = (Menu *)popups->FindByCategory(category);
    if (!menu)
     {
-      menu = new Menu(category, popups, true, "", "", NULL, POPUP_MENU);
-      XtVaSetValues(menu->InnerWidget(), XmNpopupEnabled, False, NULL);
+      menu = new Menu(category, popups, true, "", "", nullptr, POPUP_MENU);
+      XtVaSetValues(menu->InnerWidget(), XmNpopupEnabled, False, nullptr);
     }
    return new Button(category, menu, name, PUSH_BUTTON, callback, callback_data,
 	             mnemonic, acceleratorText, accelerator);
@@ -161,13 +161,13 @@ void MainWindow::RegisterPopup(MotifUI *obj)
    if (!menu)
     {
       menu = new Menu((char *)obj->Category(), popups, true, "", "", 
-		      NULL, POPUP_MENU);
-      XtVaSetValues(menu->InnerWidget(), XmNpopupEnabled, False, NULL);
+		      nullptr, POPUP_MENU);
+      XtVaSetValues(menu->InnerWidget(), XmNpopupEnabled, False, nullptr);
     }
    XtAddEventHandler(obj->InnerWidget(), ButtonPressMask, FALSE,
 		     PopupMenu, (XtPointer) this);
    XtOverrideTranslations(obj->InnerWidget(), trans);
-   XtVaSetValues(obj->InnerWidget(), XmNuserData, obj, NULL);
+   XtVaSetValues(obj->InnerWidget(), XmNuserData, obj, nullptr);
    if (obj->UIClass() == CONTAINER)
     {
       switch (obj->UISubClass())
@@ -182,7 +182,7 @@ void MainWindow::RegisterPopup(MotifUI *obj)
          XtAddEventHandler(XtParent(obj->InnerWidget()), ButtonPressMask, FALSE,
 		           PopupMenu, (XtPointer) this);
          XtOverrideTranslations(XtParent(obj->InnerWidget()), trans);
-         XtVaSetValues(XtParent(obj->InnerWidget()), XmNuserData, obj, NULL);
+         XtVaSetValues(XtParent(obj->InnerWidget()), XmNuserData, obj, nullptr);
       break;
       }
     }
@@ -193,8 +193,8 @@ void MainWindow::AddSep(char *category)
    Menu *menu = (Menu *)popups->FindByCategory(category);
    if (!menu)
     {
-      menu = new Menu(category, popups, true, "", "", NULL, POPUP_MENU);
-      XtVaSetValues(menu->InnerWidget(), XmNpopupEnabled, False, NULL);
+      menu = new Menu(category, popups, true, "", "", nullptr, POPUP_MENU);
+      XtVaSetValues(menu->InnerWidget(), XmNpopupEnabled, False, nullptr);
     }
    new Sep(category, menu);
 }
@@ -210,7 +210,7 @@ void MainWindow::KeyboardPopupMenu(Widget widget, XEvent *event,
 
    MotifUI *obj;
    MainWindow *window;
-   XtVaGetValues(focus_widget, XmNuserData, &obj, NULL);
+   XtVaGetValues(focus_widget, XmNuserData, &obj, nullptr);
    window = (MainWindow *) obj;
    while (window->UIClass() != MAIN_WINDOW)
       window = (MainWindow *) window->Parent();
@@ -242,7 +242,7 @@ void MainWindow::PopupMenu(Widget widget, XtPointer client_data,
 
    MainWindow *window = (MainWindow *) client_data;
    MotifUI *obj;
-   XtVaGetValues(widget, XmNuserData, &obj, NULL);
+   XtVaGetValues(widget, XmNuserData, &obj, nullptr);
    if (!obj)
       obj = window;
    if (obj->UIClass() == ICON)
@@ -251,7 +251,7 @@ void MainWindow::PopupMenu(Widget widget, XtPointer client_data,
       if (!(PointInRect(pixmap_rect, win_x, win_y) ||
           PointInRect(label_rect, win_x, win_y)))
        {
-          XtVaGetValues(XtParent(widget), XmNuserData, &obj, NULL);
+          XtVaGetValues(XtParent(widget), XmNuserData, &obj, nullptr);
        }
     }
    window->PostMenu(obj, event);
@@ -261,15 +261,15 @@ void MainWindow::PostMenu(MotifUI *obj, XEvent *event)
 {
    BaseUI *popup_menu = popups->FindByCategory((char *)obj->Category());
    if (LastPopupMenu)
-      XtVaSetValues(LastPopupMenu, XmNpopupEnabled, False, NULL);
-   Widget widget = NULL;
+      XtVaSetValues(LastPopupMenu, XmNpopupEnabled, False, nullptr);
+   Widget widget = nullptr;
    if (popup_menu)
     {
       popup_menu->Name((char *)obj->Name());
       PopupObject = obj;
       PopupObjectUniqueID = PopupObject->UniqueID();
       widget = ((MotifUI *) popup_menu)->BaseWidget();
-      XtVaSetValues(widget, XmNpopupEnabled, True, NULL);
+      XtVaSetValues(widget, XmNpopupEnabled, True, nullptr);
       if (event->type == ButtonPress)
         {
           XmMenuPosition(widget, (XButtonPressedEvent *) event);
@@ -278,7 +278,7 @@ void MainWindow::PostMenu(MotifUI *obj, XEvent *event)
     } 
    else
     {
-      PopupObject = NULL;
+      PopupObject = nullptr;
       PopupObjectUniqueID = 0;
     }
    LastPopupMenu = widget;

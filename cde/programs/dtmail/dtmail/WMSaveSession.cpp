@@ -126,7 +126,7 @@ RoamApp::initSession(void)
     (void) time(&tloc);
 #endif
     
-    session_fp = NULL;
+    session_fp = nullptr;
     XtAddCallback(_w, XtNsaveCallback, smpSaveSessionCB, (XtPointer) this);
     XtAddCallback(_w, XtNdieCallback, smpDieCB, (XtPointer) this);
 
@@ -143,12 +143,12 @@ void
 RoamApp::openSessionFile(char *filename)
 {
     struct stat s;
-    char *pathname = NULL;
+    char *pathname = nullptr;
 
-    if (filename == NULL)
+    if (filename == nullptr)
       return;
     
-    session_fp = NULL;
+    session_fp = nullptr;
 
     LOG_DEFINEFILEPTR(log);
     LOG_OPENFILEPTR(log);
@@ -169,13 +169,13 @@ RoamApp::openSessionFile(char *filename)
     // set the session_fp to NULL.
     SafeStat(pathname, &s);
     if (s.st_size == 0)
-      session_fp = NULL;
+      session_fp = nullptr;
     else
     {
 	if (!(session_fp = fopen(pathname, "r")))
 	{
 	    perror(pathname);
-	    session_fp = NULL;
+	    session_fp = nullptr;
 	}
     }
 
@@ -191,10 +191,10 @@ RoamApp::openSessionFile(char *filename)
 char *RoamApp::parseSessionArg(int *argc, char **argv)
 {
     LOG_DEFINEFILEPTR(log);
-    char *filename = NULL;
+    char *filename = nullptr;
 
     if (*argc<3)
-      return NULL;
+      return nullptr;
     
     LOG_OPENFILEPTR(log);
 
@@ -231,7 +231,7 @@ RoamApp::restoreSession(void)
     if (! session_fp)
       _exit(0);
     
-    _mailview = NULL;
+    _mailview = nullptr;
     for(;;)
     {
 	if (fscanf(session_fp,"%s",buf) == EOF)
@@ -241,10 +241,10 @@ RoamApp::restoreSession(void)
 	{
 	  case 'R':
 	  {
-	    RoamMenuWindow	*rmw = NULL;
+	    RoamMenuWindow	*rmw = nullptr;
 	    
 	    rmw = RoamMenuWindow::restoreSession(buf);
-	    if(_mailview == NULL)
+	    if(_mailview == nullptr)
 	    {
 		dtmail_mapped = 1;
 		_mailview = rmw;
@@ -276,10 +276,10 @@ RoamApp::restoreSession(void)
 void 
 RoamApp::smpSaveSessionLocal(void)
 {
-    char *pathname = NULL, *filename = NULL;
-    char **save_argv = NULL;
+    char *pathname = nullptr, *filename = nullptr;
+    char **save_argv = nullptr;
     int save_argc = 0;
-    char **argv = NULL;
+    char **argv = nullptr;
     int argc = 0;
     
     if (! DtSessionSavePath(_w, &pathname, &filename))
@@ -290,7 +290,7 @@ RoamApp::smpSaveSessionLocal(void)
 	perror(pathname);
 	XtFree((char *)pathname);
 	XtFree((char *)filename);
-	session_fp = NULL;
+	session_fp = nullptr;
 	return;
     }
     chmod(pathname, S_IRUSR | S_IRGRP | S_IWUSR | S_IWGRP);
@@ -299,12 +299,12 @@ RoamApp::smpSaveSessionLocal(void)
       _windows[i]->smpSaveSessionLocal();
     
     fclose(session_fp);
-    session_fp = NULL;
+    session_fp = nullptr;
     
-    XtVaGetValues(_w, XtNrestartCommand, &argv, NULL);
+    XtVaGetValues(_w, XtNrestartCommand, &argv, nullptr);
 
 #if 0
-    for (i=0; NULL != argv[i]; i++) {}
+    for (i=0; nullptr != argv[i]; i++) {}
     save_argv = (char**) XtMalloc((i+3)*sizeof(char*));
     for (save_argc=0; save_argc<i; save_argc++)
       save_argv[save_argc] = argv[save_argc];
@@ -315,7 +315,7 @@ RoamApp::smpSaveSessionLocal(void)
 #endif
     save_argv[save_argc++] = "-session";
     save_argv[save_argc++] = filename;
-    save_argv[save_argc] = NULL;
+    save_argv[save_argc] = nullptr;
     
     LOG_DEFINEFILEPTR(log);
     LOG_OPENFILEPTR(log);
@@ -325,7 +325,7 @@ RoamApp::smpSaveSessionLocal(void)
     }
     LOG_CLOSEFILEPTR(log);
     
-    XtVaSetValues(_w, XtNrestartCommand, save_argv, NULL);
+    XtVaSetValues(_w, XtNrestartCommand, save_argv, nullptr);
     /* There should be no code after this */
 }
 
@@ -350,13 +350,13 @@ RoamApp::smpSaveSessionGlobal(void)
 RoamMenuWindow *
 RoamMenuWindow::restoreSession(char *buf)
 {
-    RoamMenuWindow *rmw = NULL;
+    RoamMenuWindow *rmw = nullptr;
     char *workspaces = new char[256];
     int iconic = 0; 
     int x = 0, y = 0; 
     int width = 0, height = 0;
     char *ptr;
-    Atom *workspace_atoms = NULL;
+    Atom *workspace_atoms = nullptr;
     int num_workspaces = 0;
 
     LOG_DEFINEFILEPTR(log);
@@ -373,7 +373,7 @@ RoamMenuWindow::restoreSession(char *buf)
 	{
 	    fscanf(fp,"%s[\n]",buf);
     	    LOG_CLOSEFILEPTR(log);
-	    return NULL;
+	    return nullptr;
 	}
 
 	LOG_FPRINTF(log, (log, "Restore: RoamMenu %s %s %d %d %d %d %d\n",
@@ -395,7 +395,7 @@ RoamMenuWindow::restoreSession(char *buf)
 
 	    strncpy(buf, inboxname, MAXPATHLEN);
 	    buf[MAXPATHLEN] = '\0';
-	    if (NULL != inboxname)
+	    if (nullptr != inboxname)
 	      free(inboxname);
 	}
 
@@ -429,14 +429,14 @@ RoamMenuWindow::restoreSession(char *buf)
 			(iconic ? IconicState: NormalState), 
 			XtNx, (Position)x, XtNy, (Position)y, 
 			XtNwidth, (Dimension)width, XtNheight, 
-			(Dimension)height, NULL);
+			(Dimension)height, nullptr);
   
 	    if (workspaces)
 	    {
 		do
 		{
 		    ptr = strchr (workspaces, '*');
-		    if (ptr != NULL) *ptr = 0;
+		    if (ptr != nullptr) *ptr = 0;
 				
 		    workspace_atoms = (Atom*) XtRealloc(
 					(char*) workspace_atoms, 
@@ -447,12 +447,12 @@ RoamMenuWindow::restoreSession(char *buf)
 					
 		    num_workspaces++;
 
-		    if (ptr != NULL)
+		    if (ptr != nullptr)
 		    {
 			*ptr = '*';
 			workspaces = ptr + 1;
 		    }
-		} while (ptr != NULL);
+		} while (ptr != nullptr);
 
 		DtWsmSetWorkspacesOccupied(
 					XtDisplay(bw),
@@ -461,7 +461,7 @@ RoamMenuWindow::restoreSession(char *buf)
 					num_workspaces);
 
 		XtFree((char*) workspace_atoms);
-		workspace_atoms = NULL;
+		workspace_atoms = nullptr;
 			  
 	    }
 		
@@ -486,20 +486,20 @@ RoamMenuWindow::restoreSession(char *buf)
 void
 RoamMenuWindow::smpSaveSessionLocal(void)
 {
-    WmState	*iconic_state = NULL;
+    WmState	*iconic_state = nullptr;
     FILE	*fp = theRoamApp.sessionFile();
     Display	*display = theRoamApp.display();
     int		initialstate = 0;
     Atom	wm_state, actual_type;
     unsigned long nitems, leftover;
     int		actual_format;
-    Atom	*ws_presence = NULL;
-    char	*workspace_name=NULL;
+    Atom	*ws_presence = nullptr;
+    char	*workspace_name=nullptr;
     unsigned long num_workspaces = 0;
     char	*all_workspace_names;
     char	*mailboxname;
     
-    if (fp == NULL)
+    if (fp == nullptr)
       return;
     
     _mailbox->save();
@@ -574,10 +574,10 @@ SendMsgDialog::restoreSession(char *buf)
     int iconic = 0; 
     int x = 0, y = 0; 
     int width = 0, height = 0;
-    char *ptr = NULL;
-    Atom *workspace_atoms = NULL;
+    char *ptr = nullptr;
+    Atom *workspace_atoms = nullptr;
     int num_workspaces=0;
-    SendMsgDialog *smd = NULL;
+    SendMsgDialog *smd = nullptr;
 
     LOG_DEFINEFILEPTR(log);
     LOG_OPENFILEPTR(log);
@@ -631,13 +631,13 @@ SendMsgDialog::restoreSession(char *buf)
 			(iconic ? IconicState: NormalState), 
 			XtNx, (Position)x, XtNy, (Position)y, 
 			XtNwidth, (Dimension)width, XtNheight, 
-			(Dimension)height, NULL);
+			(Dimension)height, nullptr);
 	    if (workspaces)
 	    {
 	        do
 		{
 		    ptr = strchr(workspaces, '*');
-		    if (ptr != NULL) *ptr = 0;
+		    if (ptr != nullptr) *ptr = 0;
 				
 		    workspace_atoms = (Atom*) XtRealloc(
 					(char*) workspace_atoms, 
@@ -648,12 +648,12 @@ SendMsgDialog::restoreSession(char *buf)
 
 		    num_workspaces++;
 
-		    if (ptr != NULL)
+		    if (ptr != nullptr)
 		    {
 		        *ptr = '*';
 		        workspaces = ptr + 1;
 		    }
-		} while (ptr != NULL);
+		} while (ptr != nullptr);
 
 		DtWsmSetWorkspacesOccupied(
 					XtDisplay(bw),
@@ -662,7 +662,7 @@ SendMsgDialog::restoreSession(char *buf)
 					num_workspaces);
 
 		XtFree((char*) workspace_atoms);
-		workspace_atoms = NULL;
+		workspace_atoms = nullptr;
 	    }
 	}
 
@@ -684,7 +684,7 @@ SendMsgDialog::restoreSession(char *buf)
 void
 SendMsgDialog::smpSaveSessionLocal(void)
 {
-    WmState	*iconic_state = NULL;
+    WmState	*iconic_state = nullptr;
     FILE	*fp = theRoamApp.sessionFile();
     Display	*display = theRoamApp.display();
     int		initialstate = 0;
@@ -693,15 +693,15 @@ SendMsgDialog::smpSaveSessionLocal(void)
     int		actual_format;
     Position	x=0, y=0;
     Dimension	width = 0, height = 0;
-    Atom	*ws_presence = NULL;
-    char	*workspace_name = NULL;
+    Atom	*ws_presence = nullptr;
+    char	*workspace_name = nullptr;
     unsigned long num_workspaces = 0;
     char	*all_workspace_names;
     char	*save_filename;
     int j;
 
     
-    if(fp == NULL)
+    if(fp == nullptr)
 	return;
     
     // If tthe SMD is not being used, return.
@@ -709,7 +709,7 @@ SendMsgDialog::smpSaveSessionLocal(void)
 	return;
     
     // Create a dead letter if this one is currently in use
-    if ((save_filename = tempnam(_auto_save_path, "session")) == NULL) 
+    if ((save_filename = tempnam(_auto_save_path, "session")) == nullptr) 
     {
         for (int suffix = 1; ; suffix++) {
             save_filename = (char*) malloc((size_t) MAXPATHLEN + 1);
@@ -760,7 +760,7 @@ SendMsgDialog::smpSaveSessionLocal(void)
 		XtNy, &y,
 		XtNwidth, &width,
 		XtNheight, &height,
-		NULL);
+		nullptr);
 
     (void) fprintf(
 		fp,"SendMsg %s %s %d %d %d %d %d\n",

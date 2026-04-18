@@ -49,10 +49,10 @@
 #include <Xm/ScrolledW.h>
 #include <Xm/MainW.h>
 
-PixmapLookupList MotifUI::pixmap_table = NULL;
-XtAppContext     MotifUI::appContext = NULL;
-XmFontList       MotifUI::userFont = NULL;
-Display *        MotifUI::display = NULL;
+PixmapLookupList MotifUI::pixmap_table = nullptr;
+XtAppContext     MotifUI::appContext = nullptr;
+XmFontList       MotifUI::userFont = nullptr;
+Display *        MotifUI::display = nullptr;
 Widget           MotifUI::topLevel;
 Window           MotifUI::root;
 Font             MotifUI::font;
@@ -71,7 +71,7 @@ MotifUI::MotifUI(MotifUI *parent,
 		 const char *widgetName)
 	: BaseUI(parent, name, category)
 {
-   _w = NULL;
+   _w = nullptr;
    if (widgetName)
       _widgetName = STRDUP(widgetName);
    else
@@ -155,9 +155,9 @@ void MotifUI::DoContextualHelp()
    Widget context_widget, shell;
 #ifdef NO_CDE
    XEvent event;
-   static Cursor cursor = (Cursor) NULL;
+   static Cursor cursor = (Cursor) nullptr;
 
-   if (cursor == (Cursor) NULL)
+   if (cursor == (Cursor) nullptr)
       cursor =  XCreateFontCursor(display, XC_question_arrow);
 #endif
 
@@ -184,7 +184,7 @@ void MotifUI::DoContextualHelp()
 	 return;
     }
 
-   if (context_widget != NULL)
+   if (context_widget != nullptr)
     {
 #else
    int returnVal = DtHelpReturnSelectedWidgetId(shell, 0, &context_widget);
@@ -197,7 +197,7 @@ void MotifUI::DoContextualHelp()
 #ifdef NO_CDE
       cb.event = &event;
 #endif
-      while (context_widget != NULL)
+      while (context_widget != nullptr)
        {
          // If there is no help at this widget, back track to find help 
          if (XtHasCallbacks(context_widget, XmNhelpCallback) ==
@@ -232,7 +232,7 @@ void MotifUI::WidgetDestroyCB(Widget,
 
 void MotifUI::WidgetDestroyed()
 {
-   _w = NULL;
+   _w = nullptr;
    delete _widgetName;
 }
 
@@ -279,7 +279,7 @@ boolean MotifUI::SetSelected(boolean flag)
       return false;
 
    if (GuiIsIcon(_w))
-      XtVaSetValues(_w, GuiNselected, flag, NULL);
+      XtVaSetValues(_w, GuiNselected, flag, nullptr);
    else if (XmIsToggleButton(_w))
       XmToggleButtonSetState(_w, flag, False);
 
@@ -292,7 +292,7 @@ boolean MotifUI::SetName(char *name)
       return false;
 
    XmString xm_string = StringCreate(name);
-   XtVaSetValues(InnerWidget(), XmNlabelString, xm_string, NULL);
+   XtVaSetValues(InnerWidget(), XmNlabelString, xm_string, nullptr);
    StringFree(xm_string);
 
    return true;
@@ -304,7 +304,7 @@ boolean MotifUI::SetActivity(boolean flag)
       return false;
 
    if (GuiIsIcon(_w))
-      XtVaSetValues(_w, GuiNactive, flag, NULL);
+      XtVaSetValues(_w, GuiNactive, flag, nullptr);
    else
       XtSetSensitive(_w, flag);
 
@@ -329,13 +329,13 @@ void MotifUI::GetResources(const XtResourceList resources,
 {
    if (_w && resources)
       XtGetSubresources(XtParent(_w), (XtPointer) this, _widgetName,
-			className(), resources, numResources, NULL, 0);
+			className(), resources, numResources, nullptr, 0);
 }
 
 void MotifUI::SetDefaultResources(const Widget,
 			          const String *resources)
 {
-   XrmDatabase rdb = NULL;
+   XrmDatabase rdb = nullptr;
    int         i;
 
    rdb = XrmGetStringDatabase("");
@@ -366,44 +366,44 @@ void MotifUI::NotifyDelete(BaseUI *obj)
       XtRemoveCallback(_w, XmNdestroyCallback, &MotifUI::WidgetDestroyCB, 
 		       (XtPointer) this);
       XtDestroyWidget(p->_w);
-      p->_w = NULL;
+      p->_w = nullptr;
     }
 }
 
 void MotifUI::Width(int width)
 {
-   XtVaSetValues(this->BaseWidget(), XmNwidth, width, NULL);
+   XtVaSetValues(this->BaseWidget(), XmNwidth, width, nullptr);
 }
 
 int MotifUI::Width()
 {
    Dimension w;
-   XtVaGetValues(this->BaseWidget(), XmNwidth, &w, NULL);
+   XtVaGetValues(this->BaseWidget(), XmNwidth, &w, nullptr);
    return (int) w;
 }
 
 void MotifUI::Height(int height)
 {
-   XtVaSetValues(this->BaseWidget(), XmNheight, height, NULL);
+   XtVaSetValues(this->BaseWidget(), XmNheight, height, nullptr);
 }
 
 int MotifUI::Height()
 {
    Dimension h;
-   XtVaGetValues(this->BaseWidget(), XmNheight, &h, NULL);
+   XtVaGetValues(this->BaseWidget(), XmNheight, &h, nullptr);
    return (int) h;
 }
 
 void MotifUI::WidthHeight(int width, int height)
 {
-   XtVaSetValues(this->BaseWidget(), XmNwidth, width, XmNheight, height, NULL);
+   XtVaSetValues(this->BaseWidget(), XmNwidth, width, XmNheight, height, nullptr);
 }
 
 void MotifUI::WidthHeight(int *width, int *height)
 {
    Dimension w, h;
 
-   XtVaGetValues(this->BaseWidget(), XmNwidth, &w, XmNheight, &h, NULL);
+   XtVaGetValues(this->BaseWidget(), XmNwidth, &w, XmNheight, &h, nullptr);
    *width = (int) w;
    *height = (int) h;
 }
@@ -415,46 +415,46 @@ void MotifUI::AttachAll(int offset)
                  XmNbottomAttachment, XmATTACH_NONE,
                  XmNleftAttachment, XmATTACH_NONE,
                  XmNrightAttachment, XmATTACH_NONE,
-                 NULL);
+                 nullptr);
    XtVaSetValues(this->BaseWidget(),
                  XmNtopAttachment, XmATTACH_FORM, XmNtopOffset, offset,
                  XmNbottomAttachment, XmATTACH_FORM, XmNbottomOffset, offset,
                  XmNleftAttachment, XmATTACH_FORM, XmNleftOffset, offset,
                  XmNrightAttachment, XmATTACH_FORM, XmNrightOffset, offset,
-                 NULL);
+                 nullptr);
 }
 
 void MotifUI::AttachTop(int offset)
 {
-   XtVaSetValues(this->BaseWidget(), XmNtopAttachment, XmATTACH_NONE, NULL);
+   XtVaSetValues(this->BaseWidget(), XmNtopAttachment, XmATTACH_NONE, nullptr);
    XtVaSetValues(this->BaseWidget(), XmNtopAttachment, XmATTACH_FORM,
-                 XmNtopOffset, offset, NULL);
+                 XmNtopOffset, offset, nullptr);
 }
 
 void MotifUI::AttachBottom(int offset)
 {
-   XtVaSetValues(this->BaseWidget(), XmNbottomAttachment, XmATTACH_NONE, NULL);
+   XtVaSetValues(this->BaseWidget(), XmNbottomAttachment, XmATTACH_NONE, nullptr);
    XtVaSetValues(this->BaseWidget(), XmNbottomAttachment, XmATTACH_FORM,
-                 XmNbottomOffset, offset, NULL);
+                 XmNbottomOffset, offset, nullptr);
 }
 
 void MotifUI::AttachLeft(int offset)
 {
-   XtVaSetValues(this->BaseWidget(), XmNleftAttachment, XmATTACH_NONE, NULL);
+   XtVaSetValues(this->BaseWidget(), XmNleftAttachment, XmATTACH_NONE, nullptr);
    XtVaSetValues(this->BaseWidget(), XmNleftAttachment, XmATTACH_FORM,
-                 XmNleftOffset, offset, NULL);
+                 XmNleftOffset, offset, nullptr);
 }
 
 void MotifUI::AttachRight(int offset)
 {
-   XtVaSetValues(this->BaseWidget(), XmNrightAttachment, XmATTACH_NONE, NULL);
+   XtVaSetValues(this->BaseWidget(), XmNrightAttachment, XmATTACH_NONE, nullptr);
    XtVaSetValues(this->BaseWidget(), XmNrightAttachment, XmATTACH_FORM,
-                 XmNrightOffset, offset, NULL);
+                 XmNrightOffset, offset, nullptr);
 }
 
 void MotifUI::AttachTop(BaseUI *obj, int offset, boolean opposite)
 {
-   XtVaSetValues(this->BaseWidget(), XmNtopAttachment, XmATTACH_NONE, NULL);
+   XtVaSetValues(this->BaseWidget(), XmNtopAttachment, XmATTACH_NONE, nullptr);
    if (obj)
     {
       Widget w = ((MotifUI *)obj)->BaseWidget();
@@ -465,13 +465,13 @@ void MotifUI::AttachTop(BaseUI *obj, int offset, boolean opposite)
          attachment = XmATTACH_WIDGET;
 
       XtVaSetValues(this->BaseWidget(), XmNtopAttachment, attachment,
-                    XmNtopWidget, w, XmNtopOffset, offset, NULL);
+                    XmNtopWidget, w, XmNtopOffset, offset, nullptr);
     }
 }
 
 void MotifUI::AttachBottom(BaseUI *obj, int offset, boolean opposite)
 {
-   XtVaSetValues(this->BaseWidget(), XmNbottomAttachment, XmATTACH_NONE, NULL);
+   XtVaSetValues(this->BaseWidget(), XmNbottomAttachment, XmATTACH_NONE, nullptr);
    if (obj)
     {
       Widget w = ((MotifUI *)obj)->BaseWidget();
@@ -482,13 +482,13 @@ void MotifUI::AttachBottom(BaseUI *obj, int offset, boolean opposite)
          attachment = XmATTACH_WIDGET;
 
       XtVaSetValues(this->BaseWidget(), XmNbottomAttachment, attachment,
-                    XmNbottomWidget, w, XmNbottomOffset, offset, NULL);
+                    XmNbottomWidget, w, XmNbottomOffset, offset, nullptr);
     }
 }
 
 void MotifUI::AttachLeft(BaseUI *obj, int offset, boolean opposite)
 {
-   XtVaSetValues(this->BaseWidget(), XmNleftAttachment, XmATTACH_NONE, NULL);
+   XtVaSetValues(this->BaseWidget(), XmNleftAttachment, XmATTACH_NONE, nullptr);
    if (obj)
     {
       int attachment;
@@ -498,13 +498,13 @@ void MotifUI::AttachLeft(BaseUI *obj, int offset, boolean opposite)
          attachment = XmATTACH_WIDGET;
       Widget w = ((MotifUI *)obj)->BaseWidget();
       XtVaSetValues(this->BaseWidget(), XmNleftAttachment, attachment,
-                    XmNleftWidget, w, XmNleftOffset, offset, NULL);
+                    XmNleftWidget, w, XmNleftOffset, offset, nullptr);
     }
 }
 
 void MotifUI::AttachRight(BaseUI *obj, int offset, boolean opposite)
 {
-   XtVaSetValues(this->BaseWidget(), XmNrightAttachment, XmATTACH_NONE, NULL);
+   XtVaSetValues(this->BaseWidget(), XmNrightAttachment, XmATTACH_NONE, nullptr);
    if (obj)
     {
       Widget w = ((MotifUI *)obj)->BaseWidget();
@@ -515,7 +515,7 @@ void MotifUI::AttachRight(BaseUI *obj, int offset, boolean opposite)
          attachment = XmATTACH_WIDGET;
 
       XtVaSetValues(this->BaseWidget(), XmNrightAttachment, attachment,
-                    XmNrightWidget, w, XmNrightOffset, offset, NULL);
+                    XmNrightWidget, w, XmNrightOffset, offset, nullptr);
     }
 }
 
@@ -549,7 +549,7 @@ int MotifUI::StringHeight(const char *string)
 boolean MotifUI::SetOrder(int new_position)
 {
    if (XmIsRowColumn(((MotifUI *)Parent())->InnerWidget()))
-       XtVaSetValues(BaseWidget(), XmNpositionIndex, new_position, NULL);
+       XtVaSetValues(BaseWidget(), XmNpositionIndex, new_position, nullptr);
    return true;
 }
 
@@ -583,7 +583,7 @@ ObjectTimeProc(XtPointer callback_data, XtIntervalId * /*id*/)
    TimeOutCallbackData *data = (TimeOutCallbackData *) callback_data;
    (*data->fp)(data->obj, data->callback_data);
    delete data;
-   data = NULL;
+   data = nullptr;
 }
 
 void MotifUI::SetAddTimeOut(TimeOutCallback timeoutCB,
@@ -625,9 +625,9 @@ void MotifUI::FillBackground(Widget widget, Pixmap pixmap, Pixmap mask)
    old_height = height;
    old_depth = dep;
    if (dep == 1 && UIClass() == MAIN_WINDOW)
-      XtVaGetValues(widget, XmNforeground, &xgc.foreground, NULL);
+      XtVaGetValues(widget, XmNforeground, &xgc.foreground, nullptr);
    else
-      XtVaGetValues(widget, XmNbackground, &xgc.foreground, NULL);
+      XtVaGetValues(widget, XmNbackground, &xgc.foreground, nullptr);
    if (!temp)
     {
       temp = XCreatePixmap(display, RootWindowOfScreen(XtScreen(widget)),
@@ -691,7 +691,7 @@ void MotifUI::GetPixmaps(Widget w,
          bmPath = PIXMAP_DIR;
       subs[0].match = 'B';
       subs[0].substitution = name;
-      s = XtFindFile(bmPath, subs, XtNumber(subs), NULL);
+      s = XtFindFile(bmPath, subs, XtNumber(subs), nullptr);
       if (bmPath != PIXMAP_DIR)
          delete [] bmPath;
     }

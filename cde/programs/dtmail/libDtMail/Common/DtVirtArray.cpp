@@ -61,7 +61,7 @@ DtVirtArrayImpl::~DtVirtArrayImpl(void)
     if (_elements) {
 	MutexLock lock_scope(_mutex);
 	free(_elements);
-	_elements = NULL;
+	_elements = nullptr;
 	_size = 0;
 	_count = 0;
 	lock_scope.unlock_and_destroy();
@@ -81,7 +81,7 @@ DtVirtArrayImpl::operator[](const int at)
 {
     MutexLock lock_scope(_mutex);
     if (at < 0 || at >= _count) {
-	return(NULL);
+	return(nullptr);
     }
 
     return(_elements[at]);
@@ -153,7 +153,7 @@ DtVirtArrayImpl::make_slot(const int at)
     for (int pos = (_count - 1); pos > at; pos--) {
 	_elements[pos] = _elements[pos - 1];
     }
-    _elements[at] = NULL;
+    _elements[at] = nullptr;
 }
 
 void

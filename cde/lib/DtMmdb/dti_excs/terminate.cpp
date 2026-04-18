@@ -26,14 +26,14 @@
 
 typedef void (*PFV)();
 
-static PFV _terminate_handler = NULL;
+static PFV _terminate_handler = nullptr;
 
 PFV
 set_terminate (PFV handler)
 {
   PFV old_handler = _terminate_handler;
 
-  _terminate_handler = handler != NULL ? handler : NULL;
+  _terminate_handler = handler != nullptr ? handler : nullptr;
 
   return (old_handler);
 }
@@ -41,13 +41,13 @@ set_terminate (PFV handler)
 void
 terminate()
 {
-  if (_terminate_handler != NULL)
+  if (_terminate_handler != nullptr)
     {
       // Reset terminate handler to NULL before handling to
       // avoid potential recursive calls due to exceptions
       // abuse in the terminate handler. 
       PFV handler = _terminate_handler;
-      _terminate_handler = NULL;
+      _terminate_handler = nullptr;
       mtry
 	{
 	  (*handler)();

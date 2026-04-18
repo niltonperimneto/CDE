@@ -55,18 +55,18 @@ PasswordDialogManager::PasswordDialogManager ( char   *name ) :
 {
     // Empty
     _pwd[0] = 0;
-    _user = NULL;
-    _password = NULL;
+    _user = nullptr;
+    _password = nullptr;
 }
 
 Widget PasswordDialogManager::createDialog ( Widget parent )
 {
    
-  Widget dialog = XmCreatePromptDialog ( parent, _name, NULL, 0);
+  Widget dialog = XmCreatePromptDialog ( parent, _name, nullptr, 0);
     
   XtVaSetValues ( dialog,
 		  XmNdialogStyle, XmDIALOG_FULL_APPLICATION_MODAL,
-		  NULL );
+		  nullptr );
 
   XtUnmanageChild( XmSelectionBoxGetChild( dialog,
 				      XmDIALOG_TEXT ) );
@@ -77,31 +77,31 @@ Widget PasswordDialogManager::createDialog ( Widget parent )
   Widget rc = XtCreateManagedWidget ( "PasswordArea",
 				      xmRowColumnWidgetClass,
 				      dialog,
-				      NULL, 0 );
+				      nullptr, 0 );
 
   Widget _user_label = XtCreateManagedWidget
     ( "UserLabel",
       xmLabelWidgetClass,
       rc,
-      NULL, 0);
+      nullptr, 0);
 
   _user = XtCreateManagedWidget
     ( "User",
       xmTextFieldWidgetClass,
       rc,
-      NULL, 0);
+      nullptr, 0);
 
   Widget _password_label = XtCreateManagedWidget
     ( "PasswordLabel",
       xmLabelWidgetClass,
       rc,
-      NULL, 0);
+      nullptr, 0);
 
   _password = XtCreateManagedWidget
     ( "Password",
       xmTextFieldWidgetClass,
       rc,
-      NULL, 0);
+      nullptr, 0);
 
   XtManageChild( rc );
   XtAddCallback ( _password,
@@ -139,7 +139,7 @@ PasswordDialogManager::modifyVerify( Widget ,
 {
  int len;
 
-  if ( cbs->text->ptr == NULL ) // Backspace
+  if ( cbs->text->ptr == nullptr ) // Backspace
     return;
   for ( len=0; len< cbs->text->length; len++ ) {
     strncat(_pwd, &cbs->text->ptr[len], 1);

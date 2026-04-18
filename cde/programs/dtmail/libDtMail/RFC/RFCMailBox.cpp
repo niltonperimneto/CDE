@@ -196,13 +196,13 @@ void HexDump(FILE *pfp, char *pmsg, unsigned char *pbufr, int plen, int plimit)
   if (!plen)
     return;
   
-  if (pfp_r == (FILE*) NULL) {
+  if (pfp_r == (FILE*) nullptr) {
     char	dumpfilename[MAXPATHLEN+1];
     _Xctimeparams ctime_buf;
 
     GET_DUMPFILE_NAME(dumpfilename);
     pfp_r = fopen(dumpfilename, "a");
-    const time_t clockTime = (const time_t) time(NULL);
+    const time_t clockTime = (const time_t) time(nullptr);
     memset((void*) &ctime_buf, 0, sizeof(_Xctimeparams));
     fprintf(pfp_r, "--------------------- pid=%ld %s",
 	    (long)getpid(), _XCtime(&clockTime, ctime_buf));
@@ -248,7 +248,7 @@ void HexDump(FILE *pfp, char *pmsg, unsigned char *pbufr, int plen, int plimit)
     }
   }
   fflush(pfp_r);
-  if (pfp == (FILE*) NULL) {
+  if (pfp == (FILE*) nullptr) {
     fprintf(pfp_r, "---------------------\n");
     fclose(pfp_r);
   }
@@ -281,10 +281,10 @@ _msg_list(128), _mappings(4)
 
     _impl_name = impl_name;
 
-    _buffer = NULL;
+    _buffer = nullptr;
     _parsed = DTM_FALSE;
     _fd = -1;
-    _real_path = NULL;
+    _real_path = nullptr;
 
     _mail_box_writable = DTM_FALSE;
     _use_dot_lock = DTM_TRUE;
@@ -292,16 +292,16 @@ _msg_list(128), _mappings(4)
     _dot_lock_active = DTM_FALSE;
     _lockf_active = DTM_FALSE;
     _uniqueLockId = generateUniqueLockId();
-    assert(_uniqueLockId != NULL);
+    assert(_uniqueLockId != nullptr);
     _uniqueLockIdLength = strlen(_uniqueLockId);
     _lockFileName = (char *)0;
     _dirty = 0;
 
     _mr_allowed = DTM_TRUE;
-    _mra_server = NULL;
-    _mra_serverpw = NULL;
-    _mra_command = NULL;
-    createMailRetrievalAgent(NULL);
+    _mra_server = nullptr;
+    _mra_serverpw = nullptr;
+    _mra_command = nullptr;
+    createMailRetrievalAgent(nullptr);
 
     // Create a thread for getting new mail and expunging old mail.
     // Of course we don't need threads for buffer objects.
@@ -326,7 +326,7 @@ _msg_list(128), _mappings(4)
     // when the user has explicitly turned it on via a property.
     //
     DtMail::MailRc * mailrc = _session->mailRc(error);
-    const char * value = NULL;
+    const char * value = nullptr;
     mailrc->getValue(localError, "cdetooltalklock", &value);
     if (localError.isSet()) {
         _tt_lock = DTM_FALSE;
@@ -334,20 +334,20 @@ _msg_list(128), _mappings(4)
     } else {
         _tt_lock = DTM_TRUE;
     }
-    if (NULL != value)
+    if (nullptr != value)
       free((void*) value);
 
     // Determine if error logging is enabled
     //
-    value = NULL;
+    value = nullptr;
     localError.clear();
     mailrc->getValue(localError, "errorlogging", &value);
     _errorLogging = (localError.isSet() ?
 			(localError.clear(), DTM_FALSE) : DTM_TRUE);
-    if (NULL != value)
+    if (nullptr != value)
       free((void*) value);
 
-    _partialList = NULL;
+    _partialList = nullptr;
     _partialListCount = 0;
 
     error.clear();
@@ -437,9 +437,9 @@ RFCMailBox::~RFCMailBox(void)
 
     _object_signature = 0;
 
-    if (NULL != _mra_command) delete _mra_command;
-    if (NULL != _mra_server) delete _mra_server;
-    if (NULL != _mra_serverpw) delete _mra_serverpw;
+    if (nullptr != _mra_command) delete _mra_command;
+    if (nullptr != _mra_server) delete _mra_server;
+    if (nullptr != _mra_serverpw) delete _mra_serverpw;
 }
 
 static int isMailGroupSystemMailbox(const char * mailboxPath)
@@ -449,7 +449,7 @@ static int isMailGroupSystemMailbox(const char * mailboxPath)
     static int		oneTimeFlag = 0;
     static char		*cached_inbox_path = 0;
 
-    if (NULL == mailboxPath) return retval;
+    if (nullptr == mailboxPath) return retval;
 
     if (! oneTimeFlag)
     {
@@ -481,7 +481,7 @@ static char *getMailspoolPath(DtMail::Session *session)
     sprintf(syspath, MAIL_SPOOL_PATH, pw.pw_name);
     mailspoolpath = strdup(syspath);
 
-    assert(NULL!=mailspoolpath);
+    assert(nullptr!=mailspoolpath);
     delete [] syspath;
     return mailspoolpath;
 }
@@ -518,17 +518,17 @@ static char *getInboxPath(DtMail::Session *session)
 	inboxpath = getMailspoolPath(session);
     }
 
-    assert(NULL!=inboxpath);
+    assert(nullptr!=inboxpath);
     return inboxpath;
 }
 
 static int isInboxMailbox(DtMail::Session *session, const char * mailboxPath)
 {
     int		retval = 0;
-    char	*inbox_path = NULL;
+    char	*inbox_path = nullptr;
 
     inbox_path = getInboxPath(session);
-    assert(NULL!=inbox_path);
+    assert(nullptr!=inbox_path);
     retval = (!strcmp(mailboxPath, inbox_path));
     free(inbox_path);
     return retval;
@@ -613,7 +613,7 @@ memoryPageSize()
 DtMailBoolean
 RFCMailBox::addressIsMapped(void *addressToCheck)
 {
-  assert(addressToCheck != NULL);
+  assert(addressToCheck != nullptr);
   int me = _mappings.length();
   for (int m = 0; m < me; m++)
   {
@@ -630,7 +630,7 @@ RFCMailBox::appendCB(DtMailEnv &error, char *buf, int len, void *clientData)
 {
     RFCMailBox	*obj = (RFCMailBox*) clientData;
 
-    if (NULL == obj) return;
+    if (nullptr == obj) return;
     obj->append(error, buf, len);
 }
 
@@ -650,7 +650,7 @@ RFCMailBox::append(DtMailEnv &error, char *buf, int len)
         {
             case EFBIG:
               error.vSetError(
-			DTME_AppendMailboxFile_FileTooBig, DTM_FALSE, NULL,
+			DTME_AppendMailboxFile_FileTooBig, DTM_FALSE, nullptr,
 			path, errno, error.errnoMessage(errno));
               break;
 
@@ -660,19 +660,19 @@ RFCMailBox::append(DtMailEnv &error, char *buf, int len)
             case ENOLINK:
 #endif
               error.vSetError(
-			DTME_AppendMailboxFile_LinkLost, DTM_FALSE, NULL,
+			DTME_AppendMailboxFile_LinkLost, DTM_FALSE, nullptr,
 			path, errno, error.errnoMessage(errno));
               break;
 
             case ENOSPC:
               error.vSetError(
-			DTME_AppendMailboxFile_NoSpaceLeft, DTM_FALSE, NULL,
+			DTME_AppendMailboxFile_NoSpaceLeft, DTM_FALSE, nullptr,
 			path, errno, error.errnoMessage(errno));
               break;
 
             default:
               error.vSetError(
-			DTME_AppendMailboxFile_SystemError, DTM_FALSE, NULL,
+			DTME_AppendMailboxFile_SystemError, DTM_FALSE, nullptr,
 			path, errno, error.errnoMessage(errno));
         }
 	free(path);
@@ -682,7 +682,7 @@ RFCMailBox::append(DtMailEnv &error, char *buf, int len)
       mailboxAccessHide("append");
     else
     {
-        time_t	now = time(NULL);
+        time_t	now = time(nullptr);
         mailboxAccessShow(now, "append");
     }
 
@@ -952,13 +952,13 @@ RFCMailBox::getFirstMessageSummary(DtMailEnv & error,
 
     if (_object_valid->state() <= 0) {
 	error.setError(DTME_ObjectInvalid);
-	return(NULL);
+	return(nullptr);
     }
 
     int slot = nextNotDel(0);
 
     if (slot >= _msg_list.length()) {
-	return(NULL);
+	return(nullptr);
     }
 
     makeHeaderLine(error, 0, request, summary);
@@ -974,12 +974,12 @@ RFCMailBox::getNextMessageSummary(DtMailEnv & error,
 {
     if (_object_valid->state() <= 0) {
 	error.setError(DTME_ObjectInvalid);
-	return(NULL);
+	return(nullptr);
     }
 
     // Let's treat a null last as the start of the list.
     //
-    if (last == NULL) {
+    if (last == nullptr) {
 	return(getFirstMessageSummary(error, request, summary));
     }
 
@@ -987,7 +987,7 @@ RFCMailBox::getNextMessageSummary(DtMailEnv & error,
 
     int slot = _msg_list.indexof((MessageCache *)last);
     if (slot < 0) {
-	return(NULL);
+	return(nullptr);
     }
 
     slot += 1;
@@ -996,7 +996,7 @@ RFCMailBox::getNextMessageSummary(DtMailEnv & error,
     slot = nextNotDel(slot);
 
     if (slot >= _msg_list.length()) {
-	return(NULL);
+	return(nullptr);
     }
 
     makeHeaderLine(error, slot, request, summary);
@@ -1033,7 +1033,7 @@ RFCMailBox::getMessageSummary(DtMailEnv & error,
 void
 RFCMailBox::clearMessageSummary(DtMailHeaderLine & headers)
 {
-    if (NULL != headers.header_values)
+    if (nullptr != headers.header_values)
       delete []headers.header_values;
 }
 
@@ -1042,7 +1042,7 @@ RFCMailBox::getMessage(DtMailEnv & error, DtMailMessageHandle hnd)
 {
     if (_object_valid->state() <= 0) {
 	error.setError(DTME_ObjectInvalid);
-	return(NULL);
+	return(nullptr);
     }
 
     error.clear();
@@ -1050,7 +1050,7 @@ RFCMailBox::getMessage(DtMailEnv & error, DtMailMessageHandle hnd)
     int slot = _msg_list.indexof((MessageCache *)hnd);
     if (slot < 0) {
 	error.setError(DTME_ObjectInvalid);
-	return(NULL);
+	return(nullptr);
     }
 
     MessageCache * mc = _msg_list[slot];
@@ -1066,13 +1066,13 @@ RFCMailBox::getFirstMessage(DtMailEnv & error)
 
     if (_object_valid->state() <= 0) {
 	error.setError(DTME_ObjectInvalid);
-	return(NULL);
+	return(nullptr);
     }
 
     int slot = nextNotDel(0);
 
     if (slot >= _msg_list.length()) {
-	return(NULL);
+	return(nullptr);
     }
 
     MessageCache * mc = _msg_list[slot];
@@ -1087,7 +1087,7 @@ RFCMailBox::getNextMessage(DtMailEnv & error,
 
     int slot = lookupByMsg((RFCMessage *)last);
     if (slot < 0) {
-	return(NULL);
+	return(nullptr);
     }
 
     slot += 1;
@@ -1096,7 +1096,7 @@ RFCMailBox::getNextMessage(DtMailEnv & error,
     slot = nextNotDel(slot);
 
     if (slot >= _msg_list.length()) {
-	return(NULL);
+	return(nullptr);
     }
 
     MessageCache * mc = _msg_list[slot];
@@ -1266,11 +1266,11 @@ RFCMailBox::callCallback(DtMailCallbackOp op, void * arg)
 	path = (char *)_arg;
     }
     else {
-	path = NULL;
+	path = nullptr;
     }
 
-    if (NULL != _callback)
-      _callback(op, path, NULL, _cb_data, arg);
+    if (nullptr != _callback)
+      _callback(op, path, nullptr, _cb_data, arg);
 
     return;
 }
@@ -1283,7 +1283,7 @@ RFCMailBox::newMessage(DtMailEnv & error)
     // of kludge, but we can only extend the kludge so far.
     //
     error.setError(DTME_NotSupported);
-    return(NULL);
+    return(nullptr);
 }
 
 void
@@ -1542,7 +1542,7 @@ RFCMailBox::openRealFile(DtMailEnv & error, int open_mode, mode_t create_mode)
     _links = buf.st_nlink;
 
     _lockFileName = generateLockFileName();
-    assert(_lockFileName != NULL);
+    assert(_lockFileName != nullptr);
     return;
 }
 
@@ -1934,13 +1934,13 @@ RFCMailBox::mapFile(DtMailEnv & error,
 #if 0
         if (_errorLogging) {
 	  HexDump(
-		(FILE*) NULL,
+		(FILE*) nullptr,
 		"Region mapped in",
 		(unsigned char *)map->map_region,
 		map->map_size,
 		_errorLogging ? 0 : 100);
           HexDump(
-		(FILE*) NULL,
+		(FILE*) nullptr,
 		"Offset Region mapped in",
 		(unsigned char *)map->map_region+offset_from_map,
 		map->file_size,
@@ -2060,7 +2060,7 @@ RFCMailBox::mapFile(DtMailEnv & error,
       if (readResults > 0) {
         if (_errorLogging)
           HexDump(
-		(FILE*) NULL,
+		(FILE*) nullptr,
 		"Buffer read in",
 		(unsigned char *)map->map_region, readResults,
 		_errorLogging ? 0 : 100);
@@ -2205,7 +2205,7 @@ RFCMailBox::ThreadParseEntry(void * client_data)
     lock_map.unlock();
 
     ThreadExit(0);
-    return(NULL);
+    return(nullptr);
 }
 
 void
@@ -2347,7 +2347,7 @@ RFCMailBox::parseFile(DtMailEnv & error, int map_slot)
             DtMail::Envelope * env = mc->message->getEnvelope(error);
 
             DtMailValueSeq value;
-            char           *type=NULL;
+            char           *type=nullptr;
             static const char       * partial = "message/partial";
             static const char       * contentType = "content-type";
         // get content-type
@@ -2358,7 +2358,7 @@ RFCMailBox::parseFile(DtMailEnv & error, int map_slot)
              else{
               error.clear();
            }
-          if(type != NULL) {
+          if(type != nullptr) {
             if (error.isNotSet()) {
                 env->getHeader(error, RFCDeleteHeader, DTM_FALSE, value);
 
@@ -2405,37 +2405,37 @@ RFCMailBox::ThreadNewMailEntry(void * client_data)
     time_t check_per_ping = 120;
     time_t expunge_per_ping = 240;
 
-    const char * value = NULL;
+    const char * value = nullptr;
     mailrc->getValue(error, "RFC_PING_INTERVAL", &value);
     if (error.isNotSet()) {
-	ping = (time_t) strtol(value, NULL, 10);
+	ping = (time_t) strtol(value, nullptr, 10);
     }
     else {
 	error.clear();
     }
-    if (NULL != value)
+    if (nullptr != value)
       free((void*) value);
 
-    value = NULL;
+    value = nullptr;
     mailrc->getValue(error, "RFC_CHECK", &value);
     if (error.isNotSet()) {
-	check_per_ping = (time_t) strtol(value, NULL, 10);
+	check_per_ping = (time_t) strtol(value, nullptr, 10);
     }
     else {
 	error.clear();
     }
-    if (NULL != value)
+    if (nullptr != value)
       free((void*) value);
 
-    value = NULL;
+    value = nullptr;
     mailrc->getValue(error, "RFC_EXPUNGE", &value);
     if (error.isNotSet()) {
-	expunge_per_ping = (time_t) strtol(value, NULL, 10);
+	expunge_per_ping = (time_t) strtol(value, nullptr, 10);
     }
     else {
 	error.clear();
     }
-    if (NULL != value)
+    if (nullptr != value)
       free((void*) value);
 
     int pinged = 0;
@@ -2510,7 +2510,7 @@ RFCMailBox::ThreadNewMailEntry(void * client_data)
 
     ThreadExit(0);
 
-    return(NULL);
+    return(nullptr);
 }
 
 
@@ -2540,33 +2540,33 @@ RFCMailBox::PollEntry(void * client_data)
     //
     const char * value;
 
-    value = NULL;
+    value = nullptr;
     mailrc->getValue(error, "retrieveinterval", &value);
-    if (error.isNotSet() && value != NULL && *value != '\0')
+    if (error.isNotSet() && value != nullptr && *value != '\0')
     {
-	ping = (time_t) strtol(value, NULL, 10);
+	ping = (time_t) strtol(value, nullptr, 10);
 	if (ping <= 0)
 	  ping = 0;
 	else if (ping < 15)
 	  ping = 15;
     }
     error.clear();
-    if (NULL != value) free((void*) value);
+    if (nullptr != value) free((void*) value);
 
     // Retrieve current setting for how often we are supposed to
     // perform an auto save of the mailbox
     //
-    value = NULL;
+    value = nullptr;
     mailrc->getValue(error, "dontautosave", &value);
     if (error.isSet()) {
 	error.clear();
-        if (NULL != value)
+        if (nullptr != value)
           free((void*) value);
 
-        value = NULL;
+        value = nullptr;
     	mailrc->getValue(error, "saveinterval", &value);
-    	if (error.isNotSet() && value != NULL && *value != '\0') {
-	    save_interval = (time_t) strtol(value, NULL, 10) * 60;
+    	if (error.isNotSet() && value != nullptr && *value != '\0') {
+	    save_interval = (time_t) strtol(value, nullptr, 10) * 60;
 	}
 	error.clear();
 	if (save_interval < 60)
@@ -2574,14 +2574,14 @@ RFCMailBox::PollEntry(void * client_data)
 	  save_interval = 15;	// The minimum time is every minute
     }
     else save_interval = -1;
-    if (NULL != value)
+    if (nullptr != value)
       free((void*) value);
 
     // Get the current time in seconds, and compute how long it has
     // been since the last interactive input (keystroke, buttonpress)
     // was done by the user
     //
-    time_t now = time(NULL);
+    time_t now = time(nullptr);
     time_t lastInteractive =
 		(time_t) self->session()->lastInteractiveEventTime();
     time_t interactiveIdleTime = (now - lastInteractive);
@@ -2592,17 +2592,17 @@ RFCMailBox::PollEntry(void * client_data)
     // the duration of an auto save/and/or/new mail incorporation
     //
 
-    value = NULL;
+    value = nullptr;
     mailrc->getValue(error, "inactivityinterval", &value);
-    if (error.isNotSet() && value != NULL && *value != '\0') {
-      minimumIdleTime = strtol(value, NULL, 10);
+    if (error.isNotSet() && value != nullptr && *value != '\0') {
+      minimumIdleTime = strtol(value, nullptr, 10);
       if (minimumIdleTime < 15)
 	  minimumIdleTime = 15;		// at least 15 seconds must go by
       else if (minimumIdleTime > 600)
 	  minimumIdleTime = 600;	// but not more than 10 minutes
     }
     error.clear();
-    if (NULL != value)
+    if (nullptr != value)
       free((void*) value);
     
     if (interactiveIdleTime < minimumIdleTime)
@@ -2657,18 +2657,18 @@ RFCMailBox::NewMailEvent(
     op = retrieveNewMail(error);
     if (error.isSet())
     {
-	const char *errmsg = NULL;
+	const char *errmsg = nullptr;
 	errmsg = (const char *) error;
 
 	event.key = _key;
 	event.target = DTM_TARGET_MAILBOX;
 	event.target_object = this;
 	event.operation = (void*) op;
-	if (NULL != errmsg)
+	if (nullptr != errmsg)
 	  event.argument = strdup(errmsg);
 	else
-	  event.argument = NULL;
-	event.event_time = time(NULL);
+	  event.argument = nullptr;
+	event.event_time = time(nullptr);
 
 	// longUnlock(error);
 	_session->writeEventData(error, &event, sizeof(event));
@@ -2686,8 +2686,8 @@ RFCMailBox::NewMailEvent(
 	event.target = DTM_TARGET_MAILBOX;
 	event.target_object = this;
 	event.operation = (void *)DTMC_ACCESSFAILED;
-	event.argument = NULL;
-	event.event_time = time(NULL);
+	event.argument = nullptr;
+	event.event_time = time(nullptr);
 
         error.setError(DTME_ObjectAccessFailed);
 	_session->writeEventData(error, &event, sizeof(event));
@@ -2707,8 +2707,8 @@ RFCMailBox::NewMailEvent(
 	event.target = DTM_TARGET_MAILBOX;
 	event.target_object = this;
 	event.operation = (void *)DTMC_INODECHANGED;
-	event.argument = NULL;
-	event.event_time = time(NULL);
+	event.argument = nullptr;
+	event.event_time = time(nullptr);
 
         error.setError(DTME_MailboxInodeChanged);
 	_session->writeEventData(error, &event, sizeof(event));
@@ -2747,8 +2747,8 @@ RFCMailBox::NewMailEvent(
 	event.target = DTM_TARGET_MAILBOX;
 	event.target_object = this;
 	event.operation = (void *)DTMC_ACCESSFAILED;
-	event.argument = NULL;
-	event.event_time = time(NULL);
+	event.argument = nullptr;
+	event.event_time = time(nullptr);
 
 	_session->writeEventData(error, &event, sizeof(event));
         _session->setBusyState(error1, DtMailBusyState_NotBusy);
@@ -2781,8 +2781,8 @@ RFCMailBox::NewMailEvent(
 	event.target = DTM_TARGET_MAILBOX;
 	event.target_object = this;
 	event.operation = (void *)DTMC_BADSTATE;
-	event.argument = NULL;
-	event.event_time = time(NULL);
+	event.argument = nullptr;
+	event.event_time = time(nullptr);
 
 	_session->writeEventData(error, &event, sizeof(event));
 
@@ -2838,7 +2838,7 @@ RFCMailBox::CheckPointEvent()
 
       startAutoSave(error1,DTM_FALSE);
       showError((char *) error.getClient());
-      error.setClient(NULL);
+      error.setClient(nullptr);
       startAutoSave(error1,DTM_TRUE);
   }
 
@@ -2863,16 +2863,16 @@ RFCMailBox::ExpungeEvent(DtMailBoolean closing)
     DtMail::MailRc * mailrc = _session->mailRc(error);
 
     long expire_days;
-    const char * expire_time = NULL;
+    const char * expire_time = nullptr;
     mailrc->getValue(error, "DTMAIL_EXPIRE_TIME", &expire_time);
     if (error.isNotSet()) {
-	expire_days = strtol(expire_time, NULL, 10);
+	expire_days = strtol(expire_time, nullptr, 10);
     }
     else {
 	error.clear();
 	expire_days = 0;
     }
-    if (NULL != expire_time)
+    if (nullptr != expire_time)
       free((void*) expire_time);
 
     if (expire_days == 0 && closing == DTM_FALSE) {
@@ -2888,7 +2888,7 @@ RFCMailBox::ExpungeEvent(DtMailBoolean closing)
     }
 
     time_t expire_secs = (time_t) expire_days * (24 * 3600);
-    time_t now = time(NULL);
+    time_t now = time(nullptr);
 
     for (int msg = 0; msg < _msg_list.length(); msg++) {
 	MessageCache * mc = _msg_list[msg];
@@ -2904,7 +2904,7 @@ RFCMailBox::ExpungeEvent(DtMailBoolean closing)
 	env->getHeader(error, RFCDeleteHeader, DTM_FALSE, value);
 	if (!error.isSet()) {
 	    time_t deleted;
-	    deleted = (time_t) strtol(*(value[0]), NULL, 16);
+	    deleted = (time_t) strtol(*(value[0]), nullptr, 16);
 	    if ((deleted + expire_secs) < now) {
 		mc->delete_pending = DTM_TRUE;
 		_dirty += 1;
@@ -2920,7 +2920,7 @@ RFCMailBox::ExpungeEvent(DtMailBoolean closing)
 		    event.target_object = this;
 		    event.operation = (void *)DTMC_DELETEMSG;
 		    event.argument = mc;
-		    event.event_time = time(NULL);
+		    event.event_time = time(nullptr);
 		    _session->writeEventData(error, &event, sizeof(event));
 		}
 	    }
@@ -2964,7 +2964,7 @@ RFCMailBox::createTemporaryMailboxFile(DtMailEnv & error, char *tmp_name)
 		   "createTemporaryMailboxFile(): fstat(%d) failed errno=%d\n",
 		   _fd, errno);
     error.vSetError(DTME_CannotObtainInformationOnOpenMailboxFile,
-		    DTM_FALSE, NULL, _real_path, error.errnoMessage(errno2));
+		    DTM_FALSE, nullptr, _real_path, error.errnoMessage(errno2));
     return(-1);
   }
 
@@ -2994,7 +2994,7 @@ RFCMailBox::createTemporaryMailboxFile(DtMailEnv & error, char *tmp_name)
       
     default:
       error.vSetError(DTME_CannotCreateTemporaryMailboxFile,
-		      DTM_FALSE, NULL, tmp_name, error.errnoMessage(errno2));
+		      DTM_FALSE, nullptr, tmp_name, error.errnoMessage(errno2));
     }
     return(-1);
   }
@@ -3005,7 +3005,7 @@ RFCMailBox::createTemporaryMailboxFile(DtMailEnv & error, char *tmp_name)
     (void) SafeClose(fd);
     PRIV_ENABLED(return_status,SafeUnlink(tmp_name));
     error.vSetError(DTME_CannotSetPermissionsOfTemporaryMailboxFile,
-		    DTM_FALSE, NULL, tmp_name, info.st_mode & 07777,
+		    DTM_FALSE, nullptr, tmp_name, info.st_mode & 07777,
 		    error.errnoMessage(errno2));
     return(-1);
   }
@@ -3023,7 +3023,7 @@ RFCMailBox::createTemporaryMailboxFile(DtMailEnv & error, char *tmp_name)
     (void) SafeClose(fd);
     PRIV_ENABLED(return_status,SafeUnlink(tmp_name));
     error.vSetError(DTME_CannotSetOwnerOfTemporaryMailboxFile,
-		    DTM_FALSE, NULL, tmp_name, info.st_uid,
+		    DTM_FALSE, nullptr, tmp_name, info.st_uid,
 		    error.errnoMessage(errno2));
     return(-1);
   }
@@ -3077,7 +3077,7 @@ void
 RFCMailBox::writeMailBox(DtMailEnv &error, DtMailBoolean hide_access)
 {
   static char *pname = "writeMailBox";
-  char *fsname=NULL;
+  char *fsname=nullptr;
   DtMailEnv error2; 	// When we need to preserve error during error cleanup
   int return_status;	// for handling priv/unpriv operations
 #if defined(DEBUG_RFCMailBox)
@@ -3104,7 +3104,7 @@ RFCMailBox::writeMailBox(DtMailEnv &error, DtMailBoolean hide_access)
   // Need to deal with any potentially new mail that
   // has arrived and we don't know about.
   //
-  if (_mra_server == NULL) checkForMail(error, DTM_TRUE);
+  if (_mra_server == nullptr) checkForMail(error, DTM_TRUE);
   if (error.isSet()) {
     DEBUG_PRINTF( ("%s:  locking mailbox\n", pname) );
     unlockFile(error2, _fd);
@@ -3114,7 +3114,7 @@ RFCMailBox::writeMailBox(DtMailEnv &error, DtMailBoolean hide_access)
   // Create the new temporary file to hold the mailbox contents
   //
   static char tmp_name[MAXPATHLEN+1];
-  sprintf(tmp_name, "%s.tmp.%08lx", _real_path, (long)time(NULL));
+  sprintf(tmp_name, "%s.tmp.%08lx", _real_path, (long)time(nullptr));
   assert(strlen(tmp_name)<sizeof(tmp_name));
 
   int fd = createTemporaryMailboxFile(error, tmp_name);
@@ -3173,7 +3173,7 @@ RFCMailBox::writeMailBox(DtMailEnv &error, DtMailBoolean hide_access)
     HexDump(stdout, "body", (unsigned char *)tmlLast->tmlBodyStart, tmlLast->tmlBodyLen, 10);
     fflush(stdout);
 #endif
-    assert(tmlLast->tmlHeaderStart != NULL);
+    assert(tmlLast->tmlHeaderStart != nullptr);
     assert(tmlLast->tmlHeaderLen);
     tmlLast->tmlRealOffset = -1;
     tmlLast++;
@@ -3293,7 +3293,7 @@ RFCMailBox::writeMailBox(DtMailEnv &error, DtMailBoolean hide_access)
     int errno2 = errno;
     for (tempMsgList *tml = tmlFirst; tml < tmlLast; tml++) {
       MessageCache *mc = tml->tmlMc;
-      assert(mc != NULL);
+      assert(mc != nullptr);
       mc->message->unfixMessageLocation(tml->tmlHeaderStart, tml->tmlTemporary);
     }
     FileSystemSpace(tmp_name, 0,&fsname);
@@ -3324,7 +3324,7 @@ RFCMailBox::writeMailBox(DtMailEnv &error, DtMailBoolean hide_access)
 
     default:
       error.vSetError(DTME_CannotWriteToTemporaryMailboxFile,
-		      DTM_FALSE, NULL, tmp_name, error.errnoMessage(errno2));
+		      DTM_FALSE, nullptr, tmp_name, error.errnoMessage(errno2));
     }
     return;
   }
@@ -3337,7 +3337,7 @@ RFCMailBox::writeMailBox(DtMailEnv &error, DtMailBoolean hide_access)
   if (error.isSet()) {
     for (tempMsgList *tml = tmlFirst; tml < tmlLast; tml++) {
       MessageCache *mc = tml->tmlMc;
-      assert(mc != NULL);
+      assert(mc != nullptr);
       mc->message->unfixMessageLocation(tml->tmlHeaderStart, tml->tmlTemporary);
     }
     (void) SafeClose(fd);
@@ -3376,7 +3376,7 @@ RFCMailBox::writeMailBox(DtMailEnv &error, DtMailBoolean hide_access)
 
   for (tempMsgList *tml = tmlFirst; tml < tmlLast; tml++) {
     MessageCache *mc = tml->tmlMc;
-    assert(mc != NULL);
+    assert(mc != nullptr);
     assert(mc->delete_pending == DTM_FALSE);
     mc->message->adjustMessageLocation(tml->tmlHeaderStart, map->file_region+tml->tmlRealOffset, tml->tmlHeaderLen+tml->tmlBodyLen, tml->tmlTemporary, tml->tmlBodyOffset);
   }
@@ -3413,7 +3413,7 @@ RFCMailBox::writeMailBox(DtMailEnv &error, DtMailBoolean hide_access)
     // this as a fatal error so that the caller can exit properly.
     //
     error.vSetError(DTME_CannotRenameNewMailboxFileOverOld,
-		    DTM_TRUE, NULL, _real_path, tmp_name,
+		    DTM_TRUE, nullptr, _real_path, tmp_name,
 		    error.errnoMessage());
     (void) SafeClose(fd);
     (void) SafeClose(_fd);
@@ -3494,8 +3494,8 @@ RFCMailBox::incorporate(DtMailEnv & error, const DtMailBoolean already_locked)
 	    event.target = DTM_TARGET_MAILBOX;
 	    event.target_object = this;
 	    event.operation = (void *)DTMC_INODECHANGED;
-	    event.argument = NULL;
-	    event.event_time = time(NULL);
+	    event.argument = nullptr;
+	    event.event_time = time(nullptr);
 	    _session->writeEventData(error, &event, sizeof(event));
 	}
 	else if (DTME_ObjectAccessFailed == (DTMailError_t) error)
@@ -3507,8 +3507,8 @@ RFCMailBox::incorporate(DtMailEnv & error, const DtMailBoolean already_locked)
 	    event.target = DTM_TARGET_MAILBOX;
 	    event.target_object = this;
 	    event.operation = (void *)DTMC_ACCESSFAILED;
-	    event.argument = NULL;
-	    event.event_time = time(NULL);
+	    event.argument = nullptr;
+	    event.event_time = time(nullptr);
 	    _session->writeEventData(error, &event, sizeof(event));
 	}
 	return;
@@ -3532,7 +3532,7 @@ RFCMailBox::incorporate(DtMailEnv & error, const DtMailBoolean already_locked)
 
     while (num_tries < 5 && !done) {
 	if (strncmp(buf, "From ", 5) == 0) {
-	    DtMailMessageHandle last = NULL;
+	    DtMailMessageHandle last = nullptr;
 
 	    // We can be here via either of two scenarios:
 	    // 1- Aside from incorporating new mail, there is no other 
@@ -3591,7 +3591,7 @@ RFCMailBox::incorporate(DtMailEnv & error, const DtMailBoolean already_locked)
 	    event.target_object = this;
 	    event.operation = (void *)DTMC_NEWMAIL;
 	    event.argument = last;
-	    event.event_time = time(NULL);
+	    event.event_time = time(nullptr);
 	    _session->writeEventData(error, &event, sizeof(event));
 	    done = DTM_TRUE;
 	}
@@ -3604,8 +3604,8 @@ RFCMailBox::incorporate(DtMailEnv & error, const DtMailBoolean already_locked)
 	    event.target = DTM_TARGET_MAILBOX;
 	    event.target_object = this;
 	    event.operation = (void *)DTMC_BADSTATE;
-	    event.argument = NULL;
-	    event.event_time = time(NULL);
+	    event.argument = nullptr;
+	    event.event_time = time(nullptr);
 
 	    error.setError(DTME_ObjectInvalid);
 	    _session->writeEventData(error, &event, sizeof(event));
@@ -3637,7 +3637,7 @@ RFCMailBox::generateLockFileName(void)
   char *s;
   char *lock_path = new char[MAXPATHLEN+20];
 
-  assert(_real_path != NULL);
+  assert(_real_path != nullptr);
   (void) sprintf(lock_path, "%s.lock", _real_path);
   s = strdup(lock_path);
   delete [] lock_path;
@@ -3669,7 +3669,7 @@ RFCMailBox::generateUniqueLockId(void)
   char theId[128];
 
   snprintf(theId, sizeof(theId), "%08ld%08ld%s", (long)getpid(),
-           (long)time(NULL), "dtmail");
+           (long)time(nullptr), "dtmail");
   return(strdup(theId));
 }
 
@@ -3678,7 +3678,7 @@ RFCMailBox::checkLockFileOwnership(DtMailEnv & error)
 {
   char *pname = "checkLockFileOwnership";
 
-  assert(_lockFileName != NULL);
+  assert(_lockFileName != nullptr);
   struct stat info;
   if (SafeStat(_lockFileName, &info) < 0) {
     if (_errorLogging)
@@ -3734,7 +3734,7 @@ RFCMailBox::checkLockFileOwnership(DtMailEnv & error)
         "%s: dtmail lock file stolen by another process\n", pname);
     if (_errorLogging)
       HexDump(
-		(FILE*) NULL,
+		(FILE*) nullptr,
 		"lock file stolen - lock file contents",
 		(unsigned char *)lockBuf, status, 0);
     (void) SafeClose(lock_fd);
@@ -3810,10 +3810,10 @@ RFCMailBox::linkLockFile(DtMailEnv & error, char *tempLockFileName)
       
     default:
       error.vSetError(DTME_CannotCreateMailboxLockFile,
-		      DTM_FALSE, NULL, tempLockFileName, error.errnoMessage());
+		      DTM_FALSE, nullptr, tempLockFileName, error.errnoMessage());
       break;
     }
-    return(time(NULL));
+    return(time(nullptr));
   }
 
   // Get creation time of temporary file *on remote system*
@@ -3824,9 +3824,9 @@ RFCMailBox::linkLockFile(DtMailEnv & error, char *tempLockFileName)
 		   "linkLockFile(): temporary lock file cannot be stat()ed: %s, errno = %d\n",
 		   tempLockFileName, errno);
     error.vSetError(DTME_CannotCreateMailboxLockFile,
-		    DTM_FALSE, NULL, tempLockFileName, error.errnoMessage());
+		    DTM_FALSE, nullptr, tempLockFileName, error.errnoMessage());
     (void) SafeClose(lock_fd);
-    return(time(NULL));
+    return(time(nullptr));
   }
 
   // Write proper contents to lock file:
@@ -3848,9 +3848,9 @@ RFCMailBox::linkLockFile(DtMailEnv & error, char *tempLockFileName)
 		   "linkLockFile(): write to temporary lock file failed: %s, errno = %d\n",
 		   tempLockFileName, errno);
     error.vSetError(DTME_CannotCreateMailboxLockFile,
-		    DTM_FALSE, NULL, tempLockFileName, error.errnoMessage());
+		    DTM_FALSE, nullptr, tempLockFileName, error.errnoMessage());
     (void) SafeClose(lock_fd);
-    return(time(NULL));
+    return(time(nullptr));
   }
 
   // sync up the lock file with the ultimate storage device
@@ -3861,9 +3861,9 @@ RFCMailBox::linkLockFile(DtMailEnv & error, char *tempLockFileName)
 		   "linkLockFile(): fsync to temporary lock file failed: %s, errno = %d\n",
 		   tempLockFileName, errno);
     error.vSetError(DTME_CannotCreateMailboxLockFile,
-		    DTM_FALSE, NULL, tempLockFileName, error.errnoMessage());
+		    DTM_FALSE, nullptr, tempLockFileName, error.errnoMessage());
     (void) SafeClose(lock_fd);
-    return(time(NULL));
+    return(time(nullptr));
   }
 
   // close the file
@@ -3875,8 +3875,8 @@ RFCMailBox::linkLockFile(DtMailEnv & error, char *tempLockFileName)
 	"linkLockFile(): close of temporary lock file failed: %s, errno = %d\n",
 	tempLockFileName, errno);
     error.vSetError(DTME_CannotCreateMailboxLockFile,
-		    DTM_FALSE, NULL, tempLockFileName, error.errnoMessage());
-    return(time(NULL));
+		    DTM_FALSE, nullptr, tempLockFileName, error.errnoMessage());
+    return(time(nullptr));
   }
          
   // The temporary lock file has been created - now try and link it to the
@@ -3939,7 +3939,7 @@ RFCMailBox::lockFile(DtMailEnv & error)
   // It has the form <_lockfilename><XXXXXX> or mailbox.lockXXXXXX
   // mktemp then creates a unique temporary file for the template
   //
-  assert(_lockFileName != NULL);
+  assert(_lockFileName != nullptr);
   char *tempLockFileName = new char[MAXPATHLEN];
   sprintf(tempLockFileName, "%sXXXXXX", _real_path);
   ({ int _fd = mkstemp(tempLockFileName); if (_fd != -1) close(_fd); tempLockFileName; });
@@ -3994,7 +3994,7 @@ RFCMailBox::lockFile(DtMailEnv & error)
     if (SafeStat(_lockFileName, &sbuf) == -1) {
       if (statFailed++ > 5) {
 	error.vSetError(DTME_CannotCreateMailboxLockFile,
-			DTM_FALSE, NULL, _lockFileName, error.errnoMessage());
+			DTM_FALSE, nullptr, _lockFileName, error.errnoMessage());
         delete [] tempLockFileName;
 	return;
       }
@@ -4030,7 +4030,7 @@ RFCMailBox::lockFile(DtMailEnv & error)
       _use_dot_lock = DTM_FALSE;
       _mail_box_writable = DTM_FALSE;
       error.vSetError(DTME_CannotRemoveStaleMailboxLockFile,
-		     DTM_FALSE, NULL, _lockFileName, error.errnoMessage());
+		     DTM_FALSE, nullptr, _lockFileName, error.errnoMessage());
       delete [] tempLockFileName;
       return;
     }
@@ -4096,7 +4096,7 @@ RFCMailBox::unlockFile(DtMailEnv & error, int fd)
   
   if (_use_dot_lock == DTM_TRUE) {
     assert(_dot_lock_active == DTM_TRUE);
-    assert(_lockFileName != NULL);
+    assert(_lockFileName != nullptr);
     _dot_lock_active = DTM_FALSE;
     checkLockFileOwnership(error);
     if (!error.isSet()) {
@@ -4105,7 +4105,7 @@ RFCMailBox::unlockFile(DtMailEnv & error, int fd)
         PRIV_ENABLED(return_status,SafeUnlink(_lockFileName));
 	if (return_status == -1) {
           error.vSetError(DTME_CannotRemoveMailboxLockFile,
-		     DTM_FALSE, NULL, _lockFileName, error.errnoMessage());
+		     DTM_FALSE, nullptr, _lockFileName, error.errnoMessage());
         }
     }
   }
@@ -4127,7 +4127,7 @@ RFCMailBox::dotDtmailLockFile(char *filename, int)
 {
 
   // Attempt to link the temporary lock file to the real lock file.
-  assert(_real_path != NULL);
+  assert(_real_path != nullptr);
   (void) sprintf(filename, "%s.%s", _real_path, DOT_DTMAIL_SUFFIX);
 
 }
@@ -4177,7 +4177,7 @@ RFCMailBox::dotDtmailLock(DtMailEnv & error)
       break;
     default:
       error.vSetError(DTME_CannotCreateMailboxLockFile,
-		      DTM_FALSE, NULL, tempLockFileName,
+		      DTM_FALSE, nullptr, tempLockFileName,
 		      error.errnoMessage());
       break;
     }
@@ -4195,7 +4195,7 @@ RFCMailBox::dotDtmailLock(DtMailEnv & error)
   PRIV_ENABLED(return_status,SafeLink(tempLockFileName, dotDtmailPath));
   if (return_status == -1)
     error.vSetError(DTME_CannotCreateMailboxDotDtmailLockFile,
-		      DTM_FALSE, NULL, dotDtmailPath,
+		      DTM_FALSE, nullptr, dotDtmailPath,
 		      error.errnoMessage());
 
   PRIV_ENABLED(return_status,SafeRemove(tempLockFileName));
@@ -4265,14 +4265,14 @@ RFCMailBox::longLock(DtMailEnv & error)
       // TT is not available.  Attempt to lock using the .dtmail lock.
       //
       delete _lock_obj;
-      _lock_obj = NULL;
+      _lock_obj = nullptr;
 
       error.clear();
       dotDtmailLock(error);
       if (error.isSet())
       {
           _long_lock_active = DTM_FALSE;
-          if (NULL != _callback)
+          if (nullptr != _callback)
           {
               //
               // .dtmail lock failed.  The best we can do is read only.
@@ -4282,7 +4282,7 @@ RFCMailBox::longLock(DtMailEnv & error)
 
   	      dotDtmailLockFile(dotDtmailPath, MAXPATHLEN);
 	      ans = _callback(
-			DTMC_DOTDTMAILLOCKFAILED, _real_path, NULL, _cb_data,
+			DTMC_DOTDTMAILLOCKFAILED, _real_path, nullptr, _cb_data,
 			(char*) dotDtmailPath, (const char*) error);
 	      if (DTM_TRUE == ans)
 	      {
@@ -4323,7 +4323,7 @@ RFCMailBox::longLock(DtMailEnv & error)
 	  }
 
           delete _lock_obj;
-          _lock_obj = NULL;
+          _lock_obj = nullptr;
           _long_lock_active = DTM_FALSE;
       }
       else
@@ -4340,10 +4340,10 @@ RFCMailBox::longUnlock(DtMailEnv & error)
   
   if (DTM_TRUE == _lock_flag)
   {
-    if (NULL != _lock_obj)
+    if (nullptr != _lock_obj)
     {
       delete _lock_obj;
-      _lock_obj = NULL;
+      _lock_obj = nullptr;
     }
     else if (_long_lock_active == DTM_TRUE)
       dotDtmailUnlock(error);
@@ -4402,12 +4402,12 @@ RFCMailBox::mapNewRegion(DtMailEnv & error, int fd, unsigned long size)
       
     default:
       error.vSetError(DTME_CannotReadNewMailboxFile,
-		      DTM_FALSE, NULL, error.errnoMessage());
+		      DTM_FALSE, nullptr, error.errnoMessage());
       break;
     }
     
     delete map;
-    return((MapRegion *)NULL);
+    return((MapRegion *)nullptr);
   }
   
   map->file_region = map->map_region;
@@ -4470,7 +4470,7 @@ RFCMailBox::writeToDumpFile(const char *format, ...)
   GET_DUMPFILE_NAME(dumpfilename);
   FILE *df = fopen(dumpfilename, "a");
   
-  const time_t clockTime = (const time_t) time(NULL);
+  const time_t clockTime = (const time_t) time(nullptr);
   memset((void*) &ctime_buf, 0, sizeof(_Xctimeparams));
   fprintf(df, "--------------------- pid=%ld %s", 
 	  (long)getpid(), _XCtime(&clockTime, ctime_buf));
@@ -4516,7 +4516,7 @@ RFCMailBox::dumpMaps(const char *str)
   GET_DUMPFILE_NAME(dumpfilename);
   FILE *df = fopen(dumpfilename, "a");
   
-  if (df==NULL && _errorLogging)
+  if (df==nullptr && _errorLogging)
     error.logError(
 		DTM_FALSE,
 		"dumpMaps():  Cant open dump file %s\n", dumpfilename);
@@ -4525,7 +4525,7 @@ RFCMailBox::dumpMaps(const char *str)
     fprintf(df, "dumpMaps(): fstat(%d) failed errno=%d\n", _fd, errno);
   }
 
-  if (str == NULL) {
+  if (str == nullptr) {
     str = "\n";
   }
 
@@ -4538,7 +4538,7 @@ RFCMailBox::dumpMaps(const char *str)
   sigaction(SIGBUS, &sig_act, &old_sig_act);
   sigbus_env_valid = 1;
   if (setjmp(sigbus_env) == 0) {
-    const time_t clockTime = (const time_t) time(NULL);
+    const time_t clockTime = (const time_t) time(nullptr);
     _Xctimeparams ctime_buf;
     memset((void*) &ctime_buf, 0, sizeof(_Xctimeparams));
     fprintf(df, "--------------------- pid=%ld %s", 
@@ -4591,7 +4591,7 @@ RFCMailBox::dumpMaps(const char *str)
     fprintf(df, "This generally indicates a truncated or deleted file.\n");
   }
   sigbus_env_valid = 0;
-  sigaction(SIGBUS, &old_sig_act, NULL);
+  sigaction(SIGBUS, &old_sig_act, nullptr);
   fclose(df);
 }
 
@@ -4794,7 +4794,7 @@ RFCMetaFactory(const char * op)
 	return((void *)RFCMIMETransportConstruct);
     }
 
-    return(NULL);
+    return(nullptr);
 }
 
 // The mail box construct entry point creates an instance of the RFC
@@ -4853,7 +4853,7 @@ V3MetaFactory(const char * op)
 	return((void *)RFCV3TransportConstruct);
     }
 
-    return(NULL);
+    return(nullptr);
 }
 
 
@@ -4862,7 +4862,7 @@ RFCMailBox::createMailRetrievalAgent(char *password)
 {
     DtMailEnv		localError;
     char		*path = _session->expandPath(localError, (char*) _arg);
-    DtMailServer	*server = NULL;
+    DtMailServer	*server = nullptr;
     char		*protocol;
 
     if (! isInboxMailbox(_session, path))
@@ -4871,17 +4871,17 @@ RFCMailBox::createMailRetrievalAgent(char *password)
         return;
     }
 
-    if (NULL != _mra_command) free(_mra_command);
-    _mra_command = NULL;
+    if (nullptr != _mra_command) free(_mra_command);
+    _mra_command = nullptr;
 
-    if (NULL != password)
+    if (nullptr != password)
     {
-        if (NULL != _mra_serverpw) free(_mra_serverpw);
+        if (nullptr != _mra_serverpw) free(_mra_serverpw);
         _mra_serverpw = strdup(password);
     }
     
-    if (NULL != _mra_server) delete _mra_server;
-    _mra_server = NULL;
+    if (nullptr != _mra_server) delete _mra_server;
+    _mra_server = nullptr;
 
     if (True == DtMailServer::get_mailrc_value(
 					_session, DTMAS_INBOX,
@@ -4914,7 +4914,7 @@ RFCMailBox::createMailRetrievalAgent(char *password)
 					DTMAS_INBOX, _session, this,
 					appendCB, (void*) this);
 
-        if (NULL != _mra_server) _mra_server->set_password(_mra_serverpw);
+        if (nullptr != _mra_server) _mra_server->set_password(_mra_serverpw);
         free(protocol);
     }
     else if (True == DtMailServer::get_mailrc_value(
@@ -4925,7 +4925,7 @@ RFCMailBox::createMailRetrievalAgent(char *password)
 	_mra_command = DtMailServer::get_mailrc_value(
 						_session, DTMAS_INBOX,
 						DTMAS_PROPKEY_GETMAILCOMMAND,
-						(char*) NULL);
+						(char*) nullptr);
     }
 }
 
@@ -4933,20 +4933,20 @@ RFCMailBox::createMailRetrievalAgent(char *password)
 void
 RFCMailBox::deleteMailRetrievalAgent()
 {
-    if (NULL != _mra_command) free(_mra_command);
-    _mra_command = NULL;
-    if (NULL != _mra_serverpw) free(_mra_serverpw);
-    _mra_serverpw = NULL;
-    if (NULL != _mra_server) delete _mra_server;
-    _mra_server = NULL;
+    if (nullptr != _mra_command) free(_mra_command);
+    _mra_command = nullptr;
+    if (nullptr != _mra_serverpw) free(_mra_serverpw);
+    _mra_serverpw = nullptr;
+    if (nullptr != _mra_server) delete _mra_server;
+    _mra_server = nullptr;
 }
 
 void
 RFCMailBox::updateMailRetrievalPassword(char *password)
 {
-    if (NULL == password || NULL == _mra_server) return;
+    if (nullptr == password || nullptr == _mra_server) return;
 
-    if (NULL != _mra_serverpw) delete _mra_serverpw;
+    if (nullptr != _mra_serverpw) delete _mra_serverpw;
     _mra_serverpw = strdup(password);
     _mra_server->set_password(_mra_serverpw);
 }
@@ -4955,7 +4955,7 @@ RFCMailBox::updateMailRetrievalPassword(char *password)
 DtMailCallbackOp
 RFCMailBox::retrieveNewMail(DtMailEnv &error)
 {
-    if (NULL != _mra_server)
+    if (nullptr != _mra_server)
     {
         _mra_server->retrieve_messages(error);
 
@@ -4965,14 +4965,14 @@ RFCMailBox::retrieveNewMail(DtMailEnv &error)
 	else if (DTME_NoError != (DTMailError_t) error)
 	  return DTMC_SERVERACCESSFAILED;
     }
-    else if (NULL != _mra_command)
+    else if (nullptr != _mra_command)
     {
 	int	sysstatus = system(_mra_command);
 	if (-1 == sysstatus)
 	{
             error.vSetError(
 			DTME_GetmailCommandRetrieval_SystemError,
-			DTM_FALSE, NULL,
+			DTM_FALSE, nullptr,
 			_mra_command, errno, error.errnoMessage(errno));
 	    if (_errorLogging) error.logError(DTM_FALSE, (const char*) error);
 	    return DTMC_GETMAILCOMMANDFAILED;
@@ -4981,7 +4981,7 @@ RFCMailBox::retrieveNewMail(DtMailEnv &error)
 	{
             error.vSetError(
 			DTME_GetmailCommandRetrieval_AbnormalExit,
-			DTM_FALSE, NULL,
+			DTM_FALSE, nullptr,
 			_mra_command);
 	    if (_errorLogging) error.logError(DTM_FALSE, (const char*) error);
 	    return DTMC_GETMAILCOMMANDFAILED;
@@ -5014,7 +5014,7 @@ RFCMailBox::mailboxAccessShow(time_t mtime, char *prefix)
 void
 RFCMailBox::mailboxAccessHide(char *prefix)
 {
-    SafeUTime(_real_path, NULL);
+    SafeUTime(_real_path, nullptr);
 #ifdef DEBUG_MAILBOX_ACCESS
     fprintf(stderr, "%s:  forcing modtime==acctime\n", prefix);
 #endif

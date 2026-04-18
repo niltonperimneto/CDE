@@ -104,27 +104,27 @@ DmxPrintJob::DmxPrintJob(
 			MainWindow	*window
 			 ) : UIComponent( "PrintJob" )
 {
-    _next_msg = (DmxMsg *) NULL;
+    _next_msg = (DmxMsg *) nullptr;
     _filename = strdup(filename);
-    _mailbox = (DmxMailbox *) NULL;
+    _mailbox = (DmxMailbox *) nullptr;
     _parent = window;
-    _print_output = (DmxPrintOutput *) NULL;
-    _print_setup = (DmxPrintSetup *) NULL;
+    _print_output = (DmxPrintOutput *) nullptr;
+    _print_setup = (DmxPrintSetup *) nullptr;
     _print_data = (DtPrintSetupData *) XtMalloc(sizeof(DtPrintSetupData));
     memset((void*) _print_data, 0, sizeof(DtPrintSetupData));
-    _pshell = (Widget) NULL;
+    _pshell = (Widget) nullptr;
     _silent = silent;
 
-    _spool_msg_info = (DmxMsgInfo *) NULL;
+    _spool_msg_info = (DmxMsgInfo *) nullptr;
     _spool_nmsgs_done = 0;
     _spool_nmsgs_total = 0;
     _spool_npages_done = 0;
     _spool_npages_total = 0;
-    _w = XtCreateWidget(_name, coreWidgetClass, _parent->baseWidget(), NULL, 0);
+    _w = XtCreateWidget(_name, coreWidgetClass, _parent->baseWidget(), nullptr, 0);
     installDestroyHandler();
 
-    _nextpage_shell = NULL;
-    _nextpage_button = NULL;
+    _nextpage_shell = nullptr;
+    _nextpage_button = nullptr;
 }
 
 DmxPrintJob::~DmxPrintJob (void)
@@ -133,49 +133,49 @@ DmxPrintJob::~DmxPrintJob (void)
     // Unregister the fact that we have a print job running so
     // dtmail can terminate.
     //
-    if (_parent != NULL)
+    if (_parent != nullptr)
       _parent->unregisterPendingTask();
 
     if (_filename)
     {
 	free(_filename);
-	_filename = NULL;
+	_filename = nullptr;
     }
     if (_mailbox)
     {
         delete _mailbox;
-	_mailbox = NULL;
+	_mailbox = nullptr;
     }
     if (_spool_msg_info)
     {
         XtFree((char*) _spool_msg_info);
-	_spool_msg_info = NULL;
+	_spool_msg_info = nullptr;
     }
     if (_print_output)
     {
         delete _print_output;
-	_print_output = NULL;
+	_print_output = nullptr;
     }
     if (_print_setup)
     {
         delete _print_setup;
-	_print_setup = NULL;
+	_print_setup = nullptr;
     }
     if (_pshell)
     {
         XtDestroyWidget(_pshell);
-	_pshell = NULL;
+	_pshell = nullptr;
     }
     if (_print_data)
     {
 	DtPrintFreeSetupData(_print_data);
         XtFree((char *) _print_data);
-	_print_data = NULL;
+	_print_data = nullptr;
     }
     if (_nextpage_shell)
     {
         XtDestroyWidget(_nextpage_shell);
-	_nextpage_shell = NULL;
+	_nextpage_shell = nullptr;
     }
     if (_w)
     {
@@ -197,7 +197,7 @@ DmxPrintJob::cancel(void)
 
     _parent->clearStatus();
 
-    if (NULL != _pshell)
+    if (nullptr != _pshell)
     {
         Display	*display = XtDisplay(_pshell);
 
@@ -217,10 +217,10 @@ DmxPrintJob::cancel(void)
 
             genDialog->setToErrorDialog(CATGETS(DT_catd, 1, 6, "Mailer"),
                             		errMsg);
-            genDialog->post_and_return(CATGETS(DT_catd, 3, 9, "OK"), NULL);
+            genDialog->post_and_return(CATGETS(DT_catd, 3, 9, "OK"), nullptr);
             delete genDialog;
 
-	    theRoamApp.setErrorPrintDisplay(NULL);
+	    theRoamApp.setErrorPrintDisplay(nullptr);
         }
     }
     delete this;
@@ -356,19 +356,19 @@ DmxPrintJob::createOutputWidgets (void)
 
         genDialog->post_and_return(
                             CATGETS(DT_catd, 21, 4, "OK"),
-                            NULL);
+                            nullptr);
         delete genDialog;
     }
 
     XtRealizeWidget( _pshell );
 
-    if (NULL != top)
+    if (nullptr != top)
       free((void*) top);
-    if (NULL != right)
+    if (nullptr != right)
       free((void*) right);
-    if (NULL != bottom)
+    if (nullptr != bottom)
       free((void*) bottom);
-    if (NULL != left)
+    if (nullptr != left)
       free((void*) left);
 }
 
@@ -474,7 +474,7 @@ DmxPrintJob::loadOutputWidgets(void)
 
 	_spool_nmsgs_total++;
 
-    } while ( (  (_next_msg = _mailbox->nextMessage()) != (DmxMsg *) NULL  ) &&
+    } while ( (  (_next_msg = _mailbox->nextMessage()) != (DmxMsg *) nullptr  ) &&
 	      (  (! _print_setup->printSeparately()) ||
 		 (_print_data->destination == DtPRINT_TO_FILE )  )
 	    );
@@ -511,7 +511,7 @@ DmxPrintJob::updatePageHeaders(
 	 *fl_string,
 	 *fr_string;
 
-    if (msg == (DmxMsg *) NULL)
+    if (msg == (DmxMsg *) nullptr)
       return;
 
     hl_string = getPageHeaderString(msg, hl_type);
@@ -548,11 +548,11 @@ DmxPrintJob::getPageHeaderString(
 				   )
 {
     char *format,
-	 *buf = (char *) NULL;
+	 *buf = (char *) nullptr;
 
 
-    if (msg == (DmxMsg *) NULL)
-      return NULL;
+    if (msg == (DmxMsg *) nullptr)
+      return nullptr;
 
     switch (type)
     {
@@ -565,7 +565,7 @@ DmxPrintJob::getPageHeaderString(
 
 	        format = CATGETS(DT_catd, 21, 5, "Cc:  %s");
 	        buf = (char *) malloc(strlen(format) + strlen(hdrstr) + 1); 
-	        if (buf != (char *) NULL)
+	        if (buf != (char *) nullptr)
 	          sprintf(buf, format, hdrstr);
 		
 		free(hdrstr);
@@ -577,7 +577,7 @@ DmxPrintJob::getPageHeaderString(
 
 	        format = CATGETS(DT_catd, 21, 6, "Date:  %s");
 	        buf = (char *) malloc(strlen(format) + strlen(hdrstr) + 1); 
-	        if (buf != (char *) NULL)
+	        if (buf != (char *) nullptr)
 	          sprintf(buf, format, hdrstr);
 		
 		free(hdrstr);
@@ -589,7 +589,7 @@ DmxPrintJob::getPageHeaderString(
 
 	        format = CATGETS(DT_catd, 21, 7, "From:  %s");
 	        buf = (char *) malloc(strlen(format) + strlen(hdrstr) + 1); 
-	        if (buf != (char *) NULL)
+	        if (buf != (char *) nullptr)
 	          sprintf(buf, format, hdrstr);
 		
 		free(hdrstr);
@@ -601,7 +601,7 @@ DmxPrintJob::getPageHeaderString(
 
 	        format = CATGETS(DT_catd, 21, 8, "Subject:  %s");
 	        buf = (char *) malloc(strlen(format) + strlen(hdrstr) + 1); 
-	        if (buf != (char *) NULL)
+	        if (buf != (char *) nullptr)
 	          sprintf(buf, format, hdrstr);
 		
 		free(hdrstr);
@@ -613,7 +613,7 @@ DmxPrintJob::getPageHeaderString(
 
 	        format = CATGETS(DT_catd, 21, 9, "To:  %s");
 	        buf = (char *) malloc(strlen(format) + strlen(hdrstr) + 1); 
-	        if (buf != (char *) NULL)
+	        if (buf != (char *) nullptr)
 	          sprintf(buf, format, hdrstr);
 		
 		free(hdrstr);
@@ -626,7 +626,7 @@ DmxPrintJob::getPageHeaderString(
 	    {
 	        format = CATGETS(DT_catd, 21, 10, "Page %d of %d");
 	        buf = (char *) malloc(strlen(format) + 16); 
-	        if (buf != (char *) NULL)
+	        if (buf != (char *) nullptr)
 	          sprintf(buf, format, _spool_npages_done, _spool_npages_total);
 	    }
 	    break;
@@ -640,7 +640,7 @@ DmxPrintJob::getPageHeaderString(
 		format = CATGETS(DT_catd, 21, 11, "Mail For:  %s");
 		pw = getpwuid(getuid());
 	        buf = (char *) malloc(strlen(format) + strlen(pw->pw_name) + 1);
-	        if (buf != (char *) NULL)
+	        if (buf != (char *) nullptr)
 	          sprintf(buf, format, pw->pw_name);
 	    }
 	    break;
@@ -682,10 +682,10 @@ DmxPrintJob::closeDisplayCB (Widget, XtPointer client_data, XtPointer call_data)
     DmxPrintJob *thisJob = (DmxPrintJob *) client_data;
     DtPrintSetupCallbackStruct *pbs = (DtPrintSetupCallbackStruct *) call_data;
 
-    if (thisJob->_pshell != NULL)
+    if (thisJob->_pshell != nullptr)
     {
 	XtDestroyWidget(thisJob->_pshell);
-	thisJob->_pshell = NULL;
+	thisJob->_pshell = nullptr;
     }
     DtPrintFreeSetupData(thisJob->_print_data);
 }

@@ -43,7 +43,7 @@ ScaleObj::ScaleObj(MotifUI *parent,
 		   int scaleMultiple,
 	           ScaleType style,
 		   boolean showValue)
-	: MotifUI(parent, title, NULL)
+	: MotifUI(parent, title, nullptr)
 {
     CreateScale(parent, title, value, numDecimalPoints, max, min, scaleMultiple,
 		style, showValue);
@@ -88,15 +88,15 @@ void ScaleObj::CreateScale(MotifUI *parent, char *title, int value,
 
    XmString xm_string = StringCreate(title);
    _w = XtVaCreateManagedWidget(title, xmFormWidgetClass,
-				parent->InnerWidget(), NULL);
+				parent->InnerWidget(), nullptr);
    _minLabel = XtVaCreateWidget(title, xmLabelWidgetClass, _w,
 				XmNtopAttachment, XmATTACH_FORM,
 				XmNbottomAttachment, XmATTACH_FORM,
-				XmNleftAttachment, XmATTACH_FORM, NULL);
+				XmNleftAttachment, XmATTACH_FORM, nullptr);
    _maxLabel = XtVaCreateWidget(title, xmLabelWidgetClass, _w,
 				XmNtopAttachment, XmATTACH_FORM,
 				XmNbottomAttachment, XmATTACH_FORM,
-				XmNrightAttachment, XmATTACH_FORM, NULL);
+				XmNrightAttachment, XmATTACH_FORM, nullptr);
    _scale = XtVaCreateManagedWidget(title, xmScaleWidgetClass, _w,
 				    XmNmaximum, _max,
                                     XmNminimum, _min, XmNvalue, _value,
@@ -106,7 +106,7 @@ void ScaleObj::CreateScale(MotifUI *parent, char *title, int value,
 				    XmNshowValue, _showValue,
 				    XmNtopAttachment, XmATTACH_FORM,
 				    XmNbottomAttachment, XmATTACH_FORM,
-				    XmNorientation, orientation, NULL);
+				    XmNorientation, orientation, nullptr);
    StringFree(xm_string);
    SetString(_minLabel, _min);
    SetString(_maxLabel, _max);
@@ -116,7 +116,7 @@ void ScaleObj::CreateScale(MotifUI *parent, char *title, int value,
 boolean ScaleObj::SetName(char *name)
 {
    XmString xm_string = StringCreate(name);
-   XtVaSetValues(_w, XmNtitleString, xm_string, NULL);
+   XtVaSetValues(_w, XmNtitleString, xm_string, nullptr);
    StringFree(xm_string);
    return true;
 }
@@ -149,7 +149,7 @@ void ScaleObj::CheckValues(boolean do_it)
       short points = _numDecimalPoints;
       XtVaSetValues(_scale, XmNmaximum, _max, XmNminimum, _min,
 		    XmNscaleMultiple, _scaleMultiple,
-                    XmNdecimalPoints, points, XmNvalue, _value, NULL);
+                    XmNdecimalPoints, points, XmNvalue, _value, nullptr);
     }
 }
 
@@ -168,7 +168,7 @@ void ScaleObj::SetString(Widget w, int value)
       sprintf(number, fmt, (float) value / n);
     }
    XmString xm_string = StringCreate(number);
-   XtVaSetValues(w, XmNlabelString, xm_string, NULL);
+   XtVaSetValues(w, XmNlabelString, xm_string, nullptr);
    StringFree(xm_string);
 }
 
@@ -180,12 +180,12 @@ void ScaleObj::Style(ScaleType value)
       orientation = XmVERTICAL;
    else
       orientation = XmHORIZONTAL;
-   XtVaSetValues(_scale, XmNorientation, orientation, NULL);
+   XtVaSetValues(_scale, XmNorientation, orientation, nullptr);
 }
 
 int ScaleObj::Value()
 {
-   XtVaGetValues(_scale, XmNvalue, &_value, NULL);
+   XtVaGetValues(_scale, XmNvalue, &_value, nullptr);
    return _value;
 }
 
@@ -243,7 +243,7 @@ void ScaleObj::ShowValue(boolean value)
        XtVaSetValues(_scale, XmNshowValue, _showValue, XmNleftWidget, _minLabel,
 		     XmNleftAttachment, XmATTACH_WIDGET, 
 		     XmNrightAttachment, XmATTACH_WIDGET, 
-		     XmNrightWidget, _maxLabel, NULL);
+		     XmNrightWidget, _maxLabel, nullptr);
     }
    else
     {
@@ -251,6 +251,6 @@ void ScaleObj::ShowValue(boolean value)
        XtUnmanageChild(_maxLabel);
        XtVaSetValues(_scale, XmNshowValue, _showValue,
 		     XmNleftAttachment, XmATTACH_FORM, 
-		     XmNrightAttachment, XmATTACH_FORM, NULL);
+		     XmNrightAttachment, XmATTACH_FORM, nullptr);
     }
 }

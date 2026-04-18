@@ -48,11 +48,11 @@
 
 DmxMailbox::DmxMailbox (void)
 {
-	mbox = NULL;
+	mbox = nullptr;
 	newMessages = 0;
 	messageCount = 0;
 	firstNew = 0;
-	name = NULL;
+	name = nullptr;
 }
 
 void
@@ -75,11 +75,11 @@ DmxMailbox::loadMessages (void)
 		exit (1);
 
 	// get the first message handle
-	DtMailMessageHandle	first = NULL, next = NULL, prev = NULL;
+	DtMailMessageHandle	first = nullptr, next = nullptr, prev = nullptr;
 	DtMailHeaderRequest	request;
 	DtMailHeaderLine 	hdrline;
 	int			i = 1;
-	DtMail::Message		*m = NULL;	// temporary
+	DtMail::Message		*m = nullptr;	// temporary
 
 	createHeaderRequest (request);
 
@@ -88,7 +88,7 @@ DmxMailbox::loadMessages (void)
 	if (handleError (env, "get first msg summary") == B_TRUE)
 		exit (1);
 
-	if (first == NULL)
+	if (first == nullptr)
 	{
 		fprintf (stderr,
 			"loadMessages: error w/1st message...exiting.\n");
@@ -111,7 +111,7 @@ DmxMailbox::loadMessages (void)
 		next = mbox->getNextMessageSummary (env, prev,
 						request, hdrline);
 
-		if (next == NULL)
+		if (next == nullptr)
 		{
 			moreMessages = B_FALSE;
 			if (handleError (env, "msgLoop") == B_TRUE)

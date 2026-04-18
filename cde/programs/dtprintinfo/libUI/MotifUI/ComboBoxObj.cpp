@@ -39,7 +39,7 @@ ComboBoxObj::ComboBoxObj(MotifUI *parent, ComboBoxCallback callback,
                          char *name, 
 			 char **items, 
 			 int n_items)
-	: MotifUI(parent, name, NULL)
+	: MotifUI(parent, name, nullptr)
 {
    XmString *items_list;
    int itemCount = 0;
@@ -55,18 +55,18 @@ ComboBoxObj::ComboBoxObj(MotifUI *parent, ComboBoxCallback callback,
          items_list[i] = StringCreate(items[i]);
     }
    else
-      items_list = NULL;
+      items_list = nullptr;
    _callback = callback;
    if (name)
     {
       XmString xm_string = StringCreate(name);
       _w = XtVaCreateManagedWidget("form", xmFormWidgetClass, 
-				   parent->InnerWidget(), NULL);
+				   parent->InnerWidget(), nullptr);
       _label = XtVaCreateManagedWidget("form", xmLabelWidgetClass, 
 				       _w, XmNlabelString, xm_string,
 				       XmNtopAttachment, XmATTACH_FORM, 
 				       XmNbottomAttachment, XmATTACH_FORM, 
-				       XmNleftAttachment, XmATTACH_FORM, NULL); 
+				       XmNleftAttachment, XmATTACH_FORM, nullptr); 
       _combo_box = XtVaCreateManagedWidget("combo_box", xmComboBoxWidgetClass, 
 				           _w, XmNleftWidget, _label,
 				           XmNleftAttachment, XmATTACH_WIDGET,
@@ -74,11 +74,11 @@ ComboBoxObj::ComboBoxObj(MotifUI *parent, ComboBoxCallback callback,
 				           XmNtopAttachment, XmATTACH_FORM, 
 				           XmNbottomAttachment, XmATTACH_FORM, 
 					   XmNcomboBoxType, XmDROP_DOWN_LIST,
-					   (items_list ? XmNitems : NULL),
+					   (items_list ? XmNitems : nullptr),
 					      items_list,
 					   XmNitemCount, n_items,
 					   XmNvisibleItemCount, itemCount, 
-					   NULL); 
+					   nullptr); 
       StringFree(xm_string);
     }
    else
@@ -86,10 +86,10 @@ ComboBoxObj::ComboBoxObj(MotifUI *parent, ComboBoxCallback callback,
       _w = XtVaCreateManagedWidget("combo_box", xmComboBoxWidgetClass, 
 				   parent->InnerWidget(),
 				   XmNcomboBoxType, XmDROP_DOWN_LIST,
-				   (items_list ? XmNitems : NULL), items_list,
+				   (items_list ? XmNitems : nullptr), items_list,
 				   XmNitemCount, n_items,
-		                   XmNvisibleItemCount, itemCount, NULL); 
-      _label = NULL;
+		                   XmNvisibleItemCount, itemCount, nullptr); 
+      _label = nullptr;
       _combo_box = _w;
     }
    _list = XtNameToWidget(_combo_box, "*List");
@@ -108,9 +108,9 @@ char * ComboBoxObj::Item(int item)
 {
    XmString *items;
    int n_items;
-   XtVaGetValues(_list, XmNitems, &items, XmNitemCount, &n_items, NULL);
+   XtVaGetValues(_list, XmNitems, &items, XmNitemCount, &n_items, nullptr);
    if (item < 0 || item > n_items - 1)
-      return NULL;
+      return nullptr;
    else
       return StringExtract(items[item + 1]);
 }
@@ -123,7 +123,7 @@ char * ComboBoxObj::Item(char *item)
    if (n)
       return item;
    else
-      return NULL;
+      return nullptr;
 }
 
 void ComboBoxObj::Add(char *item)

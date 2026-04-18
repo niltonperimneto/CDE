@@ -56,13 +56,13 @@
 Node::Node()
 {
 
-    my_message_handle    = NULL;
-    my_message_header    = NULL;
+    my_message_handle    = nullptr;
+    my_message_header    = nullptr;
 
     homep = DTM_FALSE;
     deleted_p = DTM_FALSE;
-    my_previous_node = NULL;
-    my_next_node  = NULL;
+    my_previous_node = nullptr;
+    my_next_node  = nullptr;
 }
 
 Node::Node(
@@ -75,8 +75,8 @@ Node::Node(
 
     homep = DTM_FALSE;
     deleted_p = DTM_FALSE;
-    my_previous_node = NULL;
-    my_next_node  = NULL;
+    my_previous_node = nullptr;
+    my_next_node  = nullptr;
 }
 
 Node::~Node() {}
@@ -203,7 +203,7 @@ Node::append(
     Node* tmpSelf;
     Node* inNode;
 
-    if (anyNode == NULL) {
+    if (anyNode == nullptr) {
 	printf("Cannot append NIL node!");
 	return;
     }
@@ -241,7 +241,7 @@ Node::prepend(
     Node* inNode;
     Node* tmpSelf;
 
-    if (anyNode == NULL) {
+    if (anyNode == nullptr) {
 	printf("Cannot prepend NIL node!");
 	return;
     }

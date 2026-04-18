@@ -96,17 +96,17 @@ IndexedOptionMenu::IndexedOptionMenu (
     Widget	menu;
     XmString	xms;
 
-    _strings = NULL;
-    _data = NULL;
+    _strings = nullptr;
+    _data = nullptr;
 
     _nmenu_items = nmenu_items;
-    if (nmenu_items && strings != NULL)
+    if (nmenu_items && strings != nullptr)
     {
 	_strings = (char **) XtMalloc(nmenu_items * sizeof(char*));
 	for (int i=0; i<nmenu_items; i++)
 	  _strings[i] = strings[i];
     }
-    if (nmenu_items && data != NULL)
+    if (nmenu_items && data != nullptr)
     {
 	_data = (void **) XtMalloc(nmenu_items * sizeof(void*));
 	for (int i=0; i<nmenu_items; i++)
@@ -119,20 +119,20 @@ IndexedOptionMenu::IndexedOptionMenu (
      * Attach the original strings used to generate
      * the button labels to the buttons as userData.
      */
-    menu = XmCreatePulldownMenu(parent, "Menu", NULL, 0);
+    menu = XmCreatePulldownMenu(parent, "Menu", nullptr, 0);
     _buttons = (Widget *) XtMalloc( _nmenu_items * sizeof(Widget) );
     for (int i=0; i<_nmenu_items; i++)
     {
 	static char	button_label[32];
 
 	sprintf(button_label, "Button%d", i);
-	_buttons[i] = XmCreatePushButton(menu, button_label, NULL, 0);
+	_buttons[i] = XmCreatePushButton(menu, button_label, nullptr, 0);
 	xms = XmStringCreateLocalized(_strings[i]);
         XtVaSetValues(
 		_buttons[i],
 		XmNuserData, i,
 		XmNlabelString, xms,
-		NULL);
+		nullptr);
         XmStringFree(xms);
 	XtManageChild(_buttons[i]);
     }
@@ -156,23 +156,23 @@ IndexedOptionMenu::IndexedOptionMenu (
     _w = option_menu;
     installDestroyHandler();
     _nmenu_items = nmenu_items;
-    _strings = NULL;
-    _data = NULL;
-    _buttons = NULL;
+    _strings = nullptr;
+    _data = nullptr;
+    _buttons = nullptr;
 
-    if (nmenu_items && strings != NULL)
+    if (nmenu_items && strings != nullptr)
     {
 	_strings = (char **) XtMalloc(nmenu_items * sizeof(char*));
 	for (int i=0; i<nmenu_items; i++)
 	  _strings[i] = strings[i];
     }
-    if (nmenu_items && data != NULL)
+    if (nmenu_items && data != nullptr)
     {
 	_data = (void **) XtMalloc(nmenu_items * sizeof(void*));
 	for (int i=0; i<nmenu_items; i++)
 	  _data[i] = data[i];
     }
-    if (nmenu_items && buttons != NULL)
+    if (nmenu_items && buttons != nullptr)
     {
         _buttons = (Widget *) XtMalloc( _nmenu_items * sizeof(Widget) );
         for (int i=0; i<nmenu_items; i++)
@@ -183,7 +183,7 @@ IndexedOptionMenu::IndexedOptionMenu (
 
 IndexedOptionMenu::~IndexedOptionMenu (void)
 {
-    if (_w != NULL)
+    if (_w != nullptr)
       XtDestroyWidget(_w);
     if (_buttons)
       XtFree((char *) _buttons);
@@ -219,9 +219,9 @@ IndexedOptionMenu::getIndexSpec (void)
     {
         XtArgVal arg;
         Widget	selected;
-        XtVaGetValues(_w, XmNmenuHistory, &arg, NULL);
+        XtVaGetValues(_w, XmNmenuHistory, &arg, nullptr);
         selected = (Widget)arg;
-        XtVaGetValues(selected, XmNuserData, &arg, NULL);
+        XtVaGetValues(selected, XmNuserData, &arg, nullptr);
         data = (int)arg;
     }
     return data;
@@ -237,7 +237,7 @@ IndexedOptionMenu::getStringSpec(void)
 void
 IndexedOptionMenu::setSpec (int spec)
 {
-    XtVaSetValues(_w, XmNmenuHistory, _buttons[spec], NULL );
+    XtVaSetValues(_w, XmNmenuHistory, _buttons[spec], nullptr );
 }
 
 void

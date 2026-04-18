@@ -114,7 +114,7 @@ SunV3::formatBodies(DtMailEnv & error,
 		    Buffer & buf)
 {
 // For CHARSET
-    char *from_cs = NULL, *to_cs = NULL;
+    char *from_cs = nullptr, *to_cs = nullptr;
 	DtMailBoolean sevenbit = DTM_TRUE;
 // End of For CHARSET
 	char v3type[64];
@@ -148,8 +148,8 @@ SunV3::formatBodies(DtMailEnv & error,
 
 	unsigned long bp_len;
 	const char * tmp_ptr;
-	char * bp_contents=NULL;
-	char * name=NULL;
+	char * bp_contents=nullptr;
+	char * name=nullptr;
 	DtMail::BodyPart * bp = msg.getFirstBodyPart(error);
 	if (error.isSet()) {
 	    return;
@@ -157,13 +157,13 @@ SunV3::formatBodies(DtMailEnv & error,
 	bp->getContents(error,
 			(const void **)&tmp_ptr,
 			&bp_len,
-			NULL,
+			nullptr,
 			&name,
-			NULL,
-			NULL);
+			nullptr,
+			nullptr);
 
 	if (error.isSet()) {
-	    if (name != NULL) free(name);
+	    if (name != nullptr) free(name);
 	    return;
 	}
 
@@ -182,9 +182,9 @@ SunV3::formatBodies(DtMailEnv & error,
     	if (strcasecmp(v3type, "text") == 0) {
     		if (sevenbit == DTM_FALSE) {
 			if (bp_contents) {
-				from_cs = NULL;
+				from_cs = nullptr;
     				from_cs = _session->locToConvName();
-				to_cs = NULL;
+				to_cs = nullptr;
     				to_cs = _session->targetConvName();
     				(void) _session->csConvert((char **)&bp_contents, 
 					bp_len, 1, from_cs, to_cs);
@@ -236,19 +236,19 @@ SunV3::formatBodies(DtMailEnv & error,
 	    crlf(buf);
 	    unsigned long bp_len;
 	    const char * tmp_ptr;
-	    char * bp_contents=NULL;
-	    char * name=NULL;
+	    char * bp_contents=nullptr;
+	    char * name=nullptr;
 	    bp->getContents(error,
 			    (const void **)&tmp_ptr,
 			    &bp_len,
-			    NULL,
+			    nullptr,
 			    &name,
-			    NULL,
-			    NULL);
+			    nullptr,
+			    nullptr);
 
 	    // What can be done if getContents returns an error???
 	    if (error.isSet()) {
-		if (name != NULL) free(name);
+		if (name != nullptr) free(name);
 		return;
 	    }
 
@@ -275,9 +275,9 @@ SunV3::formatBodies(DtMailEnv & error,
 // For CHARSET
        if ( strcasecmp(v3type, "text") == 0 ) {
 	   if ( sevenbit == DTM_FALSE ) {
-		from_cs = NULL;
+		from_cs = nullptr;
 		from_cs = _session->locToConvName();
-		to_cs = NULL;
+		to_cs = nullptr;
 		to_cs = _session->targetConvName();
 		if (_session->csConvert((char **)&bp_contents, bp_len, 1, from_cs, to_cs)) {
 			getCharSet(charset_name, "V3");
@@ -350,7 +350,7 @@ SunV3::formatBodies(DtMailEnv & error,
 		int clen = len_buf.getSize();
 
 		char * cbuf = new char[clen];
-		if (cbuf == NULL) {
+		if (cbuf == nullptr) {
 		    error.setError(DTME_NoMemory);
 		    return;
 		}
@@ -375,10 +375,10 @@ SunV3::formatBodies(DtMailEnv & error,
 	    }
 
 	    free(bp_contents);
-	    bp_contents = NULL;
+	    bp_contents = nullptr;
 	    
 	    free(name);
-	    name = NULL;
+	    name = nullptr;
 	}
     }
 
@@ -408,7 +408,7 @@ static const char * block_headers[] = {
     "Content-Length",
     "Content-MD5",
     "X-Sun-Charset",
-    NULL
+    nullptr
 };
 
 void
@@ -488,7 +488,7 @@ SunV3::decode(const char * enc_info,
         // results for the next decoding pass
 	//
 
-	assert (interimBp != NULL);
+	assert (interimBp != nullptr);
 	assert (interimLen);
  	if (*outputBp) {
 	    if (interimBp) {
@@ -536,8 +536,8 @@ SunV3::decode(const char * enc_info,
 	}
     }
 
-    assert(outputBp != NULL);
-    assert(*outputBp != NULL);
+    assert(outputBp != nullptr);
+    assert(*outputBp != nullptr);
     assert(outputLen >= 0);
 
     // Done decoding the input
@@ -696,7 +696,7 @@ SunV3::uncompress(char ** outputBp, int & outputLen, const char * inputBp, const
     const long int blockSize = 4096;	// i/o done at least at this size
     long int interimOutputLimit = (inputLen+(blockSize-(inputLen%blockSize)));
     unsigned char *interimOutputBuffer = (unsigned char *)malloc((size_t)interimOutputLimit);
-    assert(interimOutputBuffer != NULL);
+    assert(interimOutputBuffer != nullptr);
     unsigned char *interimBp = interimOutputBuffer;
 
     // Fork off the uncompress function so its ready to process the data
@@ -785,7 +785,7 @@ SunV3::uncompress(char ** outputBp, int & outputLen, const char * inputBp, const
 		long int delta = (long int) (interimOutputLimit * 1.10);
 		delta = delta+(blockSize-(delta%blockSize));
 		interimOutputBuffer = (unsigned char *)realloc(interimOutputBuffer, (size_t)delta);
-		assert(interimOutputBuffer != NULL);
+		assert(interimOutputBuffer != nullptr);
 		interimOutputLimit = delta;
 		interimBp = interimOutputBuffer + interimOutputLength;
 	    }
@@ -847,7 +847,7 @@ SunV3::uncompress(char ** outputBp, int & outputLen, const char * inputBp, const
     // that may have been generated, and return a failure indication
     //
     if (childStatus != 0) {
-	assert(interimOutputBuffer != NULL);
+	assert(interimOutputBuffer != nullptr);
 	free((char *)interimOutputBuffer);	// toss any output
 	return(1);
     }
@@ -860,7 +860,7 @@ SunV3::uncompress(char ** outputBp, int & outputLen, const char * inputBp, const
     assert(interimOutputLength == (interimBp-interimOutputBuffer));
     if (interimOutputLength < interimOutputLimit)
       interimOutputBuffer = (unsigned char *)realloc(interimOutputBuffer, (size_t)(interimOutputLength+1));
-    assert(interimOutputBuffer != NULL);
+    assert(interimOutputBuffer != nullptr);
     
     outputLen = (int)interimOutputLength;	// stuff output length in caller's variable
     *outputBp = (char *)interimOutputBuffer;	// stuff -> clear text in caller's variable
@@ -1062,26 +1062,26 @@ SunV3::getV3Type(DtMail::BodyPart * bp, char * v3type)
     DtMailEnv error;
 
     bp->getContents(error,
-		    NULL,
-		    NULL,
+		    nullptr,
+		    nullptr,
 		    &type,
-		    NULL,
-		    NULL,
-		    NULL);
+		    nullptr,
+		    nullptr,
+		    nullptr);
 
     // Look it up in the data typing system. Hopefully we will
     // get a db based mime name.
     //
     char * db_type = DtDtsDataTypeToAttributeValue(type,
 						   "SUNV3_TYPE",
-						   NULL);
+						   nullptr);
 
     // See if we call this text. If so, then it will be text/plain,
     // if not then application/octet-stream
     //
     char * text_type = DtDtsDataTypeToAttributeValue(type,
 						     DtDTS_DA_IS_TEXT,
-						     NULL);
+						     nullptr);
 
     if (db_type) {
 	strcpy(v3type, db_type);

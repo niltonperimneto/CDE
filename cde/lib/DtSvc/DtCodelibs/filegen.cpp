@@ -114,14 +114,14 @@ _SHXbuf::expand(_SHXcomponents &stack,
     // We have a wildcard component, open and scan its parent directory
     // and look for matches.
     DIR *dir = opendir(filebuf[0] == '\0' ? "." : filebuf);
-    if (dir == NULL)
+    if (dir == nullptr)
 	return;
 
     _Xreaddirparams dir_buf;
     struct dirent *ent;
 
     memset((char*) &dir_buf, 0, sizeof(_Xreaddirparams));
-    while ((ent = _XReaddir(dir, dir_buf)) != NULL)
+    while ((ent = _XReaddir(dir, dir_buf)) != nullptr)
     {
 	// deleted file?
 	if (ent->d_ino == 0 || ent->d_name[0] == '\0')
@@ -196,7 +196,7 @@ _SHXbuf::filegen()
 	_SHXcomponent & comp = stack[stack.size()];
 	comp.is_pattern = FALSE;
 	comp.offset = path.size();
-	comp.ptr = NULL;
+	comp.ptr = nullptr;
 	int startpos = bufpos;
 
 	int ch;

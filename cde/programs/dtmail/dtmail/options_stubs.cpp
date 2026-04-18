@@ -72,7 +72,7 @@ opt_dlog_cancelCB(
 )
 {
     /*** DTB_USER_CODE_START vvv Add C variables and code below vvv ***/
-  OptCmd *cmd_ptr = NULL;
+  OptCmd *cmd_ptr = nullptr;
 
     /*** DTB_USER_CODE_END   ^^^ Add C variables and code above ^^^ ***/
     
@@ -80,9 +80,9 @@ opt_dlog_cancelCB(
 
   XtVaGetValues(widget,
                 XmNuserData, &cmd_ptr,
-                NULL);
+                nullptr);
 
-  if(cmd_ptr != NULL)   
+  if(cmd_ptr != nullptr)   
     {
       cmd_ptr->update_panes();
       cmd_ptr->unmanage();
@@ -100,16 +100,16 @@ opt_pane_okCB(
 )
 {
     /*** DTB_USER_CODE_START vvv Add C variables and code below vvv ***/
-   OptCmd *cmd_ptr = NULL;
+   OptCmd *cmd_ptr = nullptr;
 
     /*** DTB_USER_CODE_END   ^^^ Add C variables and code above ^^^ ***/
     
     /*** DTB_USER_CODE_START vvv Add C code below vvv ***/
   XtVaGetValues(widget,
                 XmNuserData, &cmd_ptr,
-                NULL);
+                nullptr);
 
-  if(cmd_ptr != NULL)
+  if(cmd_ptr != nullptr)
     {
       if (! cmd_ptr->optionsAreValid()) return;
       if (! cmd_ptr->doFileLockingCheck()) return;
@@ -131,16 +131,16 @@ options_applyCB(
 {
     /*** DTB_USER_CODE_START vvv Add C variables and code below vvv ***/
 
-  OptCmd *cmd_ptr = NULL;
+  OptCmd *cmd_ptr = nullptr;
 
     /*** DTB_USER_CODE_END   ^^^ Add C variables and code above ^^^ ***/
     
     /*** DTB_USER_CODE_START vvv Add C code below vvv ***/
   XtVaGetValues(widget,
                 XmNuserData, &cmd_ptr,
-                NULL);
+                nullptr);
 
-  if(cmd_ptr != NULL)
+  if(cmd_ptr != nullptr)
     {
       if (! cmd_ptr->optionsAreValid()) return;
       if (! cmd_ptr->doFileLockingCheck()) return;
@@ -190,7 +190,7 @@ vacationOnCB(
 )
 {
     /*** DTB_USER_CODE_START vvv Add C variables and code below vvv ***/
-  OptCmd  *cmd_ptr = NULL;
+  OptCmd  *cmd_ptr = nullptr;
 
     /*** DTB_USER_CODE_END   ^^^ Add C variables and code above ^^^ ***/
     
@@ -198,9 +198,9 @@ vacationOnCB(
 
   XtVaGetValues(widget,
                 XmNuserData, &cmd_ptr,
-                NULL);
+                nullptr);
 
-  if(cmd_ptr != NULL)
+  if(cmd_ptr != nullptr)
     {
           cmd_ptr->setVacationChanged();
     }
@@ -217,7 +217,7 @@ vacationOffCB(
 )
 {
     /*** DTB_USER_CODE_START vvv Add C variables and code below vvv ***/
-     OptCmd *cmd_ptr = NULL;
+     OptCmd *cmd_ptr = nullptr;
 
     /*** DTB_USER_CODE_END   ^^^ Add C variables and code above ^^^ ***/
     
@@ -225,9 +225,9 @@ vacationOffCB(
 
   XtVaGetValues(widget,
                 XmNuserData, &cmd_ptr,
-                NULL);
+                nullptr);
 
-  if(cmd_ptr != NULL)
+  if(cmd_ptr != nullptr)
     {
           cmd_ptr->setVacationChanged();
     }
@@ -244,7 +244,7 @@ opt_dlog_resetCB(
 )
 {
     /*** DTB_USER_CODE_START vvv Add C variables and code below vvv ***/
-  OptCmd *cmd_ptr = NULL;
+  OptCmd *cmd_ptr = nullptr;
 
     /*** DTB_USER_CODE_END   ^^^ Add C variables and code above ^^^ ***/
     
@@ -252,9 +252,9 @@ opt_dlog_resetCB(
 
   XtVaGetValues(widget,
                 XmNuserData, &cmd_ptr,
-                NULL);
+                nullptr);
 
-  if(cmd_ptr != NULL)
+  if(cmd_ptr != nullptr)
     {
       cmd_ptr->update_panes();
 

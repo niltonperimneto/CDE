@@ -85,7 +85,7 @@ ToggleButtonInterface::ToggleButtonInterface (
 		XmNlabelString, label,
 		XmNvisibleWhenOff, visible_when_off,
 		XmNindicatorType, indicator_type,
-		NULL);
+		nullptr);
     }
     else
         _w = XtVaCreateWidget (w_name, 
@@ -93,7 +93,7 @@ ToggleButtonInterface::ToggleButtonInterface (
 		parent,
 		XmNlabelString, label,
 		XmNvisibleWhenOff, TRUE,
-		NULL);
+		nullptr);
 
     XmStringFree(label);
 

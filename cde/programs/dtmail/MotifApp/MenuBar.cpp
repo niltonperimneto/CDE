@@ -95,7 +95,7 @@ MenuBar::MenuBar ( Widget parent, char *name, unsigned char type )
 {
     // Base widget is a Motif menu bar widget
     
-    if(parent == NULL)
+    if(parent == nullptr)
 	return;
 
     if( type == XmMENU_POPUP) {
@@ -107,7 +107,7 @@ MenuBar::MenuBar ( Widget parent, char *name, unsigned char type )
 //        XtVaSetValues(_w, XmNwhichButton, theApplication->bMenuButton(), NULL);
     } else {
 	type = XmMENU_BAR; // Force it to menu bar
-    	_w = XmCreateMenuBar ( parent, _name, NULL, 0 );
+    	_w = XmCreateMenuBar ( parent, _name, nullptr, 0 );
     }
 
     printHelpId("_w", _w);
@@ -147,11 +147,11 @@ MenuBar::createPulldown (
     
     if( type == XmMENU_BAR) {
 		pulldown = XmCreatePulldownMenu( parent,
-				(char *) list->name(), NULL, 0 );
+				(char *) list->name(), nullptr, 0 );
 		label_str = XmStringCreateLocalized(list->getLabel());
 		XtVaSetValues(pulldown,
 			      XmNlabelString, label_str,
-			      NULL);
+			      nullptr);
 		printHelpId("pulldown", pulldown);
 		/* install callback */
 		// XtAddCallback(pulldown, XmNhelpCallback, HelpCB, helpId);
@@ -160,10 +160,10 @@ MenuBar::createPulldown (
 		// Each entry in the menu bar must have a cascade button
 		// from which the user can pull down the pane
 
-		if (cascade != NULL && *cascade != NULL)
+		if (cascade != nullptr && *cascade != nullptr)
                         XtVaSetValues (*cascade, XmNsubMenuId, pulldown, 
 				       XmNlabelString, label_str,
-				       NULL);
+				       nullptr);
                 else {
 
 			XtSetArg(args2[0], XmNsubMenuId, pulldown);
@@ -173,7 +173,7 @@ MenuBar::createPulldown (
 				       args2, 1);
 			XtVaSetValues(*cascade,
 				      XmNlabelString, label_str,
-				      NULL);
+				      nullptr);
 			if (help) {
 				XtSetArg (args2[0], XmNmenuHelpWidget, *cascade);
 				XtSetValues (parent, args2, 1);
@@ -230,13 +230,13 @@ MenuBar::createPulldown (
 	    label_str = XmStringCreateLocalized(((CmdList *)(*list)[i])->getLabel());
 	    XtVaSetValues(pane, 
 			  XmNlabelString, label_str,
-			  NULL);
+			  nullptr);
 	} else {
 	    if ( !strcmp((*list)[i]->className(),"SeparatorCmd")) {
 		*(wl++) = XtCreateWidget ( (*list)[i]->name(),
 					  xmSeparatorWidgetClass,
 					  pulldown,
-					  NULL, 0);
+					  nullptr, 0);
 	    } else if (!strcmp((*list)[i]->className(),"ToggleButtonCmd")) {
 		CmdInterface *ci;
 		ci = new ToggleButtonInterface(pulldown, (*list)[i] );
@@ -248,7 +248,7 @@ MenuBar::createPulldown (
 					xmLabelWidgetClass,
 					pulldown,
 					XmNlabelString, label_str,
-					NULL);
+					nullptr);
 	    } else {
 		CmdInterface *ci;
 		ci  = new ButtonInterface ( pulldown, (*list)[i] );
@@ -285,11 +285,11 @@ MenuBar::createPulldown (
     
     if( type == XmMENU_BAR) {
 		pulldown = XmCreatePulldownMenu( parent,
-				(char *) list->name(), NULL, 0 );
+				(char *) list->name(), nullptr, 0 );
 		label_str = XmStringCreateLocalized(list->getLabel());
 		XtVaSetValues(pulldown,
 			      XmNlabelString, label_str,
-			      NULL);
+			      nullptr);
 		printHelpId("pulldown", pulldown);
 		/* install callback */
 		// XtAddCallback(pulldown, XmNhelpCallback, HelpCB, helpId);
@@ -305,7 +305,7 @@ MenuBar::createPulldown (
 			       args2, 1);
 		XtVaSetValues(cascade,
 			      XmNlabelString, label_str,
-			      NULL);
+			      nullptr);
 		if (help) {
 			XtSetArg (args2[0], XmNmenuHelpWidget, cascade);
 			XtSetValues (parent, args2, 1);
@@ -358,13 +358,13 @@ MenuBar::createPulldown (
 	    label_str = XmStringCreateLocalized((*list)[i]->getLabel());
 	    XtVaSetValues(pane, 
 			  XmNlabelString, label_str,
-			  NULL);
+			  nullptr);
 	} else {
 	    if ( !strcmp((*list)[i]->className(),"SeparatorCmd")) {
 		XtCreateManagedWidget ( (*list)[i]->name(),
 					  xmSeparatorWidgetClass,
 					  pulldown,
-					  NULL, 0);
+					  nullptr, 0);
 	    } else if (!strcmp((*list)[i]->className(),"ToggleButtonCmd")) {
 		CmdInterface *ci;
 		ci = new ToggleButtonInterface(pulldown, (*list)[i]);
@@ -378,7 +378,7 @@ MenuBar::createPulldown (
 					(*list)[i]->name(),
 					xmLabelWidgetClass,
 					pulldown,
-					NULL, 0
+					nullptr, 0
 					);
 
 		xms = XmStringCreateLocalized((char*) (*list)[i]->getLabel());
@@ -414,13 +414,13 @@ MenuBar::addCommands(
 
     XtVaGetValues(pulldown,
 	XmNnumChildren, &num_children,
-	NULL);
+	nullptr);
     
     children = (WidgetList)XtMalloc(sizeof(Widget) * num_children);
     
     XtVaGetValues(pulldown,
 	XmNchildren, &children,
-	NULL);
+	nullptr);
 
     // Handle the creation or management of the Separator.
 
@@ -443,7 +443,7 @@ MenuBar::addCommands(
 	XtCreateManagedWidget ("Separator",
 		xmSeparatorWidgetClass,
 		pulldown,
-		NULL, 0);
+		nullptr, 0);
 	haveNoSeparator = FALSE;
     }
     
@@ -476,7 +476,7 @@ MenuBar::addCommands(
 			XtVaSetValues(wid,
 			    XmNlabelString, XmStringCreateLocalized(
 				(char *) (*new_list)[newItemIndex]->getLabel()),
-			    NULL);
+			    nullptr);
 			XtManageChild(wid);
 			numPBUnmanaged--;
 		    }
@@ -510,13 +510,13 @@ MenuBar::removeOnlyCommands(
     
     XtVaGetValues(pulldown,
 	XmNnumChildren, &num_children,
-	NULL);
+	nullptr);
     
     children = (WidgetList)XtMalloc(sizeof(Widget) * num_children);
     
     XtVaGetValues(pulldown,
 	XmNchildren, &children,
-	NULL);
+	nullptr);
      
     // Loop through widget list.  Destroy those widgets that map to those
     // in the redundant list.
@@ -553,13 +553,13 @@ MenuBar::removeCommands(
     
     XtVaGetValues(pulldown,
 	XmNnumChildren, &num_children,
-	NULL);
+	nullptr);
     
     children = (WidgetList)XtMalloc(sizeof(Widget) * num_children);
     
     XtVaGetValues(pulldown,
 	XmNchildren, &children,
-	NULL);
+	nullptr);
      
     // Loop through widget list.  Destroy those widgets that map to those
     // in the redundant list.
@@ -574,16 +574,16 @@ MenuBar::removeCommands(
 	else if (XtIsSubclass(wid, xmPushButtonWidgetClass)) {
 
 	    for (j=0; j<redundant_list->size(); j++) {
-		XmString str=NULL;
-		String label=NULL;
-		XtVaGetValues(wid, XmNlabelString, &str, NULL);
-		if (str == NULL) continue;
-	        label = NULL;
+		XmString str=nullptr;
+		String label=nullptr;
+		XtVaGetValues(wid, XmNlabelString, &str, nullptr);
+		if (str == nullptr) continue;
+	        label = nullptr;
         	label = (char *) _XmStringUngenerate(
-					str, NULL,
+					str, nullptr,
 					XmMULTIBYTE_TEXT, XmMULTIBYTE_TEXT);
 		XmStringFree(str);
-		if (label == NULL) continue;
+		if (label == nullptr) continue;
 		if (strcmp(label, (*redundant_list)[j]->getLabel()) == 0) {
 		    // The redundant item has been found.
 		    XtUnmanageChild(wid);
@@ -626,13 +626,13 @@ MenuBar::changeLabel(
 
     XtVaGetValues(pulldown,
 	XmNnumChildren, &num_children,
-	NULL);
+	nullptr);
 
     children = (WidgetList)XtMalloc(sizeof(Widget) * num_children);
 
     XtVaGetValues(pulldown,
 	XmNchildren, &children,
-	NULL);
+	nullptr);
     
     // Some widgets may be unmanaged, so find the real index
     for (managed_widgets=0, i=0; 
@@ -648,7 +648,7 @@ MenuBar::changeLabel(
 
     XtVaSetValues(wid,
 	XmNlabelString, label,
-	NULL);
+	nullptr);
     XmStringFree(label);
 }
 
@@ -670,19 +670,19 @@ MenuBar::changeLabel(Widget pulldown,
 
     XtVaGetValues(pulldown,
 		  XmNnumChildren, &num_children,
-		  NULL);
+		  nullptr);
 
     Widget * children = new Widget[num_children];
     XtVaGetValues(pulldown,
 		  XmNchildren, &children,
-		  NULL);
+		  nullptr);
 
     for (int wid = 0; wid < num_children; wid++) {
 	if (strcmp(XtName(children[wid]), wid_name) == 0) {
 	    if (XtIsManaged(children[wid]))
 	   	 XtVaSetValues(children[wid],
 			  XmNlabelString, label_string,
-			  NULL);
+			  nullptr);
 	}
     }
 
@@ -703,14 +703,14 @@ MenuBar::rotateLabels(
     XtArgVal num_children;
     WidgetList children;
     XmString label, endlabel;
-    Widget prevwid = NULL, wid;
+    Widget prevwid = nullptr, wid;
 
     if (startindex < 0 || endindex < 0)
 	return;
 
     XtVaGetValues(pulldown,
 	XmNnumChildren, &num_children,
-	NULL);
+	nullptr);
 
     if (startindex >= num_children || endindex >= num_children)
 	return;
@@ -723,7 +723,7 @@ MenuBar::rotateLabels(
 
     XtVaGetValues(pulldown,
 	XmNchildren, &children,
-	NULL);
+	nullptr);
 
     // Some of the widgets may be unmanaged: find the first managed widget
     for (i = startindex; i < num_children; i++) {
@@ -752,7 +752,7 @@ MenuBar::rotateLabels(
     wid = (Widget) children[endindex];
     XtVaGetValues(wid,
 	XmNlabelString, &label,
-	NULL);
+	nullptr);
     endlabel = XmStringCopy(label);
 
     j = i = endindex; 
@@ -766,12 +766,12 @@ MenuBar::rotateLabels(
 	if(prevwid) {
 		XtVaGetValues(prevwid,
 			XmNlabelString, &label,
-			NULL);
+			nullptr);
 	}
 
 	XtVaSetValues(wid,
 		XmNlabelString, label,
-		NULL);
+		nullptr);
 
 	i = j;
 
@@ -781,7 +781,7 @@ MenuBar::rotateLabels(
     wid = (Widget) children[startindex];
     XtVaSetValues(wid,
 	XmNlabelString, endlabel,
-	NULL);
+	nullptr);
     
     XmStringFree(endlabel);
 }
@@ -818,13 +818,13 @@ MenuBar::removeCommand(
 
     XtVaGetValues(pulldown,
         XmNnumChildren, &num_children,
-        NULL);
+        nullptr);
 
     children = (WidgetList)XtMalloc(sizeof(Widget) * num_children);
 
     XtVaGetValues(pulldown,
         XmNchildren, &children,
-        NULL);
+        nullptr);
 
     // Some widgets may be unmanaged, so find the real index
     for (managed_widgets=0, i=0;

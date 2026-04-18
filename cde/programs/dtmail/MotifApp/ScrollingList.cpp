@@ -76,7 +76,7 @@ ScrollingList::ScrollingList( Widget parent, char *name ) : UIComponent( name )
   XtSetArg(args[0],"textMode",XmTEXT_MODE_EXPLICIT);
   _w = XmCreateScrolledList( parent, name, args, 1 );
 #else
-  _w = XmCreateScrolledList( parent, name, NULL, 0 );
+  _w = XmCreateScrolledList( parent, name, nullptr, 0 );
 #endif
 
   printHelpId("_w", _w);

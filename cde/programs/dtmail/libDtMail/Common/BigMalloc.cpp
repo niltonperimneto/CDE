@@ -65,7 +65,7 @@ BigMalloc::BigMalloc(unsigned int size) {
 #if defined(MMAP_NORESERVE)
   _fd = open("/dev/zero", O_RDONLY);
 
-  _buffer = mmap(NULL, size * 4, (PROT_READ | PROT_WRITE),
+  _buffer = mmap(nullptr, size * 4, (PROT_READ | PROT_WRITE),
                  MAP_PRIVATE | MAP_NORESERVE, _fd, 0);
 #else
   _buffer = malloc(size);
@@ -102,7 +102,7 @@ void BigMalloc::Realloc(unsigned int size) {
   if (new_buf == (char *)-1) {
     // Fixed mapping failed. We will have to map a new region and copy.
     //
-    new_buf = (char *)mmap(NULL, size * 4, (PROT_READ | PROT_WRITE),
+    new_buf = (char *)mmap(nullptr, size * 4, (PROT_READ | PROT_WRITE),
                            MAP_PRIVATE | MAP_NORESERVE, _fd, 0);
 
     memcpy(new_buf, _buffer, _size * 4);

@@ -99,14 +99,14 @@ class Dialog : public MotifUI {
 	  char *name, 
 	  DialogType dialog_type = MODELESS,
 	  boolean has_resize_controls = true,
-          DialogCallback cancel_callback = NULL,
-          void * help_callback_data = NULL,
-          DialogCallback apply_callback = NULL,
-          void * apply_callback_data = NULL,
-          DialogCallback reset_callback = NULL,
-          void * reset_callback_data = NULL,
-          ValidationCallback CB = NULL,
-          void * validation_data = NULL);
+          DialogCallback cancel_callback = nullptr,
+          void * help_callback_data = nullptr,
+          DialogCallback apply_callback = nullptr,
+          void * apply_callback_data = nullptr,
+          DialogCallback reset_callback = nullptr,
+          void * reset_callback_data = nullptr,
+          ValidationCallback CB = nullptr,
+          void * validation_data = nullptr);
 
    // Constructor for info, error, work-in-progress, question, warning
    Dialog(MotifUI *parent,
@@ -116,9 +116,9 @@ class Dialog : public MotifUI {
 	  char *ok_label = "OK", 
 	  char *cancel_label = "Cancel", 
 	  char *help_label = "Help", 
-	  DialogCallback helpCB = NULL, // If NULL, no help button is created
-	  void *help_data = NULL,
-	  char *icon = NULL);           // If NULL, use default icon
+	  DialogCallback helpCB = nullptr, // If NULL, no help button is created
+	  void *help_data = nullptr,
+	  char *icon = nullptr);           // If NULL, use default icon
 
    // Constructor for prompt
    Dialog(MotifUI *parent,
@@ -128,16 +128,16 @@ class Dialog : public MotifUI {
 	  PromptType prompt_type,
 	  char *default_value,            // If NULL, no reset button is created
 	  boolean echo_input = true,
-          ValidationCallback CB = NULL,
-          void * validation_data = NULL,
-	  DialogCallback helpCB = NULL,   // If NULL, no help button is created
-	  void * help_data = NULL,
-          DialogCallback applyCB = NULL,
-          void * apply_data = NULL,
-          DialogCallback resetCB = NULL,
-          void * reset_data = NULL,
-	  char *message = NULL,          // The message above the input field
-	  char *icon = NULL);            // If NULL, no icon will be shown
+          ValidationCallback CB = nullptr,
+          void * validation_data = nullptr,
+	  DialogCallback helpCB = nullptr,   // If NULL, no help button is created
+	  void * help_data = nullptr,
+          DialogCallback applyCB = nullptr,
+          void * apply_data = nullptr,
+          DialogCallback resetCB = nullptr,
+          void * reset_data = nullptr,
+	  char *message = nullptr,          // The message above the input field
+	  char *icon = nullptr);            // If NULL, no icon will be shown
 
    // Constructor for file and directory selection
    Dialog(MotifUI *parent,
@@ -145,8 +145,8 @@ class Dialog : public MotifUI {
 	  char *base_directory, 
 	  char *search_pattern, 
 	  DialogType dialog_type = FILE_SELECTION,
-	  DialogCallback help = NULL,  // If NULL, no help button is created
-	  void * help_data = NULL);
+	  DialogCallback help = nullptr,  // If NULL, no help button is created
+	  void * help_data = nullptr);
    virtual ~Dialog();
 
    virtual void CloseCB(void);

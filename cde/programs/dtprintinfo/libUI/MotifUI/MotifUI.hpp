@@ -85,25 +85,25 @@ class MotifUI : public BaseUI {
    MotifUI(MotifUI *parent, 
 	   const char *name,
 	   const char *category,
-	   const char *widgetName = NULL);
+	   const char *widgetName = nullptr);
    void InstallDestroyCB(void);
    void InstallHelpCB(void);
    virtual void WidgetDestroyed(void);
    void GetPixmaps(Widget widget, char *iconFile, Pixmap *pixmap,
-		   Pixmap *mask = NULL);
+		   Pixmap *mask = nullptr);
    void FillBackground(Widget widget, Pixmap pixmap, Pixmap mask);
    void SetDefaultResources(const Widget, const String *);
    void GetResources(const XtResourceList, const int);
    XmString StringCreate(char *string)
        { if (string) return XmStringCreateLocalized(string);
-	 else return NULL;
+	 else return nullptr;
        }
    void StringFree(XmString string) 
-       { if (string) XmStringFree(string); string = NULL; }
+       { if (string) XmStringFree(string); string = nullptr; }
    char * StringExtract(XmString string)
-       { char *s = NULL;
+       { char *s = nullptr;
   	 s = (char *) _XmStringUngenerate(
-			string, NULL,
+			string, nullptr,
 			XmMULTIBYTE_TEXT, XmMULTIBYTE_TEXT);
 	 return s; };
 

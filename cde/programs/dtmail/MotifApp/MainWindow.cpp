@@ -101,19 +101,19 @@ static const unsigned long FLASH_INTERVAL = 250; // milliseconds
 
 MainWindow::MainWindow( char *name, Boolean allowResize ) : UIComponent ( name )
 {
-    _workArea = NULL;
+    _workArea = nullptr;
     _flashing = 0;
-    _icon_invert = NULL;
-    _window_invert = NULL;
+    _icon_invert = nullptr;
+    _window_invert = nullptr;
     _icon = 0;
     _allow_resize = allowResize;
     _last_state = 0;
     _flash_owin = 0;
     _flash_iwin = 0;
-    _main = NULL;
+    _main = nullptr;
     memset(&_window_attributes, 0, sizeof(XWindowAttributes));
 
-    assert ( theApplication != NULL ); // Application object must exist
+    assert ( theApplication != nullptr ); // Application object must exist
     // before any MainWindow object
     theApplication->registerWindow ( this );
 }
@@ -135,12 +135,12 @@ MainWindow::initialize( )
 				theApplication->baseWidget(),
 				XmNdeleteResponse, XmDO_NOTHING,
 				XmNallowShellResize, _allow_resize,
-				NULL, NULL );
+				nullptr, nullptr );
 
 #ifdef USE_EDITRES
     XtAddEventHandler(
 		_w, (EventMask) 0, True,
-		(XtEventHandler) _XEditResCheckMessages, NULL);
+		(XtEventHandler) _XEditResCheckMessages, nullptr);
 #endif
 
     installDestroyHandler();
@@ -150,7 +150,7 @@ MainWindow::initialize( )
     _main = XtCreateManagedWidget ( "mainWindow", 
 				   xmMainWindowWidgetClass,
 				   _w, 
-				   NULL, 0 );
+				   nullptr, 0 );
     printHelpId("_main", _main);
     /* install callback */
     // XtAddCallback(_main, XmNhelpCallback, HelpCB, helpId);
@@ -160,14 +160,14 @@ MainWindow::initialize( )
     // Called derived class to create the work area
     
     _workArea = createWorkArea ( _main );  
-    assert ( _workArea != NULL );
+    assert ( _workArea != nullptr );
     
     // Designate the _workArea widget as the XmMainWindow
     // widget's XmNworkWindow widget
     
     XtVaSetValues ( _main, 
 		   XmNworkWindow, _workArea,
-		   NULL );
+		   nullptr );
 
     Atom WM_DELETE_WINDOW=XmInternAtom( XtDisplay( _w ),
 					"WM_DELETE_WINDOW",
@@ -185,10 +185,10 @@ MainWindow::initialize( )
     setIconName(DefaultIcon);
 #endif
 
-    _window_invert = NULL;
+    _window_invert = nullptr;
     _last_state = 0;
-    _flash_owin = (Window) NULL;
-    _flash_iwin = (Window) NULL;
+    _flash_owin = (Window) nullptr;
+    _flash_iwin = (Window) nullptr;
     memset((char*) &(this->_window_attributes), 0, sizeof(XWindowAttributes));
 
     // Manage the work area if the derived class hasn't already.
@@ -212,13 +212,13 @@ MainWindow::~MainWindow( )
 	XmRemoveWMProtocolCallback( _w,
 				    WM_DELETE_WINDOW,
 				    ( XtCallbackProc ) quitCallback,
-				    NULL );
+				    nullptr );
 
 	if (_icon_invert) XFreeGC(XtDisplay(_w), _icon_invert);
 	if (_window_invert) XFreeGC(XtDisplay(_w), _window_invert);
-	if (_flash_iwin != (Window) NULL)
+	if (_flash_iwin != (Window) nullptr)
 	  XDestroyWindow( XtDisplay(_w), _flash_iwin );
-	if (_flash_owin != (Window) NULL)
+	if (_flash_owin != (Window) nullptr)
 	  XDestroyWindow( XtDisplay(_w), _flash_owin );
     }
     
@@ -228,19 +228,19 @@ MainWindow::~MainWindow( )
 void
 MainWindow::enableWorkAreaResize()
 {
-    XtVaSetValues(_workArea, XmNresizePolicy, XmRESIZE_ANY, NULL);
+    XtVaSetValues(_workArea, XmNresizePolicy, XmRESIZE_ANY, nullptr);
 }
 
 void
 MainWindow::disableWorkAreaResize()
 {
-    XtVaSetValues(_workArea, XmNresizePolicy, XmRESIZE_NONE, NULL);
+    XtVaSetValues(_workArea, XmNresizePolicy, XmRESIZE_NONE, nullptr);
 }
 
 void
 MainWindow::manage()
 {
-    assert ( _w != NULL );
+    assert ( _w != nullptr );
     XtPopup ( _w, XtGrabNone );
     
     // Map the window, in case the window is iconified
@@ -252,19 +252,19 @@ MainWindow::manage()
 void
 MainWindow::unmanage()
 {
-    assert ( _w != NULL );
+    assert ( _w != nullptr );
     XtPopdown ( _w );
 }
 
 void
 MainWindow::iconify()
 {
-    assert ( _w != NULL );
+    assert ( _w != nullptr );
     
     // Set the widget to have an initial iconic state
     // in case the base widget has not yet been realized
     
-    XtVaSetValues ( _w, XmNiconic, TRUE, NULL );
+    XtVaSetValues ( _w, XmNiconic, TRUE, nullptr );
     
     // If the widget has already been realized,
     // iconify the window
@@ -276,19 +276,19 @@ MainWindow::iconify()
 void
 MainWindow::setIconTitle(const char * title)
 {
-    XtVaSetValues(_w, XmNiconName, title, NULL);
+    XtVaSetValues(_w, XmNiconName, title, nullptr);
 }
 
 void
 MainWindow::setIconName(const char * path)
 {
     char * icon_filename = XmGetIconFileName(XtScreen(_w),
-					     NULL,
+					     nullptr,
 					     (char *)path, // Bug!
-					     NULL,
+					     nullptr,
 					     DtLARGE);
 
-    if (icon_filename == NULL) {
+    if (icon_filename == nullptr) {
 	return;
     }
 
@@ -309,7 +309,7 @@ MainWindow::setIconName(const char * path)
     XtVaSetValues(_w,
 		  XmNiconPixmap, _icon,
 		  XmNiconMask, icon_mask_map,
-		  NULL);
+		  nullptr);
 
     // Build the inverted icon mask for flashing.
     //
@@ -363,7 +363,7 @@ MainWindow::clearStatus(void)
 void
 MainWindow::title(const char *text )
 {
-    XtVaSetValues ( _w, XmNtitle, (char *)text, NULL );
+    XtVaSetValues ( _w, XmNtitle, (char *)text, nullptr );
 }
 
 void
@@ -381,7 +381,7 @@ MainWindow::getIconColors(Pixel & fore, Pixel & back)
     XtVaGetValues (_w,
 		   XmNforeground, &fore,
 		   XmNbackground, &back,
-		   NULL);
+		   nullptr);
 }
 
 struct WM_STATE {
@@ -424,7 +424,7 @@ MainWindow::flash(const int count)
     if (count == 0) return;
     if (_flashing > 0) return;
 
-    if (_window_invert == NULL) {
+    if (_window_invert == nullptr) {
 	// Create a GC to flash the window.
 	//
 	XGCValues	gc_vals;
@@ -468,18 +468,18 @@ MainWindow::flash(const int count)
     
     XGetWindowAttributes(XtDisplay(_w), XtWindow(_w), &window_attributes);
 
-    if ((Window) NULL != _flash_owin &&
+    if ((Window) nullptr != _flash_owin &&
 	(window_attributes.width != _window_attributes.width ||
 	 window_attributes.height != _window_attributes.height ||
 	 window_attributes.border_width != _window_attributes.border_width))
     {
         XDestroyWindow( XtDisplay(_w), _flash_iwin );
         XDestroyWindow( XtDisplay(_w), _flash_owin );
-        _flash_iwin = (Window) NULL;
-        _flash_owin = (Window) NULL;
+        _flash_iwin = (Window) nullptr;
+        _flash_owin = (Window) nullptr;
     }
 
-    if ((Window) NULL == _flash_owin)
+    if ((Window) nullptr == _flash_owin)
     {
         XSetWindowAttributes	sw_attr;
 
@@ -538,8 +538,8 @@ MainWindow::doFlash(XtIntervalId *)
 	Pixmap	image = _icon;
 
 	XFillRectangle(XtDisplay(_w), image, _icon_invert, 0, 0, 48, 48);
-	XtVaSetValues(_w, XmNiconPixmap, NULL, NULL);
-	XtVaSetValues(_w, XmNiconPixmap, image, NULL);
+	XtVaSetValues(_w, XmNiconPixmap, nullptr, nullptr);
+	XtVaSetValues(_w, XmNiconPixmap, image, nullptr);
     }
     else if (state != 0) {
 
@@ -584,7 +584,7 @@ MainWindow::isIconified()
     WM_STATE *wmState;
     Boolean retval = FALSE;
  
-    assert ( _w != NULL );
+    assert ( _w != nullptr );
 
     /*  Getting the WM_STATE property to see if iconified or not */
     wmStateAtom = XInternAtom(XtDisplay(_w), "WM_STATE", False);
@@ -623,14 +623,14 @@ MainWindow::MbStrchr(char *str, int ch)
         numBytes = mbtowc(&curChar, &str[i], mbCurMax);
         if(curChar == targetChar) return &str[i];
     }
-    return (char *)NULL;
+    return (char *)nullptr;
 }
 
 void
 MainWindow::setWorkspacesOccupied(char *workspaces)
 {
     char	*ptr;
-    Atom	*workspace_atoms = NULL;
+    Atom	*workspace_atoms = nullptr;
     int		nworkspaces=0;
 
     if (workspaces)
@@ -639,7 +639,7 @@ MainWindow::setWorkspacesOccupied(char *workspaces)
         {
             ptr = MbStrchr (workspaces, ' ');
 
-            if (ptr != NULL) *ptr = '\0';
+            if (ptr != nullptr) *ptr = '\0';
 
             workspace_atoms = (Atom*) XtRealloc(
 						(char *) workspace_atoms,
@@ -649,19 +649,19 @@ MainWindow::setWorkspacesOccupied(char *workspaces)
 						workspaces, True);
             nworkspaces++;
 
-            if (ptr != NULL)
+            if (ptr != nullptr)
             {
                 *ptr = ' ';
                 workspaces = ptr + 1;
             }
-        } while (ptr != NULL);
+        } while (ptr != nullptr);
 
         DtWsmSetWorkspacesOccupied(
 				XtDisplay(_w), XtWindow (_w), 
 				workspace_atoms, nworkspaces);
 
         XtFree ((char *) workspace_atoms);
-        workspace_atoms = NULL;
+        workspace_atoms = nullptr;
     }
     else
     {

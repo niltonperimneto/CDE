@@ -410,9 +410,9 @@ info_lib::define_info_base( char* base_name, char* base_desc,
       f_obj_dict -> init_a_base(spec_file_path, new_db_path, base_name);
 
       const char* lang;
-      if ((lang = getenv("LC_ALL")) == NULL)
-	if ((lang = getenv("LC_CTYPE")) == NULL)
-	  if ((lang = getenv("LANG")) == NULL)
+      if ((lang = getenv("LC_ALL")) == nullptr)
+	if ((lang = getenv("LC_CTYPE")) == nullptr)
+	  if ((lang = getenv("LANG")) == nullptr)
 	    lang = "C.UTF-8";
 
       base = new info_base(*f_obj_dict, set_nm_list, list_nm_list,

@@ -58,9 +58,9 @@ const int Buffer::defaultchunksize = 16 * 1024;
 void
 BufferMemory::initBuffer(int chunksize)
 {
-    _firstreader = NULL;
-    _firstchunk = NULL;
-    _lastchunk = NULL;
+    _firstreader = nullptr;
+    _firstchunk = nullptr;
+    _lastchunk = nullptr;
     _totalsize = 0;
     _chunksize = chunksize;
 
@@ -97,7 +97,7 @@ BufferMemory::~BufferMemory()
 	// disassociate us from all the readers
 	BufReaderMemory *r = _firstreader;
 	while (r) {
-		r->_buffer = NULL;
+		r->_buffer = nullptr;
 		r = r->_nextreader;
 	}
 
@@ -179,8 +179,8 @@ BufferMemory::newChunk(int size)
     // now splice it into the list
     // lock should already have been called
 
-    d->_nextchunk = NULL;
-    if (_firstchunk == NULL) _firstchunk = d;
+    d->_nextchunk = nullptr;
+    if (_firstchunk == nullptr) _firstchunk = d;
 
     if (_lastchunk) {
 	_lastchunk->_nextchunk = d;
@@ -246,7 +246,7 @@ BufReaderMemory::BufReaderMemory(BufferMemory *b)
 
     _buffer = b;
     _nextreader = b->_firstreader;
-    _prevreader = NULL;
+    _prevreader = nullptr;
 
     if (b->_firstreader) {
 	b->_firstreader->_prevreader = this;
@@ -254,7 +254,7 @@ BufReaderMemory::BufReaderMemory(BufferMemory *b)
     b->_firstreader = this;
 
     _currentoffset = 0;
-    _currentchunk = NULL;
+    _currentchunk = nullptr;
 }
 
 
@@ -279,7 +279,7 @@ BufReaderMemory::getData(char *user_buffer, int length)
     MutexLock mutex(_buffer->_mutex);
 
     // handle starup case
-    if (_currentchunk == NULL) {
+    if (_currentchunk == nullptr) {
 	_currentchunk = _buffer->_firstchunk;
 
 	// see if buffer is still empty
@@ -294,7 +294,7 @@ BufReaderMemory::getData(char *user_buffer, int length)
 
 	if (numbytes <= 0) {
 	    // we are at the end of this data chunk
-	    if (_currentchunk->_nextchunk == NULL) {
+	    if (_currentchunk->_nextchunk == nullptr) {
 		// we are at the end of the valid data
 		break;
 	    }

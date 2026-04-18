@@ -104,7 +104,7 @@ void pstring::_init(const char* x, int leng)
 
 pstring::~pstring()
 {
-   if ( get_mode(PERSISTENT) == false && NULL != v_str_ptr.p ) 
+   if ( get_mode(PERSISTENT) == false && nullptr != v_str_ptr.p ) 
       delete v_str_ptr.p;
 }
 

@@ -90,7 +90,7 @@ void CC_TPtrDlist<T>::clearAndDestroy()
 	    if ( elem ) { 
 		T *temp_elem = elem->f_element;
 		delete temp_elem;
-		elem->f_element = NULL; // prevent further destruction on this pointer
+		elem->f_element = nullptr; // prevent further destruction on this pointer
 		delete elem; 
 	    }
 	    else { break; }

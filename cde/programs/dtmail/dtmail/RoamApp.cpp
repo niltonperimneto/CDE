@@ -158,7 +158,7 @@ static int x_error_handler(Display *display, XErrorEvent* error_event)
 
     // log error
     _DtPrintDefaultErrorSafe(display, error_event, error_msg, _DTMAIL_BUFSIZE);
-    _DtSimpleError("dtmail", DtWarning, NULL, error_msg, NULL);
+    _DtSimpleError("dtmail", DtWarning, nullptr, error_msg, nullptr);
     
     // if the error occurred on the print display we're going to set
     // a variable so that and when the job is done, right before calling
@@ -310,7 +310,7 @@ RoamApp::_resources[] = {
     XtOffset ( RoamApp *, _glyph_font ),
     XtRString,
     ( XtPointer )
-    NULL,
+    nullptr,
   },
 
 };
@@ -371,8 +371,8 @@ int started_by_tt = 0;
 // Move this to constructor of RoamMenuWindow???
 int dtmail_mapped = 0;    // For explanation, look in RoamApp.h.
 static int roam_tt_fd = 0;
-char *roam_tt_procid = NULL;
-Tt_pattern *roam_tt_pattern = NULL;
+char *roam_tt_procid = nullptr;
+Tt_pattern *roam_tt_pattern = nullptr;
 
 //  Report ToolTalk error
 int dieFromTtError(Tt_status errid, char *procname, char *errmsg, char *helpid)
@@ -395,7 +395,7 @@ int dieFromTtError(Tt_status errid, char *procname, char *errmsg, char *helpid)
 					   "ExitDialog", 
 					   theApplication->baseWidget());
 	exit_dialog->setToErrorDialog(title, errmsg);
-	if (NULL == helpid) helpid = DTMAILHELPERROR;
+	if (nullptr == helpid) helpid = DTMAILHELPERROR;
 	exit_dialog->post_and_return(CATGETS(DT_catd, 1, 1, "OK"), helpid);
 
 	XtRemoveAllCallbacks(theApplication->baseWidget(), XmNdestroyCallback);
@@ -425,14 +425,14 @@ Tt_message attachmt_msg_handler(
       return msg;
    }
 
-   pattern = ttdt_message_accept(msg, NULL, (Widget)0, client_data, 1, 1);
+   pattern = ttdt_message_accept(msg, nullptr, (Widget)0, client_data, 1, 1);
    dieFromTtError(tt_ptr_error(pattern),
-		"attachmt_msg_handler.ttdt_message_accept", NULL, NULL);
+		"attachmt_msg_handler.ttdt_message_accept", nullptr, nullptr);
 
    if ( op == TTME_MAIL_EDIT ) {
        status = tt_message_reply(msg);
        dieFromTtError(status,
-		"attachmt_msg_handler.tt_message_reply", NULL, NULL);
+		"attachmt_msg_handler.tt_message_reply", nullptr, nullptr);
 
        // Put the data that is coming in (via buffer or file) as
        // the attachment of a message.
@@ -443,7 +443,7 @@ Tt_message attachmt_msg_handler(
 	       compose->setTitle(docname);
 	       compose->setIconTitle(docname);
 	   }
-       } else if ( file != NULL ) {    // Pass by filename
+       } else if ( file != nullptr ) {    // Pass by filename
 	   compose = theCompose.getWin();
 	   compose->inclAsAttmt(file, docname);
 	   if ( docname ) {
@@ -458,7 +458,7 @@ Tt_message attachmt_msg_handler(
    } else {
        status = tttk_message_fail( msg, TT_DESKTOP_ENOTSUP, 0, 1 );
        dieFromTtError(status,
-		"tooltalk_msg_handler.tttk_message_fail", NULL, NULL);
+		"tooltalk_msg_handler.tttk_message_fail", nullptr, nullptr);
    }
 
    //
@@ -487,7 +487,7 @@ tooltalk_msg_handler_done_cb( Widget w, XtPointer client_data, XtPointer )
 
     status = tt_message_reply(cbData->msg);
     dieFromTtError(status,
-		"tooltalk_msg_handler_done_cb.tt_message_reply", NULL, NULL);
+		"tooltalk_msg_handler_done_cb.tt_message_reply", nullptr, nullptr);
 
     XtRemoveCallback(
    		w,
@@ -495,7 +495,7 @@ tooltalk_msg_handler_done_cb( Widget w, XtPointer client_data, XtPointer )
 		cbData);
 
     cbData->roamApp->unregisterPendingTask();
-    if (NULL != cbData->roamWin)
+    if (nullptr != cbData->roamWin)
     {
 	cbData->roamWin->quit(TRUE);
         delete cbData->roamWin;
@@ -507,16 +507,16 @@ static char *tooltalk_save_buffer_to_file(
 				unsigned char	*contents,
 				int		 len)
 {
-    char *p = NULL;
+    char *p = nullptr;
     char *tmpdir = new char[MAXPATHLEN+1];
 
     // 1. Get buffer content into file.
     snprintf(tmpdir, MAXPATHLEN+1, "%s/%s", getenv("HOME"), DtPERSONAL_TMP_DIRECTORY);
     p = tempnam(tmpdir, "mail");
-    if (p == NULL)
+    if (p == nullptr)
     {
 	delete [] tmpdir;
-	return NULL;
+	return nullptr;
     }
 
     int fd = SafeOpen(p, O_RDWR | O_CREAT);
@@ -524,12 +524,12 @@ static char *tooltalk_save_buffer_to_file(
     {
 	delete [] tmpdir;
 	free(p);
-	return NULL;
+	return nullptr;
     }
     if (SafeWrite(fd, contents, len) != len)
     {
 	free(p);
-	p = NULL;
+	p = nullptr;
     }
 
     close(fd);
@@ -563,22 +563,22 @@ tooltalk_msg_handler(
 
     // Need to check the return value of this call.
     //
-    pattern = ttdt_message_accept(msg, NULL, (Widget)0, client_data, 1, 1);
+    pattern = ttdt_message_accept(msg, nullptr, (Widget)0, client_data, 1, 1);
     dieFromTtError(tt_ptr_error(pattern),
-		"tooltalk_msg_handler.ttdt_message_accept", NULL, NULL);
+		"tooltalk_msg_handler.ttdt_message_accept", nullptr, nullptr);
 
     if ( op == TTME_MAIL ) {
 	// Send without GUI.
 	status = tt_message_reply(msg);
 	dieFromTtError(status,
-			"tooltalk_msg_handler.tt_message_reply", NULL, NULL);
+			"tooltalk_msg_handler.tt_message_reply", nullptr, nullptr);
 
 	// Construct message handle
 	DtMailBuffer mbuf;
 	if ( len > 0 ) {
 	    mbuf.buffer = (void *)contents;
 	    mbuf.size = (unsigned long)len;
-	} else if ( file != NULL ) {
+	} else if ( file != nullptr ) {
 	    // 1. Get file content into buffer.
 	    int fd = SafeOpen(file, O_RDONLY);
 	    if (fd < 0) {
@@ -610,9 +610,9 @@ tooltalk_msg_handler(
 							error,
 							DtMailBufferObject,
 							&mbuf,
-							NULL,
-							NULL,
-							NULL);
+							nullptr,
+							nullptr,
+							nullptr);
 	if ( error.isSet() || !msgHandle ) {
 	    return msg;
 	}
@@ -625,7 +625,7 @@ tooltalk_msg_handler(
 	// Bring up blank compose window.
 	status = tt_message_reply(msg);
 	dieFromTtError(status,
-		"tooltalk_msg_handler.tt_message_reply", NULL, NULL);
+		"tooltalk_msg_handler.tt_message_reply", nullptr, nullptr);
 
 	compose = theCompose.getWin();
 	if ( docname ) {
@@ -636,7 +636,7 @@ tooltalk_msg_handler(
 	// Bring up compose window with given data filled in.
 	status = tt_message_reply(msg);
 	dieFromTtError(status,
-		"tooltalk_msg_handler.tt_message_reply", NULL, NULL);
+		"tooltalk_msg_handler.tt_message_reply", nullptr, nullptr);
 
 	// Parse data (coming in as buffer or file)
 	if ( len > 0 ) {    // Pass by content
@@ -646,7 +646,7 @@ tooltalk_msg_handler(
 	        compose->setTitle(docname);
 	        compose->setIconTitle(docname);
 	    }
-	} else if ( file != NULL ) {    // Pass by filename
+	} else if ( file != nullptr ) {    // Pass by filename
 	    compose = theCompose.getWin();
 	    compose->parseNplace(file);
 	    if ( docname ) {
@@ -684,9 +684,9 @@ tooltalk_msg_handler(
         // (tooltalk folks say this is ok) for the time being.
 	if (! strcmp("Display", opname)) {
 	    MailSession *ses = theRoamApp.session();
-	    RoamMenuWindow *roamwin = NULL;
+	    RoamMenuWindow *roamwin = nullptr;
 
-	    if ( theApplication == NULL ) {
+	    if ( theApplication == nullptr ) {
 #ifdef WM_TT
 	        fprintf(stdout, "%s: theApplication is NULL\n", thisFcn);
 #endif
@@ -725,10 +725,10 @@ tooltalk_msg_handler(
 
 		free(str);
 
-		if (NULL == file)
+		if (nullptr == file)
 		{
 		    file = tooltalk_save_buffer_to_file(contents, len);
-		    if (NULL == file) return msg;
+		    if (nullptr == file) return msg;
 		}
             }
 
@@ -736,10 +736,10 @@ tooltalk_msg_handler(
 	    // simply make sure it's displayed in the current workspace.
 	    if (ses->isMboxOpen(file))
 	    {
-		Widget w = NULL;
+		Widget w = nullptr;
 		roamwin = ses->getRMW(file);
 		ses->activateRMW(roamwin);
-		if (NULL != roamwin) roamwin->displayInCurrentWorkspace();
+		if (nullptr != roamwin) roamwin->displayInCurrentWorkspace();
 	    }
 	    else
 	    {
@@ -754,7 +754,7 @@ tooltalk_msg_handler(
 			XtMalloc(sizeof(MsgHandlerDoneCbData));
 	    cbData->msg = msg;
 	    cbData->roamApp = roamapp;
-	    cbData->roamWin = NULL;
+	    cbData->roamWin = nullptr;
 	    XtAddCallback(roamwin->GetMainWin(),
 			XtNdestroyCallback,
 			tooltalk_msg_handler_done_cb,
@@ -769,30 +769,30 @@ tooltalk_msg_handler(
 
 	    if ( len > 0 ) {
 		p = tooltalk_save_buffer_to_file(contents, len);
-		if (NULL == p) return msg;
-	    } else if (file != NULL) {
+		if (nullptr == p) return msg;
+	    } else if (file != nullptr) {
 	       p = strdup(file);
 	    } else {
 	       return msg;
 	    }
 		
 #if 1
-	    MsgHandlerDoneCbData *cbData = NULL;
+	    MsgHandlerDoneCbData *cbData = nullptr;
             DtMailEnv		 error;
-	    DmxPrintJob		*pjob = NULL;
-	    RoamMenuWindow	*roamwin = NULL;
+	    DmxPrintJob		*pjob = nullptr;
+	    RoamMenuWindow	*roamwin = nullptr;
 	    MailSession		*ses = theRoamApp.session();
 
 	    cbData =
 	      (MsgHandlerDoneCbData*) XtMalloc(sizeof(MsgHandlerDoneCbData));
 	    if (ses->isMboxOpen(file))
 	    {
-		Widget w = NULL;
+		Widget w = nullptr;
 		roamwin = ses->getRMW(file);
 		ses->activateRMW(roamwin);
-		if (NULL != roamwin) roamwin->displayInCurrentWorkspace();
+		if (nullptr != roamwin) roamwin->displayInCurrentWorkspace();
 
-		cbData->roamWin = NULL;
+		cbData->roamWin = nullptr;
 	    }
 	    else
 	    {
@@ -818,7 +818,7 @@ tooltalk_msg_handler(
 #else
 	    MainWindow *mw = roamapp->defaultStatusWindow();
 
-	    if (mw != NULL) {
+	    if (mw != nullptr) {
 	      char *buf = new char[1024];
 	      sprintf(buf, "Printing %s", p);
 	      mw->setStatus(buf);
@@ -827,13 +827,13 @@ tooltalk_msg_handler(
 
  	    status = tt_message_reply(msg);
  	    dieFromTtError(status,
-		"tooltalk_msg_handler.tt_message_reply", NULL, NULL);
+		"tooltalk_msg_handler.tt_message_reply", nullptr, nullptr);
 #endif
         }
     } else {
         status = tttk_message_fail( msg, TT_DESKTOP_ENOTSUP, 0, 1 );
  	dieFromTtError(status,
-		"tooltalk_msg_handler.tttk_message_fail", NULL, NULL);
+		"tooltalk_msg_handler.tttk_message_fail", nullptr, nullptr);
     }
 
     //     tt_free( (caddr_t)contents );
@@ -931,7 +931,7 @@ void pspace_signal( int )
 
         genDialog->post_and_return(
                             CATGETS(DT_catd, 3, 9, "OK"),
-                            NULL);
+                            nullptr);
         delete genDialog;
     }
     else
@@ -968,16 +968,16 @@ void RoamApp::initialize(int *argcp, char **argv)
 
     _busy_count = 0;
     _firstSaveYourselfArrived = FALSE;
-    _options = NULL;
-    _optionsHandle = NULL;
+    _options = nullptr;
+    _optionsHandle = nullptr;
     _quitSilently = FALSE;
     _quitQuickly = FALSE;
     _shutdownWorkprocID = 0;
 
     int n = 1;
-    char * mail_file = NULL;
-    char * dead_letter = NULL;
-    char *session_file = NULL;
+    char * mail_file = nullptr;
+    char * dead_letter = nullptr;
+    char *session_file = nullptr;
     int	opt;
     char *helpId;
 
@@ -991,17 +991,17 @@ void RoamApp::initialize(int *argcp, char **argv)
     memset((void*) action, 0, sizeof(struct sigaction));
     action->sa_handler = (SA_HANDLER_TYPE) panicQuitSignalHandler;
     action->sa_flags = 0;
-    sigaction(SIGHUP, action, NULL);
-    sigaction(SIGINT, action, NULL);
-    sigaction(SIGQUIT, action, NULL);
-    sigaction(SIGILL, action, NULL);
-    sigaction(SIGABRT, action, NULL);
-    sigaction(SIGBUS, action, NULL);
-    sigaction(SIGSEGV, action, NULL);
-    sigaction(SIGTERM, action, NULL);
+    sigaction(SIGHUP, action, nullptr);
+    sigaction(SIGINT, action, nullptr);
+    sigaction(SIGQUIT, action, nullptr);
+    sigaction(SIGILL, action, nullptr);
+    sigaction(SIGABRT, action, nullptr);
+    sigaction(SIGBUS, action, nullptr);
+    sigaction(SIGSEGV, action, nullptr);
+    sigaction(SIGTERM, action, nullptr);
 
     // Must be called before XtAppInitialize.
-    XtSetLanguageProc(NULL, NULL, NULL);
+    XtSetLanguageProc(nullptr, nullptr, nullptr);
 
     // Set up environment variable (including NLSPATH) before calling 
     // XtAppInitialize() (cmvc 6576). 
@@ -1169,7 +1169,7 @@ void RoamApp::initialize(int *argcp, char **argv)
         if (_glyph_font)
 	  _glyph_name = XtNewString(_glyph_font);
 	else
-	  _glyph_name = NULL;
+	  _glyph_name = nullptr;
 	
 	// If the glyph font hasn't been specified, try to match it with
 	// the user font.
@@ -1182,7 +1182,7 @@ void RoamApp::initialize(int *argcp, char **argv)
 	strcpy(buf, _user_font);
 #if 0
 	// Never refer to the "plain" tag so don't add it.
-	if (strchr(_user_font, '=') == NULL) {
+	if (strchr(_user_font, '=') == nullptr) {
 	    // No tag.  Add one
 	    strcat(buf, "=plain, ");
 	}
@@ -1213,7 +1213,7 @@ void RoamApp::initialize(int *argcp, char **argv)
     // NOTE:  For now, must make the FIRST ttdt_open call to be the proc_id 
     //        that will respond to the start message.  Therefore, call gui's 
     //        ttdt_open before libDtMail calls its.
-    char *sess = NULL;
+    char *sess = nullptr;
 
     sess = (char *)getenv("TT_SESSION");
     if (!sess || (*sess == '\0')) {
@@ -1237,7 +1237,7 @@ void RoamApp::initialize(int *argcp, char **argv)
 				    this,
 				    1);
     dieFromTtError(status,
-		"initialize.ttmedia_ptype_declare.RFC_822_Message", NULL, NULL);
+		"initialize.ttmedia_ptype_declare.RFC_822_Message", nullptr, nullptr);
 
     status = ttmedia_ptype_declare( "RFC_822_MESSAGE",
 				    0,
@@ -1245,7 +1245,7 @@ void RoamApp::initialize(int *argcp, char **argv)
 				    this,
 				    1);
     dieFromTtError(status,
-		"initialize.ttmedia_ptype_declare.RFC_822_MESSAGE", NULL, NULL);
+		"initialize.ttmedia_ptype_declare.RFC_822_MESSAGE", nullptr, nullptr);
 
     status = ttmedia_ptype_declare( "MAIL_TYPE",
 				    0,
@@ -1253,7 +1253,7 @@ void RoamApp::initialize(int *argcp, char **argv)
 				    this,
 				    1);
     dieFromTtError(status,
-		"initialize.ttmedia_ptype_declare.MAIL_TYPE", NULL, NULL);
+		"initialize.ttmedia_ptype_declare.MAIL_TYPE", nullptr, nullptr);
 
     /* Join the default session -- This should have been done by default */
     roam_tt_pattern = ttdt_session_join(
@@ -1261,7 +1261,7 @@ void RoamApp::initialize(int *argcp, char **argv)
 			        (Ttdt_contract_cb)quit_message_cb,
 			        baseWidget(), this, 1);
     dieFromTtError(tt_ptr_error(roam_tt_pattern),
-		"initialize.ttdt_session_join", NULL, NULL);
+		"initialize.ttdt_session_join", nullptr, nullptr);
 
     _mail_session = new MailSession(mail_error, Application::appContext());
     if (mail_error.isSet()) {
@@ -1304,7 +1304,7 @@ void RoamApp::initialize(int *argcp, char **argv)
     //
     // Check if mailer is installed properly if we are not in debugging mode.
     //
-    const char *value = NULL;
+    const char *value = nullptr;
     mail_error.clear();
     d_session->mailRc(mail_error)->getValue(mail_error, 
 					    "__ignore_group_permissions", 
@@ -1347,7 +1347,7 @@ is incorrectly set."));
             exit(1);
         }
     }
-    if (NULL != value)
+    if (nullptr != value)
       free((void*) value);
 
     _options = new OptCmd("Mail Options...",
@@ -1368,7 +1368,7 @@ is incorrectly set."));
 	else {
 	    if ( *argcp > num_legit_args + 1) {    // Have attachment(s)
 		for ( int k = num_legit_args + 1;  k < *argcp;  k++ ) {
-		    compose->inclAsAttmt(argv[k], NULL);
+		    compose->inclAsAttmt(argv[k], nullptr);
 		}
 	    }
 	}
@@ -1398,13 +1398,13 @@ is incorrectly set."));
     //
     // 4) The first implementation that provides a transport.
     //
-    const char * trans_impl = NULL;
+    const char * trans_impl = nullptr;
 
     d_session->mailRc(mail_error)->getValue(mail_error, 
 					    "DEFAULT_TRANSPORT", 
 					    &trans_impl);
     if (mail_error.isSet()) {
-	trans_impl = NULL;
+	trans_impl = nullptr;
     }
     
     
@@ -1420,7 +1420,7 @@ is incorrectly set."));
 	d_session->queryImpl(mail_error, trans_impl, 
 			     DtMailCapabilityTransport, &trans);
 	if (mail_error.isSet() || trans == DTM_FALSE) {
-	    trans_impl = NULL;
+	    trans_impl = nullptr;
 	}
     }
 
@@ -1445,7 +1445,7 @@ is incorrectly set."));
 							this);
     }
     else {
-	_mail_transport = NULL;
+	_mail_transport = nullptr;
     }
 
     // Register all callbacks the backend may have to deal with
@@ -1491,16 +1491,16 @@ is incorrectly set."));
 	if(session_fp ) 
 		restoreSession();
 	else
-		_mailview = NULL;
+		_mailview = nullptr;
     }
 
     initSession();
  
     _dialog = new DtMailGenDialog("Dialog", _w);
 
-    DtDbReloadNotify(reload_notify_cb, (XtPointer) NULL);
+    DtDbReloadNotify(reload_notify_cb, (XtPointer) nullptr);
     _default_x_error_handler = XSetErrorHandler(x_error_handler);
-    if (NULL != mail_file)
+    if (nullptr != mail_file)
       free((void*) mail_file);
 } 
 
@@ -1510,31 +1510,31 @@ RoamApp::RoamApp(char *name) : Application (name), _activePrintDisplays(5)
     theRoamApp = *this;
     
     _busy_count = 0;
-    _dialog = NULL;
-    _errorPrintDisplay = NULL;
+    _dialog = nullptr;
+    _errorPrintDisplay = nullptr;
     _firstSaveYourselfArrived = false;
-    _options = NULL;
-    _optionsHandle = NULL;
-    _mailview = NULL;
+    _options = nullptr;
+    _optionsHandle = nullptr;
+    _mailview = nullptr;
     _quitSilently = false;
     _quitQuickly = false;
-    _vacation = NULL;
-    session_fp = NULL;
+    _vacation = nullptr;
+    session_fp = nullptr;
     _shutdownWorkprocID = 0;
     _appTimeoutId = 0;
-    _default_mailbox = NULL;
-    _glyph_font = NULL;
-    _glyph_name = NULL;
-    _mailfiles_folder = NULL;
-    _mail_session = NULL;
-    _mail_transport = NULL;
-    _print_script = NULL;
-    _system_font = NULL;
-    _system_fontlist = NULL;
+    _default_mailbox = nullptr;
+    _glyph_font = nullptr;
+    _glyph_name = nullptr;
+    _mailfiles_folder = nullptr;
+    _mail_session = nullptr;
+    _mail_transport = nullptr;
+    _print_script = nullptr;
+    _system_font = nullptr;
+    _system_fontlist = nullptr;
     _tt_fd = 0;
-    _user_font = NULL;
-    _user_fontlist = NULL;
-    _default_x_error_handler = NULL;
+    _user_font = nullptr;
+    _user_fontlist = nullptr;
+    _default_x_error_handler = nullptr;
 }
 
 // Let the destructor of parent Application class handle the
@@ -1543,7 +1543,7 @@ RoamApp::RoamApp(char *name) : Application (name), _activePrintDisplays(5)
 RoamApp::~RoamApp()
 {
 #ifdef DTMAIL_TOOLTALK
-    if ( roam_tt_procid != NULL ) {
+    if ( roam_tt_procid != nullptr ) {
 	//
 	// Temporary workaround to get PrintToFile to work.
 	// Currently, PrintToFile forks a child which is
@@ -1551,7 +1551,7 @@ RoamApp::~RoamApp()
 	// the tooltalk connection causing the parent to hang.
 	//
 	ttdt_close(0, 0, 1);
-        roam_tt_procid = NULL;
+        roam_tt_procid = nullptr;
     }
 #endif
 
@@ -1808,11 +1808,11 @@ RoamApp::startVacation(
 
     XtVaGetValues(subject_tf,
 	XmNvalue, &subj,
-	NULL);
+	nullptr);
 
     XtVaGetValues(text_tp,
 	XmNvalue, &text,
-	NULL);
+	nullptr);
 	
     status = _vacation->startVacation((char *)subj, (char *) text);
 
@@ -1851,13 +1851,13 @@ getPropStringValue(DtVirtArray<PropStringPair *> &results, const char *label)
             if (strcmp(label, psp->label) == 0)
                 return strdup(psp->value);
         }
-        return (char*)NULL;
+        return (char*)nullptr;
 }
 
 void
 parsePropString(const char * input, DtVirtArray<PropStringPair *> & results)
 {
-  if (input == NULL)
+  if (input == nullptr)
 	return;
 
     // If it's not multibyte, use the regular string function
@@ -1887,7 +1887,7 @@ parsePropString(const char * input, DtVirtArray<PropStringPair *> & results)
 	char * file = strchr(label, ':');
 	if (!file) {
 	    new_pair->label = strdup(label);
-	    new_pair->value = NULL;
+	    new_pair->value = nullptr;
 	}
 	else {
 	    *file = 0;
@@ -1895,7 +1895,7 @@ parsePropString(const char * input, DtVirtArray<PropStringPair *> & results)
 
 	    file += 1;
 	    if (strlen(file) == 0) {
-		new_pair->value = NULL;
+		new_pair->value = nullptr;
 	    }
 	    else {
 		new_pair->value = strdup(file);
@@ -1949,7 +1949,7 @@ parsePropString(const char * input, DtVirtArray<PropStringPair *> & results)
         if (!file) {
             new_pair->label = new char[(wclen+1)*MB_CUR_MAX];
             wcstombs(new_pair->label, wc_label, wclen+1);
-            new_pair->value = NULL;
+            new_pair->value = nullptr;
 
         }
 
@@ -1961,7 +1961,7 @@ parsePropString(const char * input, DtVirtArray<PropStringPair *> & results)
             file += 1;
             int filelen = wcslen(file);
             if (filelen == 0) {
-                new_pair->value = NULL;
+                new_pair->value = nullptr;
             }
             else {
                 new_pair->value = new char[(filelen+1)*MB_CUR_MAX];
@@ -1985,14 +1985,14 @@ parsePropString(const char * input, DtVirtArray<PropStringPair *> & results)
 
 PropStringPair::PropStringPair(void)
 {
-    label = NULL;
-    value = NULL;
+    label = nullptr;
+    value = nullptr;
 }
 
 PropStringPair::PropStringPair(const PropStringPair & other)
 {
-    label = NULL;
-    value = NULL;
+    label = nullptr;
+    value = nullptr;
 
     if (other.label) {
 	label = strdup(other.label);
@@ -2029,13 +2029,13 @@ RoamApp::vacation()
 
 char *formatPropPair(char * key, const void * data)
 {
-    char *formatted_str = NULL;
-    char *white_space = NULL;
+    char *formatted_str = nullptr;
+    char *white_space = nullptr;
     int i, num_spaces = 0;
     int key_len = strlen(key);
     int m_size;
 
-    if (data == NULL)
+    if (data == nullptr)
 	data = (void *)"";
 
     // figure out whitespace for formatting
@@ -2089,7 +2089,7 @@ RoamApp::inboxWindow()
 	    }
 	}
     }
-    return(NULL);
+    return(nullptr);
 }
 
 RoamMenuWindow*
@@ -2103,13 +2103,13 @@ RoamApp::nextRoamMenuWindow(RoamMenuWindow *last)
 	cname = _windows[win]->className();
 	if (strcmp(cname, "RoamMenuWindow") == 0) {
 	    rmw = (RoamMenuWindow *)_windows[win];
-	    if (NULL == looking_for)
+	    if (nullptr == looking_for)
 	      return(rmw);
 	    if (rmw == looking_for)
-	      looking_for = NULL;
+	      looking_for = nullptr;
 	}
     }
-    return(NULL);
+    return(nullptr);
 }
 
 void
@@ -2171,11 +2171,11 @@ RoamApp::reopenRoamMenuWindows(void)
 MainWindow*
 RoamApp::defaultStatusWindow()
 {
-    MainWindow *mw = NULL;
+    MainWindow *mw = nullptr;
 
-    if ((mw = (MainWindow *) _mailview) != NULL)
+    if ((mw = (MainWindow *) _mailview) != nullptr)
       return mw;
-    if ((mw = (MainWindow *) inboxWindow()) != NULL)
+    if ((mw = (MainWindow *) inboxWindow()) != nullptr)
       return mw;
     if (_numWindows > 0)
       mw = (MainWindow *) _windows[0];

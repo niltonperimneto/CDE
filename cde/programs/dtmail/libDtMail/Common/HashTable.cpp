@@ -60,7 +60,7 @@ HashTableImpl::~HashTableImpl(void)
   // eventually delete the hash table itself
   //
   for (int slot = 0; slot < _table_size; slot++) {
-    if (_hash_table[slot].key != NULL) {
+    if (_hash_table[slot].key != nullptr) {
       HashEntry * chain;
       HashEntry * chainHead;
       for (chainHead = chain = &_hash_table[slot]; chain; chain = chain->next) {
@@ -95,7 +95,7 @@ HashTableImpl::lookup(ObjectKey & key)
 	return(chain->value);
     }
 
-    return(NULL);
+    return(nullptr);
 }
 
 void
@@ -107,7 +107,7 @@ HashTableImpl::set(ObjectKey & key, void * value)
 
     // See if we have already filled the slot.
     //
-    if (_hash_table[slot].key == NULL) {
+    if (_hash_table[slot].key == nullptr) {
 	// Simple, put it in the slot.
 	//
 	_hash_table[slot].key = &key;
@@ -130,7 +130,7 @@ HashTableImpl::set(ObjectKey & key, void * value)
     HashEntry * new_ent = new HashEntry;
     new_ent->key = &key;
     new_ent->value = value;
-    new_ent->next = NULL;
+    new_ent->next = nullptr;
 
     chain->next = new_ent;
 }
@@ -140,7 +140,7 @@ HashTableImpl::remove(ObjectKey & key)
 {
     short hash_val = key.hashValue();
     int slot = hash_val % _table_size;
-    void * removed_val = NULL;
+    void * removed_val = nullptr;
     HashEntry *chain;
 
     // See if we even have this object.
@@ -153,7 +153,7 @@ HashTableImpl::remove(ObjectKey & key)
 
     // Try to find it in the chain.
     //
-    HashEntry * last = NULL;
+    HashEntry * last = nullptr;
     for (chain = &_hash_table[slot]; chain; chain = chain->next) {
 	if (key == *(chain->key)) {
 	    break;
@@ -196,7 +196,7 @@ HashTableImpl::forEach(HashImplIterator iterator, void * client_data)
     // iterator.
     //
     for (int slot = 0; slot < _table_size; slot++) {
-	if (_hash_table[slot].key == NULL) {
+	if (_hash_table[slot].key == nullptr) {
 	    continue;
 	}
 

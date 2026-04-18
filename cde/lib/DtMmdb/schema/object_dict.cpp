@@ -68,7 +68,7 @@ extern void schemarestart(FILE*);
 extern FILE *schemain;
 
 object_dict::object_dict() :
-   v_dict(desc_name_eq, desc_name_ls), v_desc_ptr(0), v_last_desc_ptr(NULL)
+   v_dict(desc_name_eq, desc_name_ls), v_desc_ptr(0), v_last_desc_ptr(nullptr)
 {
    v_db_path[0] = 0;
 }
@@ -314,7 +314,7 @@ desc* object_dict::parse(char* define_desc_path)
 {
     schemain = fopen(define_desc_path, "r");
 
-    if ( schemain == NULL )
+    if ( schemain == nullptr )
        throw(stringException("open desc file failed"));
 
     static int ct = 0;

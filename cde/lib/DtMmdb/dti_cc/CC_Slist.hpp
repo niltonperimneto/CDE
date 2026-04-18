@@ -123,7 +123,7 @@ public:
       delete t;
       return(ret);
     }
-    else return(NULL);
+    else return(nullptr);
   }
 
   T*  removeFirst() {
@@ -133,21 +133,21 @@ public:
       delete t;
       return (ret);
     }
-    else return(NULL);
+    else return(nullptr);
   }
 
   T*  first() const
   { 
     CC_Link<T> *t = (CC_Link<T> *)(CC_Listbase::first());
     if (t) { return( t->f_element ); }
-    else return(NULL);
+    else return(nullptr);
   }
 
   T*  last() const
   {
     CC_Link<T> *t = (CC_Link<T> *)(CC_Listbase::last());
     if (t) { return( t->f_element ); }
-    else return(NULL);
+    else return(nullptr);
   }
 
   T*  find(const T*) const;
@@ -190,14 +190,14 @@ public:
 	return ( link_item->f_element );
       }
       else { 
-	return(NULL);
+	return(nullptr);
       }
     }
 
   T *operator()()
   {
     if ( ++(*this) ) { return( key() ); }
-    else { return(NULL); }
+    else { return(nullptr); }
   }
 
 

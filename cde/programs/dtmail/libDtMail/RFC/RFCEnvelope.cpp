@@ -115,7 +115,7 @@ RFCEnvelope::getFirstHeader(DtMailEnv & error,
     error.clear();
 
     if (_parsed_headers.length() == 0) {
-	return(NULL); // No headers.
+	return(nullptr); // No headers.
     }
 
     DtMailHeaderHandle handle = _parsed_headers[0];
@@ -141,17 +141,17 @@ RFCEnvelope::getNextHeader(DtMailEnv & error,
 
     if (!last) {
 	error.setError(DTME_BadArg);
-	return(NULL);
+	return(nullptr);
     }
 
     int slot = _parsed_headers.indexof((ParsedHeader *)last);
     if (slot < 0) {
-	return(NULL);
+	return(nullptr);
     }
 
     slot += 1;
     if (slot >= _parsed_headers.length()) {
-	return(NULL);
+	return(nullptr);
     }
 
     ParsedHeader * hdr = _parsed_headers[slot];
@@ -171,51 +171,51 @@ struct AbstractMap {
 };
 
 static const char * DtMailMessageToMap[] = {
-    "To", "Apparently-To", "Resent-To", NULL
+    "To", "Apparently-To", "Resent-To", nullptr
 };
 
 static const char * DtMailMessageSenderMap[] = {
-    "Reply-To", "From", "Return-Path", "Resent-From", NULL
+    "Reply-To", "From", "Return-Path", "Resent-From", nullptr
 };
 
 static const char * DtMailMessageCcMap[] = {
-    "Cc", NULL
+    "Cc", nullptr
 };
 
 static const char * DtMailMessageBccMap[] = {
-    "Bcc", NULL
+    "Bcc", nullptr
 };
 
 static const char * DtMailMessageReceivedTimeMap[] = {
-    NULL
+    nullptr
 };
 
 static const char * DtMailMessageSentTimeMap[] = {
-"Date", NULL
+"Date", nullptr
 };
 
 static const char * DtMailMessageIdMap[] = {
-    "Message-Id", NULL
+    "Message-Id", nullptr
 };
 
 static const char * DtMailMessageSubjectMap[] = {
-    "Subject", NULL
+    "Subject", nullptr
 };
 
 static const char * DtMailMessageContentLengthMap[] = {
-    "Content-Length", NULL
+    "Content-Length", nullptr
 };
 
 static const char * DtMailMessageStatusMap[] = {
-    "Status", "X-Status", NULL
+    "Status", "X-Status", nullptr
 };
 
 static const char * DtMailMessageV3charsetMap[] = {
-    "X-Sun-Charset", NULL
+    "X-Sun-Charset", nullptr
 };
 
 static const char * DtMailMessageContentTypeMap[] = {
-    "Content-Type", NULL
+    "Content-Type", nullptr
 };
 
 static const AbstractMap abstract_map[] = {
@@ -231,7 +231,7 @@ static const AbstractMap abstract_map[] = {
 { DtMailMessageStatus,		DtMailMessageStatusMap },
 { DtMailMessageV3charset,		DtMailMessageV3charsetMap },
 { DtMailMessageContentType,		DtMailMessageContentTypeMap },
-{ NULL,				NULL }
+{ nullptr,				nullptr }
 };
 
 void
@@ -430,7 +430,7 @@ RFCEnvelope::setHeader(DtMailEnv & error,
 	if (hdr->alloc_mask & VALUE_MASK) {
 	    free((char *)hdr->value_start);
 	}
-	hdr->value_start = NULL;
+	hdr->value_start = nullptr;
 	_header_len -= hdr->value_len;
 	hdr->value_len = 0;
     }
@@ -558,7 +558,7 @@ const char *
 RFCEnvelope::unixFrom(DtMailEnv & error, int & length)
 {
     ParsedHeader * hdr = _parsed_headers[0];
-    const char * ufrom = NULL;
+    const char * ufrom = nullptr;
 
     length = 0;
     error.clear();
@@ -903,7 +903,7 @@ RFCEnvelope::makeReply(DtMailEnv & error,
 	return;
     }
 
-    if (_parent == NULL) {
+    if (_parent == nullptr) {
 	// We're done. Copy the values from one to the other.
 	//
 	for (int nc = 0; nc < lvalue.length(); nc++) {
@@ -1007,7 +1007,7 @@ striphosts(char * addr)
 {
     char *cp, *cp2;
     
-    if ((cp = strrchr(addr,'!')) != NULL)
+    if ((cp = strrchr(addr,'!')) != nullptr)
 	cp++;
     else
 	cp = addr;
@@ -1015,9 +1015,9 @@ striphosts(char * addr)
      * Now strip off all Internet-type
      * hosts.
      */
-    if ((cp2 = strchr(cp, '%')) == NULL)
+    if ((cp2 = strchr(cp, '%')) == nullptr)
 	cp2 = strchr(cp, '@');
-    if (cp2 != NULL)
+    if (cp2 != nullptr)
 	*cp2 = '\0';
     return(cp);
 }
@@ -1077,9 +1077,9 @@ RFCEnvelope::ParsedHeader::ParsedHeader(void)
 {
     mutex = MutexInit();
     alloc_mask = 0;
-    name_start = NULL;
+    name_start = nullptr;
     name_len = 0;
-    value_start = NULL;
+    value_start = nullptr;
     value_len = 0;
 }
 

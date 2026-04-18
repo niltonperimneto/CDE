@@ -46,10 +46,10 @@ CC_Tokenizer::operator()()
     touched = TRUE;
   }
   else {
-    current_ptr = _XStrtok(NULL, " \t\n", strtok_buf);
+    current_ptr = _XStrtok(nullptr, " \t\n", strtok_buf);
   }
 
-  return ( current_ptr != NULL );
+  return ( current_ptr != nullptr );
 }
     
   

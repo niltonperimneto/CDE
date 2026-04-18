@@ -72,9 +72,9 @@
 
 /* secure XtNewString macro */
 #define XtsNewString(str)                                                      \
-  ((str) != NULL ? (char *)(memcpy(XtMalloc((unsigned)strlen(str) + 1), str,   \
+  ((str) != nullptr ? (char *)(memcpy(XtMalloc((unsigned)strlen(str) + 1), str,   \
                                    (unsigned)strlen(str) + 1))                 \
-                 : NULL)
+                 : nullptr)
 
 /* little endian to/from big endian swap macros. */
 

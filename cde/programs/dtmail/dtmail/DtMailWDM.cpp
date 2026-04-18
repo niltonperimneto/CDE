@@ -55,7 +55,7 @@ DtMailWDM *theDtMailWDM =
 DtMailWDM::DtMailWDM ( char   *name ) 
          : WorkingDialogManager ( name )
 {
-    _text = NULL;
+    _text = nullptr;
 }
 
 
@@ -113,7 +113,7 @@ DtMailWDM::updateAnimation()
     if (_w) {
 	XtVaSetValues ( _w, 
 //	    XmNsymbolPixmap, _busyPixmaps->next(),
-	    NULL );
+	    nullptr );
 	forceUpdate( _w );
     }
 }
@@ -135,7 +135,7 @@ DtMailWDM::updateDialog(
 	XtVaSetValues ( _w, 
 //		    XmNsymbolPixmap, _busyPixmaps->next(),
 		    XmNmessageString, xmstr, 
-		    NULL );
+		    nullptr );
 	XmStringFree ( xmstr );
 
     }

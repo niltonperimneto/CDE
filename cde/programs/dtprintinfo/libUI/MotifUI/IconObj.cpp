@@ -40,9 +40,9 @@
 
 IconObj::IconObj(MotifUI *parent, char *name, char *iconFile, char *details,
 		 char *topString, char *bottomString, IconFields fields)
-	: MotifUI(parent, name, NULL)
+	: MotifUI(parent, name, nullptr)
 {
-   CreateIconObj(parent, name, NULL, iconFile, details, topString,
+   CreateIconObj(parent, name, nullptr, iconFile, details, topString,
 		 bottomString, fields);
 }
 
@@ -119,7 +119,7 @@ void IconObj::CreateIconObj(MotifUI *parent, char *name, char * /*category*/,
        }
     }
    else
-      gui_fields = NULL;
+      gui_fields = nullptr;
 
    // Get small and large pixmaps and masks
    char icon_type = 'p';
@@ -130,10 +130,10 @@ void IconObj::CreateIconObj(MotifUI *parent, char *name, char * /*category*/,
    _bottomString = STRDUP(bottomString);
    _details = STRDUP(details);
 
-   if (display == NULL)
+   if (display == nullptr)
     {
       strcpy(_iconFile, iconFile);
-      _stateIconName = NULL;
+      _stateIconName = nullptr;
       return;
     }
 
@@ -194,10 +194,10 @@ void IconObj::CreateIconObj(MotifUI *parent, char *name, char * /*category*/,
    p = parent->InnerWidget();
    if (!XtIsComposite(p))
       p = XtParent(p);
-   XtVaGetValues(p, XmNbackground, &bg, NULL);
+   XtVaGetValues(p, XmNbackground, &bg, nullptr);
 
    // If p is a icon then set superNode to it, otherwise set superNode to NULL
-   super_node = GuiIsIcon(parent->BaseWidget()) ? parent->BaseWidget() : NULL;
+   super_node = GuiIsIcon(parent->BaseWidget()) ? parent->BaseWidget() : nullptr;
    xm_string = StringCreate(s);
    xm_topString = StringCreate(topString);
    xm_bottomString = StringCreate(bottomString);
@@ -223,7 +223,7 @@ void IconObj::CreateIconObj(MotifUI *parent, char *name, char * /*category*/,
 				XmNbackground, bg,
 				GuiNtopLabelString, xm_topString,
 				GuiNbottomLabelString, xm_bottomString,
-				XmNuserData, this, NULL);
+				XmNuserData, this, nullptr);
 
    StringFree(xm_string);
    StringFree(xm_topString);
@@ -237,7 +237,7 @@ void IconObj::CreateIconObj(MotifUI *parent, char *name, char * /*category*/,
    XtAddCallback(_w, GuiNdoubleClickCallback, &IconObj::DoubleClickCB, 
       (XtPointer) this);
    InstallHelpCB();
-   _stateIconName = NULL;
+   _stateIconName = nullptr;
 }
 
 void IconObj::StateIconFile(char *stateIconName)
@@ -265,19 +265,19 @@ void IconObj::SetStateIconFile(IconStyle style)
       delete [] tmp;
     }
    XtVaSetValues(_w, GuiNstatePixmap, _statePixmap,
-		 GuiNstateIconMask, _stateMask, NULL);
+		 GuiNstateIconMask, _stateMask, nullptr);
 }
 
 void IconObj::StateIconGravity(StateGravity stateGravity)
 {
-   XtVaSetValues(_w, GuiNstateGravity, stateGravity, NULL);
+   XtVaSetValues(_w, GuiNstateGravity, stateGravity, nullptr);
    _state_gravity = stateGravity;
 }
 
 int IconObj::NumberFields()
 {
    GuiIconFields gui_fields;
-   XtVaGetValues(_w, GuiNfields, &gui_fields, NULL);
+   XtVaGetValues(_w, GuiNfields, &gui_fields, nullptr);
    if (gui_fields)
       return gui_fields->n_fields;
    else
@@ -330,7 +330,7 @@ void IconObj::BottomString(char *bottomString)
    delete _bottomString;
    _bottomString = STRDUP(bottomString);
    XmString xm_string = StringCreate(bottomString);
-   XtVaSetValues(_w, GuiNbottomLabelString, xm_string, NULL);
+   XtVaSetValues(_w, GuiNbottomLabelString, xm_string, nullptr);
    StringFree(xm_string);
 }
 
@@ -339,7 +339,7 @@ void IconObj::TopString(char *topString)
    delete _topString;
    _topString = STRDUP(topString);
    XmString xm_string = StringCreate(topString);
-   XtVaSetValues(_w, GuiNtopLabelString, xm_string, NULL);
+   XtVaSetValues(_w, GuiNtopLabelString, xm_string, nullptr);
    StringFree(xm_string);
 }
 
@@ -365,17 +365,17 @@ void IconObj::IconFile(char *iconFile)
       sprintf(_iconFile, "%s.l.%cm", iconFile, icon_type);
       GetPixmaps(_w, _iconFile, &vlargePixmap, &vlargeMask);
       XtVaSetValues(_w, XmNlabelPixmap, vlargePixmap, GuiNiconMask, vlargeMask,
-		    NULL);
+		    nullptr);
       break;
    case LARGE_ICON:
    case MEDIUM_ICON:
       XtVaSetValues(_w, XmNlabelPixmap, _largePixmap, GuiNiconMask, _largeMask,
-		    NULL);
+		    nullptr);
       break;
    case SMALL_ICON:
    case TINY_ICON:
       XtVaSetValues(_w, XmNlabelPixmap, _smallPixmap, GuiNiconMask, _smallMask,
-		    NULL);
+		    nullptr);
       break;
    }
    strcpy(_iconFile, iconFile);
@@ -390,7 +390,7 @@ void IconObj::SetDetail()
 
    sprintf(name, "%s %s", _name, _details);
    XmString xm_string = StringCreate(name);
-   XtVaSetValues(_w, XmNlabelString, xm_string, NULL);
+   XtVaSetValues(_w, XmNlabelString, xm_string, nullptr);
    StringFree(xm_string);
    delete [] name;
 }
@@ -446,7 +446,7 @@ boolean IconObj::SetOpen(boolean flag)
       pixmapPlacement = GuiPIXMAP_LEFT;
     }
    XtVaSetValues(_w, XmNalignment, alignment, GuiNisOpened, isOpened,
-		 GuiNpixmapPlacement, pixmapPlacement, NULL);
+		 GuiNpixmapPlacement, pixmapPlacement, nullptr);
    return true;
 }
 
@@ -532,14 +532,14 @@ boolean IconObj::SetIcon(IconStyle style)
                      XmNlabelString, xm_string, XmNalignment, alignment,
 		     GuiNpixmapPlacement, pixmapPlacement, 
 		     GuiNisOpened, isOpened,
-                     GuiNshrinkOutline, shrinkOutline, NULL);
+                     GuiNshrinkOutline, shrinkOutline, nullptr);
        StringFree(xm_string);
     }
    else
       XtVaSetValues(_w, XmNlabelPixmap, pixmap, GuiNiconMask, mask,
 		    GuiNpixmapPlacement, pixmapPlacement,
 		    XmNalignment, alignment, GuiNisOpened, isOpened,
-                    GuiNshrinkOutline, shrinkOutline, NULL);
+                    GuiNshrinkOutline, shrinkOutline, nullptr);
 
    _previous_style = style;
    if (_stateIconName)

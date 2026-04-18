@@ -79,16 +79,16 @@ WorkingDialogManager::WorkingDialogManager ( char   *name ) :
                            DialogManager ( name )
 {
     _intervalId  = 0;
-    _busyPixmaps = NULL;
+    _busyPixmaps = nullptr;
 }
 
 Widget WorkingDialogManager::createDialog ( Widget parent )
 {
-    Widget dialog = XmCreateWorkingDialog ( parent, _name, NULL, 0 );
+    Widget dialog = XmCreateWorkingDialog ( parent, _name, nullptr, 0 );
     
     XtVaSetValues ( dialog,
 		   XmNdialogStyle, XmDIALOG_PRIMARY_APPLICATION_MODAL,
-		   NULL );
+		   nullptr );
     
     XtAddCallback ( dialog, 
 		   XmNokCallback, 
@@ -201,7 +201,7 @@ void WorkingDialogManager::unpostCallback ( Widget ,
 
 void WorkingDialogManager::unpost ()
 {
-    assert ( _w != NULL );
+    assert ( _w != nullptr );
     
     // Remove the dialog from the screen
     
@@ -221,7 +221,7 @@ void WorkingDialogManager::updateMessage ( char *text )
 	// Just change the string displayed in the dialog
     
 	XmString xmstr = XmStringCreateLocalized ( text ); 
-	XtVaSetValues ( _w, XmNmessageString, xmstr, NULL );
+	XtVaSetValues ( _w, XmNmessageString, xmstr, nullptr );
 	XmStringFree ( xmstr );
     }
     forceUpdate( _w );

@@ -49,7 +49,7 @@ Dialog::Dialog(MotifUI *parent, char *title, DialogType dialog_type,
                void * apply_callback_data, DialogCallback reset_callback, 
                void * reset_callback_data, ValidationCallback CB,
                void * validation_data)
-	: MotifUI(parent, title, NULL)
+	: MotifUI(parent, title, nullptr)
 {
    Arg args[10];
    int n;
@@ -63,8 +63,8 @@ Dialog::Dialog(MotifUI *parent, char *title, DialogType dialog_type,
    _apply_callback_data = apply_callback_data;
    _reset_callback = reset_callback;
    _reset_callback_data = reset_callback_data;
-   _cancel_button = NULL;
-   _cancel_widget = NULL;
+   _cancel_button = nullptr;
+   _cancel_widget = nullptr;
 
    n = 0;
    if (has_resize_controls == false)
@@ -110,7 +110,7 @@ Dialog::Dialog(MotifUI *parent, char *title, DialogType dialog_type,
    else
       _w = XmCreateTemplateDialog(parent->InnerWidget(), title, args, n);
 
-   _clientArea = XtVaCreateManagedWidget("form", xmFormWidgetClass, _w, NULL);
+   _clientArea = XtVaCreateManagedWidget("form", xmFormWidgetClass, _w, nullptr);
 
    StringFree(xm_string);
    XmAddWMProtocolCallback(XtParent(_w), 
@@ -124,7 +124,7 @@ Dialog::Dialog(MotifUI *parent, char *title, char *message,
 	       DialogType dialog_type, char *ok_label, char *cancel_label, 
 	       char *help_label, DialogCallback help,
 	       void * help_callback_data, char * /*icon*/)
-	: MotifUI(parent, title, NULL)
+	: MotifUI(parent, title, nullptr)
 {
    Arg args[15];
    long mwmDecorations;
@@ -148,10 +148,10 @@ Dialog::Dialog(MotifUI *parent, char *title, char *message,
    XtSetArg(args[9], XmNhelpLabelString, help_string);
    _help_callback = help;
    _help_callback_data = help_callback_data;
-   _apply_callback = NULL;
-   _apply_callback_data = NULL;
-   _reset_callback = NULL;
-   _reset_callback_data = NULL;
+   _apply_callback = nullptr;
+   _apply_callback_data = nullptr;
+   _reset_callback = nullptr;
+   _reset_callback_data = nullptr;
    switch (_dialog_type = dialog_type)
     {
      case INFORMATION:
@@ -242,12 +242,12 @@ Dialog::Dialog(MotifUI *parent, char *title, char *caption, boolean editable,
 	       void * help_callback_data, DialogCallback apply_callback, 
                void * apply_callback_data, DialogCallback reset_callback, 
                void * reset_callback_data, char *message, char *icon)
-	: MotifUI(parent, title, NULL)
+	: MotifUI(parent, title, nullptr)
 {
    Arg      args[8];
    int      n;
    XmString xm_string = StringCreate(title);
-   XmString xm_message = NULL;
+   XmString xm_message = nullptr;
    Pixmap   pixmap;
 
    _dialog_type = PROMPT_DIALOG;
@@ -302,7 +302,7 @@ Dialog::Dialog(MotifUI *parent, char *title, char *caption, boolean editable,
 Dialog::Dialog(MotifUI *parent, char *title, char *base_directory, 
 	       char *search_pattern, DialogType dialog_type,
 	       DialogCallback help, void * /*help_callback_data*/)
-	: MotifUI(parent, title, NULL)
+	: MotifUI(parent, title, nullptr)
 {
    Arg args[9];
    XmString title_string = StringCreate(title);
@@ -362,7 +362,7 @@ Dialog::~Dialog()
 
 void Dialog::DefaultButton(MotifUI *button)
 {
-   XtVaSetValues(_w, XmNdefaultButton, button->BaseWidget(), NULL);
+   XtVaSetValues(_w, XmNdefaultButton, button->BaseWidget(), nullptr);
 }
 
 void Dialog::CancelButtonCB(Widget, XtPointer client_data, XtPointer)
@@ -380,7 +380,7 @@ void Dialog::CancelButton(MotifUI *button)
    if (!_cancel_widget)
     {
       _cancel_widget = XtVaCreateWidget("cancel_button",
-					xmPushButtonWidgetClass, _w, NULL);
+					xmPushButtonWidgetClass, _w, nullptr);
       XtAddCallback(_cancel_widget, XmNactivateCallback, CancelButtonCB, this);
       BB_CancelButton(_w) = _cancel_widget;
     }
@@ -389,29 +389,29 @@ void Dialog::CancelButton(MotifUI *button)
 
 void Dialog::Width(int w)
 {
-   XtVaSetValues(XtParent(_w), XmNallowShellResize, true, NULL);
+   XtVaSetValues(XtParent(_w), XmNallowShellResize, true, nullptr);
    MotifUI::Width(w);
-   XtVaSetValues(XtParent(_w), XmNallowShellResize, false, NULL);
+   XtVaSetValues(XtParent(_w), XmNallowShellResize, false, nullptr);
 }
 
 void Dialog::Height(int w)
 {
-   XtVaSetValues(XtParent(_w), XmNallowShellResize, true, NULL);
+   XtVaSetValues(XtParent(_w), XmNallowShellResize, true, nullptr);
    MotifUI::Height(w);
-   XtVaSetValues(XtParent(_w), XmNallowShellResize, false, NULL);
+   XtVaSetValues(XtParent(_w), XmNallowShellResize, false, nullptr);
 }
 
 void Dialog::WidthHeight(int w, int h)
 {
-   XtVaSetValues(XtParent(_w), XmNallowShellResize, true, NULL);
+   XtVaSetValues(XtParent(_w), XmNallowShellResize, true, nullptr);
    MotifUI::WidthHeight(w, h);
-   XtVaSetValues(XtParent(_w), XmNallowShellResize, false, NULL);
+   XtVaSetValues(XtParent(_w), XmNallowShellResize, false, nullptr);
 }
 
 boolean Dialog::SetName(char *name)
 {
    XmString xm_message = StringCreate(name);
-   XtVaSetValues(_w, XmNmessageString, xm_message, NULL);
+   XtVaSetValues(_w, XmNmessageString, xm_message, nullptr);
    StringFree(xm_message);
    return true;
 }
@@ -436,7 +436,7 @@ boolean Dialog::SetVisiblity(boolean flag)
     }
 
    ToFront();
-   XtVaSetValues(XtParent(_w), XmNallowShellResize, False, NULL);
+   XtVaSetValues(XtParent(_w), XmNallowShellResize, False, nullptr);
    if (is_modal)
     {
       _status = -1;
@@ -463,7 +463,7 @@ const boolean Dialog::Answer(char **string)
        }
     }
    else
-      *string = NULL;
+      *string = nullptr;
      
    return _rc;
 }

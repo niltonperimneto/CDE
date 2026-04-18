@@ -39,11 +39,11 @@ implement_array(privbuf_strvec, char*, 128)
 
 void privbuf_release(void **var)
 {
-    if (var == NULL || *var == NULL)
+    if (var == nullptr || *var == nullptr)
 	return;
     char *buf = (char*)*var;
     privbuf_func *p = (privbuf_func*)(void*)buf;
-    *var = NULL;
+    *var = nullptr;
     (*p)((void*)buf);
 }
 

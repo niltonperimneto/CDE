@@ -59,20 +59,20 @@ extern Boolean props_changed;
 IgnoreListUiItem::IgnoreListUiItem(Widget w, 
 		       int source, 
 		       char *search_key,
-		       Widget text_entry_widget):ListUiItem(w, source, search_key, NULL)
+		       Widget text_entry_widget):ListUiItem(w, source, search_key, nullptr)
 {
   source = source; search_key = search_key;
 
   entry_field_widget = text_entry_widget;
 
-  list_items = NULL;
-  deleted_items = NULL;
+  list_items = nullptr;
+  deleted_items = nullptr;
 
   XtVaSetValues(w,
 	XmNuserData, this,
         XmNautomaticSelection, True,
         XmNselectionPolicy, XmBROWSE_SELECT,
-	NULL);
+	nullptr);
 
     XtAddCallback(w,
 		XmNbrowseSelectionCallback, 
@@ -86,26 +86,26 @@ void handleIgnoreSelection(Widget w, XtPointer, XtPointer calldata)
 {
   IgnoreListUiItem *item;
   XmListCallbackStruct *list_info = (XmListCallbackStruct *)calldata;
-  char *selection_string = NULL;
+  char *selection_string = nullptr;
   DtVirtArray<PropStringPair *> *list_items;
 
   XtVaGetValues(w, 
 	XmNuserData, &item,
-	NULL);  
+	nullptr);  
 
   list_items = item->getItemList();
 
-  if(list_items != NULL)
+  if(list_items != nullptr)
     {
       // motif index is 1 based
       //virtarry is 0 based
       PropStringPair *pair = (*list_items)[list_info->item_position - 1];
 
-      if(pair != NULL)
+      if(pair != nullptr)
         {
           XtVaSetValues(item->getEntryFieldWidget(),
                         XmNvalue,pair->label,
-                        NULL);
+                        nullptr);
 
 	}	
 
@@ -123,7 +123,7 @@ void IgnoreListUiItem::writeFromUiToSource()
   DtMail::MailRc * mail_rc = d_session->mailRc(error);
   int i, num_items;
 
-  if(deleted_items != NULL)
+  if(deleted_items != nullptr)
     {
       num_items = deleted_items->length();
 
@@ -133,7 +133,7 @@ void IgnoreListUiItem::writeFromUiToSource()
 	}
     }
 
-  if(list_items != NULL)
+  if(list_items != nullptr)
     {
       num_items = list_items->length();
       for(i = 0; i < num_items; i++)
@@ -142,10 +142,10 @@ void IgnoreListUiItem::writeFromUiToSource()
 	}
     }
   
-  if(deleted_items != NULL)
+  if(deleted_items != nullptr)
     {
       delete deleted_items;
-      deleted_items = NULL;
+      deleted_items = nullptr;
     }
 }
 
@@ -157,7 +157,7 @@ void IgnoreListUiItem::writeFromSourceToUi()
   DtMailEnv error;
   DtMail::Session * d_session = theRoamApp.session()->session();
   DtMail::MailRc * mail_rc = d_session->mailRc(error);
-  DtVirtArray<char *> *char_list = NULL;
+  DtVirtArray<char *> *char_list = nullptr;
   int list_len, i;
   PropStringPair *new_pair;
 
@@ -165,22 +165,22 @@ void IgnoreListUiItem::writeFromSourceToUi()
 
   XmListDeleteAllItems(w);
 
-  if(deleted_items != NULL)
+  if(deleted_items != nullptr)
     {
       delete deleted_items;
-      deleted_items = NULL;
+      deleted_items = nullptr;
     }
 
-  if(list_items != NULL)
+  if(list_items != nullptr)
   {
     delete list_items;
-    list_items=NULL;
+    list_items=nullptr;
   }
 
   // ignore list code here...
   char_list = mail_rc->getIgnoreList();
   
-  if(char_list != NULL)
+  if(char_list != nullptr)
     {
       list_len = char_list->length();
       list_items = new DtVirtArray<PropStringPair *>(10);
@@ -189,7 +189,7 @@ void IgnoreListUiItem::writeFromSourceToUi()
 	{
 	  new_pair = new PropStringPair;
 	  new_pair->label = strdup((*char_list)[i]);
-	  new_pair->value = NULL;
+	  new_pair->value = nullptr;
 
 	  list_items->append(new_pair);
 	}
@@ -201,14 +201,14 @@ void IgnoreListUiItem::writeFromSourceToUi()
 void IgnoreListUiItem::handleAddButtonPress()
 {
   Widget entry_field = this->getEntryFieldWidget();
-  char *test_str = NULL;
-  PropStringPair *new_pair = NULL;
+  char *test_str = nullptr;
+  PropStringPair *new_pair = nullptr;
 
   XtVaGetValues(entry_field,
 		XmNvalue, &test_str,
-		NULL);
+		nullptr);
 
-  if(test_str != NULL)
+  if(test_str != nullptr)
     if(  (strlen(test_str) > 1) &&
          (!XmListItemExists(this->getWidget(),
                             XmStringCreateLocalized(test_str)))  )
@@ -217,13 +217,13 @@ void IgnoreListUiItem::handleAddButtonPress()
 	int *pos_list, num_pos;
 
 	new_pair->label = strdup(test_str);
-	new_pair->value = NULL;
+	new_pair->value = nullptr;
       
 	if(XmListGetSelectedPos(this->getWidget(),
 				&pos_list,
 				&num_pos))
 	  {
-            if(list_items == NULL)
+            if(list_items == nullptr)
               list_items = new DtVirtArray<PropStringPair *>(10);
 
 	    list_items->insert(new_pair,pos_list[0] - 1); 
@@ -240,7 +240,7 @@ void IgnoreListUiItem::handleAddButtonPress()
 	  }	
 	else
 	  {
-            if(list_items == NULL)
+            if(list_items == nullptr)
               list_items = new DtVirtArray<PropStringPair *>(10);
 
 	    list_items->insert(new_pair,0); 
@@ -261,8 +261,8 @@ void IgnoreListUiItem::handleAddButtonPress()
 void IgnoreListUiItem::handleChangeButtonPress()
 {
   Widget entry_field = this->getEntryFieldWidget();
-  char *test_str = NULL;
-  PropStringPair *new_pair = NULL;
+  char *test_str = nullptr;
+  PropStringPair *new_pair = nullptr;
   XmString replace_string;
   int *pos_list, num_pos;
 
@@ -273,15 +273,15 @@ void IgnoreListUiItem::handleChangeButtonPress()
     {
       XtVaGetValues(entry_field,
 		    XmNvalue, &test_str,
-		    NULL);
+		    nullptr);
 
-      if(test_str != NULL)
+      if(test_str != nullptr)
 	if(strlen(test_str) > 1)
 	  {
 
 	    new_pair = (*list_items)[pos_list[0] - 1];
 
-	    if(deleted_items == NULL)
+	    if(deleted_items == nullptr)
 	      {
 		deleted_items = new DtVirtArray<char *>(10);
 	      }		
@@ -318,7 +318,7 @@ void IgnoreListUiItem::handleDeleteButtonPress()
 			  &p_count))
     {
       
-      if(deleted_items == NULL)
+      if(deleted_items == nullptr)
 	{
 	  deleted_items = new DtVirtArray<char *>(10);
 	}	
@@ -333,7 +333,7 @@ void IgnoreListUiItem::handleDeleteButtonPress()
 
       XtVaSetValues(this->getEntryFieldWidget(),
                         XmNvalue,"",
-                        NULL);
+                        nullptr);
       XmListSelectPos(list_widget,
 		      p_list[0],
 		      TRUE);
@@ -349,7 +349,7 @@ void IgnoreListUiItem::AddDefaults()
   DtMailEnv error;
   DtMail::Session * d_session = theRoamApp.session()->session();
   DtMail::MailRc * mail_rc = d_session->mailRc(error);
-  DtVirtArray<char *> *char_list = NULL;
+  DtVirtArray<char *> *char_list = nullptr;
   int list_len;
 
   // ignore list code here...

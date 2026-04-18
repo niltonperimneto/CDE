@@ -71,7 +71,7 @@ T *CC_TPtrSlist<T>::find(const T* elem) const
       return (iter.key());
   }
 
-  return  ( NULL );
+  return  ( nullptr );
 }
 
 //------------------------------------------------------------------
@@ -86,7 +86,7 @@ T *CC_TPtrSlist<T>::find(CC_Boolean (*testFunc)(T*, void *),
     }
   }
 
-  return ( NULL );
+  return ( nullptr );
 }
  
 //------------------------------------------------------------------  
@@ -119,7 +119,7 @@ T *CC_TPtrSlist<T>::remove(const T *elem)
     }
   }
 
-  return(NULL);
+  return(nullptr);
 }
 
 //---------------------------------------------------------------------
@@ -152,7 +152,7 @@ void CC_TPtrSlist<T>::clearAndDestroy()
 	    if ( elem ) { 
 		T *temp_elem = elem->f_element;
 		delete temp_elem;
-		elem->f_element = NULL; // prevent further destruction on the pointer
+		elem->f_element = nullptr; // prevent further destruction on the pointer
 		delete elem; 
 	    }
 	    else { break; }

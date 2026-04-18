@@ -157,7 +157,7 @@ istream& operator >>(istream& in, mark_t& m)
 
    while ( in && in.get(c) ) {
 
-      if ( strchr(ptr, c) == NULL ) {
+      if ( strchr(ptr, c) == nullptr ) {
          in.putback(c);
          if ( read_marks == false ) {
             debug(cerr, c); 

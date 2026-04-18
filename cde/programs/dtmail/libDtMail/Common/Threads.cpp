@@ -65,7 +65,7 @@ MutexInit(void)
 #if defined(POSIX_THREADS)
     mutex_t	*mutex = (mutex_t *)malloc(sizeof(mutex_t));
 
-    mutex_init(mutex, USYNC_THREAD, NULL);
+    mutex_init(mutex, USYNC_THREAD, nullptr);
     return(mutex);
 #else
     return(&DUMMY_MUTEX);
@@ -79,7 +79,7 @@ MutexDestroy(void * mutex)
     mutex_destroy((mutex_t *)mutex);
     free(mutex);
 #else
-    mutex = NULL;
+    mutex = nullptr;
 #endif
 
     return;
@@ -245,9 +245,9 @@ Condition::Condition(void)
 
 #if defined(POSIX_THREADS)
     _condition = malloc(sizeof(cond_t));
-    cond_init((cond_t *)_condition, USYNC_THREAD, NULL);
+    cond_init((cond_t *)_condition, USYNC_THREAD, nullptr);
 #else
-    _condition = NULL;
+    _condition = nullptr;
 #endif
 
     _state = 0;
@@ -341,7 +341,7 @@ Condition::wait(void)
     MutexLock lock_scope(_mutex);
 
     timestruc_t	abstime;
-    abstime.tv_sec = time(NULL) + 1; // Wait for 1 second.
+    abstime.tv_sec = time(nullptr) + 1; // Wait for 1 second.
     abstime.tv_nsec = 0;
 
     cond_timedwait((cond_t *)_condition, (mutex_t *)_mutex, &abstime);
@@ -461,7 +461,7 @@ ThreadCreate(
 {
     thread_t	id;
 
-    thr_create(NULL, 0, entry, client_data, THR_BOUND | THR_NEW_LWP, &id);
+    thr_create(nullptr, 0, entry, client_data, THR_BOUND | THR_NEW_LWP, &id);
     thr_continue(id);
 
     return(id);
@@ -528,7 +528,7 @@ ThreadJoin(
 #if defined(POSIX_THREADS)
 	Thread thread)
 {
-    thr_join((thread_t)thread, NULL, NULL);
+    thr_join((thread_t)thread, nullptr, nullptr);
 }
 #else
 	Thread)
@@ -543,16 +543,16 @@ ThreadJoin(
 time_t
 ThreadSleep(time_t secs)
 {
-    time_t now = time(NULL);
+    time_t now = time(nullptr);
 
     timeval interval;
 
     interval.tv_sec = secs;
     interval.tv_usec = 0;
 
-    select(0, NULL, NULL, NULL, &interval);
+    select(0, nullptr, nullptr, nullptr, &interval);
 
-    time_t slept = time(NULL) - now;
+    time_t slept = time(nullptr) - now;
     if (slept < secs) {
 	return(secs - slept);
     }

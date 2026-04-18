@@ -77,7 +77,7 @@ InfoDialogManager::InfoDialogManager ( char   *name ) :
 
 Widget InfoDialogManager::createDialog ( Widget parent )
 {
-    Widget dialog = XmCreateInformationDialog ( parent, _name, NULL, 0 );
+    Widget dialog = XmCreateInformationDialog ( parent, _name, nullptr, 0 );
     
     return dialog;
 }

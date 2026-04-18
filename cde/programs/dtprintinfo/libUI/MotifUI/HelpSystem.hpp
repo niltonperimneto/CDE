@@ -57,13 +57,13 @@ class HelpSystem : public MotifUI {
 
    HelpSystem(MotifUI * parent,
               char * name,
-              char * volume = NULL,
+              char * volume = nullptr,
               char * location_id = "_hometopic",
               HelpStyle style = HELP_DIALOG);
    HelpSystem(char *category,
               MotifUI * parent,
               char * name,
-              char * volume = NULL,
+              char * volume = nullptr,
               char * location_id = "_hometopic",
               HelpStyle style = HELP_DIALOG);
 

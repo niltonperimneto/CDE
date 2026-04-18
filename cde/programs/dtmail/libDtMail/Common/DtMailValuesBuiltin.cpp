@@ -71,7 +71,7 @@ DtMailValueSeq::clear(void)
 
 DtMailValue::DtMailValue(const char * str)
 {
-    _value = NULL;
+    _value = nullptr;
 
     if (str) {
 	_value = strdup(str);
@@ -136,7 +136,7 @@ DtMailValue::fromDate(const DtMailValueDate & date)
 DtMailAddressSeq *
 DtMailValue::toAddress(void)
 {
-    return(NULL);
+    return(nullptr);
 }
 
 #ifdef DEAD_WOOD
@@ -154,16 +154,16 @@ DtMailValue::raw(void)
 
 DtMailValueAddress::DtMailValueAddress(void)
 {
-    dtm_address = NULL;
-    dtm_person = NULL;
-    dtm_namespace = NULL;
+    dtm_address = nullptr;
+    dtm_person = nullptr;
+    dtm_namespace = nullptr;
 }
 
 DtMailValueAddress::DtMailValueAddress(const DtMailValueAddress & other)
 {
-    dtm_address = NULL;
-    dtm_person = NULL;
-    dtm_namespace = NULL;
+    dtm_address = nullptr;
+    dtm_person = nullptr;
+    dtm_namespace = nullptr;
 
     if (other.dtm_address) {
 	dtm_address = strdup(other.dtm_address);
@@ -182,9 +182,9 @@ DtMailValueAddress::DtMailValueAddress(const char * address,
 				       const char * person,
 				       const char * nameSpace)
 {
-    dtm_address = NULL;
-    dtm_person = NULL;
-    dtm_namespace = NULL;
+    dtm_address = nullptr;
+    dtm_person = nullptr;
+    dtm_namespace = nullptr;
 
     if (address) {
 	dtm_address = strdup(address);
@@ -203,9 +203,9 @@ DtMailValueAddress::DtMailValueAddress(const char * address, const int addr_len,
 				       const char * person, const int per_len,
 				       const char * nameSpace)
 {
-    dtm_address = NULL;
-    dtm_person = NULL;
-    dtm_namespace = NULL;
+    dtm_address = nullptr;
+    dtm_person = nullptr;
+    dtm_namespace = nullptr;
 
     if (address) {
 	dtm_address = (char *)malloc(addr_len + 1);

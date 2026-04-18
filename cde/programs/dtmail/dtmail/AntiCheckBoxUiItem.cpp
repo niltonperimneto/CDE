@@ -82,7 +82,7 @@ void AntiCheckBoxUiItem::writeFromUiToSource()
 ///////////////////////////////////////////////////////////////////
 void AntiCheckBoxUiItem::writeFromSourceToUi()
 {
-  char *value = NULL;
+  char *value = nullptr;
   Widget w = this->getWidget();
 
   PropSource 	*p_s = this->getPropSource();
@@ -96,7 +96,7 @@ void AntiCheckBoxUiItem::writeFromSourceToUi()
   // value is set and that a non-null means turn on the CB
   if (value && strcmp(value, "f") == 0)
     options_checkbox_set_value(w, TRUE, this->dirty_bit);
-  else if (value == NULL || strcmp(value, "") == 0)
+  else if (value == nullptr || strcmp(value, "") == 0)
     options_checkbox_set_value(w, FALSE, this->dirty_bit);
   
   free(value);

@@ -49,7 +49,7 @@ Prompt::Prompt(MotifUI *parent,
 	       int n_columns,
 	       int n_rows,
 	       int captionWidth)
-	: MotifUI(parent, name, NULL)
+	: MotifUI(parent, name, nullptr)
 {
    int editMode;
    int wordWrap;
@@ -59,7 +59,7 @@ Prompt::Prompt(MotifUI *parent,
    parentW = parent->InnerWidget();
 
    _prompt_type = prompt_type;
-   _value = NULL;
+   _value = nullptr;
    if (_default_value)
       _default_value = STRDUP(default_value);
    else
@@ -74,8 +74,8 @@ Prompt::Prompt(MotifUI *parent,
       wordWrap = false;
       editMode = XmSINGLE_LINE_EDIT;
     }
-   XtVaGetValues(parentW, XmNbackground, &bg, NULL);
-   _w = XtVaCreateManagedWidget(name, xmFormWidgetClass, parentW, NULL);
+   XtVaGetValues(parentW, XmNbackground, &bg, nullptr);
+   _w = XtVaCreateManagedWidget(name, xmFormWidgetClass, parentW, nullptr);
    XmString xm_string = StringCreate(name);
    _caption = XtVaCreateManagedWidget(name, xmLabelWidgetClass, _w, 
 				      XmNtopAttachment, XmATTACH_FORM,
@@ -83,7 +83,7 @@ Prompt::Prompt(MotifUI *parent,
 				      XmNleftAttachment, XmATTACH_FORM,
 				      XmNalignment, XmALIGNMENT_END,
 				      XmNlabelString, xm_string,
-				      XmNwidth, captionWidth, NULL);
+				      XmNwidth, captionWidth, nullptr);
    StringFree(xm_string);
    if (editMode == XmMULTI_LINE_EDIT && editable == false)
     {
@@ -96,7 +96,7 @@ Prompt::Prompt(MotifUI *parent,
 				       XmNleftWidget, _caption,
 				       XmNrightAttachment, XmATTACH_FORM,
 				       XmNshadowType, XmSHADOW_ETCHED_IN,
-				       XmNshadowThickness, 2, NULL);
+				       XmNshadowThickness, 2, nullptr);
       _text = XtVaCreateManagedWidget(name, xmTextWidgetClass, _frame,
 				      XmNvalue, default_value,
 				      XmNrows, n_rows, XmNcolumns, n_columns,
@@ -106,7 +106,7 @@ Prompt::Prompt(MotifUI *parent,
 				      XmNbackground, bg,
 				      XmNcursorPositionVisible, false,
 				      XmNtraversalOn, false,
-				      XmNshadowThickness, 0, NULL);
+				      XmNshadowThickness, 0, nullptr);
     }
    else
       _text = XtVaCreateManagedWidget(name, xmTextWidgetClass, _w, 
@@ -120,12 +120,12 @@ Prompt::Prompt(MotifUI *parent,
 				      XmNrows, n_rows, XmNcolumns, n_columns,
 				      XmNeditMode, editMode, 
 				      XmNwordWrap, wordWrap,
-				      editable ? NULL : XmNeditable, editable,
+				      editable ? nullptr : XmNeditable, editable,
 				      XmNbackground, bg,
 				      XmNcursorPositionVisible, false,
 				      XmNtraversalOn, false,
 				      XmNshadowThickness, 0,
-				      NULL);
+				      nullptr);
 }
 
 Prompt::~Prompt()

@@ -34,19 +34,19 @@
 
 MenuBar::MenuBar(MotifUI *parent,
 		 char *name)
-	: MotifUI(parent, name, NULL)
+	: MotifUI(parent, name, nullptr)
 {
    _w = XtVaCreateManagedWidget("menuBar", xmRowColumnWidgetClass, 
                                 parent->InnerWidget(),
-				XmNrowColumnType, XmMENU_BAR, NULL);
+				XmNrowColumnType, XmMENU_BAR, nullptr);
 
-   XtVaSetValues(parent->InnerWidget(), XmNmenuBar, _w, NULL);
+   XtVaSetValues(parent->InnerWidget(), XmNmenuBar, _w, nullptr);
    InstallHelpCB();
 }
 
 void MenuBar::SetHelpMenu(Menu *menu)
 {
-   XtVaSetValues(_w, XmNmenuHelpWidget, menu->GetCascade(), NULL);
+   XtVaSetValues(_w, XmNmenuHelpWidget, menu->GetCascade(), nullptr);
 }
 
 MenuBar::~MenuBar()

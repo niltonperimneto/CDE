@@ -55,7 +55,7 @@ void DtWorkArea::NotifySelected(BaseUI *obj)
    if (n_items)
       _mainW->actionsMenu->UpdateActions(n_items, selection[0]);
    else
-      _mainW->actionsMenu->UpdateActions(n_items, NULL);
+      _mainW->actionsMenu->UpdateActions(n_items, nullptr);
    delete []selection;
 }
 

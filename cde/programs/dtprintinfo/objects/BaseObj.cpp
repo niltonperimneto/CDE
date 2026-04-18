@@ -39,19 +39,19 @@ BaseObj::BaseObj(BaseObj *parent,
 	         const char *name)
 {
    _name = STRDUP(name);
-   _displayName = NULL;
-   _details = NULL;
+   _displayName = nullptr;
+   _details = nullptr;
    _parent = parent;
    _init_children = false;
    _init_attributes = false;
-   _children = NULL;
+   _children = nullptr;
    _numChildren = 0;
    _numActions = 0;
    _numAttributes = 0;
-   _actions = NULL;
-   _attributes = NULL;
-   _lastActionName = NULL;
-   _lastActionOutput = NULL;
+   _actions = nullptr;
+   _attributes = nullptr;
+   _lastActionName = nullptr;
+   _lastActionOutput = nullptr;
    _lastActionStatus = 0;
    AddToParent();
    BaseObj *p = _parent;
@@ -146,7 +146,7 @@ char *BaseObj::Details()
 void BaseObj::UpdateDetails()
 {
    free(_details);
-   _details = NULL;
+   _details = nullptr;
    (void) Details();
 }
 
@@ -263,9 +263,9 @@ void BaseObj::AddAttribute(const char *ReferenceName,
    _attributes = new_attributes;
    Attribute *attribute = new Attribute;
    attribute->ReferenceName = STRDUP(ReferenceName);
-   attribute->Value = NULL;
+   attribute->Value = nullptr;
    attribute->DisplayName = STRDUP(DisplayName);
-   attribute->DisplayValue = NULL;
+   attribute->DisplayValue = nullptr;
    attribute->DefaultValue = STRDUP(DefaultValue);
    attribute->DisplayDefaultValue = STRDUP(DisplayDefaultValue);
    attribute->Mask = Mask;
@@ -367,7 +367,7 @@ BaseObj ** BaseObj::Siblings()
    if (_parent)
       return _parent->_children;
    else
-      return NULL;
+      return nullptr;
 }
 
 boolean BaseObj::HasAction(const char *actionName,
@@ -408,7 +408,7 @@ boolean BaseObj::SendAction(Action *action,
 
    delete [] _lastActionOutput;
    free(_lastActionName);
-   _lastActionOutput = NULL;
+   _lastActionOutput = nullptr;
    _lastActionName = strdup(action->ReferenceName);
    if ((status = HasAction(action)) == true)
       _lastActionStatus = (*action->Handler)(this, &_lastActionOutput,
@@ -442,7 +442,7 @@ char * BaseObj::AttributeValue(char *referenceName)
    if (HasAttribute(referenceName, &dummy))
       return dummy->Value;
    else
-      return NULL;
+      return nullptr;
 }
 
 boolean BaseObj::HasAttribute(const char *attributeName,

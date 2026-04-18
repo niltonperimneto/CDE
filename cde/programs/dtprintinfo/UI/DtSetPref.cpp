@@ -200,17 +200,17 @@ void DtSetPref::Apply()
       if (_callback)
        {
 	 if (_previous_style == DETAILS)
-            (*_callback)(_callback_data, DETAILS_OFF, NULL);
+            (*_callback)(_callback_data, DETAILS_OFF, nullptr);
 	 else if (style == DETAILS)
-            (*_callback)(_callback_data, DETAILS_ON, NULL);
+            (*_callback)(_callback_data, DETAILS_ON, nullptr);
        }
       _previous_style = style;
       if (_callback)
        {
 	 if (_previous_show_details_label)
-            (*_callback)(_callback_data, SHOW_DETAILS_LABEL_ON, NULL);
+            (*_callback)(_callback_data, SHOW_DETAILS_LABEL_ON, nullptr);
 	 else
-            (*_callback)(_callback_data, SHOW_DETAILS_LABEL_OFF, NULL);
+            (*_callback)(_callback_data, SHOW_DETAILS_LABEL_OFF, nullptr);
        }
     }
 
@@ -220,9 +220,9 @@ void DtSetPref::Apply()
       if (_callback)
        {
 	 if (_previous_status_flag)
-            (*_callback)(_callback_data, STATUS_FLAG_ON, NULL);
+            (*_callback)(_callback_data, STATUS_FLAG_ON, nullptr);
 	 else
-            (*_callback)(_callback_data, STATUS_FLAG_OFF, NULL);
+            (*_callback)(_callback_data, STATUS_FLAG_OFF, nullptr);
        }
     }
    if (_previous_status_line != status_line->Selected())
@@ -231,9 +231,9 @@ void DtSetPref::Apply()
       if (_callback)
        {
 	 if (_previous_status_line)
-            (*_callback)(_callback_data, STATUS_LINE_ON, NULL);
+            (*_callback)(_callback_data, STATUS_LINE_ON, nullptr);
 	 else
-            (*_callback)(_callback_data, STATUS_LINE_OFF, NULL);
+            (*_callback)(_callback_data, STATUS_LINE_OFF, nullptr);
        }
     }
    if (_previous_show_only_mine != only_mine->Selected())
@@ -248,13 +248,13 @@ void DtSetPref::Apply()
       if (_callback)
        {
 	 if (_previous_show_only_mine)
-            (*_callback)(_callback_data, SHOW_ONLY_MINE_ON, NULL);
+            (*_callback)(_callback_data, SHOW_ONLY_MINE_ON, nullptr);
 	 else
-            (*_callback)(_callback_data, SHOW_ONLY_MINE_OFF, NULL);
+            (*_callback)(_callback_data, SHOW_ONLY_MINE_OFF, nullptr);
 	 if (_previous_show_details_label)
-            (*_callback)(_callback_data, SHOW_DETAILS_LABEL_ON, NULL);
+            (*_callback)(_callback_data, SHOW_DETAILS_LABEL_ON, nullptr);
 	 else
-            (*_callback)(_callback_data, SHOW_DETAILS_LABEL_OFF, NULL);
+            (*_callback)(_callback_data, SHOW_DETAILS_LABEL_OFF, nullptr);
        }
     }
    if (_previous_show_details_label != show_labels->Selected())
@@ -263,9 +263,9 @@ void DtSetPref::Apply()
       if (_callback)
        {
 	 if (_previous_show_details_label)
-            (*_callback)(_callback_data, SHOW_DETAILS_LABEL_ON, NULL);
+            (*_callback)(_callback_data, SHOW_DETAILS_LABEL_ON, nullptr);
 	 else
-            (*_callback)(_callback_data, SHOW_DETAILS_LABEL_OFF, NULL);
+            (*_callback)(_callback_data, SHOW_DETAILS_LABEL_OFF, nullptr);
        }
     }
    if (update_interval->Value() != _previous_update_interval)

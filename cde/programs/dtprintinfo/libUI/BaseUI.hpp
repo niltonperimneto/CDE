@@ -287,7 +287,7 @@ class BaseUI {
 
    BaseUI(BaseUI *parent,
 	  const char *name,
-	  const char *category = NULL);
+	  const char *category = nullptr);
 
    // Derived classes must define these functions
    virtual boolean SetVisiblity(boolean) = 0;
@@ -362,7 +362,7 @@ class BaseUI {
    const char * Category()          { return _category; }
    const ViewStyle ContainerView()  { return _viewStyle; }
    const IconStyle IconView()       { return _iconStyle; }
-   virtual char * Details()         { return NULL; }
+   virtual char * Details()         { return nullptr; }
 
    BaseUI * Parent()                { return _parent; }
    BaseUI ** Children()             { return _children; }
@@ -424,16 +424,16 @@ class BaseUI {
 
    BaseUI *FindByName(char *pattern,
 		      int depth = 1,
-		      int *n_mactches = NULL,
-		      BaseUI ***matches = NULL,
-		      SelectProc select_proc = NULL,
+		      int *n_mactches = nullptr,
+		      BaseUI ***matches = nullptr,
+		      SelectProc select_proc = nullptr,
 		      boolean regular_expression = false,
 		      boolean case_sensitive = true);
    BaseUI *FindByCategory(char *pattern,
 		          int depth = 1,
-			  int *n_mactches = NULL,
-			  BaseUI ***matches = NULL,
-		          SelectProc select_proc = NULL,
+			  int *n_mactches = nullptr,
+			  BaseUI ***matches = nullptr,
+		          SelectProc select_proc = nullptr,
 		          boolean regular_expression = false,
 		          boolean case_sensitive = true);
    void OrderByName(boolean flag);       // Calls SetOrder
@@ -459,7 +459,7 @@ class BaseUI {
 
    // Get selected items
    virtual void Selection(int *n_items,
-			  BaseUI ***items = NULL);
+			  BaseUI ***items = nullptr);
 
    virtual const UI_Class UIClass() { return BASE_UI; }
    virtual const int UISubClass() { return NO_SUBCLASS; }

@@ -58,23 +58,23 @@ extern XtPointer _XmStringUngenerate (
 boolean DtDND::FirstTime = true;
 XtCallbackRec DtDND::transferCBRec[] =
 {
-   {&DtDND::TransferCB, NULL}, {NULL, NULL}
+   {&DtDND::TransferCB, nullptr}, {nullptr, nullptr}
 };
 XtCallbackRec DtDND::convertCBRec[] =
 {
-   {&DtDND::ConvertCB, NULL}, {NULL, NULL}
+   {&DtDND::ConvertCB, nullptr}, {nullptr, nullptr}
 };
 XtCallbackRec DtDND::dragFinishCBRec[] =
 {
-   {&DtDND::DragFinishCB, NULL}, {NULL, NULL}
+   {&DtDND::DragFinishCB, nullptr}, {nullptr, nullptr}
 };
 XtCallbackRec DtDND::dropOnRootCBRec[] =
 {
-   {&DtDND::DropOnRootCB, NULL}, {NULL, NULL}
+   {&DtDND::DropOnRootCB, nullptr}, {nullptr, nullptr}
 };
 XtCallbackRec DtDND::animateCBRec[] =
 {
-   {&DtDND::AnimateCB, NULL}, {NULL, NULL}
+   {&DtDND::AnimateCB, nullptr}, {nullptr, nullptr}
 };
 boolean DtDND::DoingDrag = false;
 GC DtDND::gc;
@@ -90,9 +90,9 @@ DtDND::DtDND(MotifUI *_obj, DNDCallback _dndCB, boolean _can_drop_on_root)
       while (parent->Parent())
          parent = parent->Parent();
       tmp_pixmap = XCreatePixmap(tmp->display, tmp->root, 1, 1, tmp->depth);
-      gc = XCreateGC(tmp->display, tmp_pixmap, 0, NULL);
+      gc = XCreateGC(tmp->display, tmp_pixmap, 0, nullptr);
       tmp_pixmap = XCreatePixmap(tmp->display, tmp->root, 1, 1, 1);
-      gc_mask = XCreateGC(tmp->display, tmp_pixmap, 0, NULL);
+      gc_mask = XCreateGC(tmp->display, tmp_pixmap, 0, nullptr);
       if (tmp->font) {
 	XSetFont(tmp->display, gc, tmp->font);
       }
@@ -102,8 +102,8 @@ DtDND::DtDND(MotifUI *_obj, DNDCallback _dndCB, boolean _can_drop_on_root)
    obj = _obj;
    can_drop_on_root = _can_drop_on_root;
    dndCB = _dndCB;
-   dragIcon = NULL;
-   sourceIcon = NULL;
+   dragIcon = nullptr;
+   sourceIcon = nullptr;
 
    // Set up Drop
    transferCBRec[0].closure = (XtPointer)this;
@@ -111,7 +111,7 @@ DtDND::DtDND(MotifUI *_obj, DNDCallback _dndCB, boolean _can_drop_on_root)
    if (obj->UIClass() == ICON)
     {
       GetRects();
-      XtVaSetValues(obj->BaseWidget(), XmNshadowThickness, 2, NULL);
+      XtVaSetValues(obj->BaseWidget(), XmNshadowThickness, 2, nullptr);
       Arg args[6];
       XtSetArg(args[0], XmNdropSiteType, XmDROP_SITE_SIMPLE);
       XtSetArg(args[1], XmNanimationStyle, XmDRAG_UNDER_SHADOW_IN);
@@ -145,9 +145,9 @@ DtDND::DtDND(MotifUI *_obj, DNDCallback _dndCB, boolean _can_drop_on_root)
     }
    pixmap = 0L;
    mask = 0L;
-   name = NULL;
-   iconFile = NULL;
-   string = NULL;
+   name = nullptr;
+   iconFile = nullptr;
+   string = nullptr;
 }
 
 DtDND::~DtDND()
@@ -163,12 +163,12 @@ DtDND::~DtDND()
    if (sourceIcon)
     {
       XtDestroyWidget(sourceIcon);
-      sourceIcon = NULL;
+      sourceIcon = nullptr;
     }
    if (dragIcon)
     {
       XtDestroyWidget(dragIcon);
-      dragIcon = NULL;
+      dragIcon = nullptr;
     }
 }
 
@@ -200,7 +200,7 @@ void DtDND::GetDragPixmaps()
                  GuiNshowSelectedPixmap, &showSelectedPixmap,
                  XmNstringDirection, &stringDirection,
                  GuiNtextSelectColor, &textSelectColor,
-                 XmNlabelString, &string, XmNfontList, &fontList, NULL);
+                 XmNlabelString, &string, XmNfontList, &fontList, nullptr);
 
    XmStringExtent(fontList, string, &width, &height);
    if (icon_size == LARGE_ICON)
@@ -356,7 +356,7 @@ void DtDND::GetDragPixmaps()
 
    if (!(tmp_pixmap && tmp_pixmap != XmUNSPECIFIED_PIXMAP))
     {
-      static Pixmap l_pixmap = (Pixmap)NULL, s_pixmap = (Pixmap)NULL;
+      static Pixmap l_pixmap = (Pixmap)nullptr, s_pixmap = (Pixmap)nullptr;
       if (icon_size == LARGE_ICON)
        {
 	 if (!l_pixmap)
@@ -431,7 +431,7 @@ void DtDND::DrawString()
    else
       XSetForeground(icon->display, gc, fg);
    XmStringDraw(icon->display, pixmap, fontList, string, gc, s_x, s_y, s_w,
-		alignment, stringDirection, NULL);
+		alignment, stringDirection, nullptr);
 }
 
 void DtDND::GetRects()
@@ -440,7 +440,7 @@ void DtDND::GetRects()
 
    XtVaGetValues(obj->BaseWidget(), XmNhighlightThickness, &highlight, 
                  GuiNiconMarginThickness, &margin, 
-                 GuiNiconShadowThickness, &shadow, NULL);
+                 GuiNiconShadowThickness, &shadow, nullptr);
 
    margin += (shadow + highlight);
    GuiIconGetRects(obj->BaseWidget(), &rects[0], &rects[1]);
@@ -477,9 +477,9 @@ void DtDND::UpdateActivity(boolean flag)
     }
    XmDropSiteUpdate(obj->BaseWidget(), args, n);
    if (flag)
-      XmDropSiteConfigureStackingOrder(obj->BaseWidget(), NULL, XmABOVE);
+      XmDropSiteConfigureStackingOrder(obj->BaseWidget(), nullptr, XmABOVE);
    else
-      XmDropSiteConfigureStackingOrder(obj->BaseWidget(), NULL, XmBELOW);
+      XmDropSiteConfigureStackingOrder(obj->BaseWidget(), nullptr, XmBELOW);
 }
 
 void DtDND::UpdateRects()
@@ -504,7 +504,7 @@ void DtDND::AnimateCB(Widget /*widget*/, XtPointer client_data,
       numItems = animateInfo->dropData->numItems;
       //for (i = 0; i < numItems; i++)
        {
-	 (*obj->dndCB)(obj->obj, NULL, NULL, ANIMATE);
+	 (*obj->dndCB)(obj->obj, nullptr, nullptr, ANIMATE);
        }
     }
 }
@@ -538,11 +538,11 @@ void DtDND::TransferCB(Widget /*widget*/, XtPointer client_data,
          for (i = 0; i < numItems; i++)
           {
   	    value = (char *) _XmStringUngenerate(
-				transferInfo->dropData->data.strings[i], NULL,
+				transferInfo->dropData->data.strings[i], nullptr,
 				XmMULTIBYTE_TEXT, XmMULTIBYTE_TEXT);
 	    len = strlen(value);
 	    (*obj->dndCB)(obj->obj, &value, &len, TEXT_TRANSFER);
-	    if (NULL != value)
+	    if (nullptr != value)
 	      XtFree(value);
           }
        }
@@ -561,8 +561,8 @@ void DtDND::TransferCB(Widget /*widget*/, XtPointer client_data,
 	    aap[i].u.buffer.name = transferInfo->dropData->data.buffers[i].name;
           }
 	 MotifUI *tmp = (MotifUI *)obj->obj;
-	 DtActionInvoke(tmp->topLevel, value, aap, numItems, NULL, NULL, NULL,
-			1, NULL, NULL);
+	 DtActionInvoke(tmp->topLevel, value, aap, numItems, nullptr, nullptr, nullptr,
+			1, nullptr, nullptr);
 	 delete aap;
 	 delete value;
        }
@@ -623,8 +623,8 @@ void DtDND::StartDrag(XEvent *event)
     {
       XtDestroyWidget(dragIcon);
       XtDestroyWidget(sourceIcon);
-      dragIcon = NULL;
-      sourceIcon = NULL;
+      dragIcon = nullptr;
+      sourceIcon = nullptr;
     }
    if (!dragIcon)
       GetDragPixmaps();
@@ -646,7 +646,7 @@ void DtDND::StartDrag(XEvent *event)
     {
       XmDragContext xmDragContext = (XmDragContext) dc;
       XtVaSetValues((Widget)xmDragContext->drag.curDragOver,
-		    XmNdragOverMode, XmPIXMAP, NULL);
+		    XmNdragOverMode, XmPIXMAP, nullptr);
     }
    else
       fprintf(stderr, "DtDndDragStart returned NULL.\n");
@@ -669,7 +669,7 @@ void DtDND::ConvertCB(Widget /*dragContext*/, XtPointer client_data,
        {
          for (i = 0; i < numFiles; i++)
           {
-	    value = NULL;
+	    value = nullptr;
 	    (*obj->dndCB)(obj->obj, &value, &len, CONVERT_DATA);
 	    if (value && *value)
                convertInfo->dragData->data.files[i] = value;
@@ -704,7 +704,7 @@ void DtDND::DropOnRootCB(Widget /*dragContext*/, XtPointer client_data,
    DtDndDropCallbackStruct *fileList = (DtDndDropCallbackStruct *)call_data;
    MotifUI *tmp = (MotifUI *)obj->obj;
    Atom     pCurrent;
-   char *workspace_name = NULL;
+   char *workspace_name = nullptr;
 
    if (DtWsmGetCurrentWorkspace(tmp->display, tmp->root, &pCurrent) ==
        Success)

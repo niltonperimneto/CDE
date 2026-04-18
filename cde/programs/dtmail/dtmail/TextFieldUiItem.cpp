@@ -75,5 +75,5 @@ void TextFieldUiItem::writeFromSourceToUi()
 
   value = (char *)prop_source->getValue();
   options_field_set_value(w, value, this->dirty_bit);
-  if (NULL != value) free((void*) value);
+  if (nullptr != value) free((void*) value);
 }

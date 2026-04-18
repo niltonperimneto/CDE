@@ -69,8 +69,8 @@ class Application : public MotifUI {
    boolean SetVisiblity(boolean);
    boolean SetName(char *);
    virtual void SaveYourSelf() { }
-   virtual char *SessionFile() { return NULL; }
-   virtual char *SessionPath() { return NULL; }
+   virtual char *SessionFile() { return nullptr; }
+   virtual char *SessionPath() { return nullptr; }
    void Save(char *attribute, char *value);
    char *Restore(char *attribute);
    void SaveMe(boolean save_as_session = false);

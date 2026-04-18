@@ -59,7 +59,7 @@ DtMail::Envelope::~Envelope(void)
 	MutexLock lock_scope(_obj_mutex);
 	if (_obj_mutex) {
 	    lock_scope.unlock_and_destroy();
-	    _obj_mutex = NULL;
+	    _obj_mutex = nullptr;
 	}
     }
 }

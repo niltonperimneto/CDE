@@ -87,12 +87,12 @@ Sort::sortMessages(MsgScrollingList	*displayList,
       GetPasswordEntry(pw);
   }
 
-  if (msgHandles != NULL && mbox != NULL)
+  if (msgHandles != nullptr && mbox != nullptr)
   {
     //
     // Add in the deleted messages for the purpose of sorting.
     //
-    if (NULL != deletedMsgHandles)
+    if (nullptr != deletedMsgHandles)
     {
         numberMessages = deletedMsgHandles->length();
         for (int i = 0; i < numberMessages; i++)
@@ -116,8 +116,8 @@ Sort::sortMessages(MsgScrollingList	*displayList,
 
       unsigned int	offset;
       unsigned int	msgno;
-      DtMail::Message		* msg = NULL;
-      DtMail::Envelope	* envelope = NULL;
+      DtMail::Message		* msg = nullptr;
+      DtMail::Envelope	* envelope = nullptr;
 
       //
       // Get the messages from the list.
@@ -145,7 +145,7 @@ Sort::sortMessages(MsgScrollingList	*displayList,
 			msgno, (const char *)error);
 	    }
 
-	    if (msg != NULL)
+	    if (msg != nullptr)
 	    {
 		envelope = msg->getEnvelope(error);
 		if (error.isSet())
@@ -155,10 +155,10 @@ Sort::sortMessages(MsgScrollingList	*displayList,
 			    msgno, (const char *)error);
 		}
 	    }
-	    if (msg == NULL || envelope == NULL) continue;
+	    if (msg == nullptr || envelope == nullptr) continue;
 	}
 
-	primary_key_str = NULL;
+	primary_key_str = nullptr;
 	primary_key_int = 0;
 
 	// Set up the secondary sort key using the received timestamp.
@@ -201,10 +201,10 @@ Sort::sortMessages(MsgScrollingList	*displayList,
 		  int			len;
   		  DtMailValueSeq	tovalue;
 
-		  if (NULL != addr)
+		  if (nullptr != addr)
 		  {
 		      ptr = strchr(addr->dtm_address, '@');
-		      if (NULL != ptr)
+		      if (nullptr != ptr)
 			len = ptr - addr->dtm_address;
 		      else
 			len = strlen(addr->dtm_address);
@@ -230,7 +230,7 @@ Sort::sortMessages(MsgScrollingList	*displayList,
 	      else
 	      {
 		char *str;
-		if (NULL != addr->dtm_address)
+		if (nullptr != addr->dtm_address)
 		  str = strdup(addr->dtm_address);
 		else
 		  str = strdup("");
@@ -276,7 +276,7 @@ Sort::sortMessages(MsgScrollingList	*displayList,
 			DTM_TRUE,
 			value);
 	  if (error.isNotSet())
-	    primary_key_int = (int) strtol(*(value[0]), NULL, 10);
+	    primary_key_int = (int) strtol(*(value[0]), nullptr, 10);
 	  break;
 
 	case SortStatus:
@@ -293,7 +293,7 @@ Sort::sortMessages(MsgScrollingList	*displayList,
 		const char *s;
 		s = *(value[0]);
 
-		if (s == NULL) {
+		if (s == nullptr) {
 			// New
 			primary_key_int = 2;
 		} else if (strcmp(s, "RO") == 0) {
@@ -342,7 +342,7 @@ Sort::sortMessages(MsgScrollingList	*displayList,
       for (offset = 0; offset < numberMessages ; offset++)
       {
 	msgHandles->replace(offset, messages[i].msg_struct);
-        if (messages[i].primary_key_str != NULL)
+        if (messages[i].primary_key_str != nullptr)
 	  free(messages[i].primary_key_str);
 	i = messages[i].link;
       }
@@ -361,7 +361,7 @@ Sort::sortMessages(MsgScrollingList	*displayList,
     //
     // Remove the deleted messages.
     //
-    if (NULL != deletedMsgHandles)
+    if (nullptr != deletedMsgHandles)
     {
         numberMessages = deletedMsgHandles->length();
         for (int i = 0; i < numberMessages; i++)
@@ -511,7 +511,7 @@ Sort::_sortCmp(char ** one, char ** two)
   messageRecord	* first = (messageRecord *) *one;
   messageRecord	* second = (messageRecord *) *two;
 
-  if (first->primary_key_str == NULL)
+  if (first->primary_key_str == nullptr)
   {
     if (first->primary_key_int < second->primary_key_int)
       return -1;

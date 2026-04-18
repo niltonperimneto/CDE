@@ -122,7 +122,7 @@ MailRetrievalOptions::MailRetrievalOptions (
 			 	) : UIComponent( "PrintOptions" )
 {
     DtMail::Session	*d_session = theRoamApp.session()->session();
-    PropUiItem		*pui = (PropUiItem  *) NULL;
+    PropUiItem		*pui = (PropUiItem  *) nullptr;
     Widget		*menu_buttons, w;
     int			n, nitems;
     char		**strings;
@@ -130,37 +130,37 @@ MailRetrievalOptions::MailRetrievalOptions (
     XmString		xms;
     char		*propkey = new char[MAXPATHLEN];
 
-    _password_pui = NULL;
-    _inboxpath_label = NULL;
-    _inboxpath_tf = NULL;
-    _checkfornewmail_label = NULL;
-    _checkfornewmail_sb = NULL;
-    _system_tb = NULL;
-    _server_frame = NULL;
-    _server_tb = NULL;
-    _serverframe_form = NULL;
-    _serverprotocol_label = NULL;
-    _serverprotocol_iom = NULL;
-    _servername_label = NULL;
-    _servername_tf = NULL;
-    _username_label = NULL;
-    _username_tf = NULL;
-    _password_label = NULL;
-    _password_tf = NULL;
-    _rememberpassword_tb = NULL;
-    _removeafterdelivery_tb = NULL;
-    _retrieveold_tb = NULL;
-    _custom_frame = NULL;
-    _custom_tb = NULL;
-    _customframe_form = NULL;
-    _customcommand_label = NULL;
-    _customcommand_tf = NULL;
+    _password_pui = nullptr;
+    _inboxpath_label = nullptr;
+    _inboxpath_tf = nullptr;
+    _checkfornewmail_label = nullptr;
+    _checkfornewmail_sb = nullptr;
+    _system_tb = nullptr;
+    _server_frame = nullptr;
+    _server_tb = nullptr;
+    _serverframe_form = nullptr;
+    _serverprotocol_label = nullptr;
+    _serverprotocol_iom = nullptr;
+    _servername_label = nullptr;
+    _servername_tf = nullptr;
+    _username_label = nullptr;
+    _username_tf = nullptr;
+    _password_label = nullptr;
+    _password_tf = nullptr;
+    _rememberpassword_tb = nullptr;
+    _removeafterdelivery_tb = nullptr;
+    _retrieveold_tb = nullptr;
+    _custom_frame = nullptr;
+    _custom_tb = nullptr;
+    _customframe_form = nullptr;
+    _customcommand_label = nullptr;
+    _customcommand_tf = nullptr;
     
 
     _propui_array = new DtVirtArray<PropUiItem *>(10);
     _propui_array_iterator = 0;
     _parent = parent;
-    if (NULL != foldername)
+    if (nullptr != foldername)
       _foldername = strdup(foldername);
     else
       _foldername = strdup(DTMAS_INBOX);
@@ -182,8 +182,8 @@ MailRetrievalOptions::MailRetrievalOptions (
 			  	XmNtopAttachment, XmATTACH_FORM,
 			  	XmNresizePolicy, XmRESIZE_ANY,
 			  	XmNfractionBase, 3,
-			  	NULL);
-    if (_form == (Widget) NULL)
+			  	nullptr);
+    if (_form == (Widget) nullptr)
     {
 	delete [] propkey;
 	return;
@@ -204,7 +204,7 @@ MailRetrievalOptions::MailRetrievalOptions (
     				XmNrightAttachment, XmATTACH_NONE,
 				XmNcolumns, 30,
 				XmNvalue, "",
-				NULL);
+				nullptr);
     xms = XmStringCreateLocalized(CATGETS(DT_catd, 27, 18,"INBOX folder path:"));
     _inboxpath_label = XtVaCreateManagedWidget(
 				"InboxNameLabel",
@@ -217,7 +217,7 @@ MailRetrievalOptions::MailRetrievalOptions (
 				XmNrightAttachment, XmATTACH_WIDGET,
     				XmNrightOffset, 3,
 				XmNrightWidget, _inboxpath_tf,
-				NULL);
+				nullptr);
     XmStringFree(xms);
 
     //
@@ -225,7 +225,7 @@ MailRetrievalOptions::MailRetrievalOptions (
     //
     DtMailObjectSpace	space;
     DtMailEnv		error;
-    char		*dflt_inboxpath = NULL;
+    char		*dflt_inboxpath = nullptr;
     d_session->queryImpl(
 			error,
 			d_session->getDefaultImpl(error),
@@ -263,7 +263,7 @@ MailRetrievalOptions::MailRetrievalOptions (
         			XmNarrowLayout, XmARROWS_END,
         			XmNspinBoxChildType, XmNUMERIC,
         			XmNcolumns, 6,
-				NULL);
+				nullptr);
 
     xms = XmStringCreateLocalized(
 		CATGETS(Dtb_project_catd, 2, 13, "Check for new mail every:"));
@@ -279,7 +279,7 @@ MailRetrievalOptions::MailRetrievalOptions (
 				XmNrightAttachment, XmATTACH_WIDGET,
     				XmNrightOffset, 3,
 				XmNrightWidget, _checkfornewmail_sb,
-                		NULL);
+                		nullptr);
     XmStringFree(xms);
 
     //
@@ -304,7 +304,7 @@ MailRetrievalOptions::MailRetrievalOptions (
 			  	XmNtopAttachment, XmATTACH_WIDGET,
 			  	XmNtopWidget, _checkfornewmail_sb,
 				XmNtopOffset, 10,
-				NULL);
+				nullptr);
 
     xms = XmStringCreateLocalized(
 		CATGETS(DT_catd, 27, 6, "Automatic (system) delivery"));
@@ -320,7 +320,7 @@ MailRetrievalOptions::MailRetrievalOptions (
 				XmNalignment, XmALIGNMENT_BEGINNING,
 				XmNlabelString, xms,
 				XmNset, True,
-				NULL);
+				nullptr);
     XmStringFree(xms);
 
     XtAddCallback(
@@ -352,7 +352,7 @@ MailRetrievalOptions::MailRetrievalOptions (
 				XmNrightAttachment, XmATTACH_FORM,
 				XmNrightOffset, 10,
 				XmNbottomAttachment, XmATTACH_NONE,
-				NULL);
+				nullptr);
 
     xms = XmStringCreateLocalized(
 		CATGETS(DT_catd, 27, 7, "Mail server retrieval"));
@@ -365,7 +365,7 @@ MailRetrievalOptions::MailRetrievalOptions (
 				XmNchildVerticalAlignment, XmALIGNMENT_CENTER,
 				XmNlabelString, xms,
 				XmNset, False,
-				NULL);
+				nullptr);
     XmStringFree(xms);
 
     XtAddCallback(
@@ -389,7 +389,7 @@ MailRetrievalOptions::MailRetrievalOptions (
 			  	//XmNallowOverlap, False,
 			  	XmNfractionBase, 3,
 			  	XmNresizePolicy, XmRESIZE_ANY,
-			  	NULL);
+			  	nullptr);
 
     //
     //  Create GUI for the MailServerProtocol Option
@@ -415,7 +415,7 @@ MailRetrievalOptions::MailRetrievalOptions (
 		XmNleftAttachment, XmATTACH_POSITION,
 		XmNleftPosition, 1,
     		XmNrightAttachment, XmATTACH_NONE,
-		NULL);
+		nullptr);
     _serverprotocol_iom->manage();
     _serverprotocol_iom->setSpec((void*) DTMAS_PROPDFLT_PROTOCOL);
     XtFree((char*) strings);
@@ -434,7 +434,7 @@ MailRetrievalOptions::MailRetrievalOptions (
 			XmNrightAttachment, XmATTACH_WIDGET,
     			XmNrightOffset, 3,
 			XmNrightWidget, _serverprotocol_iom->baseWidget(),
-			NULL);
+			nullptr);
     XmStringFree(xms);
 
     //
@@ -459,7 +459,7 @@ MailRetrievalOptions::MailRetrievalOptions (
     			XmNrightAttachment, XmATTACH_NONE,
 			XmNcolumns, 30,
 			XmNvalue, "",
-			NULL);
+			nullptr);
     xms = XmStringCreateLocalized(CATGETS(DT_catd, 27, 9, "Server Name:"));
     _servername_label = XtVaCreateManagedWidget(
 			"ServerNameLabel",
@@ -472,7 +472,7 @@ MailRetrievalOptions::MailRetrievalOptions (
 			XmNrightAttachment, XmATTACH_WIDGET,
     			XmNrightOffset, 3,
 			XmNrightWidget, _servername_tf,
-			NULL);
+			nullptr);
     XmStringFree(xms);
 
     //
@@ -497,7 +497,7 @@ MailRetrievalOptions::MailRetrievalOptions (
     			XmNrightAttachment, XmATTACH_NONE,
 			XmNcolumns, 30,
 			XmNvalue, "",
-			NULL);
+			nullptr);
     xms = XmStringCreateLocalized(CATGETS(DT_catd, 27, 10, "User Name:"));
     _username_label = XtVaCreateManagedWidget(
 			"UserNameLabel",
@@ -508,7 +508,7 @@ MailRetrievalOptions::MailRetrievalOptions (
     			XmNleftAttachment, XmATTACH_NONE,
 			XmNrightAttachment, XmATTACH_WIDGET,
 			XmNrightWidget, _username_tf,
-			NULL);
+			nullptr);
     XmStringFree(xms);
  
     //
@@ -536,7 +536,7 @@ MailRetrievalOptions::MailRetrievalOptions (
     			XmNrightAttachment, XmATTACH_NONE,
 			XmNcolumns, 30,
 			XmNvalue, "",
-			NULL);
+			nullptr);
     xms = XmStringCreateLocalized(CATGETS(DT_catd, 27, 11, "Password:"));
     _password_label = XtVaCreateManagedWidget(
 			"PasswordLabel",
@@ -547,7 +547,7 @@ MailRetrievalOptions::MailRetrievalOptions (
     			XmNleftAttachment, XmATTACH_NONE,
     			XmNrightAttachment, XmATTACH_WIDGET,
     			XmNrightWidget, _password_tf,
-			NULL);
+			nullptr);
     XmStringFree(xms);
  
 
@@ -576,7 +576,7 @@ MailRetrievalOptions::MailRetrievalOptions (
     			XmNalignment, XmALIGNMENT_END,
     			XmNlabelString, xms,
     			XmNset, False,
-			NULL);
+			nullptr);
     XmStringFree(xms);
 
     XtAddCallback(
@@ -611,7 +611,7 @@ MailRetrievalOptions::MailRetrievalOptions (
     			XmNalignment, XmALIGNMENT_BEGINNING,
     			XmNlabelString, xms,
     			XmNset, True,
-			NULL);
+			nullptr);
     XmStringFree(xms);
 
     //
@@ -640,7 +640,7 @@ MailRetrievalOptions::MailRetrievalOptions (
     			XmNalignment, XmALIGNMENT_BEGINNING,
     			XmNlabelString, xms,
     			XmNset, True,
-			NULL);
+			nullptr);
     XmStringFree(xms);
 
     //
@@ -668,7 +668,7 @@ MailRetrievalOptions::MailRetrievalOptions (
 				XmNrightOffset, 10,
 				XmNbottomAttachment, XmATTACH_FORM,
 				XmNbottomOffset, 10,
-				NULL);
+				nullptr);
 
     xms = XmStringCreateLocalized(
 		CATGETS(DT_catd, 27, 15, "Custom retrieval"));
@@ -681,7 +681,7 @@ MailRetrievalOptions::MailRetrievalOptions (
 				XmNchildVerticalAlignment, XmALIGNMENT_CENTER,
 				XmNlabelString, xms,
 				XmNset, False,
-				NULL);
+				nullptr);
     XmStringFree(xms);
 
     XtAddCallback(
@@ -704,7 +704,7 @@ MailRetrievalOptions::MailRetrievalOptions (
 			  	//XmNallowOverlap, False,
 			  	XmNfractionBase, 3,
 			  	XmNresizePolicy, XmRESIZE_ANY,
-			  	NULL);
+			  	nullptr);
 
     //
     //  Create GUI for the User Command Option
@@ -718,7 +718,7 @@ MailRetrievalOptions::MailRetrievalOptions (
     			XmNrightAttachment, XmATTACH_NONE,
 			XmNcolumns, 45,
 			XmNvalue, "",
-			NULL);
+			nullptr);
     xms = XmStringCreateLocalized(
 			CATGETS(DT_catd, 27, 16, "User Getmail command:"));
     _customcommand_label = XtVaCreateManagedWidget(
@@ -732,7 +732,7 @@ MailRetrievalOptions::MailRetrievalOptions (
 			XmNrightAttachment, XmATTACH_WIDGET,
     			XmNrightOffset, 3,
 			XmNrightWidget, _customcommand_tf,
-			NULL);
+			nullptr);
     XmStringFree(xms);
 
     //
@@ -800,16 +800,16 @@ MailRetrievalOptions::isValidInboxPath(PropUiItem* pui, void* data)
     MailSession		*ses = theRoamApp.session();
     DtMail::Session	*d_session = ses->session();
     DtMailEnv		error;
-    const char		*errmsg = NULL;
-    char		*inbox_path = NULL;
+    const char		*errmsg = nullptr;
+    char		*inbox_path = nullptr;
     char		*s, *t, *tmp;
-    char		*expanded_path = NULL;
+    char		*expanded_path = nullptr;
     Widget		text;
     int			status;
 
     text = pui->getWidget();
     if (text) inbox_path = XmTextFieldGetString(text);
-    if (NULL == inbox_path || 0 == strlen(inbox_path))
+    if (nullptr == inbox_path || 0 == strlen(inbox_path))
       return CATGETS(DT_catd, 27, 17, "Null INBOX path.");
 
     tmp = (char*) malloc(strlen(inbox_path)+1);
@@ -825,7 +825,7 @@ MailRetrievalOptions::isValidInboxPath(PropUiItem* pui, void* data)
     free(inbox_path);
     inbox_path = tmp;
 
-    if (NULL == inbox_path || 0 == strlen(inbox_path))
+    if (nullptr == inbox_path || 0 == strlen(inbox_path))
       return CATGETS(DT_catd, 27, 17, "Null INBOX path.");
 
     if (isalpha(inbox_path[0]))
@@ -846,7 +846,7 @@ MailRetrievalOptions::isValidInboxPath(PropUiItem* pui, void* data)
         errmsg = strdup(errmsg);
     }
     else
-      errmsg = NULL;
+      errmsg = nullptr;
 
     if (inbox_path) free(inbox_path);
     free(expanded_path);
@@ -860,13 +860,13 @@ MailRetrievalOptions::initOptionInteractions(void)
     unsigned char	isset, isset_server;
     Widget		opt;
 
-    XtVaGetValues(_server_tb, XmNset, &isset, NULL);
+    XtVaGetValues(_server_tb, XmNset, &isset, nullptr);
     if (XmUNSET == isset)
     {
         for (i=0; i<_server_options->length(); i++)
         {
             opt = (*_server_options)[i];
-	    XtVaSetValues(opt, XmNsensitive, False, NULL);
+	    XtVaSetValues(opt, XmNsensitive, False, nullptr);
         }
     }
     else
@@ -874,18 +874,18 @@ MailRetrievalOptions::initOptionInteractions(void)
         for (i=0; i<_server_options->length(); i++)
         {
             opt = (*_server_options)[i];
-	    XtVaSetValues(opt, XmNsensitive, True, NULL);
+	    XtVaSetValues(opt, XmNsensitive, True, nullptr);
         }
     }
     isset_server = isset;
 
-    XtVaGetValues(_custom_tb, XmNset, &isset, NULL);
+    XtVaGetValues(_custom_tb, XmNset, &isset, nullptr);
     if (XmUNSET == isset)
     {
         for (i=0; i<_custom_options->length(); i++)
         {
             opt = (*_custom_options)[i];
-	    XtVaSetValues(opt, XmNsensitive, False, NULL);
+	    XtVaSetValues(opt, XmNsensitive, False, nullptr);
         }
     }
     else
@@ -893,21 +893,21 @@ MailRetrievalOptions::initOptionInteractions(void)
         for (i=0; i<_custom_options->length(); i++)
         {
             opt = (*_custom_options)[i];
-	    XtVaSetValues(opt, XmNsensitive, True, NULL);
+	    XtVaSetValues(opt, XmNsensitive, True, nullptr);
         }
     }
 
-    XtVaGetValues(_rememberpassword_tb, XmNset, &isset, NULL);
+    XtVaGetValues(_rememberpassword_tb, XmNset, &isset, nullptr);
     if (XmSET == isset)
     {
         _password_pui->writeAllowed(DTM_TRUE);
 	if (isset_server)
-	  XtVaSetValues(_password_label, XmNsensitive, True, NULL);
+	  XtVaSetValues(_password_label, XmNsensitive, True, nullptr);
     }
     else
     {
         _password_pui->writeAllowed(DTM_FALSE);
-	XtVaSetValues(_password_label, XmNsensitive, False, NULL);
+	XtVaSetValues(_password_label, XmNsensitive, False, nullptr);
     }
 }
 
@@ -921,7 +921,7 @@ MailRetrievalOptions::getFirstProp(void)
 PropUiItem *
 MailRetrievalOptions::getNextProp(void)
 {
-    PropUiItem	*pui = (PropUiItem  *) NULL;
+    PropUiItem	*pui = (PropUiItem  *) nullptr;
 
     if (_propui_array_iterator < _propui_array->length())
     {
@@ -951,12 +951,12 @@ MailRetrievalOptions::rememberPasswordChangedCB(
 #if 0
     if (XmSET == cbs->set)
     {
-	XtVaSetValues(mro->_password_label, XmNsensitive, True, NULL);
+	XtVaSetValues(mro->_password_label, XmNsensitive, True, nullptr);
         mro->_password_pui->writeAllowed(DTM_TRUE);
     }
     else
     {
-	XtVaSetValues(mro->_password_label, XmNsensitive, False, NULL);
+	XtVaSetValues(mro->_password_label, XmNsensitive, False, nullptr);
         mro->_password_pui->writeAllowed(DTM_FALSE);
     }
 #else
@@ -980,14 +980,14 @@ MailRetrievalOptions::retrievalTBSValueChangedCB(
 
     if (XmUNSET == cbs->set)
     {
-        XtVaSetValues(w, XmNset, XmSET, NULL);
+        XtVaSetValues(w, XmNset, XmSET, nullptr);
 	return;
     }
 
     for (i=0; i<mro->_retrieval_tbs->length(); i++)
     {
         tb = (*mro->_retrieval_tbs)[i];
-	if (tb != w) XtVaSetValues(tb, XmNset, XmUNSET, NULL);
+	if (tb != w) XtVaSetValues(tb, XmNset, XmUNSET, nullptr);
     }
 
 #if 0
@@ -996,12 +996,12 @@ MailRetrievalOptions::retrievalTBSValueChangedCB(
         for (i=0; i<mro->_server_options->length(); i++)
         {
             opt = (*mro->_server_options)[i];
-	    XtVaSetValues(opt, XmNsensitive, False, NULL);
+	    XtVaSetValues(opt, XmNsensitive, False, nullptr);
         }
         for (i=0; i<mro->_custom_options->length(); i++)
         {
             opt = (*mro->_custom_options)[i];
-	    XtVaSetValues(opt, XmNsensitive, False, NULL);
+	    XtVaSetValues(opt, XmNsensitive, False, nullptr);
         }
     }
     else if (w == mro->_server_tb)
@@ -1009,12 +1009,12 @@ MailRetrievalOptions::retrievalTBSValueChangedCB(
         for (i=0; i<mro->_server_options->length(); i++)
         {
             opt = (*mro->_server_options)[i];
-	    XtVaSetValues(opt, XmNsensitive, True, NULL);
+	    XtVaSetValues(opt, XmNsensitive, True, nullptr);
         }
         for (i=0; i<mro->_custom_options->length(); i++)
         {
             opt = (*mro->_custom_options)[i];
-	    XtVaSetValues(opt, XmNsensitive, False, NULL);
+	    XtVaSetValues(opt, XmNsensitive, False, nullptr);
         }
     }
     else if (w == mro->_custom_tb)
@@ -1022,12 +1022,12 @@ MailRetrievalOptions::retrievalTBSValueChangedCB(
         for (i=0; i<mro->_server_options->length(); i++)
         {
             opt = (*mro->_server_options)[i];
-	    XtVaSetValues(opt, XmNsensitive, False, NULL);
+	    XtVaSetValues(opt, XmNsensitive, False, nullptr);
         }
         for (i=0; i<mro->_custom_options->length(); i++)
         {
             opt = (*mro->_custom_options)[i];
-	    XtVaSetValues(opt, XmNsensitive, True, NULL);
+	    XtVaSetValues(opt, XmNsensitive, True, nullptr);
         }
     }
 #else
@@ -1038,10 +1038,10 @@ MailRetrievalOptions::retrievalTBSValueChangedCB(
 char *
 MailRetrievalOptions::getPassword(char *foldername)
 {
-    DtMail::Session	*d_session = NULL;
-    DtMail::MailRc	*m_rc = NULL;
+    DtMail::Session	*d_session = nullptr;
+    DtMail::MailRc	*m_rc = nullptr;
     DtMailEnv		error;
-    const char		*string = NULL;
+    const char		*string = nullptr;
     char		propkey[MAXPATHLEN];
 
     d_session = theRoamApp.session()->session();
@@ -1050,7 +1050,7 @@ MailRetrievalOptions::getPassword(char *foldername)
     MrGENPROPKEY(propkey, foldername, DTMAS_PROPKEY_PASSWORD);
 
     m_rc->getValue(error, propkey , &string, DTM_TRUE);
-    if (string == NULL || error.isSet()) return NULL;
+    if (string == nullptr || error.isSet()) return nullptr;
 
     return (char*) string;
 }

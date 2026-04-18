@@ -69,8 +69,8 @@
 
 BasicComponent::BasicComponent ( const char *name )
 {
-    _w = NULL;
-    assert ( name != NULL );  // Make sure programmers provide name
+    _w = nullptr;
+    assert ( name != nullptr );  // Make sure programmers provide name
     _name = strdup ( name );
 }
 
@@ -78,18 +78,18 @@ BasicComponent::~BasicComponent()
 {
     if( _w )
 	XtDestroyWidget ( _w );
-    _w = NULL;
+    _w = nullptr;
     free (_name);
 }
 
 void BasicComponent::manage()
 {
-    assert ( _w != NULL );
+    assert ( _w != nullptr );
     XtManageChild ( _w );
 }
 
 void BasicComponent::unmanage()
 {
-    assert ( _w != NULL );
+    assert ( _w != nullptr );
     XtUnmanageChild ( _w );
 }

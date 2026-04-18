@@ -68,7 +68,7 @@ class CC_Link_base
 friend class CC_Listbase;
 friend class CC_List_Iterator_base;
 public:
-  CC_Link_base():f_next(NULL),f_prev(NULL) {}
+  CC_Link_base():f_next(nullptr),f_prev(nullptr) {}
 
 private:
 
@@ -87,18 +87,18 @@ protected:
 
 public:
   CC_Listbase()
-    : f_head (NULL), f_tail (NULL), f_length (0)
+    : f_head (nullptr), f_tail (nullptr), f_length (0)
     { }
 
   void insert (CC_Link_base *);  /* both insert and append is the same,
-			       * throw ccException() if element is NULL
+			       * throw ccException() if element is nullptr
 			       */
 
   void append (CC_Link_base *e)  // in order to be Rogue Wave compatible
   { insert(e); }
 
   void prepend (CC_Link_base *); /*
-			       * throw ccException() if element is NULL
+			       * throw ccException() if element is nullptr
 			       */
 
 
@@ -128,7 +128,7 @@ friend class CC_Listbase;
 public:
 
   CC_List_Iterator_base (CC_Listbase *list); /* will throw ccException if 
-					       * list == NULL 
+					       * list == nullptr 
 					       */
   // Obtain the current link entry.
   CC_Link_base *item() const

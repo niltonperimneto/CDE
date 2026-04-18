@@ -69,10 +69,10 @@ DialogShell::DialogShell(char *name, RoamMenuWindow *parent, WidgetClass wc)
 : UIComponent(name)
 {
     _parent=parent;
-    _workArea=NULL;
+    _workArea=nullptr;
     _widgetClass=wc;
     
-    assert( theApplication != NULL );
+    assert( theApplication != nullptr );
 }
 
 DialogShell::~DialogShell()
@@ -83,7 +83,7 @@ DialogShell::~DialogShell()
     XmRemoveWMProtocolCallback( _w,
 				WM_DELETE_WINDOW,
 				( XtCallbackProc ) quitCallback,
-				NULL );
+				nullptr );
 
 }
 
@@ -94,18 +94,18 @@ DialogShell::initialize()
     _w = XtVaCreatePopupShell(
 			_name, _widgetClass, _parent->baseWidget(),
 			XmNdefaultPosition, False,
-			NULL, NULL );
+			nullptr, nullptr );
 #ifdef USE_EDITRES
     XtAddEventHandler(
 		_w, (EventMask) 0, True,
-		(XtEventHandler) _XEditResCheckMessages, NULL);
+		(XtEventHandler) _XEditResCheckMessages, nullptr);
 #endif
 
     installDestroyHandler();
     _workArea = createWorkArea ( _w );  
-    assert ( _workArea != NULL );
+    assert ( _workArea != nullptr );
 
-    XtVaSetValues( _w, XmNdefaultPosition, False, NULL );
+    XtVaSetValues( _w, XmNdefaultPosition, False, nullptr );
     XtAddCallback( _w,
 		   XmNpopupCallback,
 		   ( XtCallbackProc ) &DialogShell::popupCallback,
@@ -133,7 +133,7 @@ DialogShell::title(
     char *text
 )
 {
-    XtVaSetValues ( _w, XmNtitle, text, NULL );
+    XtVaSetValues ( _w, XmNtitle, text, nullptr );
 }
 
 
@@ -162,7 +162,7 @@ DialogShell::popdownCallback( Widget ,
 void
 DialogShell::manage()
 {
-    if (NULL == _workArea) return;
+    if (nullptr == _workArea) return;
     if (!XtIsManaged(_workArea )) XtManageChild(_workArea); 
     UIComponent::manage();
 }

@@ -38,7 +38,7 @@ LabelObj::LabelObj(MotifUI *parent,
                    char *name,
 		   LabelType style,
 		   boolean has_border)
-	: MotifUI(parent, name, NULL)
+	: MotifUI(parent, name, nullptr)
 {
    XmString xm_string = StringCreate(name);
    Widget p, super_node;
@@ -55,22 +55,22 @@ LabelObj::LabelObj(MotifUI *parent,
    p = parent->InnerWidget();
    if (!XtIsComposite(p))
       p = XtParent(p);
-   XtVaGetValues(p, XmNbackground, &bg, NULL);
+   XtVaGetValues(p, XmNbackground, &bg, nullptr);
    // If p is a icon then set superNode to it, otherwise set superNode to NULL
-   super_node = parent->UIClass() == ICON ? parent->BaseWidget() : NULL;
+   super_node = parent->UIClass() == ICON ? parent->BaseWidget() : nullptr;
    if (has_border)
     {
       _w = XtVaCreateManagedWidget(name, xmFrameWidgetClass, p,
 				   XmNbackground, bg, XmNuserData, this,
 				   XmNshadowType, XmSHADOW_OUT,
-				   XmNshadowThickness, shadowThickness, NULL);
+				   XmNshadowThickness, shadowThickness, nullptr);
       p = _w;
     }
    _label = XtVaCreateManagedWidget(name, xmLabelWidgetClass, p,
                                     XmNlabelString, xm_string,
 				    GuiNsuperNode, super_node,
 				    XmNalignment, alignment,
-				    XmNbackground, bg, XmNuserData, this, NULL);
+				    XmNbackground, bg, XmNuserData, this, nullptr);
    if (!has_border)
       _w = _label;
 
@@ -87,5 +87,5 @@ void LabelObj::LabelStyle(LabelType style)
    case CENTERED: alignment = XmALIGNMENT_CENTER; break;
    case RIGHT_JUSTIFIED: alignment = XmALIGNMENT_END; break;
    }
-   XtVaSetValues(_label, XmNalignment, alignment, NULL);
+   XtVaSetValues(_label, XmNalignment, alignment, nullptr);
 }

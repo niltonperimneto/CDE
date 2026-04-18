@@ -297,7 +297,7 @@ char buffer[100];
         /*# ifdef should_be_sun_but_this_dont_work*/
 	regex_t re;
 	regcomp (&re, filespec.data(), 0);
-	if (regexec (&re, direntry->d_name, 0, NULL, 0) == 0) {
+	if (regexec (&re, direntry->d_name, 0, nullptr, 0) == 0) {
 	    if (strcmp(direntry->d_name,".") == 0 ||
 		strcmp(direntry->d_name,"..") == 0)
 		continue;

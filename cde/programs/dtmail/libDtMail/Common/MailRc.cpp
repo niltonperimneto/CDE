@@ -112,7 +112,7 @@ void DtMail::MailRc::getValue(DtMailEnv &error, const char *var,
   if (_vars.length()) {
     table_val = getVar(var);
   } else {
-    table_val = NULL;
+    table_val = nullptr;
   }
 
   if (!table_val) {
@@ -158,7 +158,7 @@ char *DtMail::MailRc::getVar(const char *var) {
     }
   }
 
-  return (NULL);
+  return (nullptr);
 }
 
 void DtMail::MailRc::parse_file(void) {
@@ -231,10 +231,10 @@ const char *DtMail::MailRc::getAlias(DtMailEnv &error, const char *name) {
 
   error.clear();
 
-  return (NULL);
+  return (nullptr);
 }
 
 const char *DtMail::MailRc::getAlternates(DtMailEnv &error) {
   error.clear();
-  return (NULL);
+  return (nullptr);
 }

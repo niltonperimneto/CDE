@@ -70,7 +70,7 @@
 MenuWindow::MenuWindow( char *name, Boolean allowResize ) :
 MainWindow ( name, allowResize ) 
 {
-    _menuBar = NULL;
+    _menuBar = nullptr;
 }
 
 void MenuWindow::initialize()
@@ -88,7 +88,7 @@ void MenuWindow::initialize()
     
     XtVaSetValues ( _main, 
 		   XmNmenuBar, _menuBar->baseWidget(),
-		   NULL);
+		   nullptr);
     
     // Call derived class hook to add panes to the menu
     
@@ -115,7 +115,7 @@ MenuWindow::getIconColors(Pixel & fore, Pixel & back)
 	XtVaGetValues (_menuBar->baseWidget(),
 		       XmNforeground, &fore0,
 		       XmNbackground, &back0,
-		       NULL);
+		       nullptr);
         fore = (Pixel) fore0;
         back = (Pixel) back0;
     }

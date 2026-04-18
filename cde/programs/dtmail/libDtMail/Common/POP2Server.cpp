@@ -212,7 +212,7 @@ POP2Server::ptrans_parse_response (char *argbuf)
 	    ok = DTME_MailServerAccess_ProtocolViolation;
 	}
 
-	if (argbuf != NULL)
+	if (argbuf != nullptr)
 	  strcpy(argbuf,buf);
     }
     else 

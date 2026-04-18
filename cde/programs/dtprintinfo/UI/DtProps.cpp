@@ -72,8 +72,8 @@ DtProps::DtProps(AnyUI *parent,
          new LabelObj(rc, attributes[i]->DisplayName);
       else
          new Prompt(rc, attributes[i]->DisplayName, _editable, STRING_PROMPT,
-		    attributes[i]->DisplayValue, NULL,
-		    NULL, true, columns, 1, captionWidth + 8);
+		    attributes[i]->DisplayValue, nullptr,
+		    nullptr, true, columns, 1, captionWidth + 8);
     }
 
    ok = new Button(this, MESSAGE(OKL), PUSH_BUTTON, OkCB, this);

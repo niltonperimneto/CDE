@@ -51,23 +51,23 @@ class Button : public MotifUI {
    Button(MotifUI *parent,
 	  char *name,
 	  ButtonType button_type = PUSH_BUTTON,
-	  ButtonCallback callback = NULL,
-	  void * callback_data = NULL,
-	  char *mnemonic = NULL,
-	  char *acceleratorText = NULL, 
-	  char *accelerator = NULL, 
-	  char *iconFile = NULL);
+	  ButtonCallback callback = nullptr,
+	  void * callback_data = nullptr,
+	  char *mnemonic = nullptr,
+	  char *acceleratorText = nullptr, 
+	  char *accelerator = nullptr, 
+	  char *iconFile = nullptr);
 
    Button(char *category,
 	  MotifUI *parent,
 	  char *name,
 	  ButtonType button_type = PUSH_BUTTON,
-	  ButtonCallback callback = NULL,
-	  void * callback_data = NULL,
-	  char *mnemonic = NULL,
-	  char *acceleratorText = NULL, 
-	  char *accelerator = NULL,
-	  char *iconFile = NULL);
+	  ButtonCallback callback = nullptr,
+	  void * callback_data = nullptr,
+	  char *mnemonic = nullptr,
+	  char *acceleratorText = nullptr, 
+	  char *accelerator = nullptr,
+	  char *iconFile = nullptr);
 
    ~Button();
 

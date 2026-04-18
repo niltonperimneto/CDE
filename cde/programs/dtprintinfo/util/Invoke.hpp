@@ -42,8 +42,8 @@ class Invoke
   int status;
 
   Invoke(const char *command,
-	 char **std_out = NULL,
-	 char **std_err = NULL,
+	 char **std_out = nullptr,
+	 char **std_err = nullptr,
 	 uid_t uid = (uid_t)-1); // To run the command as another, set uid >= 0
 };
 

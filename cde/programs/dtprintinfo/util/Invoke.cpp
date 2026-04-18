@@ -60,8 +60,8 @@ Invoke::Invoke(const char *command,   // Command to Run
    pid_t c_pid;                        // child's pid 
    pid_t w;                            // temp vars 
    int out_num,err_num;                // # of chars read 
-   char *out_tmp, *err_tmp = NULL;     // temp buffer ptrs
-   char *out_end = NULL, *err_end = NULL; // ptr to end of buffer
+   char *out_tmp, *err_tmp = nullptr;     // temp buffer ptrs
+   char *out_end = nullptr, *err_end = nullptr; // ptr to end of buffer
    int outb_size,errb_size;            // buffer size 
    int out_count, err_count;           // # of buffers allocated 
    int trap_out,trap_err;              // flags; if >0, trap output 
@@ -76,8 +76,8 @@ Invoke::Invoke(const char *command,   // Command to Run
 
    status = 0;
 
-   trap_out = (out_ptr != NULL);
-   trap_err = (err_ptr != NULL);
+   trap_out = (out_ptr != nullptr);
+   trap_err = (err_ptr != nullptr);
 
    // initialize internal variables
    out_num = err_num = 0;
@@ -165,8 +165,8 @@ Invoke::Invoke(const char *command,   // Command to Run
    // -------------------------- parent process --------------------------
 
    // restore signals
-   sigaction(SIGINT, &oldsigint_act, NULL);
-   sigaction(SIGQUIT, &oldsigquit_act, NULL);
+   sigaction(SIGINT, &oldsigint_act, nullptr);
+   sigaction(SIGQUIT, &oldsigquit_act, nullptr);
 
    // close the write side of the pipe for the parent
    if (trap_out)
@@ -194,7 +194,7 @@ Invoke::Invoke(const char *command,   // Command to Run
    if (trap_out)
     {
       *out_ptr = (char *) malloc(BUFFER_SIZE);
-      if (*out_ptr == NULL)
+      if (*out_ptr == nullptr)
        {
          close(m_stdout[0]);
          if (trap_err)
@@ -212,7 +212,7 @@ Invoke::Invoke(const char *command,   // Command to Run
    if (trap_err)
     {
       *err_ptr = (char *) malloc(BUFFER_SIZE);
-      if (*err_ptr == NULL)
+      if (*err_ptr == nullptr)
        {
          close(m_stderr[0]);
          if (trap_out)
@@ -243,7 +243,7 @@ Invoke::Invoke(const char *command,   // Command to Run
          FD_SET(m_stderr[0], &rdmask);
 
       // check the status
-      if (select(Nfdsmsgs,&rdmask,&wrmask,&exmask,(struct timeval *)NULL) == -1)
+      if (select(Nfdsmsgs,&rdmask,&wrmask,&exmask,(struct timeval *)nullptr) == -1)
        {
          if (errno == EINTR)
             continue;
@@ -284,7 +284,7 @@ Invoke::Invoke(const char *command,   // Command to Run
             // filled up a buffer; allocate another one
             out_count++;
             *out_ptr = (char *)realloc(*out_ptr, (out_count * BUFFER_SIZE));
-            if (*out_ptr == NULL)
+            if (*out_ptr == nullptr)
              {
                close(m_stdout[0]);
                if (trap_err)
@@ -332,7 +332,7 @@ Invoke::Invoke(const char *command,   // Command to Run
             // filled up a buffer; allocate another one
             err_count++;
             *err_ptr = (char *)realloc(*err_ptr, (err_count * BUFFER_SIZE));
-            if (*err_ptr == NULL)
+            if (*err_ptr == nullptr)
              {
                close(m_stderr[0]);
                if (trap_out)

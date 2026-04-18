@@ -79,7 +79,7 @@ DialogManager::DialogManager ( char   *name ): UIComponent ( name )
 
 Widget DialogManager::getDialog()
 {
-    Widget newDialog = NULL;
+    Widget newDialog = nullptr;
     
     // If the permanent widget exists and is not in use,
     // just return it
@@ -116,7 +116,7 @@ Widget DialogManager::getDialog(
     Widget w
 )
 {
-    Widget newDialog = NULL;
+    Widget newDialog = nullptr;
     
     // If the permanent widget exists and is not in use,
     // just return it
@@ -158,7 +158,7 @@ void DialogManager::destroyTmpDialogCallback ( Widget     w,
 
     // We must set the wiget handle to NULL to prevent multiple
     // destroys.
-    ((DialogManager *)clientData)->_w = NULL;
+    ((DialogManager *)clientData)->_w = nullptr;
 }
 
 Widget DialogManager::post (char	  *title,
@@ -176,7 +176,7 @@ Widget DialogManager::post (char	  *title,
     // Make sure the dialog exists, and that it is an XmMessageBox
     // or subclass, since the callbacks assume this widget type
     
-    assert ( dialog != NULL );
+    assert ( dialog != nullptr );
 //    assert ( XtIsSubclass ( dialog, xmMessageBoxWidgetClass ) );
 	
 	// Convert the text string to a compound string and 
@@ -187,7 +187,7 @@ Widget DialogManager::post (char	  *title,
     XtVaSetValues ( dialog, 
 		    XmNmessageString, xmstr,
 		    XmNdialogTitle, titleStr,
-		    NULL );
+		    nullptr );
     XmStringFree ( xmstr );
     XmStringFree ( titleStr );
     
@@ -262,7 +262,7 @@ Widget DialogManager::post (char	  *title,
     // Make sure the dialog exists, and that it is an XmMessageBox
     // or subclass, since the callbacks assume this widget type
     
-    assert ( dialog != NULL );
+    assert ( dialog != nullptr );
 //    assert ( XtIsSubclass ( dialog, xmMessageBoxWidgetClass ) );
 	
 	// Convert the text string to a compound string and 
@@ -273,7 +273,7 @@ Widget DialogManager::post (char	  *title,
     XtVaSetValues ( dialog, 
 		    XmNmessageString, xmstr,
 		    XmNdialogTitle, titleStr,
-		    NULL );
+		    nullptr );
     XmStringFree ( xmstr );
     XmStringFree ( titleStr );
     
@@ -344,7 +344,7 @@ void DialogManager::okCallback ( Widget    w,
     
     // If caller specified an ok callback, call the function
     
-    if ( ( callback = dcd->ok() ) != NULL )
+    if ( ( callback = dcd->ok() ) != nullptr )
 	( *callback )( dcd->clientData() );
     
     // Reset for the next time
@@ -360,7 +360,7 @@ void DialogManager::cancelCallback ( Widget    w,
     DialogManager      *obj = (DialogManager *) dcd->dialogManager();
     DialogCallback      callback;
     
-    if ( ( callback = dcd->cancel() ) != NULL )
+    if ( ( callback = dcd->cancel() ) != nullptr )
 	( *callback )( dcd->clientData() );
     
     obj->cleanup ( w, dcd );
@@ -374,7 +374,7 @@ void DialogManager::helpCallback ( Widget    w,
     DialogManager      *obj = (DialogManager *) dcd->dialogManager();
     DialogCallback      callback;
     
-    if ( ( callback = dcd->help() ) != NULL )
+    if ( ( callback = dcd->help() ) != nullptr )
 	( *callback )( dcd->clientData() );
     
     obj->cleanup ( w, dcd );
@@ -479,12 +479,12 @@ DialogManager::post_and_return(
     // Make sure the dialog exists, and that it is an XmMessageBox
     // or subclass, since the callbacks assume this widget type
     
-    assert ( dlg != NULL );
+    assert ( dlg != nullptr );
 
     XtVaSetValues(dlg,
 		  XmNokLabelString, okLabel,
 		  XmNcancelLabelString, cancelLabel,
-		  NULL);
+		  nullptr);
 
     Widget dialog =
 	this->post(title_str,
@@ -523,11 +523,11 @@ DialogManager::post_and_return(
     // Make sure the dialog exists, and that it is an XmMessageBox
     // or subclass, since the callbacks assume this widget type
     
-    assert ( dlg != NULL );
+    assert ( dlg != nullptr );
 
     XtVaSetValues(dlg,
 		  XmNokLabelString, okLabel,
-		  NULL);
+		  nullptr);
 
     Widget dialog = this->post(title_str,
 			       text_str,
@@ -567,12 +567,12 @@ DialogManager::post_and_return(
     // Make sure the dialog exists, and that it is an XmMessageBox
     // or subclass, since the callbacks assume this widget type
     
-    assert ( dlg != NULL );
+    assert ( dlg != nullptr );
 
     XtVaSetValues(dlg,
 		  XmNokLabelString, okLabel,
 		  XmNcancelLabelString, cancelLabel,
-		  NULL);
+		  nullptr);
 
     Widget dialog = this->post(title_str,
 			       text_str,

@@ -44,7 +44,7 @@ SeparatorCmd::SeparatorCmd (
     char *name, 
     char *,
     int active 
-) : Cmd ( name, NULL, active )
+) : Cmd ( name, nullptr, active )
 {
 }
 

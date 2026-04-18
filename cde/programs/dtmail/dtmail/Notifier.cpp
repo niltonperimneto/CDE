@@ -180,7 +180,7 @@ Notifier::~Notifier(void)
     // Now we want to throw away all of the events we have laying about
     // for timers and signals.
     //
-    _timer_events.forEach(deleteTimerEvent, NULL);
+    _timer_events.forEach(deleteTimerEvent, nullptr);
 }
 
 void
@@ -235,7 +235,7 @@ Notifier::removeInterval(IntervalId id)
 
     TimerSearch t_srch;
     t_srch.srch_event = t_event;
-    t_srch.key = NULL;
+    t_srch.key = nullptr;
 
     _timer_events.forEach(searchTimer, &t_srch);
 

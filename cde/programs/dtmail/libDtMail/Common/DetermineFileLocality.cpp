@@ -66,8 +66,8 @@ preflen(char * str, char * pref)
 {
   int len;
 
-  assert(str != NULL);
-  assert(pref != NULL);
+  assert(str != nullptr);
+  assert(pref != nullptr);
 
   len = strlen(pref);
   if (strncmp(str, pref, len) == 0)
@@ -143,7 +143,7 @@ DtMail::DetermineFileLocality(const char * path)
       break;
 
     case 1:			// second instance -- scan mount table
-      if ( (mfp = fopen(MNTTAB, "r")) == NULL )
+      if ( (mfp = fopen(MNTTAB, "r")) == nullptr )
 	  continue;
       mnt = &sysvmnt;
       while ((getmntent(mfp, mnt)) >= 0) {

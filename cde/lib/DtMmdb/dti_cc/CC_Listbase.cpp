@@ -98,7 +98,7 @@ CC_Listbase::prepend (CC_Link_base *element)
     f_head = element;
   }
 
-  if (f_tail == NULL)
+  if (f_tail == nullptr)
     f_tail = element;
   f_length++;
 }
@@ -116,8 +116,8 @@ CC_Listbase::remove (CC_List_Iterator_base &iterator)
     throw (CASTCCEXCEPT ccException());
 
   // Make sure the iterator is pointing to an element. 
-  if (iterator.f_current == NULL)
-    return(NULL);
+  if (iterator.f_current == nullptr)
+    return(nullptr);
 
   // NOTE: If two iterators are active in the list at the same time
   // it is possible to blow away an element that another iterator
@@ -127,7 +127,7 @@ CC_Listbase::remove (CC_List_Iterator_base &iterator)
   //    19:41 22-Jul-93 DJB 
 
   // Link around the link we're removing.
-  if (iterator.f_previous != NULL) {
+  if (iterator.f_previous != nullptr) {
     iterator.f_previous->f_next = iterator.f_current->f_next;
     if ( f_tail != iterator.f_current ) { 
       iterator.f_current->f_next->f_prev  = iterator.f_previous;
@@ -136,14 +136,14 @@ CC_Listbase::remove (CC_List_Iterator_base &iterator)
   else {   // must be at the head 
     f_head = iterator.f_current->f_next;
     if ( f_head ) {
-      f_head->f_prev = NULL;
+      f_head->f_prev = nullptr;
     }
   }
   
   if (iterator.f_current == f_tail) {
     f_tail = iterator.f_previous;
     if ( f_tail ) { 
-      f_tail->f_next = NULL;
+      f_tail->f_next = nullptr;
     }
     
   }
@@ -164,21 +164,21 @@ CC_Listbase::removeFirst()
 
     CC_Link_base *remove_item = f_head;
     f_head = f_head->f_next;
-    remove_item->f_next = NULL;
+    remove_item->f_next = nullptr;
 
     if ( f_head ) {
-      f_head->f_prev = NULL;
+      f_head->f_prev = nullptr;
     }
 
     if ( f_tail == remove_item ) { /* only one item on the list */
-      f_tail = NULL;
+      f_tail = nullptr;
     }
 
     f_length--;
     return(remove_item);
   }
 
-  return(NULL);
+  return(nullptr);
 }
 
 //------------------------------------------------------------------
@@ -188,19 +188,19 @@ CC_Listbase::removeLast()
   if ( f_tail ) {
     CC_Link_base *remove_item = f_tail;
     f_tail = f_tail->f_prev;
-    remove_item->f_prev = NULL;
+    remove_item->f_prev = nullptr;
 
     if ( f_tail ) {
-      f_tail->f_next = NULL;
+      f_tail->f_next = nullptr;
     }
     if ( f_head == remove_item ) { // one item left on the list
-      f_head = NULL;
+      f_head = nullptr;
     }
     f_length--;
     return(remove_item);
   }
 
-  return(NULL);
+  return(nullptr);
 }
 
 // /////////////////////////////////////////////////////////////////
@@ -224,7 +224,7 @@ CC_List_Iterator_base::CC_List_Iterator_base (CC_Listbase *list)
 void
 CC_List_Iterator_base::reset()
 {
-  f_current = f_previous = NULL;
+  f_current = f_previous = nullptr;
 }
 
 
@@ -237,7 +237,7 @@ CC_List_Iterator_base::operator++()
 {
   if (!f_current) { // havn't touched the first element 
     f_current = f_list->first();
-    f_previous = NULL;
+    f_previous = nullptr;
     if ( f_current ) return ( TRUE );
     else return(FALSE);
   }

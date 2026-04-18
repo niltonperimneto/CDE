@@ -47,7 +47,7 @@
 #include <DtMail/SpinBoxUiItem.hh>
 
 int				  CheckForMailUiItem::_initialized = 0;
-DtVirtArray<CheckForMailUiItem*> *CheckForMailUiItem::_checkformail_ui = NULL;
+DtVirtArray<CheckForMailUiItem*> *CheckForMailUiItem::_checkformail_ui = nullptr;
 
 CheckForMailUiItem::CheckForMailUiItem(Widget w, int source, char *search_key):
 SpinBoxUiItem(w, source, search_key)
@@ -61,7 +61,7 @@ SpinBoxUiItem(w, source, search_key)
     }
 
     options_spinbox_init(w, &(this->dirty_bit));
-    XtVaGetValues(w, XmNtextField, &textfield, NULL);
+    XtVaGetValues(w, XmNtextField, &textfield, nullptr);
     XtAddCallback(
 		textfield,
 		XmNvalueChangedCallback,

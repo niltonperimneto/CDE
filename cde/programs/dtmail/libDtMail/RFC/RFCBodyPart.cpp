@@ -105,8 +105,8 @@ RFCBodyPart::RFCBodyPart(DtMailEnv & error,
     // a body envelope. We do this to make sure we can always
     // set headers for the body part.
     //
-    if (_body_start == NULL) {
-	_body_env = new RFCEnvelope(error, parent, NULL, 0);
+    if (_body_start == nullptr) {
+	_body_env = new RFCEnvelope(error, parent, nullptr, 0);
 	_my_env = DTM_TRUE;
     }
     else {
@@ -114,9 +114,9 @@ RFCBodyPart::RFCBodyPart(DtMailEnv & error,
 	_my_env = _body_env ? DTM_FALSE : DTM_TRUE;
     }
 
-    _body = NULL;
+    _body = nullptr;
     _body_decoded_len = 0;
-    _body_type = NULL;
+    _body_type = nullptr;
     _must_free_body = DTM_FALSE;
 }
 
@@ -264,13 +264,13 @@ RFCBodyPart::setContents(DtMailEnv & error,
     if (!contents && !length) {
 	if (_body && _must_free_body) {
 		free(_body);
-        	_body = NULL;
+        	_body = nullptr;
 		_must_free_body = DTM_FALSE;
 	}
         _body_decoded_len = _body_len = 0;
         if (_body_type) {
         	free(_body_type);
-        	_body_type = NULL;
+        	_body_type = nullptr;
 	}
 //	_must_free_body = DTM_FALSE;
 	return;
@@ -279,7 +279,7 @@ RFCBodyPart::setContents(DtMailEnv & error,
     if (contents) {
 	if (_body && _must_free_body) {
 	    free(_body);
-	    _body = NULL;
+	    _body = nullptr;
 	}
 
 	_body = (char *)malloc((int)length);
@@ -290,7 +290,7 @@ RFCBodyPart::setContents(DtMailEnv & error,
 	// Reset the type. We don't know what it is!
 	if (_body_type) {
 	    free(_body_type);
-	    _body_type = NULL;
+	    _body_type = nullptr;
 	}
     }
 
@@ -328,7 +328,7 @@ RFCBodyPart::getHeader(DtMailEnv & error,
        return;
     }
 
-    if (_body_env == (RFCEnvelope *)NULL) {
+    if (_body_env == (RFCEnvelope *)nullptr) {
        error.setError(DTME_NoObjectValue);
        return;
     }
@@ -355,7 +355,7 @@ RFCBodyPart::setFlag(DtMailEnv & error,
 
     switch (state) {
       case DtMailBodyPartDeletePending:
-	now = time(NULL);
+	now = time(nullptr);
 	sprintf(str_time, "%08lX", (long)now);
 	_body_env->setHeader(my_error, RFCDeleteHeader, DTM_TRUE, str_time);
 	break;
@@ -434,7 +434,7 @@ RFCBodyPart::getDeleteTime(DtMailEnv & error)
     DtMailValueSeq value;
     _body_env->getHeader(error, RFCDeleteHeader, DTM_FALSE, value);
     if (error.isNotSet()) {
-	delete_time = (time_t) strtol(*(value[0]), NULL, 16);
+	delete_time = (time_t) strtol(*(value[0]), nullptr, 16);
     }
 
     error.clear();
@@ -453,7 +453,7 @@ RFCBodyPart::adjustBodyPartsLocation(char * start)
 
     if (_must_free_body == DTM_FALSE) {
 	//_body = (char *)_body_text;
-	_body = NULL;
+	_body = nullptr;
     }
 
     if (_body_env && _my_env == DTM_TRUE) {
@@ -494,7 +494,7 @@ RFCBodyPart::getBody(DtMailEnv & error)
     if (!_body) {
 	loadBody(error);
 	if (error.isSet()) {
-	    return(NULL);
+	    return(nullptr);
 	}
     }
 
@@ -517,7 +517,7 @@ static const char *DfltStdCharset = "us-ascii";
 static const char *DfltStdLang = "C";
 
 static char       MyPlatform[_DtPLATFORM_MAX_LEN+1];
-static _DtXlateDb MyDb = NULL;
+static _DtXlateDb MyDb = nullptr;
 static char       MyProcess = False;
 static char       MyFirst   = True;
 static int        ExecVer;
@@ -562,13 +562,13 @@ RFCBodyPart::OpenLcxDb (void)
 	    _DtXlateGetXlateEnv(MyDb,MyPlatform,&ExecVer,&CompVer) != 0)
 	  {
 	    _DtLcxCloseDb(&MyDb);
-	    MyDb = NULL;
+	    MyDb = nullptr;
 	  }
 	MyFirst = False;
         MyProcess = False;
       }
 
-    return (MyDb == NULL ? -1 : 0 );
+    return (MyDb == nullptr ? -1 : 0 );
 }
 
 /******************************************************************************
@@ -605,20 +605,20 @@ RFCBodyPart::DtXlateOpToStdLocale (
 	(void) _DtLcxXlateOpToStd(
 			MyDb, MyPlatform, CompVer,
 			operation, opLocale,
-			ret_stdLocale, ret_stdLang, ret_stdSet, NULL);
+			ret_stdLocale, ret_stdLang, ret_stdSet, nullptr);
     }
 
     /* if failed, give default values */
-    if (ret_stdLocale != NULL && (result != 0 || *ret_stdLocale == NULL))
+    if (ret_stdLocale != nullptr && (result != 0 || *ret_stdLocale == nullptr))
     {
         *ret_stdLocale =
 	    (char *)malloc(strlen(DfltStdLang)+strlen(DfltStdCharset)+3);
 	sprintf(*ret_stdLocale,"%s.%s",DfltStdLang,DfltStdCharset);
     }
 
-    if (ret_stdLang != NULL && (result != 0 || *ret_stdLang == NULL))
+    if (ret_stdLang != nullptr && (result != 0 || *ret_stdLang == nullptr))
 	*ret_stdLang = (char *)strdup(DfltStdLang);
-    if (ret_stdSet != NULL && (result != 0 || *ret_stdSet == NULL))
+    if (ret_stdSet != nullptr && (result != 0 || *ret_stdSet == nullptr))
 	*ret_stdSet = (char *)strdup(DfltStdCharset);
 }
 
@@ -649,19 +649,19 @@ RFCBodyPart::DtXlateStdToOpLocale (
     int result = this->OpenLcxDb();
 
     if (ret_opLocale)
-      *ret_opLocale = NULL;
+      *ret_opLocale = nullptr;
 
     if (result == 0)
     {
         (void) _DtLcxXlateStdToOp(
 				MyDb, MyPlatform, CompVer,
 			  	operation,
-				stdLocale, NULL, NULL, NULL,
+				stdLocale, nullptr, nullptr, nullptr,
 				ret_opLocale);
     }
 
     /* if translation fails, use a default value */
-    if (ret_opLocale && (result != 0 || *ret_opLocale == NULL))
+    if (ret_opLocale && (result != 0 || *ret_opLocale == nullptr))
     {
        if (dflt_opLocale) *ret_opLocale = (char *)strdup(dflt_opLocale);
        else if (stdLocale) *ret_opLocale = (char *)strdup(stdLocale);
@@ -699,19 +699,19 @@ RFCBodyPart::DtXlateStdToOpCodeset (
     int result = this->OpenLcxDb();
 
     if (ret_opCodeset)
-      *ret_opCodeset = NULL;
+      *ret_opCodeset = nullptr;
 
     if (result == 0)
     {
         (void) _DtLcxXlateStdToOp(
 				MyDb, MyPlatform, CompVer,
 			  	operation,
-				NULL, NULL, stdCodeset, NULL,
+				nullptr, nullptr, stdCodeset, nullptr,
 				ret_opCodeset);
     }
 
     /* if translation fails, use a default value */
-    if (ret_opCodeset && (result != 0 || *ret_opCodeset == NULL))
+    if (ret_opCodeset && (result != 0 || *ret_opCodeset == nullptr))
     {
        if (dflt_opCodeset) *ret_opCodeset = (char *)strdup(dflt_opCodeset);
        else if (stdCodeset) *ret_opCodeset = (char *)strdup(stdCodeset);
@@ -733,14 +733,14 @@ RFCBodyPart::DtXlateMimeToIconv(
     exists = _DtLcxXlateOpToStd(
 				MyDb, MyPlatform, CompVer,
 				DtLCX_OPER_MIME, mimeId,
-				NULL, NULL, ret_commonCS, NULL);
+				nullptr, nullptr, ret_commonCS, nullptr);
 
     if (exists == -1)
     {
 	exists = _DtLcxXlateOpToStd(
 				MyDb, "CDE", 0,
 				DtLCX_OPER_MIME, mimeId,
-				NULL, NULL, ret_commonCS, NULL);
+				nullptr, nullptr, ret_commonCS, nullptr);
        if (exists == -1)
 	 *ret_commonCS = (char *)strdup(defaultCommonCS);
     }
@@ -748,7 +748,7 @@ RFCBodyPart::DtXlateMimeToIconv(
     exists = _DtLcxXlateStdToOp(
 				MyDb, MyPlatform, CompVer,
 				DtLCX_OPER_ICONV3,
-	   			NULL, NULL, *ret_commonCS, NULL,
+	   			nullptr, nullptr, *ret_commonCS, nullptr,
 				ret_platformIconv);
     if (exists == -1)
       *ret_platformIconv = (char *)strdup(defaultIconvCS);
@@ -761,7 +761,7 @@ RFCBodyPart::DtXlateLocaleToMime(
         const char * defaultMimeCS,
         char ** ret_mimeCS)
 {
-   char * commonCS = NULL;
+   char * commonCS = nullptr;
 
    this->OpenLcxDb();
 
@@ -769,7 +769,7 @@ RFCBodyPart::DtXlateLocaleToMime(
   _DtLcxXlateOpToStd(
 		MyDb, MyPlatform, CompVer,
 		DtLCX_OPER_SETLOCALE, locale,
-		NULL, NULL, &commonCS, NULL);
+		nullptr, nullptr, &commonCS, nullptr);
   if (!commonCS)
       commonCS = (char *)strdup(defaultCommonCS);
 
@@ -777,14 +777,14 @@ RFCBodyPart::DtXlateLocaleToMime(
   _DtLcxXlateStdToOp(
 		MyDb, MyPlatform, CompVer,
 		DtLCX_OPER_MIME,
-          	NULL, NULL, commonCS, NULL,
+          	nullptr, nullptr, commonCS, nullptr,
 		ret_mimeCS);
   if (!(*ret_mimeCS))
   {
      _DtLcxXlateStdToOp(
 		MyDb, "CDE", 0,
 		DtLCX_OPER_MIME,
-          	NULL, NULL, commonCS, NULL,
+          	nullptr, nullptr, commonCS, nullptr,
 		ret_mimeCS);
      if (!(*ret_mimeCS))
         *ret_mimeCS = (char *)strdup(defaultMimeCS);
@@ -800,9 +800,9 @@ char *
 RFCBodyPart::csToConvName(char *cs)
 {
    int exists = -1;
-   char *commonCS = NULL;
-   char *convName = NULL;
-   char *ret_target = NULL;
+   char *commonCS = nullptr;
+   char *convName = nullptr;
+   char *ret_target = nullptr;
  
    this->OpenLcxDb();
  
@@ -817,23 +817,23 @@ RFCBodyPart::csToConvName(char *cs)
    exists = _DtLcxXlateOpToStd(
 			MyDb, MyPlatform, CompVer,
 			DtLCX_OPER_MIME, cs,
-			NULL, NULL, &commonCS, NULL);
+			nullptr, nullptr, &commonCS, nullptr);
    if (exists == -1) {
       exists = _DtLcxXlateOpToStd(
 			MyDb, "CDE", 0,
 			DtLCX_OPER_MIME, cs,
-			NULL, NULL, &commonCS, NULL);
+			nullptr, nullptr, &commonCS, nullptr);
       if  (exists == -1)
-        return NULL;
+        return nullptr;
    }
  
    DtXlateStdToOpCodeset(DtLCX_OPER_INTERCHANGE_CODESET,
       commonCS,
-      NULL,
+      nullptr,
       &ret_target);
    DtXlateStdToOpCodeset(DtLCX_OPER_ICONV3,
       ret_target,
-      NULL,
+      nullptr,
       &convName);
 
    if ( ret_target )
@@ -844,43 +844,43 @@ RFCBodyPart::csToConvName(char *cs)
    // Workaround for libDtHelp
    // Case of no iconv name for a particular locale, eg. C,
    // check for empty string.
-   if ( convName != NULL )
+   if ( convName != nullptr )
    {
       if ( strlen(convName) > 0 )
         return convName;
       else
         free( convName );
    }
-   return NULL;
+   return nullptr;
 }
 
 // Return current locale's iconv name.
 char *
 RFCBodyPart::locToConvName()
 {
-   char *ret_locale = NULL;
-   char *ret_lang = NULL;
-   char *ret_codeset = NULL;
+   char *ret_locale = nullptr;
+   char *ret_lang = nullptr;
+   char *ret_codeset = nullptr;
  
    DtXlateOpToStdLocale(DtLCX_OPER_SETLOCALE,
-      setlocale(LC_CTYPE, NULL),
+      setlocale(LC_CTYPE, nullptr),
       &ret_locale,
       &ret_lang,
       &ret_codeset);
 
    if (ret_codeset) {
        free(ret_codeset);
-       ret_codeset = NULL;
+       ret_codeset = nullptr;
    }
    
    if (ret_lang) {
        free(ret_lang);
-       ret_lang = NULL;
+       ret_lang = nullptr;
    }
    
    DtXlateStdToOpLocale(DtLCX_OPER_ICONV3,
       ret_locale,
-      NULL,
+      nullptr,
       &ret_codeset);
 
    if (ret_locale)
@@ -889,38 +889,38 @@ RFCBodyPart::locToConvName()
    // Workaround for libDtHelp
    // Case of no iconv name for a particular locale, eg. C,
    // check for empty string.
-   if ( ret_codeset != NULL ) {
+   if ( ret_codeset != nullptr ) {
       if (strlen(ret_codeset) > 0)
         return ret_codeset;
       else
         free(ret_codeset);
    } 
-   return NULL;
+   return nullptr;
 }
 
 // Return target codeset's iconv name.
 char *
 RFCBodyPart::targetConvName()
 {
-   char *ret_locale = NULL;
-   char *ret_lang = NULL;
-   char *ret_codeset = NULL;
-   char *ret_target = NULL;
-   char *ret_convName = NULL;
+   char *ret_locale = nullptr;
+   char *ret_lang = nullptr;
+   char *ret_codeset = nullptr;
+   char *ret_target = nullptr;
+   char *ret_convName = nullptr;
  
    DtXlateOpToStdLocale(DtLCX_OPER_SETLOCALE,
-      setlocale(LC_CTYPE, NULL),
+      setlocale(LC_CTYPE, nullptr),
       &ret_locale,
       &ret_lang,
       &ret_codeset);
    DtXlateStdToOpLocale(DtLCX_OPER_INTERCHANGE_CODESET,
       ret_locale,
-      NULL,
+      nullptr,
       &ret_target);
    // Or do I call csToConvName() here??
    DtXlateStdToOpCodeset(DtLCX_OPER_ICONV3,
       ret_target,
-      NULL,
+      nullptr,
       &ret_convName);
  
 
@@ -936,37 +936,37 @@ RFCBodyPart::targetConvName()
    // Workaround for libDtHelp
    // Case of no iconv name for a particular locale, eg. C,
    // check for empty string.
-   if ( ret_convName != NULL )
+   if ( ret_convName != nullptr )
    {
       if (strlen(ret_convName) > 0)
         return ret_convName;
       else
         free(ret_convName);
    }
-   return NULL;
+   return nullptr;
 }
 
 // Return target codeset's MIME (tag) name.
 char *
 RFCBodyPart::targetTagName()
 {
-   char *ret_locale = NULL;
-   char *ret_lang = NULL;
-   char *ret_codeset = NULL;
-   char *ret_target = NULL;
+   char *ret_locale = nullptr;
+   char *ret_lang = nullptr;
+   char *ret_codeset = nullptr;
+   char *ret_target = nullptr;
 
    DtXlateOpToStdLocale(DtLCX_OPER_SETLOCALE,
-	  setlocale(LC_CTYPE, NULL),
+	  setlocale(LC_CTYPE, nullptr),
 	  &ret_locale,
 	  &ret_lang,
 	  &ret_codeset);
    DtXlateStdToOpLocale(DtLCX_OPER_INTERCHANGE_CODESET,
 	  ret_locale,
-	  NULL,
+	  nullptr,
 	  &ret_target);
    DtXlateStdToOpCodeset(DtLCX_OPER_MIME,
 	  ret_target,
-	  NULL,
+	  nullptr,
 	  &ret_codeset);
 
    if (ret_locale)
@@ -994,14 +994,14 @@ char *from_cs, char *to_cs)
 #else
    char *ip = *bp;
 #endif
-   char *op = NULL;
-   char *op_start = NULL;
+   char *op = nullptr;
+   char *op_start = nullptr;
    int mb_ret = 0;
    size_t delta;
 
-   if ( *bp == NULL  ||  **bp == '\0'  ||  bp_len <= 0 )
+   if ( *bp == nullptr  ||  **bp == '\0'  ||  bp_len <= 0 )
 	  return 0;
-   if ( to_cs == NULL  ||  from_cs == NULL )
+   if ( to_cs == nullptr  ||  from_cs == nullptr )
 	  return 0;
    if ( (cd = iconv_open(to_cs, from_cs)) == (iconv_t) -1 ) {
 	  switch (errno) {

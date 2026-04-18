@@ -992,367 +992,367 @@ dtb_options_dialog_initialize(
     
     XtVaSetValues(instance->dialog_shellform,
         XmNdefaultButton, instance->ok_button,
-        NULL);
+        nullptr);
     
     XtVaSetValues(instance->layer,
         XmNtopWidget, instance->ctrl_panel,
-        NULL);
+        nullptr);
     
     XtVaSetValues(instance->separator10,
         XmNtopWidget, instance->category_opmenu_rowcolumn,
-        NULL);
+        nullptr);
     
     XtVaSetValues(instance->separator2,
         XmNtopWidget, instance->group21,
-        NULL);
+        nullptr);
     
     XtVaSetValues(instance->checkbox,
         XmNtopWidget, instance->separator2,
-        NULL);
+        nullptr);
     
     XtVaSetValues(instance->separator4,
         XmNtopWidget, instance->checkbox,
-        NULL);
+        nullptr);
     
     XtVaSetValues(instance->group28,
         XmNtopWidget, instance->separator4,
-        NULL);
+        nullptr);
     
     XtVaSetValues(instance->deleted_msg_cb,
         XmNtopWidget, instance->destroy_del_msg_lbl,
-        NULL);
+        nullptr);
     
     XtVaSetValues(instance->seconds_lbl,
         XmNleftWidget, instance->mail_check_sb_rowcolumn,
-        NULL);
+        nullptr);
     
     XtVaSetValues(instance->beeps_lbl,
         XmNleftWidget, instance->signal_sb_rowcolumn,
-        NULL);
+        nullptr);
     
     XtVaSetValues(instance->flashes_lbl,
         XmNleftWidget, instance->spinbox2_rowcolumn,
-        NULL);
+        nullptr);
     
     XtVaSetValues(instance->headers_lbl,
         XmNleftWidget, instance->display_sb_rowcolumn,
-        NULL);
+        nullptr);
     
     XtVaSetValues(instance->separator6,
         XmNtopWidget, instance->group8,
-        NULL);
+        nullptr);
     
     XtVaSetValues(instance->abr_header_lbl,
         XmNtopWidget, instance->separator6,
-        NULL);
+        nullptr);
     
     XtVaSetValues(instance->group17,
         XmNtopWidget, instance->abr_header_lbl,
-        NULL);
+        nullptr);
     
     XtVaSetValues(instance->rows_lbl,
         XmNleftWidget, instance->display_row_sb_rowcolumn,
-        NULL);
+        nullptr);
     
     XtVaSetValues(instance->char_wide_lbl,
         XmNleftWidget, instance->characters_wide_sb_rowcolumn,
-        NULL);
+        nullptr);
     
     XtVaSetValues(instance->group3,
         XmNleftWidget, instance->hidden_fields_list_scrolledwin,
         XmNtopWidget, instance->hidden_fields_list_scrolledwin,
-        NULL);
+        nullptr);
     
     XtVaSetValues(instance->hidden_fields_list_scrolledwin,
         XmNrightWidget, instance->fields_hide,
         XmNtopWidget, instance->fields_hide,
-        NULL);
+        nullptr);
     
     XtVaSetValues(instance->hidden_fields_lbl,
         XmNtopWidget, instance->hidden_fields_list_scrolledwin,
-        NULL);
+        nullptr);
     
     XtVaSetValues(instance->h_field_delete,
         XmNtopWidget, instance->h_field_add,
-        NULL);
+        nullptr);
     
     XtVaSetValues(instance->h_field_change,
         XmNtopWidget, instance->h_field_delete,
-        NULL);
+        nullptr);
     
     XtVaSetValues(instance->separator7,
         XmNtopWidget, instance->group6,
-        NULL);
+        nullptr);
     
     XtVaSetValues(instance->deadletter_field_rowcolumn,
         XmNtopWidget, instance->separator7,
-        NULL);
+        nullptr);
     
     XtVaSetValues(instance->separator9,
         XmNtopWidget, instance->deadletter_field_rowcolumn,
-        NULL);
+        nullptr);
     
     XtVaSetValues(instance->format_menu_lbl,
         XmNtopWidget, instance->separator9,
-        NULL);
+        nullptr);
     
     XtVaSetValues(instance->confirm_attachment,
         XmNtopWidget, instance->wrap_checkbox,
-        NULL);
+        nullptr);
     
     XtVaSetValues(instance->separator3,
         XmNtopWidget, instance->confirm_attachment,
-        NULL);
+        nullptr);
     
     XtVaSetValues(instance->group6,
         XmNtopWidget, instance->separator3,
-        NULL);
+        nullptr);
     
     XtVaSetValues(instance->group4,
         XmNtopWidget, instance->format_menu_lbl,
-        NULL);
+        nullptr);
     
     XtVaSetValues(instance->indent_str_tf,
         XmNleftWidget, instance->group23,
-        NULL);
+        nullptr);
     
     XtVaSetValues(instance->group7,
         XmNleftWidget, instance->list_scrolledwin,
         XmNtopWidget, instance->list_scrolledwin,
-        NULL);
+        nullptr);
     
     XtVaSetValues(instance->list_scrolledwin,
         XmNrightWidget, instance->def_value_field,
         XmNtopWidget, instance->def_value_field,
-        NULL);
+        nullptr);
     
     XtVaSetValues(instance->menu_labels_lbl,
         XmNtopWidget, instance->list_scrolledwin,
-        NULL);
+        nullptr);
     
     XtVaSetValues(instance->def_value_field,
         XmNtopWidget, instance->hdr_field,
-        NULL);
+        nullptr);
     
     XtVaSetValues(instance->hdr_field_lbl,
         XmNbottomWidget, instance->hdr_field,
         XmNtopWidget, instance->hdr_field,
-        NULL);
+        nullptr);
     
     XtVaSetValues(instance->def_value_lbl,
         XmNbottomWidget, instance->def_value_field,
         XmNtopWidget, instance->def_value_field,
-        NULL);
+        nullptr);
     
     XtVaSetValues(instance->del_button,
         XmNtopWidget, instance->add_button,
-        NULL);
+        nullptr);
     
     XtVaSetValues(instance->change_button,
         XmNtopWidget, instance->del_button,
-        NULL);
+        nullptr);
     
     XtVaSetValues(instance->separator8,
         XmNtopWidget, instance->group25,
-        NULL);
+        nullptr);
     
     XtVaSetValues(instance->separator5,
         XmNtopWidget, instance->group9,
-        NULL);
+        nullptr);
     
     XtVaSetValues(instance->group25,
         XmNtopWidget, instance->separator5,
-        NULL);
+        nullptr);
     
     XtVaSetValues(instance->mailb_for_sent_lbl,
         XmNtopWidget, instance->separator8,
-        NULL);
+        nullptr);
     
     XtVaSetValues(instance->group26,
         XmNtopWidget, instance->mailb_for_sent_lbl,
-        NULL);
+        nullptr);
     
     XtVaSetValues(instance->group24,
         XmNleftWidget, instance->mv_menu_lst_scrolledwin,
         XmNtopWidget, instance->mv_menu_lst_scrolledwin,
-        NULL);
+        nullptr);
     
     XtVaSetValues(instance->mv_menu_lst_scrolledwin,
         XmNrightWidget, instance->path_file_name_tf,
         XmNtopWidget, instance->path_file_name_tf,
-        NULL);
+        nullptr);
     
     XtVaSetValues(instance->srt_looking_tf,
         XmNtopWidget, instance->mv_menu_lst_scrolledwin,
-        NULL);
+        nullptr);
     
     XtVaSetValues(instance->move_menu_lbl,
         XmNtopWidget, instance->mv_menu_lst_scrolledwin,
-        NULL);
+        nullptr);
     
     XtVaSetValues(instance->move_menu_lbl2,
         XmNtopWidget, instance->move_menu_lbl,
-        NULL);
+        nullptr);
     
     XtVaSetValues(instance->path_file_lbl,
         XmNbottomWidget, instance->path_file_name_tf,
         XmNtopWidget, instance->path_file_name_tf,
-        NULL);
+        nullptr);
     
     XtVaSetValues(instance->start_look_lbl,
         XmNbottomWidget, instance->srt_looking_tf,
         XmNtopWidget, instance->srt_looking_tf,
-        NULL);
+        nullptr);
     
     XtVaSetValues(instance->mm_delete_butt,
         XmNtopWidget, instance->mm_add_butt,
-        NULL);
+        nullptr);
     
     XtVaSetValues(instance->mm_change_butt,
         XmNtopWidget, instance->mm_delete_butt,
-        NULL);
+        nullptr);
     
     XtVaSetValues(instance->group10,
         XmNtopWidget, instance->vacation_lbl,
-        NULL);
+        nullptr);
     
     XtVaSetValues(instance->vacation_msg_tp_scrolledwin,
         XmNtopWidget, instance->subject_tf,
-        NULL);
+        nullptr);
     
     XtVaSetValues(instance->subject_tf,
         XmNtopWidget, instance->vacation_rb,
-        NULL);
+        nullptr);
     
     XtVaSetValues(instance->msg_list_lbl,
         XmNtopWidget, instance->vacation_msg_tp_scrolledwin,
-        NULL);
+        nullptr);
     
     XtVaSetValues(instance->subject_lbl,
         XmNbottomWidget, instance->subject_tf,
         XmNtopWidget, instance->subject_tf,
-        NULL);
+        nullptr);
     
     XtVaSetValues(instance->vacation_rb_lbl,
         XmNbottomWidget, instance->vacation_rb,
         XmNtopWidget, instance->vacation_rb,
-        NULL);
+        nullptr);
     
     XtVaSetValues(instance->group11,
         XmNleftWidget, instance->templates_list_scrolledwin,
         XmNtopWidget, instance->templates_list_scrolledwin,
-        NULL);
+        nullptr);
     
     XtVaSetValues(instance->path_filename_label,
         XmNtopWidget, instance->menu_label,
-        NULL);
+        nullptr);
     
     XtVaSetValues(instance->templates_list_scrolledwin,
         XmNrightWidget, instance->path_filename_label,
         XmNtopWidget, instance->path_filename_label,
-        NULL);
+        nullptr);
     
     XtVaSetValues(instance->templates_list_lbl,
         XmNtopWidget, instance->templates_list_scrolledwin,
-        NULL);
+        nullptr);
     
     XtVaSetValues(instance->menu_label_lbl,
         XmNbottomWidget, instance->menu_label,
         XmNtopWidget, instance->menu_label,
-        NULL);
+        nullptr);
     
     XtVaSetValues(instance->path_filename_label_lbl,
         XmNbottomWidget, instance->path_filename_label,
         XmNtopWidget, instance->path_filename_label,
-        NULL);
+        nullptr);
     
     XtVaSetValues(instance->tem_del_but,
         XmNtopWidget, instance->tem_add_but,
-        NULL);
+        nullptr);
     
     XtVaSetValues(instance->tem_change_but,
         XmNtopWidget, instance->tem_del_but,
-        NULL);
+        nullptr);
     
     XtVaSetValues(instance->group15,
         XmNleftWidget, instance->alias_list_scrolledwin,
         XmNtopWidget, instance->alias_list_scrolledwin,
-        NULL);
+        nullptr);
     
     XtVaSetValues(instance->addresses_tf,
         XmNtopWidget, instance->alias_tf,
-        NULL);
+        nullptr);
     
     XtVaSetValues(instance->alias_list_scrolledwin,
         XmNrightWidget, instance->addresses_tf,
         XmNtopWidget, instance->addresses_tf,
-        NULL);
+        nullptr);
     
     XtVaSetValues(instance->alias_list_lbl,
         XmNtopWidget, instance->alias_list_scrolledwin,
-        NULL);
+        nullptr);
     
     XtVaSetValues(instance->alias_tf_lbl,
         XmNbottomWidget, instance->alias_tf,
         XmNtopWidget, instance->alias_tf,
-        NULL);
+        nullptr);
     
     XtVaSetValues(instance->address_tf_lbl,
         XmNbottomWidget, instance->addresses_tf,
         XmNtopWidget, instance->addresses_tf,
-        NULL);
+        nullptr);
     
     XtVaSetValues(instance->alias_delete_but,
         XmNtopWidget, instance->alias_add_but,
-        NULL);
+        nullptr);
     
     XtVaSetValues(instance->al_change_but,
         XmNtopWidget, instance->alias_delete_but,
-        NULL);
+        nullptr);
     
     XtVaSetValues(instance->update_mbox_scale,
         XmNtopWidget, instance->update_mailb_lbl,
-        NULL);
+        nullptr);
     
     XtVaSetValues(instance->frequently_lbl,
         XmNleftWidget, instance->update_mbox_scale,
         XmNtopWidget, instance->update_mbox_scale,
-        NULL);
+        nullptr);
     
     XtVaSetValues(instance->seldom_lbl,
         XmNrightWidget, instance->update_mbox_scale,
         XmNtopWidget, instance->update_mbox_scale,
-        NULL);
+        nullptr);
     
     XtVaSetValues(instance->separator11,
         XmNtopWidget, instance->seldom_lbl,
-        NULL);
+        nullptr);
     
     XtVaSetValues(instance->adv_def_cb_rowcolumn,
         XmNtopWidget, instance->separator11,
-        NULL);
+        nullptr);
     
     XtVaSetValues(instance->group12,
         XmNtopWidget, instance->adv_def_cb_rowcolumn,
-        NULL);
+        nullptr);
     
     XtVaSetValues(instance->group16,
         XmNleftWidget, instance->local_name_list_scrolledwin,
         XmNtopWidget, instance->local_name_list_scrolledwin,
-        NULL);
+        nullptr);
     
     XtVaSetValues(instance->local_name_list_scrolledwin,
         XmNrightWidget, instance->local_name_tf,
         XmNtopWidget, instance->local_name_tf,
-        NULL);
+        nullptr);
     
     XtVaSetValues(instance->local_name_del_but,
         XmNtopWidget, instance->local_name_add_but,
-        NULL);
+        nullptr);
     
     XtVaSetValues(instance->local_name_chg_but,
         XmNtopWidget, instance->local_name_del_but,
-        NULL);
+        nullptr);
     
     /*
      * Call utility functions to do group layout
@@ -1381,7 +1381,7 @@ dtb_options_dialog_initialize(
 		DTB_ALIGN_NONE,
 		0, 1, 0, 4, 0);
 
-    XtVaSetValues(instance->visit_mailb_lbl, XmNtopOffset, 6, NULL);
+    XtVaSetValues(instance->visit_mailb_lbl, XmNtopOffset, 6, nullptr);
     
     dtb_children_align(instance->group26,
 		DTB_GROUP_COLUMNS,
@@ -1629,12 +1629,12 @@ dtb_options_dialog_create(
     Widget parent
 )
 {
-    XmString	label_xmstring = NULL;
-    Display	*display= (parent == NULL? NULL:XtDisplay(parent));
+    XmString	label_xmstring = nullptr;
+    Display	*display= (parent == nullptr? nullptr:XtDisplay(parent));
     Arg	args[8];	/* need 3 args (add 5 to be safe) */
     int	n = 0;
     
-    if (instance->dialog == NULL) {
+    if (instance->dialog == nullptr) {
         n = 0;
         XtSetArg(args[n], XmNallowShellResize, True);  ++n;
         XtSetArg(args[n], XmNtitle, CATGETS(Dtb_project_catd, 2, 1, "Mailer - Mail Options"));  ++n;
@@ -1643,10 +1643,10 @@ dtb_options_dialog_create(
             XmCreateDialogShell(parent,
                 "dtb_options_dialog", args, n);
     }
-    if (instance->dialog == NULL)
+    if (instance->dialog == nullptr)
         return -1;
 
-    if (instance->dialog_shellform == NULL) {
+    if (instance->dialog_shellform == nullptr) {
         instance->dialog_shellform =
             XtVaCreateWidget("dtb_options_dialog_shellform",
                 xmFormWidgetClass,
@@ -1656,12 +1656,12 @@ dtb_options_dialog_create(
                 XmNmarginHeight, 0,
                 XmNmarginWidth, 0,
                 XmNbackground, dtb_cvt_string_to_pixel(instance->dialog, "white"),
-                NULL);
+                nullptr);
     }
-    if (instance->dialog_shellform == NULL)
+    if (instance->dialog_shellform == nullptr)
         return -1;
 
-    if (instance->dialog_panedwin == NULL) {
+    if (instance->dialog_panedwin == nullptr) {
         instance->dialog_panedwin =
             XtVaCreateWidget("dtb_options_dialog_panedwin",
                 xmPanedWindowWidgetClass,
@@ -1684,12 +1684,12 @@ dtb_options_dialog_create(
                 XmNmarginHeight, 0,
                 XmNmarginWidth, 0,
                 XmNbackground, dtb_cvt_string_to_pixel(instance->dialog_shellform, "white"),
-                NULL);
+                nullptr);
     }
-    if (instance->dialog_panedwin == NULL)
+    if (instance->dialog_panedwin == nullptr)
         return -1;
 
-    if (instance->dialog_form == NULL) {
+    if (instance->dialog_form == nullptr) {
         instance->dialog_form =
             XtVaCreateWidget("dtb_options_dialog_form",
                 xmFormWidgetClass,
@@ -1699,9 +1699,9 @@ dtb_options_dialog_create(
                 XmNmarginWidth, 0,
                 XmNresizePolicy, XmRESIZE_ANY,
                 XmNbackground, dtb_cvt_string_to_pixel(instance->dialog_panedwin, "white"),
-                NULL);
+                nullptr);
     }
-    if (instance->dialog_form == NULL)
+    if (instance->dialog_form == nullptr)
         return -1;
 
     return 0;
@@ -1716,7 +1716,7 @@ dtb_options_dialog_button_panel_create(
 )
 {
     
-    if (instance->dialog_button_panel == NULL) {
+    if (instance->dialog_button_panel == nullptr) {
         instance->dialog_button_panel =
             XtVaCreateWidget("dtb_options_dialog_button_panel",
                 xmFormWidgetClass,
@@ -1725,9 +1725,9 @@ dtb_options_dialog_button_panel_create(
                 XmNmarginHeight, 7,
                 XmNmarginWidth, 7,
                 XmNpositionIndex, 1,
-                NULL);
+                nullptr);
     }
-    if (instance->dialog_button_panel == NULL)
+    if (instance->dialog_button_panel == nullptr)
         return -1;
 
     return 0;
@@ -1742,7 +1742,7 @@ dtb_options_ctrl_panel_create(
 )
 {
     
-    if (instance->ctrl_panel == NULL) {
+    if (instance->ctrl_panel == nullptr) {
         instance->ctrl_panel =
             XtVaCreateWidget("dtb_options_ctrl_panel",
                 xmFormWidgetClass,
@@ -1757,9 +1757,9 @@ dtb_options_ctrl_panel_create(
                 XmNresizePolicy, XmRESIZE_ANY,
                 XmNmarginHeight, 0,
                 XmNmarginWidth, 0,
-                NULL);
+                nullptr);
     }
-    if (instance->ctrl_panel == NULL)
+    if (instance->ctrl_panel == nullptr)
         return -1;
 
     return 0;
@@ -1774,7 +1774,7 @@ dtb_options_layer_create(
 )
 {
     
-    if (instance->layer == NULL) {
+    if (instance->layer == nullptr) {
         instance->layer =
             XtVaCreateWidget("dtb_options_layer",
                 xmFormWidgetClass,
@@ -1788,9 +1788,9 @@ dtb_options_layer_create(
                 XmNtopOffset, 0,
                 XmNtopAttachment, XmATTACH_WIDGET,
                 XmNresizePolicy, XmRESIZE_ANY,
-                NULL);
+                nullptr);
     }
-    if (instance->layer == NULL)
+    if (instance->layer == nullptr)
         return -1;
 
     return 0;
@@ -1804,12 +1804,12 @@ dtb_options_category_opmenu_create(
     Widget parent
 )
 {
-    XmString	label_xmstring = NULL;
+    XmString	label_xmstring = nullptr;
     Arg	args[22];	/* need 17 args (add 5 to be safe) */
     int	n = 0;
     Widget	category_opmenu_menu_items[8];
     
-    if (instance->category_opmenu_rowcolumn == NULL) {
+    if (instance->category_opmenu_rowcolumn == nullptr) {
         instance->category_opmenu_rowcolumn =
             XtVaCreateWidget("dtb_options_category_opmenu",
                 xmRowColumnWidgetClass,
@@ -1829,22 +1829,22 @@ dtb_options_category_opmenu_create(
                 XmNmarginHeight, 0,
                 XmNentryAlignment, XmALIGNMENT_END,
                 XmNorientation, XmHORIZONTAL,
-                NULL);
+                nullptr);
     }
-    if (instance->category_opmenu_rowcolumn == NULL)
+    if (instance->category_opmenu_rowcolumn == nullptr)
         return -1;
 
-    if (instance->category_opmenu_menu == NULL) {
+    if (instance->category_opmenu_menu == nullptr) {
         n = 0;
         XtSetArg(args[n], XmNrowColumnType, XmMENU_PULLDOWN);  ++n;
         instance->category_opmenu_menu =
             XmCreatePulldownMenu(instance->category_opmenu_rowcolumn,
                 "dtb_options_category_opmenu_menu", args, n);
     }
-    if (instance->category_opmenu_menu == NULL)
+    if (instance->category_opmenu_menu == nullptr)
         return -1;
 
-    if (instance->category_opmenu_label == NULL) {
+    if (instance->category_opmenu_label == nullptr) {
         label_xmstring = XmStringCreateLocalized(CATGETS(Dtb_project_catd, 2, 2, "Category:"));
         instance->category_opmenu_label =
             XtVaCreateWidget("dtb_options_category_opmenu_label",
@@ -1852,14 +1852,14 @@ dtb_options_category_opmenu_create(
                 instance->category_opmenu_rowcolumn,
                 XmNlabelType, XmSTRING,
                 XmNlabelString, label_xmstring,
-                NULL);
+                nullptr);
         XmStringFree(label_xmstring);
-        label_xmstring = NULL;
+        label_xmstring = nullptr;
     }
-    if (instance->category_opmenu_label == NULL)
+    if (instance->category_opmenu_label == nullptr)
         return -1;
 
-    if (instance->category_opmenu == NULL) {
+    if (instance->category_opmenu == nullptr) {
         n = 0;
         XtSetArg(args[n], XmNrowColumnType, XmMENU_OPTION);  ++n;
         XtSetArg(args[n], XmNspacing, 0);  ++n;
@@ -1868,122 +1868,122 @@ dtb_options_category_opmenu_create(
             XmCreateOptionMenu(instance->category_opmenu_rowcolumn,
                 "dtb_options_category_opmenu_choice", args, n);
     }
-    if (instance->category_opmenu == NULL)
+    if (instance->category_opmenu == nullptr)
         return -1;
 
-    if (instance->category_opmenu_items.Message_Header_List_item == NULL) {
+    if (instance->category_opmenu_items.Message_Header_List_item == nullptr) {
         label_xmstring = XmStringCreateLocalized(CATGETS(Dtb_project_catd, 2, 3, "Message Header List"));
         instance->category_opmenu_items.Message_Header_List_item =
             XtVaCreateManagedWidget("dtb_options_category_opmenu_message_header_list_item",
                 xmPushButtonWidgetClass,
                 instance->category_opmenu_menu,
                 XmNlabelString, label_xmstring,
-                NULL);
+                nullptr);
         XmStringFree(label_xmstring);
-        label_xmstring = NULL;
+        label_xmstring = nullptr;
     }
-    if (instance->category_opmenu_items.Message_Header_List_item == NULL)
+    if (instance->category_opmenu_items.Message_Header_List_item == nullptr)
         return -1;
 
-    if (instance->category_opmenu_items.Message_View_item == NULL) {
+    if (instance->category_opmenu_items.Message_View_item == nullptr) {
         label_xmstring = XmStringCreateLocalized(CATGETS(Dtb_project_catd, 2, 4, "Message View"));
         instance->category_opmenu_items.Message_View_item =
             XtVaCreateManagedWidget("dtb_options_category_opmenu_message_view_item",
                 xmPushButtonWidgetClass,
                 instance->category_opmenu_menu,
                 XmNlabelString, label_xmstring,
-                NULL);
+                nullptr);
         XmStringFree(label_xmstring);
-        label_xmstring = NULL;
+        label_xmstring = nullptr;
     }
-    if (instance->category_opmenu_items.Message_View_item == NULL)
+    if (instance->category_opmenu_items.Message_View_item == nullptr)
         return -1;
 
-    if (instance->category_opmenu_items.Compose_Window_item == NULL) {
+    if (instance->category_opmenu_items.Compose_Window_item == nullptr) {
         label_xmstring = XmStringCreateLocalized(CATGETS(Dtb_project_catd, 2, 5, "Compose Window"));
         instance->category_opmenu_items.Compose_Window_item =
             XtVaCreateManagedWidget("dtb_options_category_opmenu_compose_window_item",
                 xmPushButtonWidgetClass,
                 instance->category_opmenu_menu,
                 XmNlabelString, label_xmstring,
-                NULL);
+                nullptr);
         XmStringFree(label_xmstring);
-        label_xmstring = NULL;
+        label_xmstring = nullptr;
     }
-    if (instance->category_opmenu_items.Compose_Window_item == NULL)
+    if (instance->category_opmenu_items.Compose_Window_item == nullptr)
         return -1;
 
-    if (instance->category_opmenu_items.Message_Filing_item == NULL) {
+    if (instance->category_opmenu_items.Message_Filing_item == nullptr) {
         label_xmstring = XmStringCreateLocalized(CATGETS(Dtb_project_catd, 2, 6, "Message Filing"));
         instance->category_opmenu_items.Message_Filing_item =
             XtVaCreateManagedWidget("dtb_options_category_opmenu_message_filing_item",
                 xmPushButtonWidgetClass,
                 instance->category_opmenu_menu,
                 XmNlabelString, label_xmstring,
-                NULL);
+                nullptr);
         XmStringFree(label_xmstring);
-        label_xmstring = NULL;
+        label_xmstring = nullptr;
     }
-    if (instance->category_opmenu_items.Message_Filing_item == NULL)
+    if (instance->category_opmenu_items.Message_Filing_item == nullptr)
         return -1;
 
-    if (instance->category_opmenu_items.Vacation_item == NULL) {
+    if (instance->category_opmenu_items.Vacation_item == nullptr) {
         label_xmstring = XmStringCreateLocalized(CATGETS(Dtb_project_catd, 2, 7, "Vacation"));
         instance->category_opmenu_items.Vacation_item =
             XtVaCreateManagedWidget("dtb_options_category_opmenu_vacation_item",
                 xmPushButtonWidgetClass,
                 instance->category_opmenu_menu,
                 XmNlabelString, label_xmstring,
-                NULL);
+                nullptr);
         XmStringFree(label_xmstring);
-        label_xmstring = NULL;
+        label_xmstring = nullptr;
     }
-    if (instance->category_opmenu_items.Vacation_item == NULL)
+    if (instance->category_opmenu_items.Vacation_item == nullptr)
         return -1;
 
-    if (instance->category_opmenu_items.Templates_item == NULL) {
+    if (instance->category_opmenu_items.Templates_item == nullptr) {
         label_xmstring = XmStringCreateLocalized(CATGETS(Dtb_project_catd, 2, 8, "Templates"));
         instance->category_opmenu_items.Templates_item =
             XtVaCreateManagedWidget("dtb_options_category_opmenu_templates_item",
                 xmPushButtonWidgetClass,
                 instance->category_opmenu_menu,
                 XmNlabelString, label_xmstring,
-                NULL);
+                nullptr);
         XmStringFree(label_xmstring);
-        label_xmstring = NULL;
+        label_xmstring = nullptr;
     }
-    if (instance->category_opmenu_items.Templates_item == NULL)
+    if (instance->category_opmenu_items.Templates_item == nullptr)
         return -1;
 
-    if (instance->category_opmenu_items.Aliases_item == NULL) {
+    if (instance->category_opmenu_items.Aliases_item == nullptr) {
         label_xmstring = XmStringCreateLocalized(CATGETS(Dtb_project_catd, 2, 9, "Aliases"));
         instance->category_opmenu_items.Aliases_item =
             XtVaCreateManagedWidget("dtb_options_category_opmenu_aliases_item",
                 xmPushButtonWidgetClass,
                 instance->category_opmenu_menu,
                 XmNlabelString, label_xmstring,
-                NULL);
+                nullptr);
         XmStringFree(label_xmstring);
-        label_xmstring = NULL;
+        label_xmstring = nullptr;
     }
-    if (instance->category_opmenu_items.Aliases_item == NULL)
+    if (instance->category_opmenu_items.Aliases_item == nullptr)
         return -1;
 
-    if (instance->category_opmenu_items.Advanced_item == NULL) {
+    if (instance->category_opmenu_items.Advanced_item == nullptr) {
         label_xmstring = XmStringCreateLocalized(CATGETS(Dtb_project_catd, 2, 10, "Advanced"));
         instance->category_opmenu_items.Advanced_item =
             XtVaCreateManagedWidget("dtb_options_category_opmenu_advanced_item",
                 xmPushButtonWidgetClass,
                 instance->category_opmenu_menu,
                 XmNlabelString, label_xmstring,
-                NULL);
+                nullptr);
         XmStringFree(label_xmstring);
-        label_xmstring = NULL;
+        label_xmstring = nullptr;
     }
-    if (instance->category_opmenu_items.Advanced_item == NULL)
+    if (instance->category_opmenu_items.Advanced_item == nullptr)
         return -1;
 
-    if (instance->category_opmenu_items.Printing_item == NULL) {
+    if (instance->category_opmenu_items.Printing_item == nullptr) {
         label_xmstring =
 	  XmStringCreateLocalized(CATGETS(Dtb_project_catd, 2, 92, "Printing"));
         instance->category_opmenu_items.Printing_item =
@@ -1991,14 +1991,14 @@ dtb_options_category_opmenu_create(
                 xmPushButtonWidgetClass,
                 instance->category_opmenu_menu,
                 XmNlabelString, label_xmstring,
-                NULL);
+                nullptr);
         XmStringFree(label_xmstring);
-        label_xmstring = NULL;
+        label_xmstring = nullptr;
     }
-    if (instance->category_opmenu_items.Printing_item == NULL)
+    if (instance->category_opmenu_items.Printing_item == nullptr)
         return -1;
 
-    if (instance->category_opmenu_items.MailRetrieval_item == NULL) {
+    if (instance->category_opmenu_items.MailRetrieval_item == nullptr) {
         label_xmstring =
 	  XmStringCreateLocalized(
 	    CATGETS(Dtb_project_catd, 2, 93, "Mail Retrieval"));
@@ -2008,11 +2008,11 @@ dtb_options_category_opmenu_create(
                 xmPushButtonWidgetClass,
                 instance->category_opmenu_menu,
                 XmNlabelString, label_xmstring,
-                NULL);
+                nullptr);
         XmStringFree(label_xmstring);
-        label_xmstring = NULL;
+        label_xmstring = nullptr;
     }
-    if (instance->category_opmenu_items.MailRetrieval_item == NULL)
+    if (instance->category_opmenu_items.MailRetrieval_item == nullptr)
         return -1;
 
     dtb_center(instance->category_opmenu_rowcolumn, DTB_CENTER_POSITION_VERT);
@@ -2028,7 +2028,7 @@ dtb_options_separator10_create(
 )
 {
     
-    if (instance->separator10 == NULL) {
+    if (instance->separator10 == nullptr) {
         instance->separator10 =
             XtVaCreateWidget("dtb_options_separator10",
                 xmSeparatorWidgetClass,
@@ -2042,9 +2042,9 @@ dtb_options_separator10_create(
                 XmNtopAttachment, XmATTACH_WIDGET,
                 XmNseparatorType, XmSHADOW_ETCHED_IN,
                 XmNorientation, XmHORIZONTAL,
-                NULL);
+                nullptr);
     }
-    if (instance->separator10 == NULL)
+    if (instance->separator10 == nullptr)
         return -1;
 
     return 0;
@@ -2059,7 +2059,7 @@ dtb_options_msg_header_pane_create(
 )
 {
     
-    if (instance->msg_header_pane == NULL) {
+    if (instance->msg_header_pane == nullptr) {
         instance->msg_header_pane =
             XtVaCreateWidget("dtb_options_msg_header_pane",
                 xmFormWidgetClass,
@@ -2079,9 +2079,9 @@ dtb_options_msg_header_pane_create(
                 XmNresizePolicy, XmRESIZE_ANY,
                 XmNmarginHeight, 0,
                 XmNmarginWidth, 0,
-                NULL);
+                nullptr);
     }
-    if (instance->msg_header_pane == NULL)
+    if (instance->msg_header_pane == nullptr)
         return -1;
 
     return 0;
@@ -2096,7 +2096,7 @@ dtb_options_msg_view_pane_create(
 )
 {
     
-    if (instance->msg_view_pane == NULL) {
+    if (instance->msg_view_pane == nullptr) {
         instance->msg_view_pane =
             XtVaCreateWidget("dtb_options_msg_view_pane",
                 xmFormWidgetClass,
@@ -2116,9 +2116,9 @@ dtb_options_msg_view_pane_create(
                 XmNresizePolicy, XmRESIZE_ANY,
                 XmNmarginHeight, 0,
                 XmNmarginWidth, 0,
-                NULL);
+                nullptr);
     }
-    if (instance->msg_view_pane == NULL)
+    if (instance->msg_view_pane == nullptr)
         return -1;
 
     return 0;
@@ -2133,7 +2133,7 @@ dtb_options_compose_win_pane_create(
 )
 {
     
-    if (instance->compose_win_pane == NULL) {
+    if (instance->compose_win_pane == nullptr) {
         instance->compose_win_pane =
             XtVaCreateWidget("dtb_options_compose_win_pane",
                 xmFormWidgetClass,
@@ -2153,9 +2153,9 @@ dtb_options_compose_win_pane_create(
                 XmNresizePolicy, XmRESIZE_ANY,
                 XmNmarginHeight, 0,
                 XmNmarginWidth, 0,
-                NULL);
+                nullptr);
     }
-    if (instance->compose_win_pane == NULL)
+    if (instance->compose_win_pane == nullptr)
         return -1;
 
     return 0;
@@ -2170,7 +2170,7 @@ dtb_options_msg_filing_pane_create(
 )
 {
     
-    if (instance->msg_filing_pane == NULL) {
+    if (instance->msg_filing_pane == nullptr) {
         instance->msg_filing_pane =
             XtVaCreateWidget("dtb_options_msg_filing_pane",
                 xmFormWidgetClass,
@@ -2190,9 +2190,9 @@ dtb_options_msg_filing_pane_create(
                 XmNresizePolicy, XmRESIZE_ANY,
                 XmNmarginHeight, 0,
                 XmNmarginWidth, 0,
-                NULL);
+                nullptr);
     }
-    if (instance->msg_filing_pane == NULL)
+    if (instance->msg_filing_pane == nullptr)
         return -1;
 
     return 0;
@@ -2207,7 +2207,7 @@ dtb_options_vacation_pane_create(
 )
 {
     
-    if (instance->vacation_pane == NULL) {
+    if (instance->vacation_pane == nullptr) {
         instance->vacation_pane =
             XtVaCreateWidget("dtb_options_vacation_pane",
                 xmFormWidgetClass,
@@ -2227,9 +2227,9 @@ dtb_options_vacation_pane_create(
                 XmNresizePolicy, XmRESIZE_ANY,
                 XmNmarginHeight, 0,
                 XmNmarginWidth, 0,
-                NULL);
+                nullptr);
     }
-    if (instance->vacation_pane == NULL)
+    if (instance->vacation_pane == nullptr)
         return -1;
 
     return 0;
@@ -2244,7 +2244,7 @@ dtb_options_templates_pane_create(
 )
 {
     
-    if (instance->templates_pane == NULL) {
+    if (instance->templates_pane == nullptr) {
         instance->templates_pane =
             XtVaCreateWidget("dtb_options_templates_pane",
                 xmFormWidgetClass,
@@ -2264,9 +2264,9 @@ dtb_options_templates_pane_create(
                 XmNresizePolicy, XmRESIZE_ANY,
                 XmNmarginHeight, 0,
                 XmNmarginWidth, 0,
-                NULL);
+                nullptr);
     }
-    if (instance->templates_pane == NULL)
+    if (instance->templates_pane == nullptr)
         return -1;
 
     return 0;
@@ -2281,7 +2281,7 @@ dtb_options_aliases_pane_create(
 )
 {
     
-    if (instance->aliases_pane == NULL) {
+    if (instance->aliases_pane == nullptr) {
         instance->aliases_pane =
             XtVaCreateWidget("dtb_options_aliases_pane",
                 xmFormWidgetClass,
@@ -2301,9 +2301,9 @@ dtb_options_aliases_pane_create(
                 XmNresizePolicy, XmRESIZE_ANY,
                 XmNmarginHeight, 0,
                 XmNmarginWidth, 0,
-                NULL);
+                nullptr);
     }
-    if (instance->aliases_pane == NULL)
+    if (instance->aliases_pane == nullptr)
         return -1;
 
     return 0;
@@ -2318,7 +2318,7 @@ dtb_options_advanced_pane_create(
 )
 {
     
-    if (instance->advanced_pane == NULL) {
+    if (instance->advanced_pane == nullptr) {
         instance->advanced_pane =
             XtVaCreateWidget("dtb_options_advanced_pane",
                 xmFormWidgetClass,
@@ -2338,9 +2338,9 @@ dtb_options_advanced_pane_create(
                 XmNresizePolicy, XmRESIZE_ANY,
                 XmNmarginHeight, 0,
                 XmNmarginWidth, 0,
-                NULL);
+                nullptr);
     }
-    if (instance->advanced_pane == NULL)
+    if (instance->advanced_pane == nullptr)
         return -1;
 
     return 0;
@@ -2355,7 +2355,7 @@ dtb_options_separator2_create(
 )
 {
     
-    if (instance->separator2 == NULL) {
+    if (instance->separator2 == nullptr) {
         instance->separator2 =
             XtVaCreateWidget("dtb_options_separator2",
                 xmSeparatorWidgetClass,
@@ -2369,9 +2369,9 @@ dtb_options_separator2_create(
                 XmNtopAttachment, XmATTACH_WIDGET,
                 XmNseparatorType, XmSHADOW_ETCHED_IN,
                 XmNorientation, XmHORIZONTAL,
-                NULL);
+                nullptr);
     }
-    if (instance->separator2 == NULL)
+    if (instance->separator2 == nullptr)
         return -1;
 
     return 0;
@@ -2385,12 +2385,12 @@ dtb_options_checkbox_create(
     Widget parent
 )
 {
-    XmString	label_xmstring = NULL;
+    XmString	label_xmstring = nullptr;
     Arg	args[23];	/* need 18 args (add 5 to be safe) */
     int	n = 0;
     Widget	checkbox_items[2];
     
-    if (instance->checkbox == NULL) {
+    if (instance->checkbox == nullptr) {
         n = 0;
         XtSetArg(args[n], XmNbottomAttachment, XmATTACH_NONE);  ++n;
         XtSetArg(args[n], XmNrightAttachment, XmATTACH_NONE);  ++n;
@@ -2411,10 +2411,10 @@ dtb_options_checkbox_create(
             XmCreateRadioBox(parent,
                 "dtb_options_checkbox", args, n);
     }
-    if (instance->checkbox == NULL)
+    if (instance->checkbox == nullptr)
         return -1;
 
-    if (instance->checkbox_items.Show_To_recipient_when_mail_is_from_me_item == NULL) {
+    if (instance->checkbox_items.Show_To_recipient_when_mail_is_from_me_item == nullptr) {
         label_xmstring = XmStringCreateLocalized(CATGETS(Dtb_project_catd, 2, 11, "Show To: recipient when mail is from me"));
         instance->checkbox_items.Show_To_recipient_when_mail_is_from_me_item =
             XtVaCreateManagedWidget("dtb_options_checkbox_show_to_recipient_when_mail_is_from_me_item",
@@ -2422,14 +2422,14 @@ dtb_options_checkbox_create(
                 instance->checkbox,
                 XmNset, False,
                 XmNlabelString, label_xmstring,
-                NULL);
+                nullptr);
         XmStringFree(label_xmstring);
-        label_xmstring = NULL;
+        label_xmstring = nullptr;
     }
-    if (instance->checkbox_items.Show_To_recipient_when_mail_is_from_me_item == NULL)
+    if (instance->checkbox_items.Show_To_recipient_when_mail_is_from_me_item == nullptr)
         return -1;
 
-    if (instance->checkbox_items.Display_message_numbers_item == NULL) {
+    if (instance->checkbox_items.Display_message_numbers_item == nullptr) {
         label_xmstring = XmStringCreateLocalized(CATGETS(Dtb_project_catd, 2, 12, "Display message numbers"));
         instance->checkbox_items.Display_message_numbers_item =
             XtVaCreateManagedWidget("dtb_options_checkbox_display_message_numbers_item",
@@ -2437,11 +2437,11 @@ dtb_options_checkbox_create(
                 instance->checkbox,
                 XmNset, False,
                 XmNlabelString, label_xmstring,
-                NULL);
+                nullptr);
         XmStringFree(label_xmstring);
-        label_xmstring = NULL;
+        label_xmstring = nullptr;
     }
-    if (instance->checkbox_items.Display_message_numbers_item == NULL)
+    if (instance->checkbox_items.Display_message_numbers_item == nullptr)
         return -1;
 
     return 0;
@@ -2456,7 +2456,7 @@ dtb_options_separator4_create(
 )
 {
     
-    if (instance->separator4 == NULL) {
+    if (instance->separator4 == nullptr) {
         instance->separator4 =
             XtVaCreateWidget("dtb_options_separator4",
                 xmSeparatorWidgetClass,
@@ -2470,9 +2470,9 @@ dtb_options_separator4_create(
                 XmNtopAttachment, XmATTACH_WIDGET,
                 XmNseparatorType, XmSHADOW_ETCHED_IN,
                 XmNorientation, XmHORIZONTAL,
-                NULL);
+                nullptr);
     }
-    if (instance->separator4 == NULL)
+    if (instance->separator4 == nullptr)
         return -1;
 
     return 0;
@@ -2487,7 +2487,7 @@ dtb_options_group28_create(
 )
 {
     
-    if (instance->group28 == NULL) {
+    if (instance->group28 == nullptr) {
         instance->group28 =
             XtVaCreateWidget("dtb_options_group28",
                 xmFormWidgetClass,
@@ -2502,9 +2502,9 @@ dtb_options_group28_create(
                 XmNresizePolicy, XmRESIZE_ANY,
                 XmNmarginHeight, 0,
                 XmNmarginWidth, 0,
-                NULL);
+                nullptr);
     }
-    if (instance->group28 == NULL)
+    if (instance->group28 == nullptr)
         return -1;
 
     return 0;
@@ -2519,7 +2519,7 @@ dtb_options_group21_create(
 )
 {
     
-    if (instance->group21 == NULL) {
+    if (instance->group21 == nullptr) {
         instance->group21 =
             XtVaCreateWidget("dtb_options_group21",
                 xmFormWidgetClass,
@@ -2533,9 +2533,9 @@ dtb_options_group21_create(
                 XmNresizePolicy, XmRESIZE_ANY,
                 XmNmarginHeight, 0,
                 XmNmarginWidth, 0,
-                NULL);
+                nullptr);
     }
-    if (instance->group21 == NULL)
+    if (instance->group21 == nullptr)
         return -1;
 
     return 0;
@@ -2549,9 +2549,9 @@ dtb_options_destroy_del_msg_lbl_create(
     Widget parent
 )
 {
-    XmString	label_xmstring = NULL;
+    XmString	label_xmstring = nullptr;
     
-    if (instance->destroy_del_msg_lbl == NULL) {
+    if (instance->destroy_del_msg_lbl == nullptr) {
         label_xmstring = XmStringCreateLocalized(CATGETS(Dtb_project_catd, 2, 20, "Destroy Deleted Messages:"));
         instance->destroy_del_msg_lbl =
             XtVaCreateWidget("dtb_options_destroy_del_msg_lbl",
@@ -2567,11 +2567,11 @@ dtb_options_destroy_del_msg_lbl_create(
                 XmNalignment, XmALIGNMENT_CENTER,
                 XmNlabelType, XmSTRING,
                 XmNlabelString, label_xmstring,
-                NULL);
+                nullptr);
         XmStringFree(label_xmstring);
-        label_xmstring = NULL;
+        label_xmstring = nullptr;
     }
-    if (instance->destroy_del_msg_lbl == NULL)
+    if (instance->destroy_del_msg_lbl == nullptr)
         return -1;
 
     return 0;
@@ -2585,12 +2585,12 @@ dtb_options_deleted_msg_cb_create(
     Widget parent
 )
 {
-    XmString	label_xmstring = NULL;
+    XmString	label_xmstring = nullptr;
     Arg	args[23];	/* need 18 args (add 5 to be safe) */
     int	n = 0;
     Widget	deleted_msg_cb_items[2];
     
-    if (instance->deleted_msg_cb == NULL) {
+    if (instance->deleted_msg_cb == nullptr) {
         n = 0;
         XtSetArg(args[n], XmNbottomAttachment, XmATTACH_NONE);  ++n;
         XtSetArg(args[n], XmNrightAttachment, XmATTACH_NONE);  ++n;
@@ -2611,10 +2611,10 @@ dtb_options_deleted_msg_cb_create(
             XmCreateRadioBox(parent,
                 "dtb_options_deleted_msg_cb", args, n);
     }
-    if (instance->deleted_msg_cb == NULL)
+    if (instance->deleted_msg_cb == nullptr)
         return -1;
 
-    if (instance->deleted_msg_cb_items.When_I_close_the_mailbox_item == NULL) {
+    if (instance->deleted_msg_cb_items.When_I_close_the_mailbox_item == nullptr) {
         label_xmstring = XmStringCreateLocalized(CATGETS(Dtb_project_catd, 2, 21, "When I close the mailbox"));
         instance->deleted_msg_cb_items.When_I_close_the_mailbox_item =
             XtVaCreateManagedWidget("dtb_options_deleted_msg_cb_when_i_close_the_mailbox_item",
@@ -2622,14 +2622,14 @@ dtb_options_deleted_msg_cb_create(
                 instance->deleted_msg_cb,
                 XmNset, True,
                 XmNlabelString, label_xmstring,
-                NULL);
+                nullptr);
         XmStringFree(label_xmstring);
-        label_xmstring = NULL;
+        label_xmstring = nullptr;
     }
-    if (instance->deleted_msg_cb_items.When_I_close_the_mailbox_item == NULL)
+    if (instance->deleted_msg_cb_items.When_I_close_the_mailbox_item == nullptr)
         return -1;
 
-    if (instance->deleted_msg_cb_items.Show_confirmation_notice_item == NULL) {
+    if (instance->deleted_msg_cb_items.Show_confirmation_notice_item == nullptr) {
         label_xmstring = XmStringCreateLocalized(CATGETS(Dtb_project_catd, 2, 22, "Show confirmation notice"));
         instance->deleted_msg_cb_items.Show_confirmation_notice_item =
             XtVaCreateManagedWidget("dtb_options_deleted_msg_cb_show_confirmation_notice_item",
@@ -2637,11 +2637,11 @@ dtb_options_deleted_msg_cb_create(
                 instance->deleted_msg_cb,
                 XmNset, True,
                 XmNlabelString, label_xmstring,
-                NULL);
+                nullptr);
         XmStringFree(label_xmstring);
-        label_xmstring = NULL;
+        label_xmstring = nullptr;
     }
-    if (instance->deleted_msg_cb_items.Show_confirmation_notice_item == NULL)
+    if (instance->deleted_msg_cb_items.Show_confirmation_notice_item == nullptr)
         return -1;
 
     return 0;
@@ -2656,7 +2656,7 @@ dtb_options_group_create(
 )
 {
     
-    if (instance->group == NULL) {
+    if (instance->group == nullptr) {
         instance->group =
             XtVaCreateWidget("dtb_options_group",
                 xmFormWidgetClass,
@@ -2664,9 +2664,9 @@ dtb_options_group_create(
                 XmNresizePolicy, XmRESIZE_ANY,
                 XmNmarginHeight, 0,
                 XmNmarginWidth, 0,
-                NULL);
+                nullptr);
     }
-    if (instance->group == NULL)
+    if (instance->group == nullptr)
         return -1;
 
     return 0;
@@ -2681,7 +2681,7 @@ dtb_options_group18_create(
 )
 {
     
-    if (instance->group18 == NULL) {
+    if (instance->group18 == nullptr) {
         instance->group18 =
             XtVaCreateWidget("dtb_options_group18",
                 xmFormWidgetClass,
@@ -2689,9 +2689,9 @@ dtb_options_group18_create(
                 XmNresizePolicy, XmRESIZE_ANY,
                 XmNmarginHeight, 0,
                 XmNmarginWidth, 0,
-                NULL);
+                nullptr);
     }
-    if (instance->group18 == NULL)
+    if (instance->group18 == nullptr)
         return -1;
 
     return 0;
@@ -2706,7 +2706,7 @@ dtb_options_group19_create(
 )
 {
     
-    if (instance->group19 == NULL) {
+    if (instance->group19 == nullptr) {
         instance->group19 =
             XtVaCreateWidget("dtb_options_group19",
                 xmFormWidgetClass,
@@ -2714,9 +2714,9 @@ dtb_options_group19_create(
                 XmNresizePolicy, XmRESIZE_ANY,
                 XmNmarginHeight, 0,
                 XmNmarginWidth, 0,
-                NULL);
+                nullptr);
     }
-    if (instance->group19 == NULL)
+    if (instance->group19 == nullptr)
         return -1;
 
     return 0;
@@ -2731,7 +2731,7 @@ dtb_options_group20_create(
 )
 {
     
-    if (instance->group20 == NULL) {
+    if (instance->group20 == nullptr) {
         instance->group20 =
             XtVaCreateWidget("dtb_options_group20",
                 xmFormWidgetClass,
@@ -2739,9 +2739,9 @@ dtb_options_group20_create(
                 XmNresizePolicy, XmRESIZE_ANY,
                 XmNmarginHeight, 0,
                 XmNmarginWidth, 0,
-                NULL);
+                nullptr);
     }
-    if (instance->group20 == NULL)
+    if (instance->group20 == nullptr)
         return -1;
 
     return 0;
@@ -2755,12 +2755,12 @@ dtb_options_mail_check_sb_create(
     Widget parent
 )
 {
-    XmString	label_xmstring = NULL;
+    XmString	label_xmstring = nullptr;
     Arg	args[18];	/* need 13 args (add 5 to be safe) */
     int	n = 0;
     
     
-    if (instance->mail_check_sb_rowcolumn == NULL) {
+    if (instance->mail_check_sb_rowcolumn == nullptr) {
         instance->mail_check_sb_rowcolumn =
             XtVaCreateWidget("dtb_options_mail_check_sb",
                 xmRowColumnWidgetClass,
@@ -2776,12 +2776,12 @@ dtb_options_mail_check_sb_create(
                 XmNmarginHeight, 0,
                 XmNentryAlignment, XmALIGNMENT_END,
                 XmNorientation, XmHORIZONTAL,
-                NULL);
+                nullptr);
     }
-    if (instance->mail_check_sb_rowcolumn == NULL)
+    if (instance->mail_check_sb_rowcolumn == nullptr)
         return -1;
 
-    if (instance->mail_check_sb_label == NULL) {
+    if (instance->mail_check_sb_label == nullptr) {
         label_xmstring = XmStringCreateLocalized(CATGETS(Dtb_project_catd, 2, 13, "Check for new mail every:"));
         instance->mail_check_sb_label =
             XtVaCreateWidget("dtb_options_mail_check_sb_label",
@@ -2789,14 +2789,14 @@ dtb_options_mail_check_sb_create(
                 instance->mail_check_sb_rowcolumn,
                 XmNlabelType, XmSTRING,
                 XmNlabelString, label_xmstring,
-                NULL);
+                nullptr);
         XmStringFree(label_xmstring);
-        label_xmstring = NULL;
+        label_xmstring = nullptr;
     }
-    if (instance->mail_check_sb_label == NULL)
+    if (instance->mail_check_sb_label == nullptr)
         return -1;
 
-    if (instance->mail_check_sb == NULL) {
+    if (instance->mail_check_sb == nullptr) {
         n = 0;
         XtSetArg(args[n], XmNdecimalPoints, 0);  ++n;
         XtSetArg(args[n], XmNincrementValue, 1);  ++n;
@@ -2810,7 +2810,7 @@ dtb_options_mail_check_sb_create(
             XmCreateSimpleSpinBox(instance->mail_check_sb_rowcolumn,
                 "dtb_options_mail_check_sb_field", args, n);
     }
-    if (instance->mail_check_sb == NULL)
+    if (instance->mail_check_sb == nullptr)
         return -1;
 
     return 0;
@@ -2824,9 +2824,9 @@ dtb_options_seconds_lbl_create(
     Widget parent
 )
 {
-    XmString	label_xmstring = NULL;
+    XmString	label_xmstring = nullptr;
     
-    if (instance->seconds_lbl == NULL) {
+    if (instance->seconds_lbl == nullptr) {
         label_xmstring = XmStringCreateLocalized(CATGETS(Dtb_project_catd, 2, 14, "Seconds"));
         instance->seconds_lbl =
             XtVaCreateWidget("dtb_options_seconds_lbl",
@@ -2843,11 +2843,11 @@ dtb_options_seconds_lbl_create(
                 XmNalignment, XmALIGNMENT_CENTER,
                 XmNlabelType, XmSTRING,
                 XmNlabelString, label_xmstring,
-                NULL);
+                nullptr);
         XmStringFree(label_xmstring);
-        label_xmstring = NULL;
+        label_xmstring = nullptr;
     }
-    if (instance->seconds_lbl == NULL)
+    if (instance->seconds_lbl == nullptr)
         return -1;
 
     return 0;
@@ -2861,12 +2861,12 @@ dtb_options_signal_sb_create(
     Widget parent
 )
 {
-    XmString	label_xmstring = NULL;
+    XmString	label_xmstring = nullptr;
     Arg	args[18];	/* need 13 args (add 5 to be safe) */
     int	n = 0;
     
     
-    if (instance->signal_sb_rowcolumn == NULL) {
+    if (instance->signal_sb_rowcolumn == nullptr) {
         instance->signal_sb_rowcolumn =
             XtVaCreateWidget("dtb_options_signal_sb",
                 xmRowColumnWidgetClass,
@@ -2882,12 +2882,12 @@ dtb_options_signal_sb_create(
                 XmNmarginHeight, 0,
                 XmNentryAlignment, XmALIGNMENT_END,
                 XmNorientation, XmHORIZONTAL,
-                NULL);
+                nullptr);
     }
-    if (instance->signal_sb_rowcolumn == NULL)
+    if (instance->signal_sb_rowcolumn == nullptr)
         return -1;
 
-    if (instance->signal_sb_label == NULL) {
+    if (instance->signal_sb_label == nullptr) {
         label_xmstring = XmStringCreateLocalized(CATGETS(Dtb_project_catd, 2, 15, "Signal new mail with:"));
         instance->signal_sb_label =
             XtVaCreateWidget("dtb_options_signal_sb_label",
@@ -2895,14 +2895,14 @@ dtb_options_signal_sb_create(
                 instance->signal_sb_rowcolumn,
                 XmNlabelType, XmSTRING,
                 XmNlabelString, label_xmstring,
-                NULL);
+                nullptr);
         XmStringFree(label_xmstring);
-        label_xmstring = NULL;
+        label_xmstring = nullptr;
     }
-    if (instance->signal_sb_label == NULL)
+    if (instance->signal_sb_label == nullptr)
         return -1;
 
-    if (instance->signal_sb == NULL) {
+    if (instance->signal_sb == nullptr) {
         n = 0;
         XtSetArg(args[n], XmNdecimalPoints, 0);  ++n;
         XtSetArg(args[n], XmNincrementValue, 1);  ++n;
@@ -2916,7 +2916,7 @@ dtb_options_signal_sb_create(
             XmCreateSimpleSpinBox(instance->signal_sb_rowcolumn,
                 "dtb_options_signal_sb_field", args, n);
     }
-    if (instance->signal_sb == NULL)
+    if (instance->signal_sb == nullptr)
         return -1;
 
     return 0;
@@ -2930,9 +2930,9 @@ dtb_options_beeps_lbl_create(
     Widget parent
 )
 {
-    XmString	label_xmstring = NULL;
+    XmString	label_xmstring = nullptr;
     
-    if (instance->beeps_lbl == NULL) {
+    if (instance->beeps_lbl == nullptr) {
         label_xmstring = XmStringCreateLocalized(CATGETS(Dtb_project_catd, 2, 16, "Beep(s)"));
         instance->beeps_lbl =
             XtVaCreateWidget("dtb_options_beeps_lbl",
@@ -2949,11 +2949,11 @@ dtb_options_beeps_lbl_create(
                 XmNalignment, XmALIGNMENT_CENTER,
                 XmNlabelType, XmSTRING,
                 XmNlabelString, label_xmstring,
-                NULL);
+                nullptr);
         XmStringFree(label_xmstring);
-        label_xmstring = NULL;
+        label_xmstring = nullptr;
     }
-    if (instance->beeps_lbl == NULL)
+    if (instance->beeps_lbl == nullptr)
         return -1;
 
     return 0;
@@ -2967,12 +2967,12 @@ dtb_options_spinbox2_create(
     Widget parent
 )
 {
-    XmString	label_xmstring = NULL;
+    XmString	label_xmstring = nullptr;
     Arg	args[18];	/* need 13 args (add 5 to be safe) */
     int	n = 0;
     
     
-    if (instance->spinbox2_rowcolumn == NULL) {
+    if (instance->spinbox2_rowcolumn == nullptr) {
         instance->spinbox2_rowcolumn =
             XtVaCreateWidget("dtb_options_spinbox2",
                 xmRowColumnWidgetClass,
@@ -2988,12 +2988,12 @@ dtb_options_spinbox2_create(
                 XmNmarginHeight, 0,
                 XmNentryAlignment, XmALIGNMENT_END,
                 XmNorientation, XmHORIZONTAL,
-                NULL);
+                nullptr);
     }
-    if (instance->spinbox2_rowcolumn == NULL)
+    if (instance->spinbox2_rowcolumn == nullptr)
         return -1;
 
-    if (instance->spinbox2_label == NULL) {
+    if (instance->spinbox2_label == nullptr) {
         label_xmstring = XmStringCreateLocalized(CATGETS(Dtb_project_catd, 2, 91, " "));
         instance->spinbox2_label =
             XtVaCreateWidget("dtb_options_spinbox2_label",
@@ -3001,14 +3001,14 @@ dtb_options_spinbox2_create(
                 instance->spinbox2_rowcolumn,
                 XmNlabelType, XmSTRING,
                 XmNlabelString, label_xmstring,
-                NULL);
+                nullptr);
         XmStringFree(label_xmstring);
-        label_xmstring = NULL;
+        label_xmstring = nullptr;
     }
-    if (instance->spinbox2_label == NULL)
+    if (instance->spinbox2_label == nullptr)
         return -1;
 
-    if (instance->spinbox2 == NULL) {
+    if (instance->spinbox2 == nullptr) {
         n = 0;
         XtSetArg(args[n], XmNdecimalPoints, 0);  ++n;
         XtSetArg(args[n], XmNincrementValue, 1);  ++n;
@@ -3022,7 +3022,7 @@ dtb_options_spinbox2_create(
             XmCreateSimpleSpinBox(instance->spinbox2_rowcolumn,
                 "dtb_options_spinbox2_field", args, n);
     }
-    if (instance->spinbox2 == NULL)
+    if (instance->spinbox2 == nullptr)
         return -1;
 
     return 0;
@@ -3036,9 +3036,9 @@ dtb_options_flashes_lbl_create(
     Widget parent
 )
 {
-    XmString	label_xmstring = NULL;
+    XmString	label_xmstring = nullptr;
     
-    if (instance->flashes_lbl == NULL) {
+    if (instance->flashes_lbl == nullptr) {
         label_xmstring = XmStringCreateLocalized(CATGETS(Dtb_project_catd, 2, 17, "Flash(es)"));
         instance->flashes_lbl =
             XtVaCreateWidget("dtb_options_flashes_lbl",
@@ -3055,11 +3055,11 @@ dtb_options_flashes_lbl_create(
                 XmNalignment, XmALIGNMENT_CENTER,
                 XmNlabelType, XmSTRING,
                 XmNlabelString, label_xmstring,
-                NULL);
+                nullptr);
         XmStringFree(label_xmstring);
-        label_xmstring = NULL;
+        label_xmstring = nullptr;
     }
-    if (instance->flashes_lbl == NULL)
+    if (instance->flashes_lbl == nullptr)
         return -1;
 
     return 0;
@@ -3073,12 +3073,12 @@ dtb_options_display_sb_create(
     Widget parent
 )
 {
-    XmString	label_xmstring = NULL;
+    XmString	label_xmstring = nullptr;
     Arg	args[18];	/* need 13 args (add 5 to be safe) */
     int	n = 0;
     
     
-    if (instance->display_sb_rowcolumn == NULL) {
+    if (instance->display_sb_rowcolumn == nullptr) {
         instance->display_sb_rowcolumn =
             XtVaCreateWidget("dtb_options_display_sb",
                 xmRowColumnWidgetClass,
@@ -3094,12 +3094,12 @@ dtb_options_display_sb_create(
                 XmNmarginHeight, 0,
                 XmNentryAlignment, XmALIGNMENT_END,
                 XmNorientation, XmHORIZONTAL,
-                NULL);
+                nullptr);
     }
-    if (instance->display_sb_rowcolumn == NULL)
+    if (instance->display_sb_rowcolumn == nullptr)
         return -1;
 
-    if (instance->display_sb_label == NULL) {
+    if (instance->display_sb_label == nullptr) {
         label_xmstring = XmStringCreateLocalized(CATGETS(Dtb_project_catd, 2, 18, "Display"));
         instance->display_sb_label =
             XtVaCreateWidget("dtb_options_display_sb_label",
@@ -3107,14 +3107,14 @@ dtb_options_display_sb_create(
                 instance->display_sb_rowcolumn,
                 XmNlabelType, XmSTRING,
                 XmNlabelString, label_xmstring,
-                NULL);
+                nullptr);
         XmStringFree(label_xmstring);
-        label_xmstring = NULL;
+        label_xmstring = nullptr;
     }
-    if (instance->display_sb_label == NULL)
+    if (instance->display_sb_label == nullptr)
         return -1;
 
-    if (instance->display_sb == NULL) {
+    if (instance->display_sb == nullptr) {
         n = 0;
         XtSetArg(args[n], XmNdecimalPoints, 0);  ++n;
         XtSetArg(args[n], XmNincrementValue, 1);  ++n;
@@ -3128,7 +3128,7 @@ dtb_options_display_sb_create(
             XmCreateSimpleSpinBox(instance->display_sb_rowcolumn,
                 "dtb_options_display_sb_field", args, n);
     }
-    if (instance->display_sb == NULL)
+    if (instance->display_sb == nullptr)
         return -1;
 
     return 0;
@@ -3142,9 +3142,9 @@ dtb_options_headers_lbl_create(
     Widget parent
 )
 {
-    XmString	label_xmstring = NULL;
+    XmString	label_xmstring = nullptr;
     
-    if (instance->headers_lbl == NULL) {
+    if (instance->headers_lbl == nullptr) {
         label_xmstring = XmStringCreateLocalized(CATGETS(Dtb_project_catd, 2, 19, "Headers"));
         instance->headers_lbl =
             XtVaCreateWidget("dtb_options_headers_lbl",
@@ -3161,11 +3161,11 @@ dtb_options_headers_lbl_create(
                 XmNalignment, XmALIGNMENT_CENTER,
                 XmNlabelType, XmSTRING,
                 XmNlabelString, label_xmstring,
-                NULL);
+                nullptr);
         XmStringFree(label_xmstring);
-        label_xmstring = NULL;
+        label_xmstring = nullptr;
     }
-    if (instance->headers_lbl == NULL)
+    if (instance->headers_lbl == nullptr)
         return -1;
 
     return 0;
@@ -3180,7 +3180,7 @@ dtb_options_separator6_create(
 )
 {
     
-    if (instance->separator6 == NULL) {
+    if (instance->separator6 == nullptr) {
         instance->separator6 =
             XtVaCreateWidget("dtb_options_separator6",
                 xmSeparatorWidgetClass,
@@ -3196,9 +3196,9 @@ dtb_options_separator6_create(
                 XmNtopAttachment, XmATTACH_WIDGET,
                 XmNseparatorType, XmSHADOW_ETCHED_IN,
                 XmNorientation, XmHORIZONTAL,
-                NULL);
+                nullptr);
     }
-    if (instance->separator6 == NULL)
+    if (instance->separator6 == nullptr)
         return -1;
 
     return 0;
@@ -3212,9 +3212,9 @@ dtb_options_abr_header_lbl_create(
     Widget parent
 )
 {
-    XmString	label_xmstring = NULL;
+    XmString	label_xmstring = nullptr;
     
-    if (instance->abr_header_lbl == NULL) {
+    if (instance->abr_header_lbl == nullptr) {
         label_xmstring = XmStringCreateLocalized(CATGETS(Dtb_project_catd, 2, 23, "Abbreviated header will not include:"));
         instance->abr_header_lbl =
             XtVaCreateWidget("dtb_options_abr_header_lbl",
@@ -3230,11 +3230,11 @@ dtb_options_abr_header_lbl_create(
                 XmNalignment, XmALIGNMENT_CENTER,
                 XmNlabelType, XmSTRING,
                 XmNlabelString, label_xmstring,
-                NULL);
+                nullptr);
         XmStringFree(label_xmstring);
-        label_xmstring = NULL;
+        label_xmstring = nullptr;
     }
-    if (instance->abr_header_lbl == NULL)
+    if (instance->abr_header_lbl == nullptr)
         return -1;
 
     return 0;
@@ -3249,7 +3249,7 @@ dtb_options_group8_create(
 )
 {
     
-    if (instance->group8 == NULL) {
+    if (instance->group8 == nullptr) {
         instance->group8 =
             XtVaCreateWidget("dtb_options_group8",
                 xmFormWidgetClass,
@@ -3263,9 +3263,9 @@ dtb_options_group8_create(
                 XmNresizePolicy, XmRESIZE_ANY,
                 XmNmarginHeight, 0,
                 XmNmarginWidth, 0,
-                NULL);
+                nullptr);
     }
-    if (instance->group8 == NULL)
+    if (instance->group8 == nullptr)
         return -1;
 
     return 0;
@@ -3280,7 +3280,7 @@ dtb_options_group17_create(
 )
 {
     
-    if (instance->group17 == NULL) {
+    if (instance->group17 == nullptr) {
         instance->group17 =
             XtVaCreateWidget("dtb_options_group17",
                 xmFormWidgetClass,
@@ -3295,9 +3295,9 @@ dtb_options_group17_create(
                 XmNresizePolicy, XmRESIZE_ANY,
                 XmNmarginHeight, 0,
                 XmNmarginWidth, 0,
-                NULL);
+                nullptr);
     }
-    if (instance->group17 == NULL)
+    if (instance->group17 == nullptr)
         return -1;
 
     return 0;
@@ -3312,7 +3312,7 @@ dtb_options_group2_create(
 )
 {
     
-    if (instance->group2 == NULL) {
+    if (instance->group2 == nullptr) {
         instance->group2 =
             XtVaCreateWidget("dtb_options_group2",
                 xmFormWidgetClass,
@@ -3320,9 +3320,9 @@ dtb_options_group2_create(
                 XmNresizePolicy, XmRESIZE_ANY,
                 XmNmarginHeight, 0,
                 XmNmarginWidth, 0,
-                NULL);
+                nullptr);
     }
-    if (instance->group2 == NULL)
+    if (instance->group2 == nullptr)
         return -1;
 
     return 0;
@@ -3337,7 +3337,7 @@ dtb_options_group22_create(
 )
 {
     
-    if (instance->group22 == NULL) {
+    if (instance->group22 == nullptr) {
         instance->group22 =
             XtVaCreateWidget("dtb_options_group22",
                 xmFormWidgetClass,
@@ -3345,9 +3345,9 @@ dtb_options_group22_create(
                 XmNresizePolicy, XmRESIZE_ANY,
                 XmNmarginHeight, 0,
                 XmNmarginWidth, 0,
-                NULL);
+                nullptr);
     }
-    if (instance->group22 == NULL)
+    if (instance->group22 == nullptr)
         return -1;
 
     return 0;
@@ -3364,7 +3364,7 @@ dtb_options_fixed_font_cb_create(
     Arg	args[14];	/* need 9 args (add 5 to be safe) */
     int	n = 0;
     
-    if (instance->fixed_font_cb == NULL) {
+    if (instance->fixed_font_cb == nullptr) {
         n = 0;
         XtSetArg(args[n], XmNradioBehavior, False);  ++n;
         XtSetArg(args[n], XmNentryClass, xmToggleButtonWidgetClass);  ++n;
@@ -3379,7 +3379,7 @@ dtb_options_fixed_font_cb_create(
             XmCreateRadioBox(parent,
                 "dtb_options_fixed_font_cb", args, n);
     }
-    if (instance->fixed_font_cb == NULL)
+    if (instance->fixed_font_cb == nullptr)
         return -1;
 
     return 0;
@@ -3393,12 +3393,12 @@ dtb_options_display_row_sb_create(
     Widget parent
 )
 {
-    XmString	label_xmstring = NULL;
+    XmString	label_xmstring = nullptr;
     Arg	args[18];	/* need 13 args (add 5 to be safe) */
     int	n = 0;
     
     
-    if (instance->display_row_sb_rowcolumn == NULL) {
+    if (instance->display_row_sb_rowcolumn == nullptr) {
         instance->display_row_sb_rowcolumn =
             XtVaCreateWidget("dtb_options_display_row_sb",
                 xmRowColumnWidgetClass,
@@ -3414,12 +3414,12 @@ dtb_options_display_row_sb_create(
                 XmNmarginHeight, 0,
                 XmNentryAlignment, XmALIGNMENT_END,
                 XmNorientation, XmHORIZONTAL,
-                NULL);
+                nullptr);
     }
-    if (instance->display_row_sb_rowcolumn == NULL)
+    if (instance->display_row_sb_rowcolumn == nullptr)
         return -1;
 
-    if (instance->display_row_sb_label == NULL) {
+    if (instance->display_row_sb_label == nullptr) {
         label_xmstring = XmStringCreateLocalized(CATGETS(Dtb_project_catd, 2, 18, "Display"));
         instance->display_row_sb_label =
             XtVaCreateWidget("dtb_options_display_row_sb_label",
@@ -3427,14 +3427,14 @@ dtb_options_display_row_sb_create(
                 instance->display_row_sb_rowcolumn,
                 XmNlabelType, XmSTRING,
                 XmNlabelString, label_xmstring,
-                NULL);
+                nullptr);
         XmStringFree(label_xmstring);
-        label_xmstring = NULL;
+        label_xmstring = nullptr;
     }
-    if (instance->display_row_sb_label == NULL)
+    if (instance->display_row_sb_label == nullptr)
         return -1;
 
-    if (instance->display_row_sb == NULL) {
+    if (instance->display_row_sb == nullptr) {
         n = 0;
         XtSetArg(args[n], XmNdecimalPoints, 0);  ++n;
         XtSetArg(args[n], XmNincrementValue, 1);  ++n;
@@ -3448,7 +3448,7 @@ dtb_options_display_row_sb_create(
             XmCreateSimpleSpinBox(instance->display_row_sb_rowcolumn,
                 "dtb_options_display_row_sb_field", args, n);
     }
-    if (instance->display_row_sb == NULL)
+    if (instance->display_row_sb == nullptr)
         return -1;
 
     return 0;
@@ -3462,9 +3462,9 @@ dtb_options_rows_lbl_create(
     Widget parent
 )
 {
-    XmString	label_xmstring = NULL;
+    XmString	label_xmstring = nullptr;
     
-    if (instance->rows_lbl == NULL) {
+    if (instance->rows_lbl == nullptr) {
         label_xmstring = XmStringCreateLocalized(CATGETS(Dtb_project_catd, 2, 33, "Rows"));
         instance->rows_lbl =
             XtVaCreateWidget("dtb_options_rows_lbl",
@@ -3481,11 +3481,11 @@ dtb_options_rows_lbl_create(
                 XmNalignment, XmALIGNMENT_CENTER,
                 XmNlabelType, XmSTRING,
                 XmNlabelString, label_xmstring,
-                NULL);
+                nullptr);
         XmStringFree(label_xmstring);
-        label_xmstring = NULL;
+        label_xmstring = nullptr;
     }
-    if (instance->rows_lbl == NULL)
+    if (instance->rows_lbl == nullptr)
         return -1;
 
     return 0;
@@ -3499,12 +3499,12 @@ dtb_options_characters_wide_sb_create(
     Widget parent
 )
 {
-    XmString	label_xmstring = NULL;
+    XmString	label_xmstring = nullptr;
     Arg	args[18];	/* need 13 args (add 5 to be safe) */
     int	n = 0;
     
     
-    if (instance->characters_wide_sb_rowcolumn == NULL) {
+    if (instance->characters_wide_sb_rowcolumn == nullptr) {
         instance->characters_wide_sb_rowcolumn =
             XtVaCreateWidget("dtb_options_characters_wide_sb",
                 xmRowColumnWidgetClass,
@@ -3520,12 +3520,12 @@ dtb_options_characters_wide_sb_create(
                 XmNmarginHeight, 0,
                 XmNentryAlignment, XmALIGNMENT_END,
                 XmNorientation, XmHORIZONTAL,
-                NULL);
+                nullptr);
     }
-    if (instance->characters_wide_sb_rowcolumn == NULL)
+    if (instance->characters_wide_sb_rowcolumn == nullptr)
         return -1;
 
-    if (instance->characters_wide_sb_label == NULL) {
+    if (instance->characters_wide_sb_label == nullptr) {
         label_xmstring = XmStringCreateLocalized(CATGETS(Dtb_project_catd, 2, 91, " "));
         instance->characters_wide_sb_label =
             XtVaCreateWidget("dtb_options_characters_wide_sb_label",
@@ -3533,14 +3533,14 @@ dtb_options_characters_wide_sb_create(
                 instance->characters_wide_sb_rowcolumn,
                 XmNlabelType, XmSTRING,
                 XmNlabelString, label_xmstring,
-                NULL);
+                nullptr);
         XmStringFree(label_xmstring);
-        label_xmstring = NULL;
+        label_xmstring = nullptr;
     }
-    if (instance->characters_wide_sb_label == NULL)
+    if (instance->characters_wide_sb_label == nullptr)
         return -1;
 
-    if (instance->characters_wide_sb == NULL) {
+    if (instance->characters_wide_sb == nullptr) {
         n = 0;
         XtSetArg(args[n], XmNdecimalPoints, 0);  ++n;
         XtSetArg(args[n], XmNincrementValue, 1);  ++n;
@@ -3554,7 +3554,7 @@ dtb_options_characters_wide_sb_create(
             XmCreateSimpleSpinBox(instance->characters_wide_sb_rowcolumn,
                 "dtb_options_characters_wide_sb_field", args, n);
     }
-    if (instance->characters_wide_sb == NULL)
+    if (instance->characters_wide_sb == nullptr)
         return -1;
 
     return 0;
@@ -3568,9 +3568,9 @@ dtb_options_char_wide_lbl_create(
     Widget parent
 )
 {
-    XmString	label_xmstring = NULL;
+    XmString	label_xmstring = nullptr;
     
-    if (instance->char_wide_lbl == NULL) {
+    if (instance->char_wide_lbl == nullptr) {
         label_xmstring = XmStringCreateLocalized(CATGETS(Dtb_project_catd, 2, 34, "Characters Wide"));
         instance->char_wide_lbl =
             XtVaCreateWidget("dtb_options_char_wide_lbl",
@@ -3587,11 +3587,11 @@ dtb_options_char_wide_lbl_create(
                 XmNalignment, XmALIGNMENT_CENTER,
                 XmNlabelType, XmSTRING,
                 XmNlabelString, label_xmstring,
-                NULL);
+                nullptr);
         XmStringFree(label_xmstring);
-        label_xmstring = NULL;
+        label_xmstring = nullptr;
     }
-    if (instance->char_wide_lbl == NULL)
+    if (instance->char_wide_lbl == nullptr)
         return -1;
 
     return 0;
@@ -3606,7 +3606,7 @@ dtb_options_group3_create(
 )
 {
     
-    if (instance->group3 == NULL) {
+    if (instance->group3 == nullptr) {
         instance->group3 =
             XtVaCreateWidget("dtb_options_group3",
                 xmFormWidgetClass,
@@ -3620,9 +3620,9 @@ dtb_options_group3_create(
                 XmNresizePolicy, XmRESIZE_ANY,
                 XmNmarginHeight, 0,
                 XmNmarginWidth, 0,
-                NULL);
+                nullptr);
     }
-    if (instance->group3 == NULL)
+    if (instance->group3 == nullptr)
         return -1;
 
     return 0;
@@ -3639,7 +3639,7 @@ dtb_options_fields_hide_create(
     Arg	args[18];	/* need 13 args (add 5 to be safe) */
     int	n = 0;
     
-    if (instance->fields_hide == NULL) {
+    if (instance->fields_hide == nullptr) {
         n = 0;
         XtSetArg(args[n], XmNbottomAttachment, XmATTACH_NONE);  ++n;
         XtSetArg(args[n], XmNrightAttachment, XmATTACH_NONE);  ++n;
@@ -3655,7 +3655,7 @@ dtb_options_fields_hide_create(
             XmCreateTextField(parent,
                 "dtb_options_fields_hide", args, n);
     }
-    if (instance->fields_hide == NULL)
+    if (instance->fields_hide == nullptr)
         return -1;
 
     return 0;
@@ -3669,7 +3669,7 @@ dtb_options_hidden_fields_list_create(
     Widget parent
 )
 {
-    XmString	label_xmstring = NULL;
+    XmString	label_xmstring = nullptr;
     Arg	args[21];	/* need 16 args (add 5 to be safe) */
     int	n = 0;
     int	i = 0;
@@ -3682,7 +3682,7 @@ dtb_options_hidden_fields_list_create(
     hidden_fields_list_list_xmstrings[i++] = XmStringCreateLocalized(CATGETS(Dtb_project_catd, 2, 25, "x-lines"));
     hidden_fields_list_list_xmstrings[i++] = XmStringCreateLocalized(CATGETS(Dtb_project_catd, 2, 26, "email-version"));
     hidden_fields_list_list_xmstrings[i++] = XmStringCreateLocalized(CATGETS(Dtb_project_catd, 2, 27, "expires"));
-    if (instance->hidden_fields_list == NULL) {
+    if (instance->hidden_fields_list == nullptr) {
         n = 0;
         XtSetArg(args[n], XmNscrollBarDisplayPolicy, XmAUTOMATIC);  ++n;
         XtSetArg(args[n], XmNlistSizePolicy, XmCONSTANT);  ++n;
@@ -3703,7 +3703,7 @@ dtb_options_hidden_fields_list_create(
                 "dtb_options_hidden_fields_list_list", args, n);
     }
     instance->hidden_fields_list_scrolledwin = XtParent(instance->hidden_fields_list);
-    if (instance->hidden_fields_list == NULL)
+    if (instance->hidden_fields_list == nullptr)
         return -1;
 
     return 0;
@@ -3717,9 +3717,9 @@ dtb_options_hidden_fields_lbl_create(
     Widget parent
 )
 {
-    XmString	label_xmstring = NULL;
+    XmString	label_xmstring = nullptr;
     
-    if (instance->hidden_fields_lbl == NULL) {
+    if (instance->hidden_fields_lbl == nullptr) {
         label_xmstring = XmStringCreateLocalized(CATGETS(Dtb_project_catd, 2, 28, "Hidden Fields:"));
         instance->hidden_fields_lbl =
             XtVaCreateWidget("dtb_options_hidden_fields_lbl",
@@ -3736,11 +3736,11 @@ dtb_options_hidden_fields_lbl_create(
                 XmNalignment, XmALIGNMENT_END,
                 XmNlabelType, XmSTRING,
                 XmNlabelString, label_xmstring,
-                NULL);
+                nullptr);
         XmStringFree(label_xmstring);
-        label_xmstring = NULL;
+        label_xmstring = nullptr;
     }
-    if (instance->hidden_fields_lbl == NULL)
+    if (instance->hidden_fields_lbl == nullptr)
         return -1;
 
     return 0;
@@ -3754,9 +3754,9 @@ dtb_options_header_fields_lbl_create(
     Widget parent
 )
 {
-    XmString	label_xmstring = NULL;
+    XmString	label_xmstring = nullptr;
     
-    if (instance->header_fields_lbl == NULL) {
+    if (instance->header_fields_lbl == nullptr) {
         label_xmstring = XmStringCreateLocalized(CATGETS(Dtb_project_catd, 2, 24, "Header Field:"));
         instance->header_fields_lbl =
             XtVaCreateWidget("dtb_options_header_fields_lbl",
@@ -3773,11 +3773,11 @@ dtb_options_header_fields_lbl_create(
                 XmNalignment, XmALIGNMENT_CENTER,
                 XmNlabelType, XmSTRING,
                 XmNlabelString, label_xmstring,
-                NULL);
+                nullptr);
         XmStringFree(label_xmstring);
-        label_xmstring = NULL;
+        label_xmstring = nullptr;
     }
-    if (instance->header_fields_lbl == NULL)
+    if (instance->header_fields_lbl == nullptr)
         return -1;
 
     return 0;
@@ -3791,9 +3791,9 @@ dtb_options_h_field_add_create(
     Widget parent
 )
 {
-    XmString	label_xmstring = NULL;
+    XmString	label_xmstring = nullptr;
     
-    if (instance->h_field_add == NULL) {
+    if (instance->h_field_add == nullptr) {
         label_xmstring = XmStringCreateLocalized(CATGETS(Dtb_project_catd, 2, 29, "Add"));
         instance->h_field_add =
             XtVaCreateWidget("dtb_options_h_field_add",
@@ -3810,11 +3810,11 @@ dtb_options_h_field_add_create(
                 XmNalignment, XmALIGNMENT_CENTER,
                 XmNlabelType, XmSTRING,
                 XmNlabelString, label_xmstring,
-                NULL);
+                nullptr);
         XmStringFree(label_xmstring);
-        label_xmstring = NULL;
+        label_xmstring = nullptr;
     }
-    if (instance->h_field_add == NULL)
+    if (instance->h_field_add == nullptr)
         return -1;
 
     return 0;
@@ -3828,9 +3828,9 @@ dtb_options_h_field_delete_create(
     Widget parent
 )
 {
-    XmString	label_xmstring = NULL;
+    XmString	label_xmstring = nullptr;
     
-    if (instance->h_field_delete == NULL) {
+    if (instance->h_field_delete == nullptr) {
         label_xmstring = XmStringCreateLocalized(CATGETS(Dtb_project_catd, 2, 30, "Delete"));
         instance->h_field_delete =
             XtVaCreateWidget("dtb_options_h_field_delete",
@@ -3847,11 +3847,11 @@ dtb_options_h_field_delete_create(
                 XmNalignment, XmALIGNMENT_CENTER,
                 XmNlabelType, XmSTRING,
                 XmNlabelString, label_xmstring,
-                NULL);
+                nullptr);
         XmStringFree(label_xmstring);
-        label_xmstring = NULL;
+        label_xmstring = nullptr;
     }
-    if (instance->h_field_delete == NULL)
+    if (instance->h_field_delete == nullptr)
         return -1;
 
     return 0;
@@ -3865,9 +3865,9 @@ dtb_options_h_field_change_create(
     Widget parent
 )
 {
-    XmString	label_xmstring = NULL;
+    XmString	label_xmstring = nullptr;
     
-    if (instance->h_field_change == NULL) {
+    if (instance->h_field_change == nullptr) {
         label_xmstring = XmStringCreateLocalized(CATGETS(Dtb_project_catd, 2, 31, "Change"));
         instance->h_field_change =
             XtVaCreateWidget("dtb_options_h_field_change",
@@ -3884,11 +3884,11 @@ dtb_options_h_field_change_create(
                 XmNalignment, XmALIGNMENT_CENTER,
                 XmNlabelType, XmSTRING,
                 XmNlabelString, label_xmstring,
-                NULL);
+                nullptr);
         XmStringFree(label_xmstring);
-        label_xmstring = NULL;
+        label_xmstring = nullptr;
     }
-    if (instance->h_field_change == NULL)
+    if (instance->h_field_change == nullptr)
         return -1;
 
     return 0;
@@ -3902,12 +3902,12 @@ dtb_options_wrap_checkbox_create(
     Widget parent
 )
 {
-    XmString	label_xmstring = NULL;
+    XmString	label_xmstring = nullptr;
     Arg	args[22];	/* need 17 args (add 5 to be safe) */
     int	n = 0;
     Widget	wrap_checkbox_items[1];
     
-    if (instance->wrap_checkbox == NULL) {
+    if (instance->wrap_checkbox == nullptr) {
         n = 0;
         XtSetArg(args[n], XmNbottomAttachment, XmATTACH_NONE);  ++n;
         XtSetArg(args[n], XmNrightAttachment, XmATTACH_NONE);  ++n;
@@ -3928,10 +3928,10 @@ dtb_options_wrap_checkbox_create(
             XmCreateRadioBox(parent,
                 "dtb_options_wrap_checkbox", args, n);
     }
-    if (instance->wrap_checkbox == NULL)
+    if (instance->wrap_checkbox == nullptr)
         return -1;
 
-    if (instance->wrap_checkbox_items.Show_Attachment_List_item == NULL) {
+    if (instance->wrap_checkbox_items.Show_Attachment_List_item == nullptr) {
         label_xmstring = XmStringCreateLocalized(CATGETS(Dtb_project_catd, 2, 36, "Show Attachment List"));
         instance->wrap_checkbox_items.Show_Attachment_List_item =
             XtVaCreateManagedWidget("dtb_options_wrap_checkbox_show_attachment_list_item",
@@ -3939,11 +3939,11 @@ dtb_options_wrap_checkbox_create(
                 instance->wrap_checkbox,
                 XmNset, True,
                 XmNlabelString, label_xmstring,
-                NULL);
+                nullptr);
         XmStringFree(label_xmstring);
-        label_xmstring = NULL;
+        label_xmstring = nullptr;
     }
-    if (instance->wrap_checkbox_items.Show_Attachment_List_item == NULL)
+    if (instance->wrap_checkbox_items.Show_Attachment_List_item == nullptr)
         return -1;
 
     return 0;
@@ -3956,11 +3956,11 @@ dtb_options_confirm_attachment_create(
     DtbOptionsDialogInfo instance,
     Widget parent)
 {
-    XmString	label_xmstring = NULL;
+    XmString	label_xmstring = nullptr;
     Arg         args[32];	/* need 9 args (add 5 to be safe) */
     int         n = 0;
 
-    if (instance->confirm_attachment == NULL)
+    if (instance->confirm_attachment == nullptr)
     {
         instance->confirm_attachment =
             XtVaCreateWidget("dtb_options_confirm_attachment",
@@ -3975,13 +3975,13 @@ dtb_options_confirm_attachment_create(
                 XmNresizePolicy, XmRESIZE_ANY,
                 XmNmarginHeight, 0,
                 XmNmarginWidth, 0,
-                NULL);
+                nullptr);
 
-        if (instance->confirm_attachment == NULL) return -1;
+        if (instance->confirm_attachment == nullptr) return -1;
     }
     parent = instance->confirm_attachment;
     
-    if (instance->cfrm_att_checkbox == NULL)
+    if (instance->cfrm_att_checkbox == nullptr)
     {
         n = 0;
         XtSetArg(args[n], XmNradioBehavior, False);  ++n;
@@ -3997,7 +3997,7 @@ dtb_options_confirm_attachment_create(
         instance->cfrm_att_checkbox =
           XmCreateRadioBox(parent, "dtb_options_cfrm_att_checkbox", args, n);
         
-	if (instance->cfrm_att_checkbox == NULL) return -1;
+	if (instance->cfrm_att_checkbox == nullptr) return -1;
 
 	XtVaSetValues(
 		instance->cfrm_att_checkbox,
@@ -4006,12 +4006,12 @@ dtb_options_confirm_attachment_create(
                 XmNleftAttachment,   XmATTACH_FORM,
                 XmNleftPosition,     50,
                 XmNrightAttachment,  XmATTACH_NONE,
-		NULL);
+		nullptr);
 
 	XtManageChild(instance->cfrm_att_checkbox);
     }
 
-    if (instance->cfrm_att_checkbox_items.Confirm_Attachment_item == NULL)
+    if (instance->cfrm_att_checkbox_items.Confirm_Attachment_item == nullptr)
     {
         label_xmstring = XmStringCreateLocalized(
 	  CATGETS(Dtb_project_catd, 2, 94, "Confirm attachments over:"));
@@ -4023,15 +4023,15 @@ dtb_options_confirm_attachment_create(
                 instance->cfrm_att_checkbox,
                 XmNset,         True,
                 XmNlabelString, label_xmstring,
-                NULL);
+                nullptr);
         XmStringFree(label_xmstring);
-        label_xmstring = NULL;
+        label_xmstring = nullptr;
 
-        if (instance->cfrm_att_checkbox_items.Confirm_Attachment_item == NULL)
+        if (instance->cfrm_att_checkbox_items.Confirm_Attachment_item == nullptr)
           return -1;
     }
 
-    if (instance->cfrm_att_size_sb == NULL)
+    if (instance->cfrm_att_size_sb == nullptr)
     {
         n = 0;
         XtSetArg(args[n], XmNdecimalPoints, 0);  ++n;
@@ -4045,7 +4045,7 @@ dtb_options_confirm_attachment_create(
         instance->cfrm_att_size_sb =
           XmCreateSimpleSpinBox(parent, "dtb_options_cfrm_att_size_sb", args,n);
 
-        if (instance->cfrm_att_size_sb == NULL) return -1;
+        if (instance->cfrm_att_size_sb == nullptr) return -1;
 	
 	XtVaSetValues(
 		instance->cfrm_att_size_sb,
@@ -4054,11 +4054,11 @@ dtb_options_confirm_attachment_create(
                 XmNleftAttachment,   XmATTACH_WIDGET,
                 XmNleftWidget,       instance->cfrm_att_checkbox,
                 XmNrightAttachment,  XmATTACH_NONE,
-		NULL);
+		nullptr);
 	XtManageChild(instance->cfrm_att_size_sb);
     }
 
-    if (instance->visit_mailb_lbl == NULL)
+    if (instance->visit_mailb_lbl == nullptr)
     {
         label_xmstring =
 	  XmStringCreateLocalized(CATGETS(Dtb_project_catd, 2, 95, "kilobytes"));
@@ -4077,11 +4077,11 @@ dtb_options_confirm_attachment_create(
                 XmNleftOffset, 2,
                 XmNleftAttachment, XmATTACH_WIDGET,
                 XmNleftWidget, instance->cfrm_att_size_sb,
-                NULL);
+                nullptr);
         XmStringFree(label_xmstring);
-        label_xmstring = NULL;
+        label_xmstring = nullptr;
         
-	if (instance->cfrm_att_size_mb_lbl == NULL) return -1;
+	if (instance->cfrm_att_size_mb_lbl == nullptr) return -1;
 	
 	XtVaSetValues(
 		instance->cfrm_att_size_mb_lbl,
@@ -4090,7 +4090,7 @@ dtb_options_confirm_attachment_create(
                 XmNleftAttachment,   XmATTACH_WIDGET,
                 XmNleftWidget,       instance->cfrm_att_size_sb,
                 XmNrightAttachment,  XmATTACH_NONE,
-		NULL);
+		nullptr);
     }
 
     return 0;
@@ -4105,7 +4105,7 @@ dtb_options_separator3_create(
 )
 {
     
-    if (instance->separator3 == NULL) {
+    if (instance->separator3 == nullptr) {
         instance->separator3 =
             XtVaCreateWidget("dtb_options_separator3",
                 xmSeparatorWidgetClass,
@@ -4119,9 +4119,9 @@ dtb_options_separator3_create(
                 XmNtopOffset, 9,
                 XmNseparatorType, XmSHADOW_ETCHED_IN,
                 XmNorientation, XmHORIZONTAL,
-                NULL);
+                nullptr);
     }
-    if (instance->separator3 == NULL)
+    if (instance->separator3 == nullptr)
         return -1;
 
     return 0;
@@ -4136,7 +4136,7 @@ dtb_options_separator7_create(
 )
 {
     
-    if (instance->separator7 == NULL) {
+    if (instance->separator7 == nullptr) {
         instance->separator7 =
             XtVaCreateWidget("dtb_options_separator7",
                 xmSeparatorWidgetClass,
@@ -4150,9 +4150,9 @@ dtb_options_separator7_create(
                 XmNtopAttachment, XmATTACH_WIDGET,
                 XmNseparatorType, XmSHADOW_ETCHED_IN,
                 XmNorientation, XmHORIZONTAL,
-                NULL);
+                nullptr);
     }
-    if (instance->separator7 == NULL)
+    if (instance->separator7 == nullptr)
         return -1;
 
     return 0;
@@ -4166,11 +4166,11 @@ dtb_options_deadletter_field_create(
     Widget parent
 )
 {
-    XmString	label_xmstring = NULL;
+    XmString	label_xmstring = nullptr;
     Arg	args[44];	/* need 39 args (add 5 to be safe) */
     int	n = 0;
     
-    if (instance->deadletter_field_rowcolumn == NULL) {
+    if (instance->deadletter_field_rowcolumn == nullptr) {
         instance->deadletter_field_rowcolumn =
             XtVaCreateWidget("dtb_options_deadletter_field",
                 xmRowColumnWidgetClass,
@@ -4186,12 +4186,12 @@ dtb_options_deadletter_field_create(
                 XmNmarginHeight, 0,
                 XmNentryAlignment, XmALIGNMENT_END,
                 XmNorientation, XmHORIZONTAL,
-                NULL);
+                nullptr);
     }
-    if (instance->deadletter_field_rowcolumn == NULL)
+    if (instance->deadletter_field_rowcolumn == nullptr)
         return -1;
 
-    if (instance->deadletter_field_label == NULL) {
+    if (instance->deadletter_field_label == nullptr) {
         label_xmstring = XmStringCreateLocalized(CATGETS(Dtb_project_catd, 2, 38, "Dead Letter Folder:"));
         instance->deadletter_field_label =
             XtVaCreateWidget("dtb_options_deadletter_field_label",
@@ -4199,14 +4199,14 @@ dtb_options_deadletter_field_create(
                 instance->deadletter_field_rowcolumn,
                 XmNlabelType, XmSTRING,
                 XmNlabelString, label_xmstring,
-                NULL);
+                nullptr);
         XmStringFree(label_xmstring);
-        label_xmstring = NULL;
+        label_xmstring = nullptr;
     }
-    if (instance->deadletter_field_label == NULL)
+    if (instance->deadletter_field_label == nullptr)
         return -1;
 
-    if (instance->deadletter_field == NULL) {
+    if (instance->deadletter_field == nullptr) {
         n = 0;
         XtSetArg(args[n], XmNmaxLength, 80);  ++n;
         XtSetArg(args[n], XmNeditable, True);  ++n;
@@ -4215,7 +4215,7 @@ dtb_options_deadletter_field_create(
             XmCreateTextField(instance->deadletter_field_rowcolumn,
                 "dtb_options_deadletter_field_field", args, n);
     }
-    if (instance->deadletter_field == NULL)
+    if (instance->deadletter_field == nullptr)
         return -1;
 
     return 0;
@@ -4230,7 +4230,7 @@ dtb_options_separator9_create(
 )
 {
     
-    if (instance->separator9 == NULL) {
+    if (instance->separator9 == nullptr) {
         instance->separator9 =
             XtVaCreateWidget("dtb_options_separator9",
                 xmSeparatorWidgetClass,
@@ -4244,9 +4244,9 @@ dtb_options_separator9_create(
                 XmNtopAttachment, XmATTACH_WIDGET,
                 XmNseparatorType, XmSHADOW_ETCHED_IN,
                 XmNorientation, XmHORIZONTAL,
-                NULL);
+                nullptr);
     }
-    if (instance->separator9 == NULL)
+    if (instance->separator9 == nullptr)
         return -1;
 
     return 0;
@@ -4260,9 +4260,9 @@ dtb_options_format_menu_lbl_create(
     Widget parent
 )
 {
-    XmString	label_xmstring = NULL;
+    XmString	label_xmstring = nullptr;
     
-    if (instance->format_menu_lbl == NULL) {
+    if (instance->format_menu_lbl == nullptr) {
         label_xmstring = XmStringCreateLocalized(CATGETS(Dtb_project_catd, 2, 39, "Format Menu Custom Fields"));
         instance->format_menu_lbl =
             XtVaCreateWidget("dtb_options_format_menu_lbl",
@@ -4278,11 +4278,11 @@ dtb_options_format_menu_lbl_create(
                 XmNalignment, XmALIGNMENT_CENTER,
                 XmNlabelType, XmSTRING,
                 XmNlabelString, label_xmstring,
-                NULL);
+                nullptr);
         XmStringFree(label_xmstring);
-        label_xmstring = NULL;
+        label_xmstring = nullptr;
     }
-    if (instance->format_menu_lbl == NULL)
+    if (instance->format_menu_lbl == nullptr)
         return -1;
 
     return 0;
@@ -4297,7 +4297,7 @@ dtb_options_group6_create(
 )
 {
     
-    if (instance->group6 == NULL) {
+    if (instance->group6 == nullptr) {
         instance->group6 =
             XtVaCreateWidget("dtb_options_group6",
                 xmFormWidgetClass,
@@ -4311,9 +4311,9 @@ dtb_options_group6_create(
                 XmNresizePolicy, XmRESIZE_ANY,
                 XmNmarginHeight, 0,
                 XmNmarginWidth, 0,
-                NULL);
+                nullptr);
     }
-    if (instance->group6 == NULL)
+    if (instance->group6 == nullptr)
         return -1;
 
     return 0;
@@ -4328,7 +4328,7 @@ dtb_options_group4_create(
 )
 {
     
-    if (instance->group4 == NULL) {
+    if (instance->group4 == nullptr) {
         instance->group4 =
             XtVaCreateWidget("dtb_options_group4",
                 xmFormWidgetClass,
@@ -4343,9 +4343,9 @@ dtb_options_group4_create(
                 XmNresizePolicy, XmRESIZE_ANY,
                 XmNmarginHeight, 0,
                 XmNmarginWidth, 0,
-                NULL);
+                nullptr);
     }
-    if (instance->group4 == NULL)
+    if (instance->group4 == nullptr)
         return -1;
 
     return 0;
@@ -4362,7 +4362,7 @@ dtb_options_indent_str_tf_create(
     Arg	args[19];	/* need 14 args (add 5 to be safe) */
     int	n = 0;
     
-    if (instance->indent_str_tf == NULL) {
+    if (instance->indent_str_tf == nullptr) {
         n = 0;
         XtSetArg(args[n], XmNbottomOffset, 0);  ++n;
         XtSetArg(args[n], XmNbottomAttachment, XmATTACH_FORM);  ++n;
@@ -4379,7 +4379,7 @@ dtb_options_indent_str_tf_create(
             XmCreateTextField(parent,
                 "dtb_options_indent_str_tf", args, n);
     }
-    if (instance->indent_str_tf == NULL)
+    if (instance->indent_str_tf == nullptr)
         return -1;
 
     return 0;
@@ -4394,7 +4394,7 @@ dtb_options_group23_create(
 )
 {
     
-    if (instance->group23 == NULL) {
+    if (instance->group23 == nullptr) {
         instance->group23 =
             XtVaCreateWidget("dtb_options_group23",
                 xmFormWidgetClass,
@@ -4409,9 +4409,9 @@ dtb_options_group23_create(
                 XmNresizePolicy, XmRESIZE_ANY,
                 XmNmarginHeight, 0,
                 XmNmarginWidth, 0,
-                NULL);
+                nullptr);
     }
-    if (instance->group23 == NULL)
+    if (instance->group23 == nullptr)
         return -1;
 
     return 0;
@@ -4425,9 +4425,9 @@ dtb_options_indent_str_lbl_create(
     Widget parent
 )
 {
-    XmString	label_xmstring = NULL;
+    XmString	label_xmstring = nullptr;
     
-    if (instance->indent_str_lbl == NULL) {
+    if (instance->indent_str_lbl == nullptr) {
         label_xmstring = XmStringCreateLocalized(CATGETS(Dtb_project_catd, 2, 52, "Indent string"));
         instance->indent_str_lbl =
             XtVaCreateWidget("dtb_options_indent_str_lbl",
@@ -4437,11 +4437,11 @@ dtb_options_indent_str_lbl_create(
                 XmNalignment, XmALIGNMENT_CENTER,
                 XmNlabelType, XmSTRING,
                 XmNlabelString, label_xmstring,
-                NULL);
+                nullptr);
         XmStringFree(label_xmstring);
-        label_xmstring = NULL;
+        label_xmstring = nullptr;
     }
-    if (instance->indent_str_lbl == NULL)
+    if (instance->indent_str_lbl == nullptr)
         return -1;
 
     return 0;
@@ -4455,9 +4455,9 @@ dtb_options_reply_include_lbl_create(
     Widget parent
 )
 {
-    XmString	label_xmstring = NULL;
+    XmString	label_xmstring = nullptr;
     
-    if (instance->reply_include_lbl == NULL) {
+    if (instance->reply_include_lbl == nullptr) {
         label_xmstring = XmStringCreateLocalized(CATGETS(Dtb_project_catd, 2, 53, "for Reply Include:"));
         instance->reply_include_lbl =
             XtVaCreateWidget("dtb_options_reply_include_lbl",
@@ -4467,11 +4467,11 @@ dtb_options_reply_include_lbl_create(
                 XmNalignment, XmALIGNMENT_CENTER,
                 XmNlabelType, XmSTRING,
                 XmNlabelString, label_xmstring,
-                NULL);
+                nullptr);
         XmStringFree(label_xmstring);
-        label_xmstring = NULL;
+        label_xmstring = nullptr;
     }
-    if (instance->reply_include_lbl == NULL)
+    if (instance->reply_include_lbl == nullptr)
         return -1;
 
     return 0;
@@ -4486,7 +4486,7 @@ dtb_options_group7_create(
 )
 {
     
-    if (instance->group7 == NULL) {
+    if (instance->group7 == nullptr) {
         instance->group7 =
             XtVaCreateWidget("dtb_options_group7",
                 xmFormWidgetClass,
@@ -4500,9 +4500,9 @@ dtb_options_group7_create(
                 XmNresizePolicy, XmRESIZE_ANY,
                 XmNmarginHeight, 0,
                 XmNmarginWidth, 0,
-                NULL);
+                nullptr);
     }
-    if (instance->group7 == NULL)
+    if (instance->group7 == nullptr)
         return -1;
 
     return 0;
@@ -4516,7 +4516,7 @@ dtb_options_list_create(
     Widget parent
 )
 {
-    XmString	label_xmstring = NULL;
+    XmString	label_xmstring = nullptr;
     Arg	args[21];	/* need 16 args (add 5 to be safe) */
     int	n = 0;
     int	i = 0;
@@ -4528,7 +4528,7 @@ dtb_options_list_create(
      */
     list_list_xmstrings[i++] = XmStringCreateLocalized(CATGETS(Dtb_project_catd, 2, 40, "bcc"));
     list_list_xmstrings[i++] = XmStringCreateLocalized(CATGETS(Dtb_project_catd, 2, 41, "return-receipt"));
-    if (instance->list == NULL) {
+    if (instance->list == nullptr) {
         n = 0;
         XtSetArg(args[n], XmNscrollBarDisplayPolicy, XmAUTOMATIC);  ++n;
         XtSetArg(args[n], XmNlistSizePolicy, XmCONSTANT);  ++n;
@@ -4549,7 +4549,7 @@ dtb_options_list_create(
                 "dtb_options_list_list", args, n);
     }
     instance->list_scrolledwin = XtParent(instance->list);
-    if (instance->list == NULL)
+    if (instance->list == nullptr)
         return -1;
 
     return 0;
@@ -4563,9 +4563,9 @@ dtb_options_menu_labels_lbl_create(
     Widget parent
 )
 {
-    XmString	label_xmstring = NULL;
+    XmString	label_xmstring = nullptr;
     
-    if (instance->menu_labels_lbl == NULL) {
+    if (instance->menu_labels_lbl == nullptr) {
         label_xmstring = XmStringCreateLocalized(CATGETS(Dtb_project_catd, 2, 42, "Menu Labels:"));
         instance->menu_labels_lbl =
             XtVaCreateWidget("dtb_options_menu_labels_lbl",
@@ -4582,11 +4582,11 @@ dtb_options_menu_labels_lbl_create(
                 XmNalignment, XmALIGNMENT_CENTER,
                 XmNlabelType, XmSTRING,
                 XmNlabelString, label_xmstring,
-                NULL);
+                nullptr);
         XmStringFree(label_xmstring);
-        label_xmstring = NULL;
+        label_xmstring = nullptr;
     }
-    if (instance->menu_labels_lbl == NULL)
+    if (instance->menu_labels_lbl == nullptr)
         return -1;
 
     return 0;
@@ -4603,7 +4603,7 @@ dtb_options_hdr_field_create(
     Arg	args[18];	/* need 13 args (add 5 to be safe) */
     int	n = 0;
     
-    if (instance->hdr_field == NULL) {
+    if (instance->hdr_field == nullptr) {
         n = 0;
         XtSetArg(args[n], XmNbottomAttachment, XmATTACH_NONE);  ++n;
         XtSetArg(args[n], XmNrightAttachment, XmATTACH_NONE);  ++n;
@@ -4619,7 +4619,7 @@ dtb_options_hdr_field_create(
             XmCreateTextField(parent,
                 "dtb_options_hdr_field", args, n);
     }
-    if (instance->hdr_field == NULL)
+    if (instance->hdr_field == nullptr)
         return -1;
 
     return 0;
@@ -4636,7 +4636,7 @@ dtb_options_def_value_field_create(
     Arg	args[18];	/* need 13 args (add 5 to be safe) */
     int	n = 0;
     
-    if (instance->def_value_field == NULL) {
+    if (instance->def_value_field == nullptr) {
         n = 0;
         XtSetArg(args[n], XmNbottomAttachment, XmATTACH_NONE);  ++n;
         XtSetArg(args[n], XmNrightAttachment, XmATTACH_NONE);  ++n;
@@ -4652,7 +4652,7 @@ dtb_options_def_value_field_create(
             XmCreateTextField(parent,
                 "dtb_options_def_value_field", args, n);
     }
-    if (instance->def_value_field == NULL)
+    if (instance->def_value_field == nullptr)
         return -1;
 
     return 0;
@@ -4666,9 +4666,9 @@ dtb_options_hdr_field_lbl_create(
     Widget parent
 )
 {
-    XmString	label_xmstring = NULL;
+    XmString	label_xmstring = nullptr;
     
-    if (instance->hdr_field_lbl == NULL) {
+    if (instance->hdr_field_lbl == nullptr) {
         label_xmstring = XmStringCreateLocalized(CATGETS(Dtb_project_catd, 2, 50, "Header Field:"));
         instance->hdr_field_lbl =
             XtVaCreateWidget("dtb_options_hdr_field_lbl",
@@ -4686,11 +4686,11 @@ dtb_options_hdr_field_lbl_create(
                 XmNalignment, XmALIGNMENT_CENTER,
                 XmNlabelType, XmSTRING,
                 XmNlabelString, label_xmstring,
-                NULL);
+                nullptr);
         XmStringFree(label_xmstring);
-        label_xmstring = NULL;
+        label_xmstring = nullptr;
     }
-    if (instance->hdr_field_lbl == NULL)
+    if (instance->hdr_field_lbl == nullptr)
         return -1;
 
     return 0;
@@ -4704,9 +4704,9 @@ dtb_options_def_value_lbl_create(
     Widget parent
 )
 {
-    XmString	label_xmstring = NULL;
+    XmString	label_xmstring = nullptr;
     
-    if (instance->def_value_lbl == NULL) {
+    if (instance->def_value_lbl == nullptr) {
         label_xmstring = XmStringCreateLocalized(CATGETS(Dtb_project_catd, 2, 51, "Default Value:"));
         instance->def_value_lbl =
             XtVaCreateWidget("dtb_options_def_value_lbl",
@@ -4724,11 +4724,11 @@ dtb_options_def_value_lbl_create(
                 XmNalignment, XmALIGNMENT_CENTER,
                 XmNlabelType, XmSTRING,
                 XmNlabelString, label_xmstring,
-                NULL);
+                nullptr);
         XmStringFree(label_xmstring);
-        label_xmstring = NULL;
+        label_xmstring = nullptr;
     }
-    if (instance->def_value_lbl == NULL)
+    if (instance->def_value_lbl == nullptr)
         return -1;
 
     return 0;
@@ -4742,9 +4742,9 @@ dtb_options_add_button_create(
     Widget parent
 )
 {
-    XmString	label_xmstring = NULL;
+    XmString	label_xmstring = nullptr;
     
-    if (instance->add_button == NULL) {
+    if (instance->add_button == nullptr) {
         label_xmstring = XmStringCreateLocalized(CATGETS(Dtb_project_catd, 2, 29, "Add"));
         instance->add_button =
             XtVaCreateWidget("dtb_options_add_button",
@@ -4761,11 +4761,11 @@ dtb_options_add_button_create(
                 XmNalignment, XmALIGNMENT_CENTER,
                 XmNlabelType, XmSTRING,
                 XmNlabelString, label_xmstring,
-                NULL);
+                nullptr);
         XmStringFree(label_xmstring);
-        label_xmstring = NULL;
+        label_xmstring = nullptr;
     }
-    if (instance->add_button == NULL)
+    if (instance->add_button == nullptr)
         return -1;
 
     return 0;
@@ -4779,9 +4779,9 @@ dtb_options_del_button_create(
     Widget parent
 )
 {
-    XmString	label_xmstring = NULL;
+    XmString	label_xmstring = nullptr;
     
-    if (instance->del_button == NULL) {
+    if (instance->del_button == nullptr) {
         label_xmstring = XmStringCreateLocalized(CATGETS(Dtb_project_catd, 2, 30, "Delete"));
         instance->del_button =
             XtVaCreateWidget("dtb_options_del_button",
@@ -4798,11 +4798,11 @@ dtb_options_del_button_create(
                 XmNalignment, XmALIGNMENT_CENTER,
                 XmNlabelType, XmSTRING,
                 XmNlabelString, label_xmstring,
-                NULL);
+                nullptr);
         XmStringFree(label_xmstring);
-        label_xmstring = NULL;
+        label_xmstring = nullptr;
     }
-    if (instance->del_button == NULL)
+    if (instance->del_button == nullptr)
         return -1;
 
     return 0;
@@ -4816,9 +4816,9 @@ dtb_options_change_button_create(
     Widget parent
 )
 {
-    XmString	label_xmstring = NULL;
+    XmString	label_xmstring = nullptr;
     
-    if (instance->change_button == NULL) {
+    if (instance->change_button == nullptr) {
         label_xmstring = XmStringCreateLocalized(CATGETS(Dtb_project_catd, 2, 31, "Change"));
         instance->change_button =
             XtVaCreateWidget("dtb_options_change_button",
@@ -4834,11 +4834,11 @@ dtb_options_change_button_create(
                 XmNalignment, XmALIGNMENT_CENTER,
                 XmNlabelType, XmSTRING,
                 XmNlabelString, label_xmstring,
-                NULL);
+                nullptr);
         XmStringFree(label_xmstring);
-        label_xmstring = NULL;
+        label_xmstring = nullptr;
     }
-    if (instance->change_button == NULL)
+    if (instance->change_button == nullptr)
         return -1;
 
     return 0;
@@ -4853,7 +4853,7 @@ dtb_options_separator8_create(
 )
 {
     
-    if (instance->separator8 == NULL) {
+    if (instance->separator8 == nullptr) {
         instance->separator8 =
             XtVaCreateWidget("dtb_options_separator8",
                 xmSeparatorWidgetClass,
@@ -4867,9 +4867,9 @@ dtb_options_separator8_create(
                 XmNtopAttachment, XmATTACH_WIDGET,
                 XmNseparatorType, XmSHADOW_ETCHED_IN,
                 XmNorientation, XmHORIZONTAL,
-                NULL);
+                nullptr);
     }
-    if (instance->separator8 == NULL)
+    if (instance->separator8 == nullptr)
         return -1;
 
     return 0;
@@ -4884,7 +4884,7 @@ dtb_options_separator5_create(
 )
 {
     
-    if (instance->separator5 == NULL) {
+    if (instance->separator5 == nullptr) {
         instance->separator5 =
             XtVaCreateWidget("dtb_options_separator5",
                 xmSeparatorWidgetClass,
@@ -4898,9 +4898,9 @@ dtb_options_separator5_create(
                 XmNtopAttachment, XmATTACH_WIDGET,
                 XmNseparatorType, XmSHADOW_ETCHED_IN,
                 XmNorientation, XmHORIZONTAL,
-                NULL);
+                nullptr);
     }
-    if (instance->separator5 == NULL)
+    if (instance->separator5 == nullptr)
         return -1;
 
     return 0;
@@ -4915,7 +4915,7 @@ dtb_options_group25_create(
 )
 {
     
-    if (instance->group25 == NULL) {
+    if (instance->group25 == nullptr) {
         instance->group25 =
             XtVaCreateWidget("dtb_options_group25",
                 xmFormWidgetClass,
@@ -4929,9 +4929,9 @@ dtb_options_group25_create(
                 XmNresizePolicy, XmRESIZE_ANY,
                 XmNmarginHeight, 0,
                 XmNmarginWidth, 0,
-                NULL);
+                nullptr);
     }
-    if (instance->group25 == NULL)
+    if (instance->group25 == nullptr)
         return -1;
 
     return 0;
@@ -4945,9 +4945,9 @@ dtb_options_mailb_for_sent_lbl_create(
     Widget parent
 )
 {
-    XmString	label_xmstring = NULL;
+    XmString	label_xmstring = nullptr;
     
-    if (instance->mailb_for_sent_lbl == NULL) {
+    if (instance->mailb_for_sent_lbl == nullptr) {
         label_xmstring = XmStringCreateLocalized(CATGETS(Dtb_project_catd, 2, 61, "Mailbox for sent messages:"));
         instance->mailb_for_sent_lbl =
             XtVaCreateWidget("dtb_options_mailb_for_sent_lbl",
@@ -4963,11 +4963,11 @@ dtb_options_mailb_for_sent_lbl_create(
                 XmNalignment, XmALIGNMENT_CENTER,
                 XmNlabelType, XmSTRING,
                 XmNlabelString, label_xmstring,
-                NULL);
+                nullptr);
         XmStringFree(label_xmstring);
-        label_xmstring = NULL;
+        label_xmstring = nullptr;
     }
-    if (instance->mailb_for_sent_lbl == NULL)
+    if (instance->mailb_for_sent_lbl == nullptr)
         return -1;
 
     return 0;
@@ -4982,7 +4982,7 @@ dtb_options_group26_create(
 )
 {
     
-    if (instance->group26 == NULL) {
+    if (instance->group26 == nullptr) {
         instance->group26 =
             XtVaCreateWidget("dtb_options_group26",
                 xmFormWidgetClass,
@@ -4997,9 +4997,9 @@ dtb_options_group26_create(
                 XmNresizePolicy, XmRESIZE_ANY,
                 XmNmarginHeight, 0,
                 XmNmarginWidth, 0,
-                NULL);
+                nullptr);
     }
-    if (instance->group26 == NULL)
+    if (instance->group26 == nullptr)
         return -1;
 
     return 0;
@@ -5014,7 +5014,7 @@ dtb_options_group9_create(
 )
 {
     
-    if (instance->group9 == NULL) {
+    if (instance->group9 == nullptr) {
         instance->group9 =
             XtVaCreateWidget("dtb_options_group9",
                 xmFormWidgetClass,
@@ -5028,9 +5028,9 @@ dtb_options_group9_create(
                 XmNresizePolicy, XmRESIZE_ANY,
                 XmNmarginHeight, 0,
                 XmNmarginWidth, 0,
-                NULL);
+                nullptr);
     }
-    if (instance->group9 == NULL)
+    if (instance->group9 == nullptr)
         return -1;
 
     return 0;
@@ -5044,12 +5044,12 @@ dtb_options_dpy_up_mbox_cb_create(
     Widget parent
 )
 {
-    XmString	label_xmstring = NULL;
+    XmString	label_xmstring = nullptr;
     Arg	args[14];	/* need 9 args (add 5 to be safe) */
     int	n = 0;
     Widget	dpy_up_mbox_cb_items[1];
     
-    if (instance->dpy_up_mbox_cb == NULL) {
+    if (instance->dpy_up_mbox_cb == nullptr) {
         n = 0;
         XtSetArg(args[n], XmNradioBehavior, False);  ++n;
         XtSetArg(args[n], XmNentryClass, xmToggleButtonWidgetClass);  ++n;
@@ -5064,10 +5064,10 @@ dtb_options_dpy_up_mbox_cb_create(
             XmCreateRadioBox(parent,
                 "dtb_options_dpy_up_mbox_cb", args, n);
     }
-    if (instance->dpy_up_mbox_cb == NULL)
+    if (instance->dpy_up_mbox_cb == nullptr)
         return -1;
 
-    if (instance->dpy_up_mbox_cb_items.Display_up_to_item == NULL) {
+    if (instance->dpy_up_mbox_cb_items.Display_up_to_item == nullptr) {
         label_xmstring = XmStringCreateLocalized(CATGETS(Dtb_project_catd, 2, 59, "Display up to:"));
         instance->dpy_up_mbox_cb_items.Display_up_to_item =
             XtVaCreateManagedWidget("dtb_options_dpy_up_mbox_cb_display_up_to_item",
@@ -5075,11 +5075,11 @@ dtb_options_dpy_up_mbox_cb_create(
                 instance->dpy_up_mbox_cb,
                 XmNset, True,
                 XmNlabelString, label_xmstring,
-                NULL);
+                nullptr);
         XmStringFree(label_xmstring);
-        label_xmstring = NULL;
+        label_xmstring = nullptr;
     }
-    if (instance->dpy_up_mbox_cb_items.Display_up_to_item == NULL)
+    if (instance->dpy_up_mbox_cb_items.Display_up_to_item == nullptr)
         return -1;
 
     return 0;
@@ -5097,7 +5097,7 @@ dtb_options_recent_sb_create(
     int	n = 0;
     
     
-    if (instance->recent_sb == NULL) {
+    if (instance->recent_sb == nullptr) {
         n = 0;
         XtSetArg(args[n], XmNdecimalPoints, 0);  ++n;
         XtSetArg(args[n], XmNincrementValue, 1);  ++n;
@@ -5111,7 +5111,7 @@ dtb_options_recent_sb_create(
             XmCreateSimpleSpinBox(parent,
                 "dtb_options_recent_sb", args, n);
     }
-    if (instance->recent_sb == NULL)
+    if (instance->recent_sb == nullptr)
         return -1;
 
     return 0;
@@ -5125,9 +5125,9 @@ dtb_options_visit_mailb_lbl_create(
     Widget parent
 )
 {
-    XmString	label_xmstring = NULL;
+    XmString	label_xmstring = nullptr;
     
-    if (instance->visit_mailb_lbl == NULL) {
+    if (instance->visit_mailb_lbl == nullptr) {
         label_xmstring = XmStringCreateLocalized(CATGETS(Dtb_project_catd, 2, 60, "Recently visited mailboxes"));
         instance->visit_mailb_lbl =
             XtVaCreateWidget("dtb_options_visit_mailb_lbl",
@@ -5144,11 +5144,11 @@ dtb_options_visit_mailb_lbl_create(
                 XmNrightAttachment, XmATTACH_NONE,
                 XmNleftOffset, 2,
                 XmNleftAttachment, XmATTACH_WIDGET,
-                NULL);
+                nullptr);
         XmStringFree(label_xmstring);
-        label_xmstring = NULL;
+        label_xmstring = nullptr;
     }
-    if (instance->visit_mailb_lbl == NULL)
+    if (instance->visit_mailb_lbl == nullptr)
         return -1;
 
     return 0;
@@ -5165,7 +5165,7 @@ dtb_options_sent_mail_tf_create(
     Arg	args[9];	/* need 4 args (add 5 to be safe) */
     int	n = 0;
     
-    if (instance->sent_mail_tf == NULL) {
+    if (instance->sent_mail_tf == nullptr) {
         n = 0;
         XtSetArg(args[n], XmNmaxLength, 80);  ++n;
         XtSetArg(args[n], XmNeditable, True);  ++n;
@@ -5174,7 +5174,7 @@ dtb_options_sent_mail_tf_create(
             XmCreateTextField(parent,
                 "dtb_options_sent_mail_tf", args, n);
     }
-    if (instance->sent_mail_tf == NULL)
+    if (instance->sent_mail_tf == nullptr)
         return -1;
 
     return 0;
@@ -5188,12 +5188,12 @@ dtb_options_log_cb_create(
     Widget parent
 )
 {
-    XmString	label_xmstring = NULL;
+    XmString	label_xmstring = nullptr;
     Arg	args[14];	/* need 9 args (add 5 to be safe) */
     int	n = 0;
     Widget	log_cb_items[1];
     
-    if (instance->log_cb == NULL) {
+    if (instance->log_cb == nullptr) {
         n = 0;
         XtSetArg(args[n], XmNradioBehavior, False);  ++n;
         XtSetArg(args[n], XmNentryClass, xmToggleButtonWidgetClass);  ++n;
@@ -5208,10 +5208,10 @@ dtb_options_log_cb_create(
             XmCreateRadioBox(parent,
                 "dtb_options_log_cb", args, n);
     }
-    if (instance->log_cb == NULL)
+    if (instance->log_cb == nullptr)
         return -1;
 
-    if (instance->log_cb_items.Log_all_sent_messages_item == NULL) {
+    if (instance->log_cb_items.Log_all_sent_messages_item == nullptr) {
         label_xmstring = XmStringCreateLocalized(CATGETS(Dtb_project_catd, 2, 62, "Log all sent messages"));
         instance->log_cb_items.Log_all_sent_messages_item =
             XtVaCreateManagedWidget("dtb_options_log_cb_log_all_sent_messages_item",
@@ -5219,11 +5219,11 @@ dtb_options_log_cb_create(
                 instance->log_cb,
                 XmNset, False,
                 XmNlabelString, label_xmstring,
-                NULL);
+                nullptr);
         XmStringFree(label_xmstring);
-        label_xmstring = NULL;
+        label_xmstring = nullptr;
     }
-    if (instance->log_cb_items.Log_all_sent_messages_item == NULL)
+    if (instance->log_cb_items.Log_all_sent_messages_item == nullptr)
         return -1;
 
     return 0;
@@ -5238,7 +5238,7 @@ dtb_options_group24_create(
 )
 {
     
-    if (instance->group24 == NULL) {
+    if (instance->group24 == nullptr) {
         instance->group24 =
             XtVaCreateWidget("dtb_options_group24",
                 xmFormWidgetClass,
@@ -5252,9 +5252,9 @@ dtb_options_group24_create(
                 XmNresizePolicy, XmRESIZE_ANY,
                 XmNmarginHeight, 0,
                 XmNmarginWidth, 0,
-                NULL);
+                nullptr);
     }
-    if (instance->group24 == NULL)
+    if (instance->group24 == nullptr)
         return -1;
 
     return 0;
@@ -5271,7 +5271,7 @@ dtb_options_path_file_name_tf_create(
     Arg	args[18];	/* need 13 args (add 5 to be safe) */
     int	n = 0;
     
-    if (instance->path_file_name_tf == NULL) {
+    if (instance->path_file_name_tf == nullptr) {
         n = 0;
         XtSetArg(args[n], XmNbottomAttachment, XmATTACH_NONE);  ++n;
         XtSetArg(args[n], XmNrightAttachment, XmATTACH_NONE);  ++n;
@@ -5287,7 +5287,7 @@ dtb_options_path_file_name_tf_create(
             XmCreateTextField(parent,
                 "dtb_options_path_file_name_tf", args, n);
     }
-    if (instance->path_file_name_tf == NULL)
+    if (instance->path_file_name_tf == nullptr)
         return -1;
 
     return 0;
@@ -5305,7 +5305,7 @@ dtb_options_mv_menu_lst_create(
     int	n = 0;
     
     
-    if (instance->mv_menu_lst == NULL) {
+    if (instance->mv_menu_lst == nullptr) {
         n = 0;
         XtSetArg(args[n], XmNscrollBarDisplayPolicy, XmAUTOMATIC);  ++n;
         XtSetArg(args[n], XmNlistSizePolicy, XmCONSTANT);  ++n;
@@ -5324,7 +5324,7 @@ dtb_options_mv_menu_lst_create(
                 "dtb_options_mv_menu_lst_list", args, n);
     }
     instance->mv_menu_lst_scrolledwin = XtParent(instance->mv_menu_lst);
-    if (instance->mv_menu_lst == NULL)
+    if (instance->mv_menu_lst == nullptr)
         return -1;
 
     return 0;
@@ -5341,7 +5341,7 @@ dtb_options_srt_looking_tf_create(
     Arg	args[18];	/* need 13 args (add 5 to be safe) */
     int	n = 0;
     
-    if (instance->srt_looking_tf == NULL) {
+    if (instance->srt_looking_tf == nullptr) {
         n = 0;
         XtSetArg(args[n], XmNbottomAttachment, XmATTACH_NONE);  ++n;
         XtSetArg(args[n], XmNrightAttachment, XmATTACH_NONE);  ++n;
@@ -5357,7 +5357,7 @@ dtb_options_srt_looking_tf_create(
             XmCreateTextField(parent,
                 "dtb_options_srt_looking_tf", args, n);
     }
-    if (instance->srt_looking_tf == NULL)
+    if (instance->srt_looking_tf == nullptr)
         return -1;
 
     return 0;
@@ -5371,9 +5371,9 @@ dtb_options_move_menu_lbl_create(
     Widget parent
 )
 {
-    XmString	label_xmstring = NULL;
+    XmString	label_xmstring = nullptr;
     
-    if (instance->move_menu_lbl == NULL) {
+    if (instance->move_menu_lbl == nullptr) {
         label_xmstring = XmStringCreateLocalized(CATGETS(Dtb_project_catd, 2, 57, "Move Menu"));
         instance->move_menu_lbl =
             XtVaCreateWidget("dtb_options_move_menu_lbl",
@@ -5390,11 +5390,11 @@ dtb_options_move_menu_lbl_create(
                 XmNalignment, XmALIGNMENT_CENTER,
                 XmNlabelType, XmSTRING,
                 XmNlabelString, label_xmstring,
-                NULL);
+                nullptr);
         XmStringFree(label_xmstring);
-        label_xmstring = NULL;
+        label_xmstring = nullptr;
     }
-    if (instance->move_menu_lbl == NULL)
+    if (instance->move_menu_lbl == nullptr)
         return -1;
 
     return 0;
@@ -5408,9 +5408,9 @@ dtb_options_move_menu_lbl2_create(
     Widget parent
 )
 {
-    XmString	label_xmstring = NULL;
+    XmString	label_xmstring = nullptr;
     
-    if (instance->move_menu_lbl2 == NULL) {
+    if (instance->move_menu_lbl2 == nullptr) {
         label_xmstring = XmStringCreateLocalized(CATGETS(Dtb_project_catd, 2, 58, "and Copy To Menu:"));
         instance->move_menu_lbl2 =
             XtVaCreateWidget("dtb_options_move_menu_lbl2",
@@ -5427,11 +5427,11 @@ dtb_options_move_menu_lbl2_create(
                 XmNalignment, XmALIGNMENT_CENTER,
                 XmNlabelType, XmSTRING,
                 XmNlabelString, label_xmstring,
-                NULL);
+                nullptr);
         XmStringFree(label_xmstring);
-        label_xmstring = NULL;
+        label_xmstring = nullptr;
     }
-    if (instance->move_menu_lbl2 == NULL)
+    if (instance->move_menu_lbl2 == nullptr)
         return -1;
 
     return 0;
@@ -5445,9 +5445,9 @@ dtb_options_path_file_lbl_create(
     Widget parent
 )
 {
-    XmString	label_xmstring = NULL;
+    XmString	label_xmstring = nullptr;
     
-    if (instance->path_file_lbl == NULL) {
+    if (instance->path_file_lbl == nullptr) {
         label_xmstring = XmStringCreateLocalized(CATGETS(Dtb_project_catd, 2, 54, "Path / File Name:"));
         instance->path_file_lbl =
             XtVaCreateWidget("dtb_options_path_file_lbl",
@@ -5465,11 +5465,11 @@ dtb_options_path_file_lbl_create(
                 XmNalignment, XmALIGNMENT_CENTER,
                 XmNlabelType, XmSTRING,
                 XmNlabelString, label_xmstring,
-                NULL);
+                nullptr);
         XmStringFree(label_xmstring);
-        label_xmstring = NULL;
+        label_xmstring = nullptr;
     }
-    if (instance->path_file_lbl == NULL)
+    if (instance->path_file_lbl == nullptr)
         return -1;
 
     return 0;
@@ -5483,9 +5483,9 @@ dtb_options_start_look_lbl_create(
     Widget parent
 )
 {
-    XmString	label_xmstring = NULL;
+    XmString	label_xmstring = nullptr;
     
-    if (instance->start_look_lbl == NULL) {
+    if (instance->start_look_lbl == nullptr) {
         label_xmstring = XmStringCreateLocalized(CATGETS(Dtb_project_catd, 2, 55, "Start looking in:"));
         instance->start_look_lbl =
             XtVaCreateWidget("dtb_options_start_look_lbl",
@@ -5503,11 +5503,11 @@ dtb_options_start_look_lbl_create(
                 XmNalignment, XmALIGNMENT_CENTER,
                 XmNlabelType, XmSTRING,
                 XmNlabelString, label_xmstring,
-                NULL);
+                nullptr);
         XmStringFree(label_xmstring);
-        label_xmstring = NULL;
+        label_xmstring = nullptr;
     }
-    if (instance->start_look_lbl == NULL)
+    if (instance->start_look_lbl == nullptr)
         return -1;
 
     return 0;
@@ -5521,9 +5521,9 @@ dtb_options_mm_add_butt_create(
     Widget parent
 )
 {
-    XmString	label_xmstring = NULL;
+    XmString	label_xmstring = nullptr;
     
-    if (instance->mm_add_butt == NULL) {
+    if (instance->mm_add_butt == nullptr) {
         label_xmstring = XmStringCreateLocalized(CATGETS(Dtb_project_catd, 2, 29, "Add"));
         instance->mm_add_butt =
             XtVaCreateWidget("dtb_options_mm_add_butt",
@@ -5540,11 +5540,11 @@ dtb_options_mm_add_butt_create(
                 XmNalignment, XmALIGNMENT_CENTER,
                 XmNlabelType, XmSTRING,
                 XmNlabelString, label_xmstring,
-                NULL);
+                nullptr);
         XmStringFree(label_xmstring);
-        label_xmstring = NULL;
+        label_xmstring = nullptr;
     }
-    if (instance->mm_add_butt == NULL)
+    if (instance->mm_add_butt == nullptr)
         return -1;
 
     return 0;
@@ -5558,9 +5558,9 @@ dtb_options_mm_delete_butt_create(
     Widget parent
 )
 {
-    XmString	label_xmstring = NULL;
+    XmString	label_xmstring = nullptr;
     
-    if (instance->mm_delete_butt == NULL) {
+    if (instance->mm_delete_butt == nullptr) {
         label_xmstring = XmStringCreateLocalized(CATGETS(Dtb_project_catd, 2, 30, "Delete"));
         instance->mm_delete_butt =
             XtVaCreateWidget("dtb_options_mm_delete_butt",
@@ -5577,11 +5577,11 @@ dtb_options_mm_delete_butt_create(
                 XmNalignment, XmALIGNMENT_CENTER,
                 XmNlabelType, XmSTRING,
                 XmNlabelString, label_xmstring,
-                NULL);
+                nullptr);
         XmStringFree(label_xmstring);
-        label_xmstring = NULL;
+        label_xmstring = nullptr;
     }
-    if (instance->mm_delete_butt == NULL)
+    if (instance->mm_delete_butt == nullptr)
         return -1;
 
     return 0;
@@ -5595,9 +5595,9 @@ dtb_options_mm_change_butt_create(
     Widget parent
 )
 {
-    XmString	label_xmstring = NULL;
+    XmString	label_xmstring = nullptr;
     
-    if (instance->mm_change_butt == NULL) {
+    if (instance->mm_change_butt == nullptr) {
         label_xmstring = XmStringCreateLocalized(CATGETS(Dtb_project_catd, 2, 31, "Change"));
         instance->mm_change_butt =
             XtVaCreateWidget("dtb_options_mm_change_butt",
@@ -5614,11 +5614,11 @@ dtb_options_mm_change_butt_create(
                 XmNalignment, XmALIGNMENT_CENTER,
                 XmNlabelType, XmSTRING,
                 XmNlabelString, label_xmstring,
-                NULL);
+                nullptr);
         XmStringFree(label_xmstring);
-        label_xmstring = NULL;
+        label_xmstring = nullptr;
     }
-    if (instance->mm_change_butt == NULL)
+    if (instance->mm_change_butt == nullptr)
         return -1;
 
     return 0;
@@ -5632,9 +5632,9 @@ dtb_options_vacation_lbl_create(
     Widget parent
 )
 {
-    XmString	label_xmstring = NULL;
+    XmString	label_xmstring = nullptr;
     
-    if (instance->vacation_lbl == NULL) {
+    if (instance->vacation_lbl == nullptr) {
         label_xmstring = XmStringCreateLocalized(CATGETS(Dtb_project_catd, 2, 66, "Vacation Precedence = junk"));
         instance->vacation_lbl =
             XtVaCreateWidget("dtb_options_vacation_lbl",
@@ -5650,11 +5650,11 @@ dtb_options_vacation_lbl_create(
                 XmNalignment, XmALIGNMENT_CENTER,
                 XmNlabelType, XmSTRING,
                 XmNlabelString, label_xmstring,
-                NULL);
+                nullptr);
         XmStringFree(label_xmstring);
-        label_xmstring = NULL;
+        label_xmstring = nullptr;
     }
-    if (instance->vacation_lbl == NULL)
+    if (instance->vacation_lbl == nullptr)
         return -1;
 
     return 0;
@@ -5669,7 +5669,7 @@ dtb_options_group10_create(
 )
 {
     
-    if (instance->group10 == NULL) {
+    if (instance->group10 == nullptr) {
         instance->group10 =
             XtVaCreateWidget("dtb_options_group10",
                 xmFormWidgetClass,
@@ -5684,9 +5684,9 @@ dtb_options_group10_create(
                 XmNresizePolicy, XmRESIZE_ANY,
                 XmNmarginHeight, 0,
                 XmNmarginWidth, 0,
-                NULL);
+                nullptr);
     }
-    if (instance->group10 == NULL)
+    if (instance->group10 == nullptr)
         return -1;
 
     return 0;
@@ -5700,12 +5700,12 @@ dtb_options_vacation_rb_create(
     Widget parent
 )
 {
-    XmString	label_xmstring = NULL;
+    XmString	label_xmstring = nullptr;
     Arg	args[22];	/* need 17 args (add 5 to be safe) */
     int	n = 0;
     Widget	vacation_rb_items[2];
     
-    if (instance->vacation_rb == NULL) {
+    if (instance->vacation_rb == nullptr) {
         n = 0;
         XtSetArg(args[n], XmNbottomAttachment, XmATTACH_NONE);  ++n;
         XtSetArg(args[n], XmNrightAttachment, XmATTACH_NONE);  ++n;
@@ -5726,10 +5726,10 @@ dtb_options_vacation_rb_create(
             XmCreateRadioBox(parent,
                 "dtb_options_vacation_rb", args, n);
     }
-    if (instance->vacation_rb == NULL)
+    if (instance->vacation_rb == nullptr)
         return -1;
 
-    if (instance->vacation_rb_items.On_item == NULL) {
+    if (instance->vacation_rb_items.On_item == nullptr) {
         label_xmstring = XmStringCreateLocalized(CATGETS(Dtb_project_catd, 2, 64, "On"));
         instance->vacation_rb_items.On_item =
             XtVaCreateManagedWidget("dtb_options_vacation_rb_on_item",
@@ -5737,14 +5737,14 @@ dtb_options_vacation_rb_create(
                 instance->vacation_rb,
                 XmNset, False,
                 XmNlabelString, label_xmstring,
-                NULL);
+                nullptr);
         XmStringFree(label_xmstring);
-        label_xmstring = NULL;
+        label_xmstring = nullptr;
     }
-    if (instance->vacation_rb_items.On_item == NULL)
+    if (instance->vacation_rb_items.On_item == nullptr)
         return -1;
 
-    if (instance->vacation_rb_items.Off_item == NULL) {
+    if (instance->vacation_rb_items.Off_item == nullptr) {
         label_xmstring = XmStringCreateLocalized(CATGETS(Dtb_project_catd, 2, 65, "Off"));
         instance->vacation_rb_items.Off_item =
             XtVaCreateManagedWidget("dtb_options_vacation_rb_off_item",
@@ -5752,11 +5752,11 @@ dtb_options_vacation_rb_create(
                 instance->vacation_rb,
                 XmNset, True,
                 XmNlabelString, label_xmstring,
-                NULL);
+                nullptr);
         XmStringFree(label_xmstring);
-        label_xmstring = NULL;
+        label_xmstring = nullptr;
     }
-    if (instance->vacation_rb_items.Off_item == NULL)
+    if (instance->vacation_rb_items.Off_item == nullptr)
         return -1;
 
     return 0;
@@ -5773,7 +5773,7 @@ dtb_options_vacation_msg_tp_create(
     Arg	args[33];	/* need 28 args (add 5 to be safe) */
     int	n = 0;
     
-    if (instance->vacation_msg_tp == NULL) {
+    if (instance->vacation_msg_tp == nullptr) {
         n = 0;
         XtSetArg(args[n], XmNbottomOffset, 0);  ++n;
         XtSetArg(args[n], XmNbottomAttachment, XmATTACH_FORM);  ++n;
@@ -5813,7 +5813,7 @@ dtb_options_subject_tf_create(
     Arg	args[19];	/* need 14 args (add 5 to be safe) */
     int	n = 0;
     
-    if (instance->subject_tf == NULL) {
+    if (instance->subject_tf == nullptr) {
         n = 0;
         XtSetArg(args[n], XmNbottomAttachment, XmATTACH_NONE);  ++n;
         XtSetArg(args[n], XmNrightAttachment, XmATTACH_NONE);  ++n;
@@ -5830,7 +5830,7 @@ dtb_options_subject_tf_create(
             XmCreateTextField(parent,
                 "dtb_options_subject_tf", args, n);
     }
-    if (instance->subject_tf == NULL)
+    if (instance->subject_tf == nullptr)
         return -1;
 
     return 0;
@@ -5844,9 +5844,9 @@ dtb_options_msg_list_lbl_create(
     Widget parent
 )
 {
-    XmString	label_xmstring = NULL;
+    XmString	label_xmstring = nullptr;
     
-    if (instance->msg_list_lbl == NULL) {
+    if (instance->msg_list_lbl == nullptr) {
         label_xmstring = XmStringCreateLocalized(CATGETS(Dtb_project_catd, 2, 69, "Message:"));
         instance->msg_list_lbl =
             XtVaCreateWidget("dtb_options_msg_list_lbl",
@@ -5863,11 +5863,11 @@ dtb_options_msg_list_lbl_create(
                 XmNalignment, XmALIGNMENT_CENTER,
                 XmNlabelType, XmSTRING,
                 XmNlabelString, label_xmstring,
-                NULL);
+                nullptr);
         XmStringFree(label_xmstring);
-        label_xmstring = NULL;
+        label_xmstring = nullptr;
     }
-    if (instance->msg_list_lbl == NULL)
+    if (instance->msg_list_lbl == nullptr)
         return -1;
 
     return 0;
@@ -5881,9 +5881,9 @@ dtb_options_subject_lbl_create(
     Widget parent
 )
 {
-    XmString	label_xmstring = NULL;
+    XmString	label_xmstring = nullptr;
     
-    if (instance->subject_lbl == NULL) {
+    if (instance->subject_lbl == nullptr) {
         label_xmstring = XmStringCreateLocalized(CATGETS(Dtb_project_catd, 2, 67, "Subject:"));
         instance->subject_lbl =
             XtVaCreateWidget("dtb_options_subject_lbl",
@@ -5901,11 +5901,11 @@ dtb_options_subject_lbl_create(
                 XmNalignment, XmALIGNMENT_CENTER,
                 XmNlabelType, XmSTRING,
                 XmNlabelString, label_xmstring,
-                NULL);
+                nullptr);
         XmStringFree(label_xmstring);
-        label_xmstring = NULL;
+        label_xmstring = nullptr;
     }
-    if (instance->subject_lbl == NULL)
+    if (instance->subject_lbl == nullptr)
         return -1;
 
     return 0;
@@ -5919,9 +5919,9 @@ dtb_options_vacation_rb_lbl_create(
     Widget parent
 )
 {
-    XmString	label_xmstring = NULL;
+    XmString	label_xmstring = nullptr;
     
-    if (instance->vacation_rb_lbl == NULL) {
+    if (instance->vacation_rb_lbl == nullptr) {
         label_xmstring = XmStringCreateLocalized(CATGETS(Dtb_project_catd, 2, 63, "Vacation:"));
         instance->vacation_rb_lbl =
             XtVaCreateWidget("dtb_options_vacation_rb_lbl",
@@ -5939,11 +5939,11 @@ dtb_options_vacation_rb_lbl_create(
                 XmNalignment, XmALIGNMENT_CENTER,
                 XmNlabelType, XmSTRING,
                 XmNlabelString, label_xmstring,
-                NULL);
+                nullptr);
         XmStringFree(label_xmstring);
-        label_xmstring = NULL;
+        label_xmstring = nullptr;
     }
-    if (instance->vacation_rb_lbl == NULL)
+    if (instance->vacation_rb_lbl == nullptr)
         return -1;
 
     return 0;
@@ -5958,7 +5958,7 @@ dtb_options_group13_create(
 )
 {
     
-    if (instance->group13 == NULL) {
+    if (instance->group13 == nullptr) {
         instance->group13 =
             XtVaCreateWidget("dtb_options_group13",
                 xmFormWidgetClass,
@@ -5974,9 +5974,9 @@ dtb_options_group13_create(
                 XmNresizePolicy, XmRESIZE_ANY,
                 XmNmarginHeight, 0,
                 XmNmarginWidth, 0,
-                NULL);
+                nullptr);
     }
-    if (instance->group13 == NULL)
+    if (instance->group13 == nullptr)
         return -1;
 
     return 0;
@@ -5991,7 +5991,7 @@ dtb_options_group11_create(
 )
 {
     
-    if (instance->group11 == NULL) {
+    if (instance->group11 == nullptr) {
         instance->group11 =
             XtVaCreateWidget("dtb_options_group11",
                 xmFormWidgetClass,
@@ -6005,9 +6005,9 @@ dtb_options_group11_create(
                 XmNresizePolicy, XmRESIZE_ANY,
                 XmNmarginHeight, 0,
                 XmNmarginWidth, 0,
-                NULL);
+                nullptr);
     }
-    if (instance->group11 == NULL)
+    if (instance->group11 == nullptr)
         return -1;
 
     return 0;
@@ -6024,7 +6024,7 @@ dtb_options_menu_label_create(
     Arg	args[18];	/* need 13 args (add 5 to be safe) */
     int	n = 0;
     
-    if (instance->menu_label == NULL) {
+    if (instance->menu_label == nullptr) {
         n = 0;
         XtSetArg(args[n], XmNbottomAttachment, XmATTACH_NONE);  ++n;
         XtSetArg(args[n], XmNrightAttachment, XmATTACH_NONE);  ++n;
@@ -6040,7 +6040,7 @@ dtb_options_menu_label_create(
             XmCreateTextField(parent,
                 "dtb_options_menu_label", args, n);
     }
-    if (instance->menu_label == NULL)
+    if (instance->menu_label == nullptr)
         return -1;
 
     return 0;
@@ -6057,7 +6057,7 @@ dtb_options_path_filename_label_create(
     Arg	args[18];	/* need 13 args (add 5 to be safe) */
     int	n = 0;
     
-    if (instance->path_filename_label == NULL) {
+    if (instance->path_filename_label == nullptr) {
         n = 0;
         XtSetArg(args[n], XmNbottomAttachment, XmATTACH_NONE);  ++n;
         XtSetArg(args[n], XmNrightAttachment, XmATTACH_NONE);  ++n;
@@ -6073,7 +6073,7 @@ dtb_options_path_filename_label_create(
             XmCreateTextField(parent,
                 "dtb_options_path_filename_label", args, n);
     }
-    if (instance->path_filename_label == NULL)
+    if (instance->path_filename_label == nullptr)
         return -1;
 
     return 0;
@@ -6091,7 +6091,7 @@ dtb_options_templates_list_create(
     int	n = 0;
     
     
-    if (instance->templates_list == NULL) {
+    if (instance->templates_list == nullptr) {
         n = 0;
         XtSetArg(args[n], XmNscrollBarDisplayPolicy, XmAUTOMATIC);  ++n;
         XtSetArg(args[n], XmNlistSizePolicy, XmCONSTANT);  ++n;
@@ -6110,7 +6110,7 @@ dtb_options_templates_list_create(
                 "dtb_options_templates_list_list", args, n);
     }
     instance->templates_list_scrolledwin = XtParent(instance->templates_list);
-    if (instance->templates_list == NULL)
+    if (instance->templates_list == nullptr)
         return -1;
 
     return 0;
@@ -6124,9 +6124,9 @@ dtb_options_templates_list_lbl_create(
     Widget parent
 )
 {
-    XmString	label_xmstring = NULL;
+    XmString	label_xmstring = nullptr;
     
-    if (instance->templates_list_lbl == NULL) {
+    if (instance->templates_list_lbl == nullptr) {
         label_xmstring = XmStringCreateLocalized(CATGETS(Dtb_project_catd, 2, 72, "Templates:"));
         instance->templates_list_lbl =
             XtVaCreateWidget("dtb_options_templates_list_lbl",
@@ -6143,11 +6143,11 @@ dtb_options_templates_list_lbl_create(
                 XmNalignment, XmALIGNMENT_CENTER,
                 XmNlabelType, XmSTRING,
                 XmNlabelString, label_xmstring,
-                NULL);
+                nullptr);
         XmStringFree(label_xmstring);
-        label_xmstring = NULL;
+        label_xmstring = nullptr;
     }
-    if (instance->templates_list_lbl == NULL)
+    if (instance->templates_list_lbl == nullptr)
         return -1;
 
     return 0;
@@ -6161,9 +6161,9 @@ dtb_options_menu_label_lbl_create(
     Widget parent
 )
 {
-    XmString	label_xmstring = NULL;
+    XmString	label_xmstring = nullptr;
     
-    if (instance->menu_label_lbl == NULL) {
+    if (instance->menu_label_lbl == nullptr) {
         label_xmstring = XmStringCreateLocalized(CATGETS(Dtb_project_catd, 2, 71, "Menu Label:"));
         instance->menu_label_lbl =
             XtVaCreateWidget("dtb_options_menu_label_lbl",
@@ -6181,11 +6181,11 @@ dtb_options_menu_label_lbl_create(
                 XmNalignment, XmALIGNMENT_CENTER,
                 XmNlabelType, XmSTRING,
                 XmNlabelString, label_xmstring,
-                NULL);
+                nullptr);
         XmStringFree(label_xmstring);
-        label_xmstring = NULL;
+        label_xmstring = nullptr;
     }
-    if (instance->menu_label_lbl == NULL)
+    if (instance->menu_label_lbl == nullptr)
         return -1;
 
     return 0;
@@ -6199,9 +6199,9 @@ dtb_options_path_filename_label_lbl_create(
     Widget parent
 )
 {
-    XmString	label_xmstring = NULL;
+    XmString	label_xmstring = nullptr;
     
-    if (instance->path_filename_label_lbl == NULL) {
+    if (instance->path_filename_label_lbl == nullptr) {
         label_xmstring = XmStringCreateLocalized(CATGETS(Dtb_project_catd, 2, 54, "Path / File Name:"));
         instance->path_filename_label_lbl =
             XtVaCreateWidget("dtb_options_path_filename_label_lbl",
@@ -6219,11 +6219,11 @@ dtb_options_path_filename_label_lbl_create(
                 XmNalignment, XmALIGNMENT_CENTER,
                 XmNlabelType, XmSTRING,
                 XmNlabelString, label_xmstring,
-                NULL);
+                nullptr);
         XmStringFree(label_xmstring);
-        label_xmstring = NULL;
+        label_xmstring = nullptr;
     }
-    if (instance->path_filename_label_lbl == NULL)
+    if (instance->path_filename_label_lbl == nullptr)
         return -1;
 
     return 0;
@@ -6237,9 +6237,9 @@ dtb_options_tem_add_but_create(
     Widget parent
 )
 {
-    XmString	label_xmstring = NULL;
+    XmString	label_xmstring = nullptr;
     
-    if (instance->tem_add_but == NULL) {
+    if (instance->tem_add_but == nullptr) {
         label_xmstring = XmStringCreateLocalized(CATGETS(Dtb_project_catd, 2, 29, "Add"));
         instance->tem_add_but =
             XtVaCreateWidget("dtb_options_tem_add_but",
@@ -6256,11 +6256,11 @@ dtb_options_tem_add_but_create(
                 XmNalignment, XmALIGNMENT_CENTER,
                 XmNlabelType, XmSTRING,
                 XmNlabelString, label_xmstring,
-                NULL);
+                nullptr);
         XmStringFree(label_xmstring);
-        label_xmstring = NULL;
+        label_xmstring = nullptr;
     }
-    if (instance->tem_add_but == NULL)
+    if (instance->tem_add_but == nullptr)
         return -1;
 
     return 0;
@@ -6274,9 +6274,9 @@ dtb_options_tem_del_but_create(
     Widget parent
 )
 {
-    XmString	label_xmstring = NULL;
+    XmString	label_xmstring = nullptr;
     
-    if (instance->tem_del_but == NULL) {
+    if (instance->tem_del_but == nullptr) {
         label_xmstring = XmStringCreateLocalized(CATGETS(Dtb_project_catd, 2, 30, "Delete"));
         instance->tem_del_but =
             XtVaCreateWidget("dtb_options_tem_del_but",
@@ -6293,11 +6293,11 @@ dtb_options_tem_del_but_create(
                 XmNalignment, XmALIGNMENT_CENTER,
                 XmNlabelType, XmSTRING,
                 XmNlabelString, label_xmstring,
-                NULL);
+                nullptr);
         XmStringFree(label_xmstring);
-        label_xmstring = NULL;
+        label_xmstring = nullptr;
     }
-    if (instance->tem_del_but == NULL)
+    if (instance->tem_del_but == nullptr)
         return -1;
 
     return 0;
@@ -6311,9 +6311,9 @@ dtb_options_tem_change_but_create(
     Widget parent
 )
 {
-    XmString	label_xmstring = NULL;
+    XmString	label_xmstring = nullptr;
     
-    if (instance->tem_change_but == NULL) {
+    if (instance->tem_change_but == nullptr) {
         label_xmstring = XmStringCreateLocalized(CATGETS(Dtb_project_catd, 2, 31, "Change"));
         instance->tem_change_but =
             XtVaCreateWidget("dtb_options_tem_change_but",
@@ -6330,11 +6330,11 @@ dtb_options_tem_change_but_create(
                 XmNalignment, XmALIGNMENT_CENTER,
                 XmNlabelType, XmSTRING,
                 XmNlabelString, label_xmstring,
-                NULL);
+                nullptr);
         XmStringFree(label_xmstring);
-        label_xmstring = NULL;
+        label_xmstring = nullptr;
     }
-    if (instance->tem_change_but == NULL)
+    if (instance->tem_change_but == nullptr)
         return -1;
 
     return 0;
@@ -6349,7 +6349,7 @@ dtb_options_group14_create(
 )
 {
     
-    if (instance->group14 == NULL) {
+    if (instance->group14 == nullptr) {
         instance->group14 =
             XtVaCreateWidget("dtb_options_group14",
                 xmFormWidgetClass,
@@ -6365,9 +6365,9 @@ dtb_options_group14_create(
                 XmNresizePolicy, XmRESIZE_ANY,
                 XmNmarginHeight, 0,
                 XmNmarginWidth, 0,
-                NULL);
+                nullptr);
     }
-    if (instance->group14 == NULL)
+    if (instance->group14 == nullptr)
         return -1;
 
     return 0;
@@ -6382,7 +6382,7 @@ dtb_options_group15_create(
 )
 {
     
-    if (instance->group15 == NULL) {
+    if (instance->group15 == nullptr) {
         instance->group15 =
             XtVaCreateWidget("dtb_options_group15",
                 xmFormWidgetClass,
@@ -6396,9 +6396,9 @@ dtb_options_group15_create(
                 XmNresizePolicy, XmRESIZE_ANY,
                 XmNmarginHeight, 0,
                 XmNmarginWidth, 0,
-                NULL);
+                nullptr);
     }
-    if (instance->group15 == NULL)
+    if (instance->group15 == nullptr)
         return -1;
 
     return 0;
@@ -6415,7 +6415,7 @@ dtb_options_alias_tf_create(
     Arg	args[18];	/* need 13 args (add 5 to be safe) */
     int	n = 0;
     
-    if (instance->alias_tf == NULL) {
+    if (instance->alias_tf == nullptr) {
         n = 0;
         XtSetArg(args[n], XmNbottomAttachment, XmATTACH_NONE);  ++n;
         XtSetArg(args[n], XmNrightAttachment, XmATTACH_NONE);  ++n;
@@ -6431,7 +6431,7 @@ dtb_options_alias_tf_create(
             XmCreateTextField(parent,
                 "dtb_options_alias_tf", args, n);
     }
-    if (instance->alias_tf == NULL)
+    if (instance->alias_tf == nullptr)
         return -1;
 
     return 0;
@@ -6448,7 +6448,7 @@ dtb_options_addresses_tf_create(
     Arg	args[18];	/* need 13 args (add 5 to be safe) */
     int	n = 0;
     
-    if (instance->addresses_tf == NULL) {
+    if (instance->addresses_tf == nullptr) {
         n = 0;
         XtSetArg(args[n], XmNbottomAttachment, XmATTACH_NONE);  ++n;
         XtSetArg(args[n], XmNrightAttachment, XmATTACH_NONE);  ++n;
@@ -6464,7 +6464,7 @@ dtb_options_addresses_tf_create(
             XmCreateTextField(parent,
                 "dtb_options_addresses_tf", args, n);
     }
-    if (instance->addresses_tf == NULL)
+    if (instance->addresses_tf == nullptr)
         return -1;
 
     return 0;
@@ -6482,7 +6482,7 @@ dtb_options_alias_list_create(
     int	n = 0;
     
     
-    if (instance->alias_list == NULL) {
+    if (instance->alias_list == nullptr) {
         n = 0;
         XtSetArg(args[n], XmNscrollBarDisplayPolicy, XmAUTOMATIC);  ++n;
         XtSetArg(args[n], XmNlistSizePolicy, XmCONSTANT);  ++n;
@@ -6501,7 +6501,7 @@ dtb_options_alias_list_create(
                 "dtb_options_alias_list_list", args, n);
     }
     instance->alias_list_scrolledwin = XtParent(instance->alias_list);
-    if (instance->alias_list == NULL)
+    if (instance->alias_list == nullptr)
         return -1;
 
     return 0;
@@ -6515,9 +6515,9 @@ dtb_options_alias_list_lbl_create(
     Widget parent
 )
 {
-    XmString	label_xmstring = NULL;
+    XmString	label_xmstring = nullptr;
     
-    if (instance->alias_list_lbl == NULL) {
+    if (instance->alias_list_lbl == nullptr) {
         label_xmstring = XmStringCreateLocalized(CATGETS(Dtb_project_catd, 2, 75, "Aliases:"));
         instance->alias_list_lbl =
             XtVaCreateWidget("dtb_options_alias_list_lbl",
@@ -6534,11 +6534,11 @@ dtb_options_alias_list_lbl_create(
                 XmNalignment, XmALIGNMENT_CENTER,
                 XmNlabelType, XmSTRING,
                 XmNlabelString, label_xmstring,
-                NULL);
+                nullptr);
         XmStringFree(label_xmstring);
-        label_xmstring = NULL;
+        label_xmstring = nullptr;
     }
-    if (instance->alias_list_lbl == NULL)
+    if (instance->alias_list_lbl == nullptr)
         return -1;
 
     return 0;
@@ -6552,9 +6552,9 @@ dtb_options_alias_tf_lbl_create(
     Widget parent
 )
 {
-    XmString	label_xmstring = NULL;
+    XmString	label_xmstring = nullptr;
     
-    if (instance->alias_tf_lbl == NULL) {
+    if (instance->alias_tf_lbl == nullptr) {
         label_xmstring = XmStringCreateLocalized(CATGETS(Dtb_project_catd, 2, 73, "Alias:"));
         instance->alias_tf_lbl =
             XtVaCreateWidget("dtb_options_alias_tf_lbl",
@@ -6572,11 +6572,11 @@ dtb_options_alias_tf_lbl_create(
                 XmNalignment, XmALIGNMENT_CENTER,
                 XmNlabelType, XmSTRING,
                 XmNlabelString, label_xmstring,
-                NULL);
+                nullptr);
         XmStringFree(label_xmstring);
-        label_xmstring = NULL;
+        label_xmstring = nullptr;
     }
-    if (instance->alias_tf_lbl == NULL)
+    if (instance->alias_tf_lbl == nullptr)
         return -1;
 
     return 0;
@@ -6590,9 +6590,9 @@ dtb_options_address_tf_lbl_create(
     Widget parent
 )
 {
-    XmString	label_xmstring = NULL;
+    XmString	label_xmstring = nullptr;
     
-    if (instance->address_tf_lbl == NULL) {
+    if (instance->address_tf_lbl == nullptr) {
         label_xmstring = XmStringCreateLocalized(CATGETS(Dtb_project_catd, 2, 74, "Addresses:"));
         instance->address_tf_lbl =
             XtVaCreateWidget("dtb_options_address_tf_lbl",
@@ -6610,11 +6610,11 @@ dtb_options_address_tf_lbl_create(
                 XmNalignment, XmALIGNMENT_CENTER,
                 XmNlabelType, XmSTRING,
                 XmNlabelString, label_xmstring,
-                NULL);
+                nullptr);
         XmStringFree(label_xmstring);
-        label_xmstring = NULL;
+        label_xmstring = nullptr;
     }
-    if (instance->address_tf_lbl == NULL)
+    if (instance->address_tf_lbl == nullptr)
         return -1;
 
     return 0;
@@ -6628,9 +6628,9 @@ dtb_options_alias_add_but_create(
     Widget parent
 )
 {
-    XmString	label_xmstring = NULL;
+    XmString	label_xmstring = nullptr;
     
-    if (instance->alias_add_but == NULL) {
+    if (instance->alias_add_but == nullptr) {
         label_xmstring = XmStringCreateLocalized(CATGETS(Dtb_project_catd, 2, 29, "Add"));
         instance->alias_add_but =
             XtVaCreateWidget("dtb_options_alias_add_but",
@@ -6647,11 +6647,11 @@ dtb_options_alias_add_but_create(
                 XmNalignment, XmALIGNMENT_CENTER,
                 XmNlabelType, XmSTRING,
                 XmNlabelString, label_xmstring,
-                NULL);
+                nullptr);
         XmStringFree(label_xmstring);
-        label_xmstring = NULL;
+        label_xmstring = nullptr;
     }
-    if (instance->alias_add_but == NULL)
+    if (instance->alias_add_but == nullptr)
         return -1;
 
     return 0;
@@ -6665,9 +6665,9 @@ dtb_options_alias_delete_but_create(
     Widget parent
 )
 {
-    XmString	label_xmstring = NULL;
+    XmString	label_xmstring = nullptr;
     
-    if (instance->alias_delete_but == NULL) {
+    if (instance->alias_delete_but == nullptr) {
         label_xmstring = XmStringCreateLocalized(CATGETS(Dtb_project_catd, 2, 30, "Delete"));
         instance->alias_delete_but =
             XtVaCreateWidget("dtb_options_alias_delete_but",
@@ -6684,11 +6684,11 @@ dtb_options_alias_delete_but_create(
                 XmNalignment, XmALIGNMENT_CENTER,
                 XmNlabelType, XmSTRING,
                 XmNlabelString, label_xmstring,
-                NULL);
+                nullptr);
         XmStringFree(label_xmstring);
-        label_xmstring = NULL;
+        label_xmstring = nullptr;
     }
-    if (instance->alias_delete_but == NULL)
+    if (instance->alias_delete_but == nullptr)
         return -1;
 
     return 0;
@@ -6702,9 +6702,9 @@ dtb_options_al_change_but_create(
     Widget parent
 )
 {
-    XmString	label_xmstring = NULL;
+    XmString	label_xmstring = nullptr;
     
-    if (instance->al_change_but == NULL) {
+    if (instance->al_change_but == nullptr) {
         label_xmstring = XmStringCreateLocalized(CATGETS(Dtb_project_catd, 2, 31, "Change"));
         instance->al_change_but =
             XtVaCreateWidget("dtb_options_al_change_but",
@@ -6721,11 +6721,11 @@ dtb_options_al_change_but_create(
                 XmNalignment, XmALIGNMENT_CENTER,
                 XmNlabelType, XmSTRING,
                 XmNlabelString, label_xmstring,
-                NULL);
+                nullptr);
         XmStringFree(label_xmstring);
-        label_xmstring = NULL;
+        label_xmstring = nullptr;
     }
-    if (instance->al_change_but == NULL)
+    if (instance->al_change_but == nullptr)
         return -1;
 
     return 0;
@@ -6740,7 +6740,7 @@ dtb_options_update_mbox_scale_create(
 )
 {
     
-    if (instance->update_mbox_scale == NULL) {
+    if (instance->update_mbox_scale == nullptr) {
         instance->update_mbox_scale =
             XtVaCreateWidget("dtb_options_update_mbox_scale",
                 xmScaleWidgetClass,
@@ -6761,9 +6761,9 @@ dtb_options_update_mbox_scale_create(
                 XmNprocessingDirection, XmMAX_ON_RIGHT,
                 XmNorientation, XmHORIZONTAL,
                 "slidingMode", False,
-                NULL);
+                nullptr);
     }
-    if (instance->update_mbox_scale == NULL)
+    if (instance->update_mbox_scale == nullptr)
         return -1;
 
     return 0;
@@ -6777,9 +6777,9 @@ dtb_options_update_mailb_lbl_create(
     Widget parent
 )
 {
-    XmString	label_xmstring = NULL;
+    XmString	label_xmstring = nullptr;
     
-    if (instance->update_mailb_lbl == NULL) {
+    if (instance->update_mailb_lbl == nullptr) {
         label_xmstring = XmStringCreateLocalized(CATGETS(Dtb_project_catd, 2, 76, "Update mailbox state:"));
         instance->update_mailb_lbl =
             XtVaCreateWidget("dtb_options_update_mailb_lbl",
@@ -6795,11 +6795,11 @@ dtb_options_update_mailb_lbl_create(
                 XmNalignment, XmALIGNMENT_CENTER,
                 XmNlabelType, XmSTRING,
                 XmNlabelString, label_xmstring,
-                NULL);
+                nullptr);
         XmStringFree(label_xmstring);
-        label_xmstring = NULL;
+        label_xmstring = nullptr;
     }
-    if (instance->update_mailb_lbl == NULL)
+    if (instance->update_mailb_lbl == nullptr)
         return -1;
 
     return 0;
@@ -6813,9 +6813,9 @@ dtb_options_frequently_lbl_create(
     Widget parent
 )
 {
-    XmString	label_xmstring = NULL;
+    XmString	label_xmstring = nullptr;
     
-    if (instance->frequently_lbl == NULL) {
+    if (instance->frequently_lbl == nullptr) {
         label_xmstring = XmStringCreateLocalized(CATGETS(Dtb_project_catd, 2, 77, "Frequently"));
         instance->frequently_lbl =
             XtVaCreateWidget("dtb_options_frequently_lbl",
@@ -6831,11 +6831,11 @@ dtb_options_frequently_lbl_create(
                 XmNalignment, XmALIGNMENT_CENTER,
                 XmNlabelType, XmSTRING,
                 XmNlabelString, label_xmstring,
-                NULL);
+                nullptr);
         XmStringFree(label_xmstring);
-        label_xmstring = NULL;
+        label_xmstring = nullptr;
     }
-    if (instance->frequently_lbl == NULL)
+    if (instance->frequently_lbl == nullptr)
         return -1;
 
     return 0;
@@ -6849,9 +6849,9 @@ dtb_options_seldom_lbl_create(
     Widget parent
 )
 {
-    XmString	label_xmstring = NULL;
+    XmString	label_xmstring = nullptr;
     
-    if (instance->seldom_lbl == NULL) {
+    if (instance->seldom_lbl == nullptr) {
         label_xmstring = XmStringCreateLocalized(CATGETS(Dtb_project_catd, 2, 78, "Seldom"));
         instance->seldom_lbl =
             XtVaCreateWidget("dtb_options_seldom_lbl",
@@ -6867,11 +6867,11 @@ dtb_options_seldom_lbl_create(
                 XmNalignment, XmALIGNMENT_CENTER,
                 XmNlabelType, XmSTRING,
                 XmNlabelString, label_xmstring,
-                NULL);
+                nullptr);
         XmStringFree(label_xmstring);
-        label_xmstring = NULL;
+        label_xmstring = nullptr;
     }
-    if (instance->seldom_lbl == NULL)
+    if (instance->seldom_lbl == nullptr)
         return -1;
 
     return 0;
@@ -6886,7 +6886,7 @@ dtb_options_separator11_create(
 )
 {
     
-    if (instance->separator11 == NULL) {
+    if (instance->separator11 == nullptr) {
         instance->separator11 =
             XtVaCreateWidget("dtb_options_separator11",
                 xmSeparatorWidgetClass,
@@ -6900,9 +6900,9 @@ dtb_options_separator11_create(
                 XmNtopAttachment, XmATTACH_WIDGET,
                 XmNseparatorType, XmSHADOW_ETCHED_IN,
                 XmNorientation, XmHORIZONTAL,
-                NULL);
+                nullptr);
     }
-    if (instance->separator11 == NULL)
+    if (instance->separator11 == nullptr)
         return -1;
 
     return 0;
@@ -6916,12 +6916,12 @@ dtb_options_adv_def_cb_create(
     Widget parent
 )
 {
-    XmString	label_xmstring = NULL;
+    XmString	label_xmstring = nullptr;
     Arg	args[23];	/* need 18 args (add 5 to be safe) */
     int	n = 0;
     Widget	adv_def_cb_choice_items[6];
     
-    if (instance->adv_def_cb_rowcolumn == NULL) {
+    if (instance->adv_def_cb_rowcolumn == nullptr) {
         instance->adv_def_cb_rowcolumn =
             XtVaCreateWidget("dtb_options_adv_def_cb",
                 xmRowColumnWidgetClass,
@@ -6941,12 +6941,12 @@ dtb_options_adv_def_cb_create(
                 XmNmarginHeight, 0,
                 XmNentryAlignment, XmALIGNMENT_END,
                 XmNorientation, XmHORIZONTAL,
-                NULL);
+                nullptr);
     }
-    if (instance->adv_def_cb_rowcolumn == NULL)
+    if (instance->adv_def_cb_rowcolumn == nullptr)
         return -1;
 
-    if (instance->adv_def_cb_label == NULL) {
+    if (instance->adv_def_cb_label == nullptr) {
         label_xmstring = XmStringCreateLocalized(CATGETS(Dtb_project_catd, 2, 79, "Defaults:"));
         instance->adv_def_cb_label =
             XtVaCreateWidget("dtb_options_adv_def_cb_label",
@@ -6955,14 +6955,14 @@ dtb_options_adv_def_cb_create(
                 XmNmarginHeight, 8,
                 XmNlabelType, XmSTRING,
                 XmNlabelString, label_xmstring,
-                NULL);
+                nullptr);
         XmStringFree(label_xmstring);
-        label_xmstring = NULL;
+        label_xmstring = nullptr;
     }
-    if (instance->adv_def_cb_label == NULL)
+    if (instance->adv_def_cb_label == nullptr)
         return -1;
 
-    if (instance->adv_def_cb == NULL) {
+    if (instance->adv_def_cb == nullptr) {
         n = 0;
         XtSetArg(args[n], XmNradioBehavior, False);  ++n;
         XtSetArg(args[n], XmNentryClass, xmToggleButtonWidgetClass);  ++n;
@@ -6976,10 +6976,10 @@ dtb_options_adv_def_cb_create(
             XmCreateRadioBox(instance->adv_def_cb_rowcolumn,
                 "dtb_options_adv_def_cb_choice", args, n);
     }
-    if (instance->adv_def_cb == NULL)
+    if (instance->adv_def_cb == nullptr)
         return -1;
 
-    if (instance->adv_def_cb_items.Show_confirmation_notices_item == NULL) {
+    if (instance->adv_def_cb_items.Show_confirmation_notices_item == nullptr) {
         label_xmstring = XmStringCreateLocalized(CATGETS(Dtb_project_catd, 2, 80, "Show confirmation notices"));
         instance->adv_def_cb_items.Show_confirmation_notices_item =
             XtVaCreateManagedWidget("dtb_options_adv_def_cb_show_confirmation_notices_item",
@@ -6987,14 +6987,14 @@ dtb_options_adv_def_cb_create(
                 instance->adv_def_cb,
                 XmNset, True,
                 XmNlabelString, label_xmstring,
-                NULL);
+                nullptr);
         XmStringFree(label_xmstring);
-        label_xmstring = NULL;
+        label_xmstring = nullptr;
     }
-    if (instance->adv_def_cb_items.Show_confirmation_notices_item == NULL)
+    if (instance->adv_def_cb_items.Show_confirmation_notices_item == nullptr)
         return -1;
 
-    if (instance->adv_def_cb_items.Use_strict_MIME_character_encoding_item == NULL) {
+    if (instance->adv_def_cb_items.Use_strict_MIME_character_encoding_item == nullptr) {
         label_xmstring = XmStringCreateLocalized(CATGETS(Dtb_project_catd, 2, 81, "Use strict MIME character encoding"));
         instance->adv_def_cb_items.Use_strict_MIME_character_encoding_item =
             XtVaCreateManagedWidget("dtb_options_adv_def_cb_use_strict_m_i_m_e_character_encoding_item",
@@ -7002,14 +7002,14 @@ dtb_options_adv_def_cb_create(
                 instance->adv_def_cb,
                 XmNset, False,
                 XmNlabelString, label_xmstring,
-                NULL);
+                nullptr);
         XmStringFree(label_xmstring);
-        label_xmstring = NULL;
+        label_xmstring = nullptr;
     }
-    if (instance->adv_def_cb_items.Use_strict_MIME_character_encoding_item == NULL)
+    if (instance->adv_def_cb_items.Use_strict_MIME_character_encoding_item == nullptr)
         return -1;
 
-    if (instance->adv_def_cb_items.Use_network_aware_mail_file_locking_item == NULL) {
+    if (instance->adv_def_cb_items.Use_network_aware_mail_file_locking_item == nullptr) {
         label_xmstring = XmStringCreateLocalized(CATGETS(Dtb_project_catd, 2, 82, "Use network aware mail file locking"));
         instance->adv_def_cb_items.Use_network_aware_mail_file_locking_item =
             XtVaCreateManagedWidget("dtb_options_adv_def_cb_use_network_aware_mail_file_locking_item",
@@ -7017,14 +7017,14 @@ dtb_options_adv_def_cb_create(
                 instance->adv_def_cb,
                 XmNset, False,
                 XmNlabelString, label_xmstring,
-                NULL);
+                nullptr);
         XmStringFree(label_xmstring);
-        label_xmstring = NULL;
+        label_xmstring = nullptr;
     }
-    if (instance->adv_def_cb_items.Use_network_aware_mail_file_locking_item == NULL)
+    if (instance->adv_def_cb_items.Use_network_aware_mail_file_locking_item == nullptr)
         return -1;
 
-    if (instance->adv_def_cb_items.Ignore_host_name_in_address_allnet_item == NULL) {
+    if (instance->adv_def_cb_items.Ignore_host_name_in_address_allnet_item == nullptr) {
         label_xmstring = XmStringCreateLocalized(CATGETS(Dtb_project_catd, 2, 83, "Ignore host name in address (allnet)"));
         instance->adv_def_cb_items.Ignore_host_name_in_address_allnet_item =
             XtVaCreateManagedWidget("dtb_options_adv_def_cb_ignore_host_name_in_address_allnet_item",
@@ -7032,14 +7032,14 @@ dtb_options_adv_def_cb_create(
                 instance->adv_def_cb,
                 XmNset, False,
                 XmNlabelString, label_xmstring,
-                NULL);
+                nullptr);
         XmStringFree(label_xmstring);
-        label_xmstring = NULL;
+        label_xmstring = nullptr;
     }
-    if (instance->adv_def_cb_items.Ignore_host_name_in_address_allnet_item == NULL)
+    if (instance->adv_def_cb_items.Ignore_host_name_in_address_allnet_item == nullptr)
         return -1;
 
-    if (instance->adv_def_cb_items.Include_me_when_I_Reply_to_all_metoo_item == NULL) {
+    if (instance->adv_def_cb_items.Include_me_when_I_Reply_to_all_metoo_item == nullptr) {
         label_xmstring = XmStringCreateLocalized(CATGETS(Dtb_project_catd, 2, 84, "Include me when I \"Reply to All\" (metoo)"));
         instance->adv_def_cb_items.Include_me_when_I_Reply_to_all_metoo_item =
             XtVaCreateManagedWidget("dtb_options_adv_def_cb_include_me_when_i_reply_to_all_metoo_item",
@@ -7047,14 +7047,14 @@ dtb_options_adv_def_cb_create(
                 instance->adv_def_cb,
                 XmNset, False,
                 XmNlabelString, label_xmstring,
-                NULL);
+                nullptr);
         XmStringFree(label_xmstring);
-        label_xmstring = NULL;
+        label_xmstring = nullptr;
     }
-    if (instance->adv_def_cb_items.Include_me_when_I_Reply_to_all_metoo_item == NULL)
+    if (instance->adv_def_cb_items.Include_me_when_I_Reply_to_all_metoo_item == nullptr)
         return -1;
 
-    if (instance->adv_def_cb_items.Use_local_name_username_item == NULL) {
+    if (instance->adv_def_cb_items.Use_local_name_username_item == nullptr) {
         label_xmstring = XmStringCreateLocalized(CATGETS(Dtb_project_catd, 2, 85, "Use local name: username ="));
         instance->adv_def_cb_items.Use_local_name_username_item =
             XtVaCreateManagedWidget("dtb_options_adv_def_cb_use_local_name_username_item",
@@ -7062,11 +7062,11 @@ dtb_options_adv_def_cb_create(
                 instance->adv_def_cb,
                 XmNset, False,
                 XmNlabelString, label_xmstring,
-                NULL);
+                nullptr);
         XmStringFree(label_xmstring);
-        label_xmstring = NULL;
+        label_xmstring = nullptr;
     }
-    if (instance->adv_def_cb_items.Use_local_name_username_item == NULL)
+    if (instance->adv_def_cb_items.Use_local_name_username_item == nullptr)
         return -1;
 
     return 0;
@@ -7081,7 +7081,7 @@ dtb_options_group12_create(
 )
 {
     
-    if (instance->group12 == NULL) {
+    if (instance->group12 == nullptr) {
         instance->group12 =
             XtVaCreateWidget("dtb_options_group12",
                 xmFormWidgetClass,
@@ -7096,9 +7096,9 @@ dtb_options_group12_create(
                 XmNresizePolicy, XmRESIZE_ANY,
                 XmNmarginHeight, 0,
                 XmNmarginWidth, 0,
-                NULL);
+                nullptr);
     }
-    if (instance->group12 == NULL)
+    if (instance->group12 == nullptr)
         return -1;
 
     return 0;
@@ -7113,7 +7113,7 @@ dtb_options_group16_create(
 )
 {
     
-    if (instance->group16 == NULL) {
+    if (instance->group16 == nullptr) {
         instance->group16 =
             XtVaCreateWidget("dtb_options_group16",
                 xmFormWidgetClass,
@@ -7127,9 +7127,9 @@ dtb_options_group16_create(
                 XmNresizePolicy, XmRESIZE_ANY,
                 XmNmarginHeight, 0,
                 XmNmarginWidth, 0,
-                NULL);
+                nullptr);
     }
-    if (instance->group16 == NULL)
+    if (instance->group16 == nullptr)
         return -1;
 
     return 0;
@@ -7146,7 +7146,7 @@ dtb_options_local_name_tf_create(
     Arg	args[17];	/* need 12 args (add 5 to be safe) */
     int	n = 0;
     
-    if (instance->local_name_tf == NULL) {
+    if (instance->local_name_tf == nullptr) {
         n = 0;
         XtSetArg(args[n], XmNbottomAttachment, XmATTACH_NONE);  ++n;
         XtSetArg(args[n], XmNrightAttachment, XmATTACH_NONE);  ++n;
@@ -7161,7 +7161,7 @@ dtb_options_local_name_tf_create(
             XmCreateTextField(parent,
                 "dtb_options_local_name_tf", args, n);
     }
-    if (instance->local_name_tf == NULL)
+    if (instance->local_name_tf == nullptr)
         return -1;
 
     return 0;
@@ -7179,7 +7179,7 @@ dtb_options_local_name_list_create(
     int	n = 0;
     
     
-    if (instance->local_name_list == NULL) {
+    if (instance->local_name_list == nullptr) {
         n = 0;
         XtSetArg(args[n], XmNscrollBarDisplayPolicy, XmAUTOMATIC);  ++n;
         XtSetArg(args[n], XmNlistSizePolicy, XmCONSTANT);  ++n;
@@ -7197,7 +7197,7 @@ dtb_options_local_name_list_create(
                 "dtb_options_local_name_list_list", args, n);
     }
     instance->local_name_list_scrolledwin = XtParent(instance->local_name_list);
-    if (instance->local_name_list == NULL)
+    if (instance->local_name_list == nullptr)
         return -1;
 
     return 0;
@@ -7211,9 +7211,9 @@ dtb_options_local_name_add_but_create(
     Widget parent
 )
 {
-    XmString	label_xmstring = NULL;
+    XmString	label_xmstring = nullptr;
     
-    if (instance->local_name_add_but == NULL) {
+    if (instance->local_name_add_but == nullptr) {
         label_xmstring = XmStringCreateLocalized(CATGETS(Dtb_project_catd, 2, 29, "Add"));
         instance->local_name_add_but =
             XtVaCreateWidget("dtb_options_local_name_add_but",
@@ -7230,11 +7230,11 @@ dtb_options_local_name_add_but_create(
                 XmNalignment, XmALIGNMENT_CENTER,
                 XmNlabelType, XmSTRING,
                 XmNlabelString, label_xmstring,
-                NULL);
+                nullptr);
         XmStringFree(label_xmstring);
-        label_xmstring = NULL;
+        label_xmstring = nullptr;
     }
-    if (instance->local_name_add_but == NULL)
+    if (instance->local_name_add_but == nullptr)
         return -1;
 
     return 0;
@@ -7248,9 +7248,9 @@ dtb_options_local_name_del_but_create(
     Widget parent
 )
 {
-    XmString	label_xmstring = NULL;
+    XmString	label_xmstring = nullptr;
     
-    if (instance->local_name_del_but == NULL) {
+    if (instance->local_name_del_but == nullptr) {
         label_xmstring = XmStringCreateLocalized(CATGETS(Dtb_project_catd, 2, 30, "Delete"));
         instance->local_name_del_but =
             XtVaCreateWidget("dtb_options_local_name_del_but",
@@ -7267,11 +7267,11 @@ dtb_options_local_name_del_but_create(
                 XmNalignment, XmALIGNMENT_CENTER,
                 XmNlabelType, XmSTRING,
                 XmNlabelString, label_xmstring,
-                NULL);
+                nullptr);
         XmStringFree(label_xmstring);
-        label_xmstring = NULL;
+        label_xmstring = nullptr;
     }
-    if (instance->local_name_del_but == NULL)
+    if (instance->local_name_del_but == nullptr)
         return -1;
 
     return 0;
@@ -7285,9 +7285,9 @@ dtb_options_local_name_chg_but_create(
     Widget parent
 )
 {
-    XmString	label_xmstring = NULL;
+    XmString	label_xmstring = nullptr;
     
-    if (instance->local_name_chg_but == NULL) {
+    if (instance->local_name_chg_but == nullptr) {
         label_xmstring = XmStringCreateLocalized(CATGETS(Dtb_project_catd, 2, 31, "Change"));
         instance->local_name_chg_but =
             XtVaCreateWidget("dtb_options_local_name_chg_but",
@@ -7304,11 +7304,11 @@ dtb_options_local_name_chg_but_create(
                 XmNalignment, XmALIGNMENT_CENTER,
                 XmNlabelType, XmSTRING,
                 XmNlabelString, label_xmstring,
-                NULL);
+                nullptr);
         XmStringFree(label_xmstring);
-        label_xmstring = NULL;
+        label_xmstring = nullptr;
     }
-    if (instance->local_name_chg_but == NULL)
+    if (instance->local_name_chg_but == nullptr)
         return -1;
 
     return 0;
@@ -7322,9 +7322,9 @@ dtb_options_ok_button_create(
     Widget parent
 )
 {
-    XmString	label_xmstring = NULL;
+    XmString	label_xmstring = nullptr;
     
-    if (instance->ok_button == NULL) {
+    if (instance->ok_button == nullptr) {
         label_xmstring = XmStringCreateLocalized(CATGETS(Dtb_project_catd, 2, 86, "OK"));
         instance->ok_button =
             XtVaCreateWidget("dtb_options_ok_button",
@@ -7344,11 +7344,11 @@ dtb_options_ok_button_create(
                 XmNlabelType, XmSTRING,
                 XmNdefaultButtonShadowThickness, 1,
                 XmNlabelString, label_xmstring,
-                NULL);
+                nullptr);
         XmStringFree(label_xmstring);
-        label_xmstring = NULL;
+        label_xmstring = nullptr;
     }
-    if (instance->ok_button == NULL)
+    if (instance->ok_button == nullptr)
         return -1;
 
     return 0;
@@ -7362,9 +7362,9 @@ dtb_options_reset_button_create(
     Widget parent
 )
 {
-    XmString	label_xmstring = NULL;
+    XmString	label_xmstring = nullptr;
     
-    if (instance->reset_button == NULL) {
+    if (instance->reset_button == nullptr) {
         label_xmstring = XmStringCreateLocalized(CATGETS(Dtb_project_catd, 2, 87, "Reset"));
         instance->reset_button =
             XtVaCreateWidget("dtb_options_reset_button",
@@ -7384,11 +7384,11 @@ dtb_options_reset_button_create(
                 XmNlabelType, XmSTRING,
                 XmNdefaultButtonShadowThickness, 1,
                 XmNlabelString, label_xmstring,
-                NULL);
+                nullptr);
         XmStringFree(label_xmstring);
-        label_xmstring = NULL;
+        label_xmstring = nullptr;
     }
-    if (instance->reset_button == NULL)
+    if (instance->reset_button == nullptr)
         return -1;
 
     return 0;
@@ -7402,9 +7402,9 @@ dtb_options_cancel_button_create(
     Widget parent
 )
 {
-    XmString	label_xmstring = NULL;
+    XmString	label_xmstring = nullptr;
     
-    if (instance->cancel_button == NULL) {
+    if (instance->cancel_button == nullptr) {
         label_xmstring = XmStringCreateLocalized(CATGETS(Dtb_project_catd, 2, 88, "Cancel"));
         instance->cancel_button =
             XtVaCreateWidget("dtb_options_cancel_button",
@@ -7424,11 +7424,11 @@ dtb_options_cancel_button_create(
                 XmNlabelType, XmSTRING,
                 XmNdefaultButtonShadowThickness, 1,
                 XmNlabelString, label_xmstring,
-                NULL);
+                nullptr);
         XmStringFree(label_xmstring);
-        label_xmstring = NULL;
+        label_xmstring = nullptr;
     }
-    if (instance->cancel_button == NULL)
+    if (instance->cancel_button == nullptr)
         return -1;
 
     return 0;
@@ -7443,7 +7443,7 @@ dtb_options_separator_create(
 )
 {
     
-    if (instance->separator == NULL) {
+    if (instance->separator == nullptr) {
         instance->separator =
             XtVaCreateWidget("dtb_options_separator",
                 xmSeparatorWidgetClass,
@@ -7457,9 +7457,9 @@ dtb_options_separator_create(
                 XmNtopAttachment, XmATTACH_FORM,
                 XmNseparatorType, XmSHADOW_ETCHED_IN,
                 XmNorientation, XmHORIZONTAL,
-                NULL);
+                nullptr);
     }
-    if (instance->separator == NULL)
+    if (instance->separator == nullptr)
         return -1;
 
     return 0;
@@ -7473,9 +7473,9 @@ dtb_options_apply_button_create(
     Widget parent
 )
 {
-    XmString	label_xmstring = NULL;
+    XmString	label_xmstring = nullptr;
     
-    if (instance->apply_button == NULL) {
+    if (instance->apply_button == nullptr) {
         label_xmstring = XmStringCreateLocalized(CATGETS(Dtb_project_catd, 2, 89, "Apply"));
         instance->apply_button =
             XtVaCreateWidget("dtb_options_apply_button",
@@ -7495,11 +7495,11 @@ dtb_options_apply_button_create(
                 XmNlabelType, XmSTRING,
                 XmNdefaultButtonShadowThickness, 1,
                 XmNlabelString, label_xmstring,
-                NULL);
+                nullptr);
         XmStringFree(label_xmstring);
-        label_xmstring = NULL;
+        label_xmstring = nullptr;
     }
-    if (instance->apply_button == NULL)
+    if (instance->apply_button == nullptr)
         return -1;
 
     return 0;
@@ -7513,9 +7513,9 @@ dtb_options_help_button_create(
     Widget parent
 )
 {
-    XmString	label_xmstring = NULL;
+    XmString	label_xmstring = nullptr;
     
-    if (instance->help_button == NULL) {
+    if (instance->help_button == nullptr) {
         label_xmstring = XmStringCreateLocalized(CATGETS(Dtb_project_catd, 2, 90, "Help"));
         instance->help_button =
             XtVaCreateWidget("dtb_options_help_button",
@@ -7535,11 +7535,11 @@ dtb_options_help_button_create(
                 XmNlabelType, XmSTRING,
                 XmNdefaultButtonShadowThickness, 1,
                 XmNlabelString, label_xmstring,
-                NULL);
+                nullptr);
         XmStringFree(label_xmstring);
-        label_xmstring = NULL;
+        label_xmstring = nullptr;
     }
-    if (instance->help_button == NULL)
+    if (instance->help_button == nullptr)
         return -1;
 
     return 0;

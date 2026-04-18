@@ -102,12 +102,12 @@ RFCMIME::getMIMEType(DtMail::BodyPart * bp, char * mime_type, DtMailBoolean & is
     DtMailEnv error;
 
     bp->getContents(error,
-		    NULL,
-		    NULL,
+		    nullptr,
+		    nullptr,
 		    &type,
-		    NULL,
-		    NULL,
-		    NULL);
+		    nullptr,
+		    nullptr,
+		    nullptr);
 
     // It is possible there is *no* contents associated with this
     // body part - in that case, fake text/plain
@@ -116,21 +116,21 @@ RFCMIME::getMIMEType(DtMail::BodyPart * bp, char * mime_type, DtMailBoolean & is
       strcpy(mime_type, "text/plain");
       return;
     }
-    assert(type != NULL);
+    assert(type != nullptr);
     
     // Look it up in the data typing system. Hopefully we will
     // get a db based mime name.
     //
     char * db_type = DtDtsDataTypeToAttributeValue(type,
 						   DtDTS_DA_MIME_TYPE,
-						   NULL);
+						   nullptr);
 
     // See if we call this text. If so, then it will be text/plain,
     // if not then application/octet-stream
     //
     char * text_type = DtDtsDataTypeToAttributeValue(type,
 						     DtDTS_DA_IS_TEXT,
-						     NULL);
+						     nullptr);
 
     if (db_type) {
 	strcpy(mime_type, db_type);
@@ -202,7 +202,7 @@ RFCMIME::getEncodingType(const char * body,
   //    - if any non-printing characters non-spacing characers
   //
   
-  if (body == NULL || len == 0) {
+  if (body == nullptr || len == 0) {
     return(MIME_7BIT);
   }
   
@@ -330,7 +330,7 @@ RFCMIME::getEncodingType(const char * body,
     // 3) If 1 & 2 are not true, then base64 will be applied.
     //
 
-    if (body == NULL || len == 0) {
+    if (body == nullptr || len == 0) {
 	return(MIME_7BIT);
     }
 
@@ -508,7 +508,7 @@ RFCMIME::writeContentHeaders(Buffer & hdr_buf,
 	}
 
 	char * tempName = strdup(name);
-	assert(tempName != NULL);
+	assert(tempName != nullptr);
 
 #if 0
 	// Now make sure that the name is "unix friendly"; convert
@@ -752,7 +752,7 @@ RFCMIME::readBase64(char * buf, int & off, const char * bp, const unsigned long 
 void
 RFCMIME::writeBase64(Buffer & buf, const char * bp, const unsigned long len)
 {
-    if (bp == NULL || len == 0) {
+    if (bp == nullptr || len == 0) {
 	crlf(buf);
 	return;
     }
@@ -913,7 +913,7 @@ RFCMIME::readQPrint(
 		    hex[1] = *(cur + 2);
 		    hex[2] = 0;
 
-		    buf[off++] = (char) strtol(hex, NULL, 16);
+		    buf[off++] = (char) strtol(hex, nullptr, 16);
 		    cur += 2;
 		    continue;
 		}
@@ -929,7 +929,7 @@ RFCMIME::readQPrint(
 void
 RFCMIME::writeQPrint(Buffer & buf, const char * bp, const unsigned long bp_len)
 {
-  if (bp == NULL || bp_len == 0) {
+  if (bp == nullptr || bp_len == 0) {
     crlf(buf);
     return;
   }
@@ -1159,7 +1159,7 @@ RFCMIME::writePlainText(Buffer & buf, const char * bp, const unsigned long len)
     // It may seem silly, but we do need to make sure every line ends with
     // a CRLF pair. Most buffers will end with only LF.
     //
-    if (bp == NULL || len == 0) {
+    if (bp == nullptr || len == 0) {
 	crlf(buf);
 	return;
     }
@@ -1246,7 +1246,7 @@ RFCMIME::formatBodies(DtMailEnv & error,
 		      Buffer & buf)
 {
 // For CHARSET
-    char *from_cs = NULL, *to_cs = NULL;
+    char *from_cs = nullptr, *to_cs = nullptr;
 	int eightbit = 0;
 
 	// This is a static global variable that determines charset and whether
@@ -1299,10 +1299,10 @@ RFCMIME::formatBodies(DtMailEnv & error,
 	getMIMEType(bp, mime_type, is_text);
 
 	unsigned long bp_len;
-	char * bp_contents=NULL, * name=NULL;
+	char * bp_contents=nullptr, * name=nullptr;
   	const void *tmp_ptr;
 	error.clear();
-	bp->getContents(error, &tmp_ptr, &bp_len, NULL, &name, NULL, NULL);
+	bp->getContents(error, &tmp_ptr, &bp_len, nullptr, &name, nullptr, nullptr);
 	// We don't want to change the contents of the msg.
 	if (bp_len > 0) {
         	bp_contents = (char*)malloc((unsigned int)bp_len);
@@ -1323,9 +1323,9 @@ RFCMIME::formatBodies(DtMailEnv & error,
 
 // For CHARSET
     	if (bp_contents && (is_text == DTM_TRUE) && eightbit ) {
-		from_cs = NULL;
+		from_cs = nullptr;
     		from_cs = _session->locToConvName();
-		to_cs = NULL;
+		to_cs = nullptr;
 		to_cs = _session->targetConvName();
 		converted = _session->csConvert(
 				(char **)&bp_contents, bp_len, 1,
@@ -1360,7 +1360,7 @@ RFCMIME::formatBodies(DtMailEnv & error,
 	    }
 	}
 
-	writeContentHeaders(hdr_buf, mime_type, NULL, enc,
+	writeContentHeaders(hdr_buf, mime_type, nullptr, enc,
 			    (char *)digest, DTM_FALSE, eightbit);
 
 	if (name)
@@ -1433,10 +1433,10 @@ RFCMIME::formatBodies(DtMailEnv & error,
 	    getMIMEType(bp, mime_type, is_text);
 	    
 	    unsigned long bp_len;
-	    char* bp_contents=NULL, *name=NULL;
+	    char* bp_contents=nullptr, *name=nullptr;
 	    const void *tmp_ptr;
-		char *type = NULL;
-	    bp->getContents(error, &tmp_ptr, &bp_len, &type, &name, NULL, NULL);
+		char *type = nullptr;
+	    bp->getContents(error, &tmp_ptr, &bp_len, &type, &name, nullptr, nullptr);
 	    if (bp_len > 0) {
 	    	bp_contents = (char*)malloc((unsigned int)bp_len);
 	   	memcpy(bp_contents, (char*)tmp_ptr, (size_t)bp_len);
@@ -1456,9 +1456,9 @@ RFCMIME::formatBodies(DtMailEnv & error,
 
 // For CHARSET
 	    if (bp_contents && (is_text == DTM_TRUE) && eightbit ) {
-		from_cs = NULL;
+		from_cs = nullptr;
        	   	from_cs = _session->locToConvName();
-		to_cs = NULL;
+		to_cs = nullptr;
 	   		to_cs = _session->targetConvName();
 	   		converted = _session->csConvert((char **)&bp_contents, 
 			bp_len, 1, from_cs, to_cs);
@@ -1494,7 +1494,7 @@ RFCMIME::formatBodies(DtMailEnv & error,
 		show_as_attachment = DTM_FALSE;
 		if (name) {
 		    free(name);
-		    name = NULL;
+		    name = nullptr;
 		}
 	    }
 	    else
@@ -1577,7 +1577,7 @@ static const char * block_headers[] = {
     "Content-Length",
     "Content-MD5",
     "X-Sun-Charset",
-    NULL
+    nullptr
 };
 
 void
@@ -1603,7 +1603,7 @@ RFCMIME::getHdrEncodingType(const char * body,
 			 DtMailBoolean strict_mime,
 			 const char * charset)
 {
-  if (body == NULL || len == 0) {
+  if (body == nullptr || len == 0) {
     return(MIME_7BIT);
   }
   
@@ -1711,7 +1711,7 @@ RFCMIME::rfc1522cpy(Buffer & buf, const char * value)
 	DtMail::MailRc *mail_rc = _session->mailRc(error);
 	const char *rc_value;
 	char charset[64];
-	char *from_cs = NULL, *to_cs = NULL, *convertbuf = NULL;
+	char *from_cs = nullptr, *to_cs = nullptr, *convertbuf = nullptr;
 	int convert = 0;
 	int word_len = 0, mb_ret = 0, cs_len = 0;
 	unsigned long tmpcount = 0;
@@ -1869,12 +1869,12 @@ RFCMIME::owCompat(Buffer & buf,
          char *bp_contents,
          unsigned long bp_len)
 {
-    char *v3type = NULL;
+    char *v3type = nullptr;
 
     if (type) {
 	   v3type = (char *)DtDtsDataTypeToAttributeValue(type,
 						 "SUNV3_TYPE",
-						 NULL);
+						 nullptr);
 	}
 	if (!type || !v3type)
 	{
@@ -1885,7 +1885,7 @@ RFCMIME::owCompat(Buffer & buf,
 	       v3type = (char *)DtDtsDataTypeToAttributeValue(
 							buf_type,
 							"SUNV3_TYPE",
-							NULL);
+							nullptr);
 	       DtDtsFreeDataType(buf_type);
 	   }
 	}

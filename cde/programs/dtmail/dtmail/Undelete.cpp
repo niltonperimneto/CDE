@@ -94,7 +94,7 @@ UndelMsgScrollingList::deleteSelected(Boolean)
 
     XtVaGetValues( _w,
                    XmNitemCount, &num_msgs,
-                   NULL );
+                   nullptr );
  
     any_selected = XmListGetSelectedPos(_w,
                                         &position_list,
@@ -234,15 +234,15 @@ UndelFromListDialog::UndelFromListDialog (
     RoamMenuWindow *parent
 ) : DialogShell ( name, parent )
 {
-    assert (theApplication != NULL);
-    _list = NULL;
-    _undelete_button = NULL;
-    _close_button = NULL;
-    _undel_list_button = NULL;
-    rowOfLabels = NULL;
-    rowOfButtons = NULL;
-    rowOfMessageStatus = NULL;
-    my_owner = NULL;
+    assert (theApplication != nullptr);
+    _list = nullptr;
+    _undelete_button = nullptr;
+    _close_button = nullptr;
+    _undel_list_button = nullptr;
+    rowOfLabels = nullptr;
+    rowOfButtons = nullptr;
+    rowOfMessageStatus = nullptr;
+    my_owner = nullptr;
 }
 
 UndelFromListDialog::~UndelFromListDialog()
@@ -284,7 +284,7 @@ UndelFromListDialog::createWorkArea ( Widget parent )
     Widget form1;
     XtWidgetGeometry size;
 
-    form1 = XmCreateForm(parent, "Work_Area",  NULL, 0);
+    form1 = XmCreateForm(parent, "Work_Area",  nullptr, 0);
 
     // add help callback
     printHelpId("form1", form1);
@@ -292,14 +292,14 @@ UndelFromListDialog::createWorkArea ( Widget parent )
     rowOfLabels = XtCreateManagedWidget ("rowOfLabels",
 			xmFormWidgetClass, 
 			form1,
-			NULL, 0);
+			nullptr, 0);
 
 
     printHelpId("rowOfLabels", rowOfLabels);
     // add help callback
 
     size.request_mode = CWHeight;
-    XtQueryGeometry(rowOfLabels, NULL, &size);
+    XtQueryGeometry(rowOfLabels, nullptr, &size);
     XtVaSetValues(rowOfLabels,
 		XmNpaneMaximum, size.height,
 		XmNpaneMinimum, size.height,
@@ -311,7 +311,7 @@ UndelFromListDialog::createWorkArea ( Widget parent )
 		XmNspacing, 120,
 		XmNmarginWidth, 20,
 		XmNentryAlignment, XmALIGNMENT_CENTER,
-		NULL);
+		nullptr);
 
     labelStr = XmStringCreateLocalized(CATGETS(DT_catd, 1, 14,
            "Sender"));
@@ -319,7 +319,7 @@ UndelFromListDialog::createWorkArea ( Widget parent )
     l1 = XtVaCreateManagedWidget("Label1", xmLabelGadgetClass,
                 rowOfLabels,
                 XmNlabelString, labelStr,
-                NULL);
+                nullptr);
 
     XmStringFree(labelStr);
     printHelpId("l1", l1);
@@ -332,7 +332,7 @@ UndelFromListDialog::createWorkArea ( Widget parent )
     l2 = XtVaCreateManagedWidget("Label2",
                                 xmLabelGadgetClass, rowOfLabels,
                                 XmNlabelString, labelStr,
-                                NULL);
+                                nullptr);
 
 
 
@@ -346,7 +346,7 @@ UndelFromListDialog::createWorkArea ( Widget parent )
     l3 = XtVaCreateManagedWidget("Label3",
                         xmLabelGadgetClass, rowOfLabels,
                         XmNlabelString, labelStr,
-                        NULL);
+                        nullptr);
 
     XmStringFree(labelStr);
     printHelpId("l3", l3);
@@ -358,7 +358,7 @@ UndelFromListDialog::createWorkArea ( Widget parent )
     l4 = XtVaCreateManagedWidget("Label4",
                 xmLabelGadgetClass, rowOfLabels,
                 XmNlabelString, labelStr,
-                NULL);
+                nullptr);
 
     XmStringFree(labelStr);
     printHelpId("l4", l4);
@@ -376,7 +376,7 @@ UndelFromListDialog::createWorkArea ( Widget parent )
     if (error.isNotSet()) {
         msgnums = True;
     }
-    if (NULL != value)
+    if (nullptr != value)
       free((void*) value);
 
     // Adjust labels so the align on the columns
@@ -386,7 +386,7 @@ UndelFromListDialog::createWorkArea ( Widget parent )
     rowOfButtons = XtCreateManagedWidget("RowColumn",
 					xmFormWidgetClass,
 					form1,
-					NULL, 0);
+					nullptr, 0);
     // add help callback
     printHelpId ("rowOfButtons", rowOfButtons);
 
@@ -399,7 +399,7 @@ UndelFromListDialog::createWorkArea ( Widget parent )
 		XmNbottomAttachment, XmATTACH_WIDGET,
 		XmNbottomWidget, rowOfButtons,
 		XmNbottomOffset, 7,
-		NULL);
+		nullptr);
 
     XtVaSetValues(rowOfButtons,
 		XmNorientation, XmHORIZONTAL,
@@ -410,7 +410,7 @@ UndelFromListDialog::createWorkArea ( Widget parent )
 		XmNbottomAttachment, XmATTACH_FORM,
 	        XmNfractionBase, 100,
 		XmNresizable, FALSE,
-		NULL);
+		nullptr);
     
     // Create undelete and close buttons.
     this->addToRowOfButtons();
@@ -421,13 +421,13 @@ UndelFromListDialog::createWorkArea ( Widget parent )
     // deleted messages will be destroyed, and for status.
     rowOfMessageStatus = XtCreateManagedWidget("Message_Status",
 				xmFormWidgetClass,
-				form1, NULL, 0);
+				form1, nullptr, 0);
     XtVaSetValues(rowOfMessageStatus,
 		XmNrightAttachment, XmATTACH_FORM,
 		XmNleftAttachment, XmATTACH_FORM,
 		XmNtopAttachment, XmATTACH_FORM,
 		XmNtopOffset, 5,
-		NULL);
+		nullptr);
 
 
     XtManageChild(_list->baseWidget());
@@ -516,7 +516,7 @@ UndelFromListDialog::addToRowOfButtons()
         XmNleftAttachment, XmATTACH_POSITION,
 	XmNleftPosition, 35,          // centralized tUndelete and Close buttons
         XmNbottomAttachment, XmATTACH_FORM,
-        NULL );
+        nullptr );
     ci->manage();
     prev_widget = w;
 
@@ -532,7 +532,7 @@ UndelFromListDialog::addToRowOfButtons()
         XmNleftWidget, prev_widget,
         XmNleftOffset, 30,
         XmNbottomAttachment, XmATTACH_FORM,
-        NULL );
+        nullptr );
     ci->manage();
 
 }

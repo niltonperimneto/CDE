@@ -83,9 +83,9 @@ DtApp::DtApp(char *progname, int *argc, char **argv) :
 {
    save_state = false;
    connect_timeout = 15;
-   old_dbsearchpath = NULL;
+   old_dbsearchpath = nullptr;
    uid_t old_uid;
-   single_printer = NULL;
+   single_printer = nullptr;
    app_mode = SINGLE_PRINTER;
    char *app_name = MESSAGE(ApplicationName2L);
    if (!((lang = getenv("LANG")) && *lang))
@@ -121,7 +121,7 @@ DtApp::DtApp(char *progname, int *argc, char **argv) :
    pid_t pid = getppid();
    char *c = procs->Command(pid);
 
-   if (NULL != c && 0 == strncmp(c, "dtexec", 6))
+   if (nullptr != c && 0 == strncmp(c, "dtexec", 6))
     {
       if (app_mode == CONFIG_PRINTERS)
        {
@@ -199,16 +199,16 @@ DtApp::DtApp(char *progname, int *argc, char **argv) :
 
    if (app_mode == CONFIG_PRINTERS)
       window = new DtMainW("Printers", this, app_name, SCROLLED_WORK_AREA,
-			   SINGLE_SELECT, OpenClose, NULL, PreferenceCB, NULL,
+			   SINGLE_SELECT, OpenClose, nullptr, PreferenceCB, nullptr,
 		           MESSAGE(PrinterMenuL), MESSAGE(PrinterAcceleratorL),
 			   app_mode);
    else
       window = new DtMainW("Printers", this, app_name, SCROLLED_ICON_LIST,
-			   SINGLE_SELECT, OpenClose, NULL, PreferenceCB, NULL,
+			   SINGLE_SELECT, OpenClose, nullptr, PreferenceCB, nullptr,
 		           MESSAGE(PrinterMenuL), MESSAGE(PrinterAcceleratorL),
 			   app_mode);
    window->Initialize();
-   window->ApplicationData = NULL;
+   window->ApplicationData = nullptr;
       
    if (app_mode == PRINT_MANAGER)
       window->DtAddAction(MESSAGE(FindChoiceL), (char *)window->Category(),
@@ -221,10 +221,10 @@ DtApp::DtApp(char *progname, int *argc, char **argv) :
 
    // Save print job's class name for registering GUI actions
    PrintJob *dummy_printjob;
-   char *className = NULL;
+   char *className = nullptr;
    if (app_mode != CONFIG_PRINTERS)
     {
-      dummy_printjob = new PrintJob(NULL, "_FOO", NULL, NULL, NULL, NULL, NULL);
+      dummy_printjob = new PrintJob(nullptr, "_FOO", nullptr, nullptr, nullptr, nullptr, nullptr);
       className = (char *) dummy_printjob->ObjectClassName();
 
       // Add Print Job Actions
@@ -232,7 +232,7 @@ DtApp::DtApp(char *progname, int *argc, char **argv) :
     }
 
    // Save queue's class name for registering GUI actions
-   Queue *dummy_queue = new Queue(NULL, "_DUMMY_");
+   Queue *dummy_queue = new Queue(nullptr, "_DUMMY_");
    char *className1 = (char *) dummy_queue->ObjectClassName();
 
    // Add GUI actions for queue
@@ -573,8 +573,8 @@ void DtApp::OpenClose(BaseUI *obj)
       sprintf(s, "env DTDATABASESEARCHPATH=%s /usr/dt/bin/dtaction %s_Print &",
 	      (old_dbsearchpath ? "" : old_dbsearchpath), queue->Name());
       window->WorkingCursor(true);
-      window->AddTimeOut(TurnOffHourGlass, NULL, 5000);
-      Invoke *_thread = new Invoke(s, NULL, NULL, old_uid);
+      window->AddTimeOut(TurnOffHourGlass, nullptr, 5000);
+      Invoke *_thread = new Invoke(s, nullptr, nullptr, old_uid);
       delete _thread;
       delete [] s;
       return;
@@ -1007,7 +1007,7 @@ char *DtApp::GetBottomString(BaseObj *job, boolean need_details)
 	         job->AttributeValue((char *)TIME_SUBMITTED),
 	         job->AttributeValue((char *)DATE_SUBMITTED));
       else
-         return NULL;
+         return nullptr;
     }
    else
     {
@@ -1153,7 +1153,7 @@ void DtApp::PreferenceCB(PreferenceRequest req, char *value)
 
 void DtApp::FilterCB(void *data)
 {
-   static DtMainW *window = NULL;
+   static DtMainW *window = nullptr;
 
    if (!window)
     {
@@ -1201,7 +1201,7 @@ boolean DtApp::SelectPrintJobs(BaseUI *obj)
          return false;
       else
        {
-	 static DtMainW *window = NULL;
+	 static DtMainW *window = nullptr;
 	 if (!window)
 	  {
 	    window = (DtMainW *)obj;
@@ -1323,7 +1323,7 @@ void DtApp::UpdateQueues()
    else
     {
       // Connect to Print SubSystem
-      prt = new PrintSubSystem(NULL);
+      prt = new PrintSubSystem(nullptr);
       window->ApplicationData = prt;
     }
    int n_queues = prt->NumChildren();
@@ -1342,7 +1342,7 @@ void DtApp::UpdateQueues()
    // Get Print Subsystem children, (these are queues)
    Queue **queues = (Queue **)prt->Children();
 
-   BaseUI *lpdest = NULL;
+   BaseUI *lpdest = nullptr;
    char *LPDEST = getenv("LPDEST");
    if (app_mode == SINGLE_PRINTER)
     {
@@ -1401,7 +1401,7 @@ void DtApp::UpdateQueues()
          dialog->Visible(true);
          delete prt;
          delete [] tmp;
-         window->ApplicationData = NULL;
+         window->ApplicationData = nullptr;
          return;
        }
       single_printer = new DtPrinterIcon(window, window->container,

@@ -92,20 +92,20 @@ POP3Server::POP3Server(
 	       append_mailbox_cb, append_mailbox_cb_data)
 {
     _lastretrieved = 0;
-    _uidlist_old = NULL;
-    _uidlist_current = NULL;
-    _uidlist_file = NULL;
+    _uidlist_old = nullptr;
+    _uidlist_current = nullptr;
+    _uidlist_file = nullptr;
 }
 
 POP3Server::~POP3Server()
 {
     if (_uidlist_old)
       uidlist_destroy(_uidlist_old);
-    _uidlist_old = NULL;
+    _uidlist_old = nullptr;
 
     if (_uidlist_current)
       uidlist_destroy(_uidlist_current);
-    _uidlist_current = NULL;
+    _uidlist_current = nullptr;
 
     if (_uidlist_file)
       free(_uidlist_file);
@@ -121,7 +121,7 @@ POP3Server::ptrans_delete(int msg)
     if (_uidlist_current)
     {
 	char	*uidliststr;
-        uidliststr = uidlist_find(_uidlist_current, msg, NULL);
+        uidliststr = uidlist_find(_uidlist_current, msg, nullptr);
 	_uidlist_current->remove(uidliststr);
 	free(uidliststr);
     }
@@ -144,7 +144,7 @@ POP3Server::ptrans_retrieve_start(int msg, int *lenp)
     if (DTME_NoError != ok) return ok;
 
     // Look for "nnn octets" -- there may or may not be preceding cruft.
-    if ((cp = strstr(buf, " octets")) == (char *)NULL)
+    if ((cp = strstr(buf, " octets")) == (char *)nullptr)
       *lenp = 0;
     else
     {
@@ -216,13 +216,13 @@ POP3Server::ptrans_fldstate_read(int *countp, int *newp)
 	}
  	else
  	{
-	    if (NULL == _uidlist_old)
+	    if (nullptr == _uidlist_old)
 	    {
                 _uidlist_old = uidlist_create();
                 uidlist_read(_uidlist_old);
 	    }
 
-	    if (NULL == _uidlist_current)
+	    if (nullptr == _uidlist_current)
               _uidlist_current = uidlist_create();
 
  	    /* grab the mailbox's UID list */
@@ -250,7 +250,7 @@ POP3Server::ptrans_fldstate_read(int *countp, int *newp)
  			break;
  		    else if (sscanf(buf, "%d %s", &curmsg, curuidstr) == 2)
 		    {
-			char	*uidliststr = NULL;
+			char	*uidliststr = nullptr;
 
  			_uidlist_current->append(strdup(buf));
 
@@ -308,21 +308,21 @@ POP3Server::ptrans_msgsizes(int, int *sizes)
 int
 POP3Server::ptrans_msgisold(int msg)
 {
-    if (NULL == _uidlist_old)
+    if (nullptr == _uidlist_old)
       return (msg <= _lastretrieved);
     else
     {
 	char	curuidstr[DTMAS_IDSIZE+1];
 	int	curmsg;
-	char	*uidliststr = NULL;
+	char	*uidliststr = nullptr;
 
-	uidliststr = uidlist_find(_uidlist_current, msg, NULL);
+	uidliststr = uidlist_find(_uidlist_current, msg, nullptr);
  	if (sscanf(uidliststr, "%d %s", &curmsg, curuidstr) == 2)
 	  uidliststr = uidlist_find(_uidlist_old, -1, curuidstr);
 	else
-	  uidliststr = NULL;
+	  uidliststr = nullptr;
 
-	if (NULL != uidliststr)
+	if (nullptr != uidliststr)
 	  return 1;
 	else
 	  return 0;
@@ -373,7 +373,7 @@ POP3Server::ptrans_parse_response (char *argbuf)
 	    ok = DTME_MailServerAccess_ProtocolViolation;
 	}
 
-	if (argbuf != NULL)
+	if (argbuf != nullptr)
 	  strcpy(argbuf,bufp);
     }
     else 
@@ -396,7 +396,7 @@ POP3Server::retrieve_messages(DtMailEnv &error)
     uidlist_destroy(_uidlist_old);
     _uidlist_old = _uidlist_current;
     uidlist_write(_uidlist_old);
-    _uidlist_current = NULL;
+    _uidlist_current = nullptr;
 }
 
 DtVirtArray<char*>*
@@ -412,12 +412,12 @@ POP3Server::uidlist_destroy(DtVirtArray<char*> *uidlist)
     int		i, nuidliststr;
     char	*uidliststr;
 
-    if (NULL == uidlist) return;
+    if (nullptr == uidlist) return;
 
     for (i=0, nuidliststr=uidlist->length(); i<nuidliststr; i++)
     {
 	uidliststr = (*uidlist)[i];
-	if (NULL != uidliststr)
+	if (nullptr != uidliststr)
 	  free(uidliststr);
     }
     delete uidlist;
@@ -432,7 +432,7 @@ POP3Server::uidlist_find(
     char	*uidliststr;
     int		i, nuidliststr;
 
-    if (msg < 0 && NULL == uidstr) return NULL;
+    if (msg < 0 && nullptr == uidstr) return nullptr;
 
     for (i=0, nuidliststr=uidlist->length(); i<nuidliststr; i++)
     {
@@ -443,11 +443,11 @@ POP3Server::uidlist_find(
  	if (sscanf(uidliststr, "%d %s", &curmsg, curuidstr) == 2)
 	{
 	    if ((msg < 0 || msg == curmsg) &&
-		(uidstr == NULL || 0 == strcasecmp(uidstr, curuidstr)))
+		(uidstr == nullptr || 0 == strcasecmp(uidstr, curuidstr)))
 	      return uidliststr;
 	}
     }
-    return NULL;
+    return nullptr;
 }
 
 void
@@ -457,15 +457,15 @@ POP3Server::uidlist_read(DtVirtArray<char*> *uidlist)
     DtMailEnv	error;
     FILE	*fp;
 
-    if (NULL == uidlist) return;
+    if (nullptr == uidlist) return;
 
-    if (NULL == _uidlist_file)
+    if (nullptr == _uidlist_file)
     {
 	char	*path = new char[MAXPATHLEN+1];
 	sprintf(path, "+/.%s@%s.uidlist", _folder, _servername);
 
 	_uidlist_file = _session->expandPath(error, (const char*) path);
-	if (NULL == _uidlist_file && error.isSet())
+	if (nullptr == _uidlist_file && error.isSet())
 	{
 	    _logger.logError(
 			DTM_FALSE,
@@ -477,13 +477,13 @@ POP3Server::uidlist_read(DtVirtArray<char*> *uidlist)
 	delete [] path;
     }
 
-    if (NULL != (fp = fopen(_uidlist_file, "r")))
+    if (nullptr != (fp = fopen(_uidlist_file, "r")))
     {
 	char	uidliststr[DTMAS_POPBUFSIZE+1];
 	char	curuidstr[DTMAS_IDSIZE+1];
 	int	curmsg;
 
-	while (NULL != fgets(uidliststr, DTMAS_POPBUFSIZE, fp))
+	while (nullptr != fgets(uidliststr, DTMAS_POPBUFSIZE, fp))
  	  if (sscanf(uidliststr, "%d %s", &curmsg, curuidstr) == 2)
 	    uidlist->append(strdup(uidliststr));
 
@@ -498,9 +498,9 @@ POP3Server::uidlist_write(DtVirtArray<char*> *uidlist)
     char	*uidliststr;
     int		i, nuidliststr;
 
-    if (NULL == uidlist || NULL == _uidlist_file) return;
+    if (nullptr == uidlist || nullptr == _uidlist_file) return;
 
-    if (NULL != (fp = fopen(_uidlist_file, "w")))
+    if (nullptr != (fp = fopen(_uidlist_file, "w")))
     {
         for (i=0, nuidliststr=uidlist->length(); i<nuidliststr; i++)
         {

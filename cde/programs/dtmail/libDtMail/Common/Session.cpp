@@ -169,8 +169,8 @@ DtMail::Session::Session(DtMailEnv & error, const char * app_name)
 
     DtMailSigChldList = new DtVirtArray<SigChldInfo *>(8);
 
-    _busy_cb = NULL;
-    _busy_cb_data = NULL;
+    _busy_cb = nullptr;
+    _busy_cb_data = nullptr;
     _canAutoSave = DTM_TRUE;
 
     _object_signature = SessionSignature;
@@ -189,7 +189,7 @@ DtMail::Session::~Session(void)
       
       _object_signature = 0;
       
-      ttdt_close(_tt_channel, NULL, 1);
+      ttdt_close(_tt_channel, nullptr, 1);
       
       DtMailEnv b_error;
       
@@ -239,7 +239,7 @@ DtMail::Session::getDefaultImpl(DtMailEnv & error)
 {
     if (_num_impls == 0) {
 	error.setError(DTME_NoImplementations);
-	return(NULL);
+	return(nullptr);
     }
 
     error.clear();
@@ -309,7 +309,7 @@ DtMail::Session::mailBoxConstruct(DtMailEnv & error,
 	int sl = lookupImpl(impl_name);
 	if (sl < 0) {
 	    error.setError(DTME_NoSuchImplementation);
-	    return(NULL);
+	    return(nullptr);
 	}
 
 	primary_impl = sl;
@@ -326,7 +326,7 @@ DtMail::Session::mailBoxConstruct(DtMailEnv & error,
 	    _impls[primary_impl].impl_meta_factory(QueryOpenEntryOp);
     if (!qoe) {
 	error.setError(DTME_ImplFailure);
-	return(NULL);
+	return(nullptr);
     }
 
     if (qoe(*this, error, space, arg) == DTM_FALSE) {
@@ -334,7 +334,7 @@ DtMail::Session::mailBoxConstruct(DtMailEnv & error,
 	//
 	if (impl_name) {
 	    error.setError(DTME_ImplFailure);
-	    return(NULL);
+	    return(nullptr);
 	}
 
 	// Oh well, let's walk through the list of impls and see if any of
@@ -360,7 +360,7 @@ DtMail::Session::mailBoxConstruct(DtMailEnv & error,
 	//
 	if (const_impl < 0) {
 	    error.setError(DTME_NotMailBox);
-	    return(NULL);
+	    return(nullptr);
 	}
     }
     else {
@@ -377,7 +377,7 @@ DtMail::Session::mailBoxConstruct(DtMailEnv & error,
 	     _impls[const_impl].impl_meta_factory(MailBoxConstructEntryOp);
     if (!mbce) {
 	error.setError(DTME_ImplFailure);
-	return(NULL);
+	return(nullptr);
     }
 
     return(mbce(*this, error, space, arg, open_callback, client_data));
@@ -400,7 +400,7 @@ DtMail::Session::messageConstruct(DtMailEnv & error,
 	int sl = lookupImpl(impl_name);
 	if (sl < 0) {
 	    error.setError(DTME_NoSuchImplementation);
-	    return(NULL);
+	    return(nullptr);
 	}
 
 	primary_impl = sl;
@@ -413,7 +413,7 @@ DtMail::Session::messageConstruct(DtMailEnv & error,
 	      _impls[primary_impl].impl_meta_factory(QueryMessageEntryOp);
     if (!qoe) {
 	error.setError(DTME_ImplFailure);
-	return(NULL);
+	return(nullptr);
     }
 
     if (qoe(*this, error, space, arg) == DTM_FALSE) {
@@ -421,7 +421,7 @@ DtMail::Session::messageConstruct(DtMailEnv & error,
 	//
 	if (impl_name) {
 	    error.setError(DTME_ImplFailure);
-	    return(NULL);
+	    return(nullptr);
 	}
 
 	// Oh well, let's walk through the list of impls and see if any of
@@ -447,7 +447,7 @@ DtMail::Session::messageConstruct(DtMailEnv & error,
 	//
 	if (const_impl < 0) {
 	    error.setError(DTME_ImplFailure);
-	    return(NULL);
+	    return(nullptr);
 	}
     }
     else {
@@ -464,7 +464,7 @@ DtMail::Session::messageConstruct(DtMailEnv & error,
 	     _impls[const_impl].impl_meta_factory(MessageConstructEntryOp);
     if (!mbce) {
 	error.setError(DTME_ImplFailure);
-	return(NULL);
+	return(nullptr);
     }
 
     return(mbce(*this, error, space, arg, open_callback, client_data));
@@ -481,7 +481,7 @@ DtMail::Session::transportConstruct(DtMailEnv & error,
     int slot = lookupImpl(impl);
     if (slot < 0) {
 	error.setError(DTME_NoSuchImplementation);
-	return(NULL);
+	return(nullptr);
     }
 
     TransportConstructEntry tce;
@@ -490,7 +490,7 @@ DtMail::Session::transportConstruct(DtMailEnv & error,
 
     if (!tce) {
 	error.setError(DTME_NotSupported);
-	return(NULL);
+	return(nullptr);
     }
 
     return(tce(*this, error, call_back, client_data));
@@ -551,7 +551,7 @@ DtMail::Session::poll(DtMailEnv & error)
     // to not run for the full wait interval; otherwise, refrain
     // and let the event happen again at the next poll interval
     //
-    time_t now = time(NULL);
+    time_t now = time(nullptr);
 
     for (int ev = 0; ev < _events.length(); ev++) {
 	EventRoutine * event = _events[ev];
@@ -571,24 +571,24 @@ DtMail::Session::expandPath(DtMailEnv & error, const char * path)
 {
     const char * fold_path;
 
-    if (path == NULL) {
+    if (path == nullptr) {
 	error.setError(DTME_BadArg);
-	return(NULL);
+	return(nullptr);
     }
 
     error.clear();
 
     char * exp_name = (char *)malloc(MAXIMUM_PATH_LENGTH);
-    if (exp_name == NULL)  {
+    if (exp_name == nullptr)  {
 	error.setError(DTME_NoMemory);
-	return(NULL);
+	return(nullptr);
     }
-    if (strchr(path, '$') != NULL) {
+    if (strchr(path, '$') != nullptr) {
     	sprintf (exp_name, "echo %s", path);
     	FILE *fp;
-    	if ((fp = popen(exp_name, "r")) != NULL) {
+    	if ((fp = popen(exp_name, "r")) != nullptr) {
           	exp_name[0] = '\0';
-          	if (fgets(exp_name, MAXIMUM_PATH_LENGTH, fp) != NULL &&
+          	if (fgets(exp_name, MAXIMUM_PATH_LENGTH, fp) != nullptr &&
 			exp_name[0] != '\0') 
     	        	// get rid of \n at end of string
 	  		exp_name[strlen(exp_name)-1] = '\0';
@@ -646,7 +646,7 @@ DtMail::Session::expandPath(DtMailEnv & error, const char * path)
 	      passwd * pw_p;
 
 	      char * slash = strchr(&exp_name[1], '/');
-	      if (slash == NULL) {
+	      if (slash == nullptr) {
 		   error.clear();
 		   error.setError(DTME_NoSuchFile);
 		   break;
@@ -696,9 +696,9 @@ DtMail::Session::getRelativePath(DtMailEnv & error, const char * path)
 {
     const char * fold_path;
 
-    if (path == NULL) {
+    if (path == nullptr) {
 	error.setError(DTME_BadArg);
-	return(NULL);
+	return(nullptr);
     }
 
     error.clear();
@@ -706,7 +706,7 @@ DtMail::Session::getRelativePath(DtMailEnv & error, const char * path)
     char * exp_name = (char *)malloc(MAXIMUM_PATH_LENGTH);
     if (!exp_name) {
 	error.setError(DTME_NoMemory);
-	return(NULL);
+	return(nullptr);
     }
     exp_name[0] = '\0'; // Just for errors.
 
@@ -855,8 +855,8 @@ DtMail::Session::registerDisableGroupPrivilegesCallback(
 void
 DtMail::Session::unregisterDisableGroupPrivilegesCallback(void)
 {
-    _disableGroupPrivileges_cb = NULL;
-    _disableGroupPrivileges_cb_data = NULL;
+    _disableGroupPrivileges_cb = nullptr;
+    _disableGroupPrivileges_cb_data = nullptr;
 }
 #endif /* DEAD_WOOD */
 
@@ -881,8 +881,8 @@ DtMail::Session::registerEnableGroupPrivilegesCallback(
 void
 DtMail::Session::unregisterEnableGroupPrivilegesCallback(void)
 {
-    _enableGroupPrivileges_cb = NULL;
-    _enableGroupPrivileges_cb_data = NULL;
+    _enableGroupPrivileges_cb = nullptr;
+    _enableGroupPrivileges_cb_data = nullptr;
 }
 #endif /* DEAD_WOOD */
 
@@ -907,8 +907,8 @@ DtMail::Session::registerBusyCallback(DtMailEnv&,
 void
 DtMail::Session::unregisterBusyCallback(DtMailEnv & error)
 {
-    _busy_cb = NULL;
-    _busy_cb_data = NULL;
+    _busy_cb = nullptr;
+    _busy_cb_data = nullptr;
 }
 #endif /* DEAD_WOOD */
 
@@ -960,7 +960,7 @@ DtMail::Session::buildImplTable(DtMailEnv & error)
 	    _impls[_num_impls].impl_lib = dl;
 	    _impls[_num_impls].impl_meta_factory =
 	      (MetaImplFactory)dl->getSym(initial_impls[tbl].meta_entry_point);
-	    if (_impls[_num_impls].impl_meta_factory == NULL) {
+	    if (_impls[_num_impls].impl_meta_factory == nullptr) {
 		delete dl;
 		continue;
 	    }
@@ -970,7 +970,7 @@ DtMail::Session::buildImplTable(DtMailEnv & error)
 	}
     }
 
-    _impl_names[_num_impls] = NULL;
+    _impl_names[_num_impls] = nullptr;
 
     if (_num_impls == 0) {
 	error.setError(DTME_NoImplementations);
@@ -1042,7 +1042,7 @@ static const char *DfltStdCharset = "us-ascii";
 static const char *DfltStdLang = "C";
 
 static char       MyPlatform[_DtPLATFORM_MAX_LEN+1];
-static _DtXlateDb MyDb = NULL;
+static _DtXlateDb MyDb = nullptr;
 static char       MyProcess = False;
 static char       MyFirst   = True;
 static int        ExecVer;
@@ -1087,13 +1087,13 @@ DtMail::Session::OpenLcxDb (void)
 	    _DtXlateGetXlateEnv(MyDb,MyPlatform,&ExecVer,&CompVer) != 0)
 	  {
 	    _DtLcxCloseDb(&MyDb);
-	    MyDb = NULL;
+	    MyDb = nullptr;
 	  }
 	MyFirst = False;
         MyProcess = False;
       }
 
-    return (MyDb == NULL ? -1 : 0 );
+    return (MyDb == nullptr ? -1 : 0 );
 }
 
 /******************************************************************************
@@ -1131,20 +1131,20 @@ DtMail::Session::DtXlateOpToStdLocale (
 	(void) _DtLcxXlateOpToStd(
 				MyDb, MyPlatform, CompVer,
 				operation, opLocale,
-				ret_stdLocale, ret_stdLang, ret_stdSet, NULL);
+				ret_stdLocale, ret_stdLang, ret_stdSet, nullptr);
     }
 
     /* if failed, give default values */
-    if (ret_stdLocale != NULL && (result != 0 || *ret_stdLocale == NULL))
+    if (ret_stdLocale != nullptr && (result != 0 || *ret_stdLocale == nullptr))
     {
         *ret_stdLocale =
 	  (char *)malloc(strlen(DfltStdLang)+strlen(DfltStdCharset)+3);
 	sprintf(*ret_stdLocale,"%s.%s",DfltStdLang,DfltStdCharset);
     }
 
-    if (ret_stdLang != NULL && (result != 0 || *ret_stdLang == NULL))
+    if (ret_stdLang != nullptr && (result != 0 || *ret_stdLang == nullptr))
 	*ret_stdLang = (char *)strdup(DfltStdLang);
-    if (ret_stdSet != NULL && (result != 0 || *ret_stdSet == NULL))
+    if (ret_stdSet != nullptr && (result != 0 || *ret_stdSet == nullptr))
 	*ret_stdSet = (char *)strdup(DfltStdCharset);
 }
 
@@ -1177,18 +1177,18 @@ DtMail::Session::DtXlateStdToOpLocale (
     int result = this->OpenLcxDb();
 
     if (ret_opLocale)
-      *ret_opLocale = NULL;
+      *ret_opLocale = nullptr;
 
     if (result == 0) {
       (void) _DtLcxXlateStdToOp(
 				MyDb, MyPlatform, CompVer,
 			  	operation, stdLocale,
-				NULL, NULL, NULL,
+				nullptr, nullptr, nullptr,
 				ret_opLocale);
     }
 
     /* if translation fails, use a default value */
-    if (ret_opLocale && (result != 0 || *ret_opLocale == NULL))
+    if (ret_opLocale && (result != 0 || *ret_opLocale == nullptr))
     {
        if (dflt_opLocale) *ret_opLocale = (char *)strdup(dflt_opLocale);
        else if (stdLocale) *ret_opLocale = (char *)strdup(stdLocale);
@@ -1226,19 +1226,19 @@ DtMail::Session::DtXlateStdToOpCodeset (
     int result = this->OpenLcxDb();
 
     if (ret_opCodeset)
-      *ret_opCodeset = NULL;
+      *ret_opCodeset = nullptr;
 
     if (result == 0)
     {
         (void) _DtLcxXlateStdToOp(
 				MyDb, MyPlatform, CompVer,
 			  	operation,
-				NULL, NULL, stdCodeset, NULL,
+				nullptr, nullptr, stdCodeset, nullptr,
 				ret_opCodeset);
     }
 
     /* if translation fails, use a default value */
-    if (ret_opCodeset && (result != 0 || *ret_opCodeset == NULL))
+    if (ret_opCodeset && (result != 0 || *ret_opCodeset == nullptr))
     {
        if (dflt_opCodeset) *ret_opCodeset = (char *)strdup(dflt_opCodeset);
        else if (stdCodeset) *ret_opCodeset = (char *)strdup(stdCodeset);
@@ -1260,14 +1260,14 @@ DtMail::Session::DtXlateMimeToIconv(
     exists = _DtLcxXlateOpToStd(
 				MyDb, MyPlatform, CompVer,
 				DtLCX_OPER_MIME, mimeId,
-				NULL, NULL, ret_commonCS, NULL);
+				nullptr, nullptr, ret_commonCS, nullptr);
 
     if (exists == -1)
     {
 	exists = _DtLcxXlateOpToStd(
 				MyDb, "CDE", 0,
 				DtLCX_OPER_MIME, mimeId,
-				NULL, NULL, ret_commonCS, NULL);
+				nullptr, nullptr, ret_commonCS, nullptr);
         if (exists == -1)
 	  *ret_commonCS = (char *)strdup(defaultCommonCS);
     }
@@ -1275,7 +1275,7 @@ DtMail::Session::DtXlateMimeToIconv(
     exists = _DtLcxXlateStdToOp(
 				MyDb, MyPlatform, CompVer,
 				DtLCX_OPER_ICONV3,
-	   			NULL, NULL, *ret_commonCS, NULL,
+	   			nullptr, nullptr, *ret_commonCS, nullptr,
 				ret_platformIconv);
     if (exists == -1)
       *ret_platformIconv = (char *)strdup(defaultIconvCS);
@@ -1288,7 +1288,7 @@ DtMail::Session::DtXlateLocaleToMime(
         const char * defaultMimeCS,
         char ** ret_mimeCS)
 {
-   char * commonCS = NULL;
+   char * commonCS = nullptr;
 
    this->OpenLcxDb();
 
@@ -1296,7 +1296,7 @@ DtMail::Session::DtXlateLocaleToMime(
   _DtLcxXlateOpToStd(
 		MyDb, MyPlatform, CompVer,
 		DtLCX_OPER_SETLOCALE, locale,
-		NULL, NULL, &commonCS, NULL);
+		nullptr, nullptr, &commonCS, nullptr);
   if (!commonCS)
       commonCS = (char *)strdup(defaultCommonCS);
 
@@ -1304,14 +1304,14 @@ DtMail::Session::DtXlateLocaleToMime(
   _DtLcxXlateStdToOp(
 		MyDb, MyPlatform, CompVer,
 		DtLCX_OPER_MIME,
-          	NULL, NULL, commonCS, NULL,
+          	nullptr, nullptr, commonCS, nullptr,
 		ret_mimeCS);
   if (!(*ret_mimeCS))
   {
      _DtLcxXlateStdToOp(
 		MyDb, "CDE", 0,
 		DtLCX_OPER_MIME,
-          	NULL, NULL, commonCS, NULL,
+          	nullptr, nullptr, commonCS, nullptr,
 		ret_mimeCS);
      if (!(*ret_mimeCS))
         *ret_mimeCS = (char *)strdup(defaultMimeCS);
@@ -1327,9 +1327,9 @@ char *
 DtMail::Session::csToConvName(char *cs)
 {
    int exists = -1;
-   char *commonCS = NULL;
-   char *convName = NULL;
-   char *ret_target = NULL;
+   char *commonCS = nullptr;
+   char *convName = nullptr;
+   char *ret_target = nullptr;
  
    this->OpenLcxDb();
  
@@ -1344,23 +1344,23 @@ DtMail::Session::csToConvName(char *cs)
    exists = _DtLcxXlateOpToStd(
 			MyDb, MyPlatform, CompVer,
 			DtLCX_OPER_MIME, cs,
-			NULL, NULL, &commonCS, NULL);
+			nullptr, nullptr, &commonCS, nullptr);
    if (exists == -1) {
       exists = _DtLcxXlateOpToStd(
 			MyDb, "CDE", 0,
 			DtLCX_OPER_MIME, cs,
-			NULL, NULL, &commonCS, NULL);
+			nullptr, nullptr, &commonCS, nullptr);
       if  (exists == -1)
-        return NULL;
+        return nullptr;
    }
  
   DtXlateStdToOpCodeset(DtLCX_OPER_INTERCHANGE_CODESET,
       commonCS,
-      NULL,
+      nullptr,
       &ret_target);
    DtXlateStdToOpCodeset(DtLCX_OPER_ICONV3,
       ret_target,
-      NULL,
+      nullptr,
       &convName);
 
    if ( ret_target )
@@ -1371,43 +1371,43 @@ DtMail::Session::csToConvName(char *cs)
    // Workaround for libDtHelp
    // Case of no iconv name for a particular locale, eg. C,
    // check for empty string.
-   if ( convName != NULL )
+   if ( convName != nullptr )
    {
       if ( strlen(convName) > 0 )
         return convName;
       else
         free( convName );
    }
-   return NULL;
+   return nullptr;
 }
 
 // Return current locale's iconv name.
 char *
 DtMail::Session::locToConvName()
 {
-   char *ret_locale = NULL;
-   char *ret_lang = NULL;
-   char *ret_codeset = NULL;
+   char *ret_locale = nullptr;
+   char *ret_lang = nullptr;
+   char *ret_codeset = nullptr;
  
    DtXlateOpToStdLocale(DtLCX_OPER_SETLOCALE,
-      setlocale(LC_CTYPE, NULL),
+      setlocale(LC_CTYPE, nullptr),
       &ret_locale,
       &ret_lang,
       &ret_codeset);
 
    if (ret_codeset) {
        free(ret_codeset);
-       ret_codeset = NULL;
+       ret_codeset = nullptr;
    }
    
    if (ret_lang) {
        free(ret_lang);
-       ret_lang = NULL;
+       ret_lang = nullptr;
    }
    
    DtXlateStdToOpLocale(DtLCX_OPER_ICONV3,
       ret_locale,
-      NULL,
+      nullptr,
       &ret_codeset);
 
    if (ret_locale) 
@@ -1416,39 +1416,39 @@ DtMail::Session::locToConvName()
    // Workaround for libDtHelp
    // Case of no iconv name for a particular locale, eg. C, 
    // check for empty string.
-   if ( ret_codeset != NULL )
+   if ( ret_codeset != nullptr )
    {
       if ( strlen(ret_codeset) > 0 )
         return ret_codeset;
       else
         free(ret_codeset);
    }
-   return NULL;
+   return nullptr;
 }
 
 // Return target codeset's iconv name.
 char *
 DtMail::Session::targetConvName()
 {
-   char *ret_locale = NULL;
-   char *ret_lang = NULL;
-   char *ret_codeset = NULL;
-   char *ret_target = NULL;
-   char *ret_convName = NULL;
+   char *ret_locale = nullptr;
+   char *ret_lang = nullptr;
+   char *ret_codeset = nullptr;
+   char *ret_target = nullptr;
+   char *ret_convName = nullptr;
  
    DtXlateOpToStdLocale(DtLCX_OPER_SETLOCALE,
-      setlocale(LC_CTYPE, NULL),
+      setlocale(LC_CTYPE, nullptr),
       &ret_locale,
       &ret_lang,
       &ret_codeset);
    DtXlateStdToOpLocale(DtLCX_OPER_INTERCHANGE_CODESET,
       ret_locale,
-      NULL,
+      nullptr,
       &ret_target);
    // Or do I call csToConvName() here??
    DtXlateStdToOpCodeset(DtLCX_OPER_ICONV3,
       ret_target,
-      NULL,
+      nullptr,
       &ret_convName);
  
    if (ret_locale)
@@ -1463,37 +1463,37 @@ DtMail::Session::targetConvName()
    // Workaround for libDtHelp
    // Case of no iconv name for a particular locale, eg. C,
    // check for empty string.
-   if ( ret_convName != NULL )
+   if ( ret_convName != nullptr )
    {
       if ( strlen(ret_convName) > 0 )
         return ret_convName;
       else
         free(ret_convName);
    }
-   return NULL;
+   return nullptr;
 }
 
 // Return target codeset's MIME (tag) name.
 char *
 DtMail::Session::targetTagName()
 {
-   char *ret_locale = NULL;
-   char *ret_lang = NULL;
-   char *ret_codeset = NULL;
-   char *ret_target = NULL;
+   char *ret_locale = nullptr;
+   char *ret_lang = nullptr;
+   char *ret_codeset = nullptr;
+   char *ret_target = nullptr;
 
    DtXlateOpToStdLocale(DtLCX_OPER_SETLOCALE,
-	  setlocale(LC_CTYPE, NULL),
+	  setlocale(LC_CTYPE, nullptr),
 	  &ret_locale,
 	  &ret_lang,
-	  NULL);
+	  nullptr);
    DtXlateStdToOpLocale(DtLCX_OPER_INTERCHANGE_CODESET,
 	  ret_locale,
-	  NULL,
+	  nullptr,
 	  &ret_target);
    DtXlateStdToOpCodeset(DtLCX_OPER_MIME,
 	  ret_target,
-	  NULL,
+	  nullptr,
 	  &ret_codeset);
 
    if (ret_locale)
@@ -1514,13 +1514,13 @@ DtMail::Session::targetTagName()
 char *
 DtMail::Session::targetTagName(char *special)
 {
-   char *ret_locale = NULL;
-   char *ret_lang = NULL;
-   char *ret_codeset = NULL;
-   char *ret_target = NULL;
+   char *ret_locale = nullptr;
+   char *ret_lang = nullptr;
+   char *ret_codeset = nullptr;
+   char *ret_target = nullptr;
  
    DtXlateOpToStdLocale(DtLCX_OPER_SETLOCALE,
-      setlocale(LC_CTYPE, NULL),
+      setlocale(LC_CTYPE, nullptr),
       &ret_locale,
       &ret_lang,
       &ret_codeset);
@@ -1535,11 +1535,11 @@ DtMail::Session::targetTagName(char *special)
  
    DtXlateStdToOpLocale(DtLCX_OPER_INTERCHANGE_CODESET,
       special_locale,
-      NULL,
+      nullptr,
       &ret_target);
    DtXlateStdToOpCodeset(DtLCX_OPER_MIME,
       ret_target,
-      NULL,
+      nullptr,
       &ret_codeset);
  
    free(ret_locale);
@@ -1567,14 +1567,14 @@ char *from_cs, char *to_cs)
 #else
    char *ip = *bp;
 #endif
-   char *op = NULL;
-   char *op_start = NULL;
+   char *op = nullptr;
+   char *op_start = nullptr;
    int mb_ret = 0;
    size_t delta;
 
-   if ( *bp == NULL  ||  **bp == '\0'  ||  bp_len <= 0 )
+   if ( *bp == nullptr  ||  **bp == '\0'  ||  bp_len <= 0 )
 	  return 0;
-   if ( to_cs == NULL  ||  from_cs == NULL )
+   if ( to_cs == nullptr  ||  from_cs == nullptr )
 	  return 0;
    if ( (cd = iconv_open(to_cs, from_cs)) == (iconv_t) -1 ) {
 	  switch (errno) {

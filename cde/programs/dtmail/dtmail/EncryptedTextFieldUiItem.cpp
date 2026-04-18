@@ -60,14 +60,14 @@ EncryptedTextFieldUiItem::EncryptedTextFieldUiItem(
     _loading = DTM_FALSE;
     _maxtextlen = 256;
     _text = (char*) malloc(_maxtextlen);
-    assert(NULL!=_text);
+    assert(nullptr!=_text);
     _writeAllowed = DTM_FALSE;
 
     XtVaSetValues(
 		w,
 		XmNeditable, False,
 		XmNvalue, "",
-		NULL);
+		nullptr);
     XtAddCallback(
 		w,
 		XmNmodifyVerifyCallback, EncryptedTextFieldUiItem::verifyCB,
@@ -92,7 +92,7 @@ void EncryptedTextFieldUiItem::writeAllowed(DtMailBoolean allowed)
 	for (s=value; *s; s++) *s = '*';
 
         _loading = DTM_TRUE;
-        XtVaSetValues(w, XmNeditable, True, XmNsensitive, True, NULL);
+        XtVaSetValues(w, XmNeditable, True, XmNsensitive, True, nullptr);
         options_field_set_value(w, value, this->dirty_bit);
         _loading = DTM_FALSE;
 	setDirtyBit(True);
@@ -101,7 +101,7 @@ void EncryptedTextFieldUiItem::writeAllowed(DtMailBoolean allowed)
     else
     {
         _loading = DTM_TRUE;
-        XtVaSetValues(w, XmNeditable, False, XmNsensitive, False, NULL);
+        XtVaSetValues(w, XmNeditable, False, XmNsensitive, False, nullptr);
         options_field_set_value(w, "", this->dirty_bit);
         _loading = DTM_FALSE;
 	setDirtyBit(True);
@@ -152,7 +152,7 @@ void EncryptedTextFieldUiItem::validateLength(int length)
     {
 	_maxtextlen *= 2;
 	_text = (char*) realloc((void*) _text, (size_t) _maxtextlen);
-	assert(NULL!=_text);
+	assert(nullptr!=_text);
     }
 }
 
