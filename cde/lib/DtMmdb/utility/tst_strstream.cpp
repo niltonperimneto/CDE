@@ -36,7 +36,7 @@ tst_ostringstream()
 
 tst_istringstream()
 {
-   char* buf = "303.0";
+   const char* buf = "303.0";
    istringstream is(buf, strlen(buf));
 
    int c = is.get() ;

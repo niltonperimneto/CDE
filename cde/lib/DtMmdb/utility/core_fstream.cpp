@@ -46,7 +46,7 @@ void filebuf_exam_test2()
 {
    fprintf(stderr, "fstream test2 : write \n");
    fstream fb("/tmp/stream_test.write", ios::in|ios::out|ios::trunc);
-   char* buf = "abcdefghijklmnopq";
+   const char* buf = "abcdefghijklmnopq";
 
    for ( int i=0; i<2; i++ ) {
       fb.write(buf+i*4, 4);
@@ -227,7 +227,7 @@ void filebuf_exam_test12()
 {
    fprintf(stderr, "fstream test12 : write (2)\n");
    fstream fb("/tmp/stream_test.write", ios::out);
-   char* buf = "abcdefghijklmnopq";
+   const char* buf = "abcdefghijklmnopq";
 
    for ( int i=0; i<2; i++ ) {
       fb.write(buf+i*4, 4);
@@ -255,7 +255,7 @@ void filebuf_exam_test14(char* nm)
 {
    fprintf(stderr, "fstream test14 : write (3)\n");
    fstream fb(nm, ios::out);
-   char* buf = "abcdefghijklmnopq";
+   const char* buf = "abcdefghijklmnopq";
 
    for ( int i=0; i<2; i++ ) {
       fb.write(buf+i*4, 4);
