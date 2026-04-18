@@ -815,7 +815,7 @@ char *GetTmpPath(char *path) {
     *sp-- = '\0';
   sprintf(sp + 1, "/%s", TEMPFILEKEY);
   /* Get temporary file name */
-  return mktemp(buf);
+  return ({ int _fd = mkstemp(buf); if (_fd != -1) close(_fd); buf; });
 }
 
 int Link_NewFile(char *rd_file, char *wr_file) {

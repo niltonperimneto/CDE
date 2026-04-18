@@ -34,8 +34,8 @@ void * 		  _DtUtilDelHash(DtHashTbl tbl, const unsigned char * key);
 int    	      _DtUtilOperateHash(DtHashTbl tbl, void (*op_func)(), void * usr_arg);
 void   	      _DtUtilDestroyHash(DtHashTbl tbl, int (*des_func)(), void * usr_arg);
 
-typedef void (*DtHashOperateFunc)();
-typedef int  (*DtHashDestroyFunc)();
+typedef void (*DtHashOperateFunc)(void);
+typedef int  (*DtHashDestroyFunc)(void);
 
 #endif /* _DtHash_h */
 

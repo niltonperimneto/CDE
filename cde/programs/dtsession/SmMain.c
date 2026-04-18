@@ -602,7 +602,7 @@ static void StopAll(int i) { ImmediateExit(-1, 0, True); }
  *  Returns:
  *  -------
  *  0 - successfully registered for screen saver events
- *  other - failed to register for screen saver events
+ *  other - failed to for screen saver events
  *
  *  Comments:
  *  --------
@@ -635,7 +635,7 @@ static int RegisterX11ScreenSaver(Display *display, int *pssEventType) {
     XGrabServer(display);
     if (!XScreenSaverGetRegistered(display, screen, &xid, &type)) {
       /*
-       * No other clients registered with this server so register this one.
+       * No other clients registered with this server so this one.
        */
       XScreenSaverRegister(display, screen, XtWindow(smGD.topLevelWid),
                            XA_WINDOW);

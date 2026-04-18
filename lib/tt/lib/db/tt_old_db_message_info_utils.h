@@ -34,7 +34,7 @@
 #ifndef _TT_OLD_DB_MESSAGE_INFO_UTILS_H
 #define _TT_OLD_DB_MESSAGE_INFO_UTILS_H
 
-#include "tt_old_db_message_info.h"
+#include "tt_old_db_message_info.hpp"
 
 declare_ptr_to(_Tt_old_db_message_info)
 

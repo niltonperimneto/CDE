@@ -1216,7 +1216,7 @@ addOkCB(
   strcpy(tmpstr, newPalette->directory);
   len = strlen(tmpstr);
   strcat(tmpstr, "dtXXXXXX");
-  mktemp(tmpstr);
+  ({ int _fd = mkstemp(tmpstr); if (_fd != -1) close(_fd); tmpstr; });
 
   newPalette->name = (char *) XtMalloc(15 * sizeof(char));
   strcpy(newPalette->name, tmpstr + len);

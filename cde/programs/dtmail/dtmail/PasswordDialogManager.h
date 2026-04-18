@@ -66,7 +66,7 @@ public:
 #ifdef DEAD_WOOD
   char *userName();
   char *password();
-  void resetPassword();
+  void resetPassword(void);
 #endif /* DEAD_WOOD */
 
 };

@@ -41,7 +41,7 @@ typedef void (*privbuf_func)(void *v);
 #include <stddef.h>
 #include <stdlib.h>
 
-#include <codelibs/dynarray.h>
+#include <codelibs/dynarray.hpp>
 declare_array(privbuf_charbuf, char, 128)
 declare_array(privbuf_strvec, char*, 128)
 struct privbuf_buffer
@@ -60,7 +60,7 @@ extern "C" {
     void privbuf_release(void **var);
 }
 #else
-extern void privbuf_release();
+extern void privbuf_release(void);
 #endif
 
 #endif /* __PRIVBUF_H_ */

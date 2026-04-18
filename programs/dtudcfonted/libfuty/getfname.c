@@ -75,7 +75,7 @@ extern	int	falReadFontProp(char                    *file,
 /*
  * get "character size" and "letter size" from a character of an interface
  *
- * 	return code��
+ * 	return codeÂ¡Â§
  * 		 1... get "character size"
  * 		 2... get "character size" and "letter size"
  * 		-1... NG
@@ -322,7 +322,7 @@ is_letter_size_not_only_one( FalFontDataList *lst /* a font list */ )
 /*
  * get a real file name from a character of "size" and "style"
  *
- * return code��
+ * return codeÂ¡Â§
  * 		 0 ... OK
  * 		-1 ... NG
  *
@@ -618,7 +618,7 @@ char	*fname)		/* user defined character information file name */
 /*
  * if an end character of a file name is "/",it is cleared
  *
- * return code��none
+ * return codeÂ¡Â§none
  *      none
  */
 
@@ -640,9 +640,9 @@ fal_cut_tailslash( char *name )
 /*
  * get a real file name from a link file name
  *
- * return code��
- * 	OK������a pointer of a file name
- * 	NG������NULL
+ * return codeÂ¡Â§
+ * 	OKÂ¡Â¡Â¡Â¥Â¡Â¥a pointer of a file name
+ * 	NGÂ¡Â¡Â¡Â¥Â¡Â¥NULL
  *
  */
 

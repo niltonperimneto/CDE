@@ -1,7 +1,7 @@
 # libDtMail/RFC
 
 libdtmail_rfc = static_library('DtMailRFC',
-  sources : run_command('sh', '-c', 'ls *.C', check: true).stdout().strip().split('\n'),
+  sources : run_command('sh', '-c', 'ls *.cpp', check: true).stdout().strip().split('\n'),
   include_directories : [inc, include_directories('../../include'), include_directories('../../include/utils'), include_directories('../Common')],
   dependencies : [dep_x11, dep_xt, libDtSvc_dep, dep_tirpc],
   cpp_args : common_c_args

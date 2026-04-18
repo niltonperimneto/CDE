@@ -104,7 +104,7 @@ setDebugFlags(char *c1)
 	return;
     }
 
-    /* register our catchExit() function... */
+    /* our catchExit() function... */
     _DtTermProcessLock();
     if (!catchExitRegistered) {
 	(void) atexit(catchExit);

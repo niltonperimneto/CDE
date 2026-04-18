@@ -94,10 +94,10 @@ class UIComponent : public BasicComponent {
     // Protect constructor to prevent direct instantiation
     UIComponent ( const char * );
     
-    void installDestroyHandler(); // Easy hook for derived classes
+    void installDestroyHandler(void); // Easy hook for derived classes
     
     // Called by widgetDestroyedCallback() if base widget is destroyed
-    virtual void widgetDestroyed(); 
+    virtual void widgetDestroyed(void); 
     
 #ifdef DEAD_WOOD
     // Loads component's default resources into database
@@ -113,15 +113,15 @@ class UIComponent : public BasicComponent {
     
     // Manage the entire widget subtree represented
     // by this component. Overrides BasicComponent method
-    virtual void manage();
-    virtual void displayInCurrentWorkspace();
+    virtual void manage(void);
+    virtual void displayInCurrentWorkspace(void);
     virtual void displayInCurrentWorkspace(Widget);
     
     // Public access functions
 #ifdef CAN_INLINE_VIRTUALS
     virtual const char *const className() { return "UIComponent"; }
 #else
-    virtual const char *const className();
+    virtual const char *const className(void);
 #endif
 	
     //

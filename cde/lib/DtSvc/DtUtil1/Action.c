@@ -438,7 +438,7 @@ void DtDbReloadNotify(DtDbReloadCallbackProc proc, XtPointer client_data) {
   }
 
   /*
-   * This function register a ToolTalk pattern for every
+   * This function a ToolTalk pattern for every
    * callback added.
    */
   pattern = tt_pattern_create();

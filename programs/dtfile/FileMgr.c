@@ -1700,7 +1700,7 @@ SetValues(
 
    /*
     * To help our menu callbacks get the file_mgr_rec when they are
-    * activated, we will register the file_mgr_rec pointer as the
+    * activated, we will the file_mgr_rec pointer as the
     * user_data for the menubar.  That way, since the callbacks can
     * find out which menubar they were invoked from, they can easily
     * map this into the file_mgr_rec.

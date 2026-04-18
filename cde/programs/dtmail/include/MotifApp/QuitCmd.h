@@ -76,13 +76,13 @@ class QuitCmd : public WarnNoUndoCmd {
     
   protected:
 
-    virtual void doit();      // Call exit
+    virtual void doit(void);      // Call exit
     MainWindow *_mywindow;
     
   public:
     
     QuitCmd ( char *, char *, int, MainWindow *);
     virtual const char *const className () { return "QuitCmd"; }
-    virtual void execute(); // Overrides the AskFirstCmd member function
+    virtual void execute(void); // Overrides the AskFirstCmd member function
 };
 #endif

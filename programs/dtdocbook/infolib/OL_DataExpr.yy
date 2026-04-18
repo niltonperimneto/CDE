@@ -1,9 +1,9 @@
 /* $XConsortium: OL_DataExpr.y /main/2 1996/11/11 11:51:54 drk $ */
 %{
 #include <stdio.h>
-#include "ExprList.h"
-#include "Expression.h"
-#include "ContentType.h"
+#include "ExprList.hpp"
+#include "Expression.hpp"
+#include "ContentType.hpp"
 
 extern int yylex();
 extern void yyerror( const char *str );

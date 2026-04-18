@@ -35,8 +35,8 @@
 
 %{
 
-#include "compression/trie.h"
-#include "compression/abs_agent.h"
+#include "compression/trie.hpp"
+#include "compression/abs_agent.hpp"
 
 
 static unsigned char yybuf[LBUFSIZ];

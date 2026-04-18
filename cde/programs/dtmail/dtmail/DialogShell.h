@@ -56,7 +56,7 @@ class DialogShell : public UIComponent {
 		RoamMenuWindow	*parent,
 		WidgetClass	wc = xmDialogShellWidgetClass);
     virtual ~DialogShell();
-    virtual void initialize();
+    virtual void initialize(void);
     
 // Accessors
     
@@ -68,9 +68,9 @@ class DialogShell : public UIComponent {
     virtual void title( char * );
     virtual void popped_up()=0;
     virtual void popped_down()=0;
-    virtual void manage();
-    virtual void busyCursor();
-    virtual void normalCursor();
+    virtual void manage(void);
+    virtual void busyCursor(void);
+    virtual void normalCursor(void);
     
     virtual void quit()=0;
     

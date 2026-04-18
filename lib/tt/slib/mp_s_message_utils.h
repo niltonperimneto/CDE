@@ -35,7 +35,7 @@
  */
 #ifndef MP_S_MESSAGE_UTILS_H
 #define MP_S_MESSAGE_UTILS_H
-#include <mp/mp_message_utils.h>
+#include <mp/mp_message_utils.hpp>
 
 declare_derived_list_of(_Tt_s_message,_Tt_message)     
 #endif				/* MP_S_MESSAGE_UTILS_H */

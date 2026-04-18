@@ -379,7 +379,7 @@ main(
             
               /* the first two variable returned by Get_Sysinfo is all we need
                * to get the hostname.  hostname is the 2nd variable.  Let's
-               * register that we want them 
+               * that we want them 
                */
               status = tt_message_arg_add(msg, TT_OUT, "string", 0);
               if(status != TT_OK) {

@@ -80,7 +80,7 @@ class Attachment : public UIComponent {
     Attachment ( AttachArea *, String, DtMail::BodyPart *, int);
 
     virtual			~Attachment();	// Destructor
-    virtual void		initialize();
+    virtual void		initialize(void);
     void			action( 
 				       DtActionInvocationID, 
 				       DtActionArg *,
@@ -141,17 +141,17 @@ class Attachment : public UIComponent {
     void	 		setRow(int row) { _row = row; }
 #endif /* ! DEAD_WOOD */
 
-    void	 		deleteIt();
-    void 			undeleteIt();
+    void	 		deleteIt(void);
+    void 			undeleteIt(void);
     void 			setSaveAsFilename(String str) 
 						{ ( _saveAsFilename = str); }
 
     void 			set_binary(Boolean binary) 
 						{ ( _binary = binary); }
 
-    void          		handleDoubleClick();
+    void          		handleDoubleClick(void);
 
-    void			name_to_type();
+    void			name_to_type(void);
     void	   		setAttachArea(AttachArea *);
 #ifdef DEAD_WOOD
     Boolean        		check_if_binary(String, unsigned long);
@@ -159,15 +159,15 @@ class Attachment : public UIComponent {
 
     // SR -- Added methods below
     
-    void			primitive_select(); 
-    void			set_selected();
-    Boolean			is_selected();
+    void			primitive_select(void); 
+    void			set_selected(void);
+    Boolean			is_selected(void);
 
-    void			setContents();
+    void			setContents(void);
 
-    void			unselect();
+    void			unselect(void);
 
-    void			quit();
+    void			quit(void);
 
     void			registerAction(DtActionInvocationID);
     void			unregisterAction(DtActionInvocationID);

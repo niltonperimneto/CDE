@@ -53,12 +53,6 @@
 #define FALSE 0
 #define TRUE 1
 
-#ifndef __STDC__
-#ifdef NULL
-#undef NULL
-#endif
-#define NULL 0
-#endif
 
 typedef int iljpgBool;
 

@@ -1,6 +1,6 @@
 # dtmail - CDE Mail Client
 
-dtmail_src = run_command('sh', '-c', 'ls *.C', check: true).stdout().strip().split('\n')
+dtmail_src = run_command('sh', '-c', 'ls *.cpp', check: true).stdout().strip().split('\n')
 dtmail_src += ['StringTab.c']
 # Note: MotifApp's Main.C is linked from libMotifApp.
 # dtmail_src contains the Application implementation.

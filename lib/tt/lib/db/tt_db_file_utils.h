@@ -34,8 +34,8 @@
 #ifndef _TT_DB_FILE_UTILS_H
 #define _TT_DB_FILE_UTILS_H
 
-#include "util/tt_table.h"
-#include "db/tt_db_file.h"
+#include "util/tt_table.hpp"
+#include "db/tt_db_file.hpp"
 
 declare_ptr_to(_Tt_db_file)
 

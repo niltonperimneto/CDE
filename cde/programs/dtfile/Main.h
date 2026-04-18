@@ -53,11 +53,7 @@
 #define _Main_h
 
 /* ANSI C definitions */
-#ifdef __STDC__
 #define Const const
-#else
-#define Const /**/
-#endif
 
 #include <Tt/tttk.h>
 #include <X11/Intrinsic.h>

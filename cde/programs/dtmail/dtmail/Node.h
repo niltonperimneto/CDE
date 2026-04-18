@@ -105,10 +105,10 @@ class Node {
 				);
     
         void			set_message_header(char* hdr);
-	char*			get_message_header();
+	char*			get_message_header(void);
 
 	void			set_number(int i);
-	int			get_number();
+	int			get_number(void);
 
 	Node*			next(
 				);

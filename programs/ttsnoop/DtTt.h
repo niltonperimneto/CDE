@@ -29,7 +29,7 @@
 #define DTTT_H
 
 #include <Tt/tttk.h>
-#include "tt_c++.h"
+#include "tt_c++.hpp"
 #include "ttChooser_ui.h"
 #include "stringChooser_ui.h"
 

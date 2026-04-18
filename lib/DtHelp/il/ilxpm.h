@@ -135,14 +135,9 @@ typedef struct {
 
 /* forward declaration of functions with prototypes */
 
-#if defined(__STDC__) || defined(__cplusplus) || defined(c_plusplus)
  /* ANSI || C++ */
 #define FUNC(f, t, p) extern t f p
 #define LFUNC(f, t, p) static t f p
-#else					/* K&R */
-#define FUNC(f, t, p) extern t f()
-#define LFUNC(f, t, p) static t f()
-#endif					/* end of K&R */
 
 
 /*

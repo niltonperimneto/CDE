@@ -96,9 +96,9 @@ class Application : public UIComponent {
     
     // Functions to handle Xt interface
     virtual void initialize ( int *, char ** );  
-    virtual void handleEvents();
+    virtual void handleEvents(void);
 
-    virtual void open_catalog();  
+    virtual void open_catalog(void);  
     inline void extractAndRememberEventTime( XEvent * );
 
     char        *_applicationClass;
@@ -144,9 +144,9 @@ class Application : public UIComponent {
     gid_t	originalRgid(void)	{ return _originalRgid; }
 
     // Functions to manipulate application's top-level windows
-    void	iconify();
-    void	manage();
-    void	unmanage();
+    void	iconify(void);
+    void	manage(void);
+    void	unmanage(void);
     
     // Convenient access functions
     virtual const char *const

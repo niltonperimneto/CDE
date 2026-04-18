@@ -32,7 +32,7 @@
 #ifndef _AF_AUX_H_INCLUDED
 #define _AF_AUX_H_INCLUDED
 
-#include "UxXt.h"
+#include "UxXt.hpp"
 
 #ifndef STORAGECLASS
 #ifdef  NOEXTERN
@@ -90,8 +90,8 @@ void init_AddFiletype (FiletypeData *);
 void free_Filetypedata(FiletypeData *);
 void init_AddFiletype_dialog_fields(FiletypeData *pFtD);
 void clear_AddFiletype_dialog_fields(void);
-void AddFiletypeToList();
-void UpdateFiletypeDataArray();
+void AddFiletypeToList(void);
+void UpdateFiletypeDataArray(void);
 Boolean AddFiletypeCheckFields(void);
 
 

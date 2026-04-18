@@ -16,13 +16,13 @@
 
 #include "dti_excs/Exceptions.hh"
 
-#include "SGMLDefn.h"
-#include "Dispatch.h"
-#include "AttributeRec.h"
-#include "AttributeList.h"  
-#include "FlexBuffer.h"
-#include "Token.h"
-#include "api/utility.h"
+#include "SGMLDefn.hpp"
+#include "Dispatch.hpp"
+#include "AttributeRec.hpp"
+#include "AttributeList.hpp"  
+#include "FlexBuffer.hpp"
+#include "Token.hpp"
+#include "api/utility.hpp"
 
 static SGMLDefn *defn = new SGMLDefn();
 static FlexBuffer *DataBuffer = new FlexBuffer();
@@ -196,8 +196,8 @@ unsigned char oct2dec( const char *str )
 
 #ifdef DEBUG
 //---------------------------------------------------------------------
-#include "OLAF.h"  
-#include "SGMLName.h"
+#include "OLAF.hpp"  
+#include "SGMLName.hpp"
 
 static void TestToken( Token *tok )
 {

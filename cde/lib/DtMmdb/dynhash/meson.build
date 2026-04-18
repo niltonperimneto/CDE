@@ -1,4 +1,4 @@
-libdynhash_sources = ['data_t.C', 'imp_bucket.C', 'imp_die.C']
+libdynhash_sources = ['data_t.cpp', 'imp_bucket.cpp', 'imp_die.cpp']
 
 libdynhash = static_library('dynhash',
   libdynhash_sources,

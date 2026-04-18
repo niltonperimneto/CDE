@@ -43,14 +43,14 @@
 #include <stdlib.h>
 #include <rpc/rpc.h>
 #include "Tt/tt_c.h"
-#include "util/tt_string.h"
-#include "mp/mp_auth.h"
-#include "mp/mp_file_utils.h"
-#include "mp/mp_msg_context_utils.h"
-#include "mp/mp_message_utils.h"
-#include "mp/mp_procid_utils.h"
-#include "mp/mp_pattern_utils.h"
-#include "mp/mp_file_utils.h"
+#include "util/tt_string.hpp"
+#include "mp/mp_auth.hpp"
+#include "mp/mp_file_utils.hpp"
+#include "mp/mp_msg_context_utils.hpp"
+#include "mp/mp_message_utils.hpp"
+#include "mp/mp_procid_utils.hpp"
+#include "mp/mp_pattern_utils.hpp"
+#include "mp/mp_file_utils.hpp"
 
 typedef bool_t (*xdr_auth_proc_t)(XDR*, caddr_t);
 

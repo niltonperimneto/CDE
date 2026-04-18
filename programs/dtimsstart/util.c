@@ -999,11 +999,7 @@ char	*error_name(ximsError error)
 {
     char	*name = "<unknown>";
 
-# ifdef	__STDC__
 #define	ERR_CASE(err)	case err :	name = #err; break
-# else
-#define	ERR_CASE(err)	case err :	name = "err"; break
-# endif	/* __STDC__ */
 
     switch (error) {
 	ERR_CASE(NoError);

@@ -109,21 +109,12 @@ typedef unsigned char  u_char;
 #define self	*this
 
 #ifndef STRINGIFY
-#if defined(__STDC__)
 #define STRINGIFY(S) #S
-#else
-#define STRINGIFY(S) "S"
-#endif
 #endif
 
 #ifndef CONCAT
-#if defined(__STDC__)
 #define CONCAT(A,B) A##B
 #define CONCAT3(A,B,C) A##B##C
-#else
-#define CONCAT(A,B) A/**/B
-#define CONCAT3(A,B,C) A/**/B/**/C
-#endif
 #endif
 
 #ifdef DEBUG
@@ -168,7 +159,6 @@ void exit(const int);
 // The BOGUS preprocessor is substituting OBJ in the string.
 // NOTE: how to #ifdef this?
 
-#ifdef __STDC__
 #define PRINT_OBJECT(OBJ) \
 cout << #OBJ << "= (0x" << hex(this) << ")" << endl
 
@@ -183,16 +173,3 @@ cout << "  " << #INT << " = " << INT << endl
     for (int i = 0; i < sizeof(BITS) * 8; i++, bits <<= 1) \
       (bits & (1L << sizeof(BITS) * 8)) ? cout << '1' : cout << '0'; \
     cout << endl; } 
-#else
-#define PRINT_OBJECT(OBJ) \
-  printf ("OBJ (0x%p) = \n", this)
-#define PRINT_POINTER(PTR) \
-  printf ("  PTR = 0x%p\n", PTR)
-#define PRINT_INT(INT) \
-  printf ("  INT = %d\n", INT)
-#define PRINT_BITS(BITS) \
-  { long bits = BITS; printf ("  BITS = "); \
-    for (int i = 0; i < sizeof(BITS) * 8; i++, bits <<= 1) \
-      (bits & (1L << sizeof(BITS) * 8)) ? putchar('1') : putchar('0'); \
-    putchar ('\n'); } 
-#endif

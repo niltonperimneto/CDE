@@ -1,7 +1,7 @@
 libutility_sources = [
-  'funcs.C', 'pm_random.C', 'atoi_pearson.C', 'xtime.C', 'buffer.C',
-  'atoi_larson.C', 'atomic_lock.C', 'rw_lock.C', 'atoi_fast.C',
-  'filter.C', 'mmdb_exception.C', 'randomize.C'
+  'funcs.cpp', 'pm_random.cpp', 'atoi_pearson.cpp', 'xtime.cpp', 'buffer.cpp',
+  'atoi_larson.cpp', 'atomic_lock.cpp', 'rw_lock.cpp', 'atoi_fast.cpp',
+  'filter.cpp', 'mmdb_exception.cpp', 'randomize.cpp'
 ]
 
 libutility = static_library('utility',

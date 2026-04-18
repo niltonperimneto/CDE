@@ -1506,7 +1506,7 @@ switch (hyperData->hyper_type)
                      (Widget)qw,qw->qhelp_dialog.display.hyperLinkCallback,&callData);
 	         }
                else
-                 {  /* The application did not register a hypertext callback so
+                 {  /* The application did not a hypertext callback so
                      *  we must generate the proper warning message and 
                      *  continue!
                      */
@@ -1600,7 +1600,7 @@ switch (hyperData->hyper_type)
 	  }
         else
           { 
-             /* The application did not register a hypertext 
+             /* The application did not a hypertext 
               * callback so we must generate the proper error 
               * message and continue!
               */

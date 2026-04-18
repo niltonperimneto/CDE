@@ -1,15 +1,19 @@
 project('cde', ['c', 'cpp'],
   version : '2.5.3',
   meson_version: '>= 1.0.0',
-  default_options : ['warning_level=2', 'c_std=gnu23', 'cpp_std=gnu++98', 'b_pie=true'])
+  default_options : ['warning_level=2', 'c_std=gnu23', 'cpp_std=gnu++23', 'b_pie=true'])
 
 
 cc = meson.get_compiler('c')
 
 if get_option('with_hardening')
+  hardening_args = ['-fstack-protector-strong']
+  opt_level = get_option('optimization')
+  if opt_level != '0' and opt_level != 'g'
+    hardening_args += '-D_FORTIFY_SOURCE=2'
+  endif
   add_project_arguments(
-    '-fstack-protector-strong',
-    '-D_FORTIFY_SOURCE=2',
+    hardening_args,
     language : ['c', 'cpp']
   )
   add_project_link_arguments(
@@ -33,7 +37,13 @@ add_project_arguments(
   '-Wold-style-definition',
   '-Wimplicit-int',
   '-Werror=incompatible-pointer-types',
+  '-Werror=format-security',
   language : 'c'
+)
+
+add_project_arguments(
+  '-Werror=format-security',
+  language : 'cpp'
 )
 
 common_c_args = []
@@ -94,7 +104,7 @@ conf_data.set('CDE_VERSION_DEV', '')
 if host_machine.endian() == 'big'
   conf_data.set('WORDS_BIGENDIAN', 1)
 endif
-configure_file(output : 'cde_config.h', configuration : conf_data)
+configure_file(output : 'cde_config.hpp', configuration : conf_data)
 
 # Recurse into subdirectories
 subdir('cde')

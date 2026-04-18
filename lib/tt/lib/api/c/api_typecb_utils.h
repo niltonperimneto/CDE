@@ -35,10 +35,10 @@
  */
 #ifndef _API_TYPECB_UTILS_H
 #define _API_TYPECB_UTILS_H
-#include "util/tt_object.h"
-#include "util/tt_list.h"
-#include "util/tt_table.h"
-#include "util/tt_string.h"
+#include "util/tt_object.hpp"
+#include "util/tt_list.hpp"
+#include "util/tt_table.hpp"
+#include "util/tt_string.hpp"
 
 declare_list_of(_Tt_typecb)
 declare_table_of(_Tt_typecb)

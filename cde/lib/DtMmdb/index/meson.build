@@ -1,7 +1,7 @@
 libindex_sources = [
-  'btree_index.C', 'dyn_disk_index.C', 'dyn_index.C',
-  'dyn_memory_index.C', 'fast_mphf.C', 'hash.C', 'index.C',
-  'inv_lists.C', 'mphf_index.C'
+  'btree_index.cpp', 'dyn_disk_index.cpp', 'dyn_index.cpp',
+  'dyn_memory_index.cpp', 'fast_mphf.cpp', 'hash.cpp', 'index.cpp',
+  'inv_lists.cpp', 'mphf_index.cpp'
 ]
 
 libindex = static_library('index',

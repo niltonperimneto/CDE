@@ -531,93 +531,16 @@ PdmPrinterBoxGetAttr(PdmSetupBox* me, PdmXp* pdm_xp)
     const char* strval;
     PdmOidMediumSS* medium_ss_supported;
     PdmOidTrayMediumList* input_trays_medium = NULL;
-#if 0 && defined(PRINTING_SUPPORTED)
-    /*
-     * printer model description
-     */
-    data->printer_model =
-	PdmXpGetStringValue(pdm_xp, XPPrinterAttr, pdmoid_att_printer_model);
-    /*
-     * document format
-     */
-    strval = PdmXpGetStringValue(pdm_xp, XPDocAttr,
-				 pdmoid_att_document_format);
-    data->document_format = PdmOidDocumentFormatParse(strval);
-#endif /* PRINTING_SUPPORTED */
     if((char*)NULL == data->document_format)
     {
 	/*
 	 * document format not specified, try to obtain
 	 * document-formats-supported, and obtain up the default from it
 	 */
-#if 0 && defined(PRINTING_SUPPORTED)
-	strval = PdmXpGetStringValue(pdm_xp, XPPrinterAttr,
-				     pdmoid_att_document_formats_supported);
-	data->document_format = PdmOidDocumentFormatDefault(strval);
-#endif /* PRINTING_SUPPORTED */
     }
     /*
      * document attributes supported
      */
-#if 0 && defined(PRINTING_SUPPORTED)
-    strval = PdmXpGetStringValue(pdm_xp, XPPrinterAttr,
-				 pdmoid_att_document_attributes_supported);
-    data->document_attrs_supported = PdmOidListNew(strval);
-    /*
-     * content orientation supported
-     */
-    strval = PdmXpGetStringValue(pdm_xp, XPPrinterAttr,
-				 pdmoid_att_content_orientations_supported);
-    data->orientations_supported = PdmOidListNew(strval);
-    /*
-     * orientation
-     */
-    data->orientation =
-	PdmXpGetValue(pdm_xp, XPDocAttr, pdmoid_att_content_orientation);
-    /*
-     * plexes supported
-     */
-    strval = PdmXpGetStringValue(pdm_xp, XPPrinterAttr,
-				 pdmoid_att_plexes_supported);
-    data->plexes_supported = PdmOidListNew(strval);
-    /*
-     * plex
-     */
-    data->plex = PdmXpGetValue(pdm_xp, XPDocAttr, pdmoid_att_plex);
-    /*
-     * default input tray, default medium
-     */
-    data->default_input_tray =
-	PdmXpGetValue(pdm_xp, XPDocAttr, pdmoid_att_default_input_tray);
-    data->default_medium =
-	PdmXpGetValue(pdm_xp, XPDocAttr, pdmoid_att_default_medium);
-    /*
-     * medium source sizes supported
-     */
-    strval = PdmXpGetStringValue(pdm_xp, XPPrinterAttr,
-				 pdmoid_att_medium_source_sizes_supported);
-    medium_ss_supported = PdmOidMediumSSNew(strval);
-    /*
-     * input trays medium
-     */
-    strval = PdmXpGetStringValue(pdm_xp, XPPrinterAttr,
-				 pdmoid_att_input_trays_medium);
-    input_trays_medium = PdmOidTrayMediumListNew(strval);
-    /*
-     * build input trays and page sizes ready lists
-     */
-    PdmOidMediumSSGetTraysSizes(medium_ss_supported, input_trays_medium,
-				&data->input_trays, &data->tray_sizes);
-    /*
-     * build list of supported page sizes
-     */
-    data->sizes_supported = PdmOidMediumSSGetAllSizes(medium_ss_supported);
-    /*
-     * clean up
-     */
-    PdmOidMediumSSDelete(medium_ss_supported);
-    PdmOidTrayMediumListDelete(input_trays_medium);
-#endif /* PRINTING_SUPPORTED */
 }
 
 /*
@@ -636,29 +559,6 @@ PdmPrinterBoxGetAttr(PdmSetupBox* me, PdmXp* pdm_xp)
 static void
 PdmPrinterBoxSetAttr(PdmSetupBox* me, PdmXp* pdm_xp)
 {
-#if 0 && defined(PRINTING_SUPPORTED)
-    PdmPrinterBoxData* data = (PdmPrinterBoxData*)me->subclass_data;
-    /*
-     * orientation
-     */
-    PdmXpSetValue(pdm_xp, XPDocAttr, pdmoid_att_content_orientation,
-		  OrientCtlGetOrientation(data->orient_ctl));
-    /*
-     * plex
-     */
-    PdmXpSetValue(pdm_xp, XPDocAttr, pdmoid_att_plex,
-		  PlexCtlGetPlex(data->plex_ctl));
-    /*
-     * page size
-     */
-    PdmXpSetValue(pdm_xp, XPDocAttr, pdmoid_att_default_medium,
-		  SizeCtlGetSize(data->size_ctl));
-    /*
-     * input tray
-     */
-    PdmXpSetValue(pdm_xp, XPDocAttr, pdmoid_att_default_input_tray,
-		  TrayCtlGetTray(data->tray_ctl));
-#endif /* PRINTING_SUPPORTED */
 }
 
 /*

@@ -1,3 +1,4 @@
+#include "bms/stringbuf.h"
 /*
  * CDE - Common Desktop Environment
  *
@@ -56,7 +57,7 @@ typedef struct _SPC_Connection *SPC_Connection_Ptr;
 #include <bms/spc.h>
 
 #include "chars.h"
-#include "spc-obj.h"
+#include "spc-obj.hpp"
 #include "spcE.h"
 
 /* ---------------------------------------------------------------------- */

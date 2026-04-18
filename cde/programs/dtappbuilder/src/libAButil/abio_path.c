@@ -212,12 +212,7 @@ abio_expand_bil_encapsulated_path(STRING path)
  * Return True if the given path ends with the gil suffix.
  */
 int
-#ifdef __STDC__
 abio_is_gil_path(char *path)
-#else
-abio_is_gil_path(path)
-	char	*path;
-#endif
 {
 	return (strcmp(path + strlen(path) - strlen(GIL_SUFFIX),
 		       GIL_SUFFIX) == 0);

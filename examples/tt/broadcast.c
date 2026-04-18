@@ -91,7 +91,7 @@ main(argc, argv)
                       receive_tt_message, 0);
 
 	/*
-	 * Create and register a pattern so ToolTalk knows we are interested
+	 * Create and a pattern so ToolTalk knows we are interested
 	 * in "ttsample1_value" messages within the session we join.
 	 */
 

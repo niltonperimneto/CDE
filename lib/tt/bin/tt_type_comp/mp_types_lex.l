@@ -6,7 +6,7 @@
 %{
 #include <stdlib.h>
 #include "mp_types_gram.h"
-#include "mp_types_table.h"
+#include "mp_types_table.hpp"
 extern "C" {
 int input(void);
 void output(int);

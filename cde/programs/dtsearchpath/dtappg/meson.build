@@ -1,6 +1,6 @@
 # dtappgather - executable
 
-dtappgather_src = ['dtappgather.C', 'Options.C']
+dtappgather_src = ['dtappgather.cpp', 'Options.cpp']
 
 executable('dtappgather',
   dtappgather_src,

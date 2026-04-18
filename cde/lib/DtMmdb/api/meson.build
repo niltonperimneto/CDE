@@ -1,6 +1,6 @@
 libapi_sources = [
-  'base.C', 'info_base.C', 'info_lib.C', 'smart_ptr.C', 'transaction.C',
-  'utility.C'
+  'base.cpp', 'info_base.cpp', 'info_lib.cpp', 'smart_ptr.cpp', 'transaction.cpp',
+  'utility.cpp'
 ]
 
 libapi = static_library('api',

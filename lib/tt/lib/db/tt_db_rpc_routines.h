@@ -35,10 +35,10 @@
 #ifndef _TT_DB_RPC_ROUTINES_H
 #define _TT_DB_RPC_ROUTINES_H
 
-#include "util/tt_string.h"
+#include "util/tt_string.hpp"
 #include "db/db_server.h"
-#include "db/tt_db_property_utils.h"
-#include "db/tt_db_access_utils.h"
+#include "db/tt_db_property_utils.hpp"
+#include "db/tt_db_access_utils.hpp"
 #include "db/tt_db_results.h"
 
 extern void _tt_free_rpc_message (const _tt_message&);

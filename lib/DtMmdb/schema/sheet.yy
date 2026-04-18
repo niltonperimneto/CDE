@@ -29,12 +29,12 @@
 
 #include <stdio.h>
 #include <ctype.h>
-#include "utility/funcs.h"
-#include "schema/store_desc.h"
-#include "schema/index_desc.h"
-#include "schema/inv_desc.h"
-#include "schema/agent_desc.h"
-#include "schema/container_desc.h"
+#include "utility/funcs.hpp"
+#include "schema/store_desc.hpp"
+#include "schema/index_desc.hpp"
+#include "schema/inv_desc.hpp"
+#include "schema/agent_desc.hpp"
+#include "schema/container_desc.hpp"
 
 extern desc* desc_ptr;
 extern desc* last_desc_ptr;

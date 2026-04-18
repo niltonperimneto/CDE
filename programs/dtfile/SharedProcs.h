@@ -46,7 +46,7 @@
 #include <Dt/Action.h>
 #include <Dt/Dnd.h>
 
-#include "Common.h"
+#include "Common.hpp"
 #include "FileMgr.h"
 
 /********    Public Function Declarations    ********/

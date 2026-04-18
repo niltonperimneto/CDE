@@ -37,7 +37,7 @@
 #ifndef  _TT_PATH_H
 #define  _TT_PATH_H
 
-#include "util/tt_string.h"
+#include "util/tt_string.hpp"
 
 extern int _Tt_dirname(const char *, int len = 0);
 extern int _Tt_basename(const char *, int len = 0);

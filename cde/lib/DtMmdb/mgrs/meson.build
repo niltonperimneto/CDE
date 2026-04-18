@@ -1,5 +1,5 @@
 libmgrs_sources = [
-  'managers.C', 'misc.C', 'query_mgr.C', 'template_mgr.C'
+  'managers.cpp', 'misc.cpp', 'query_mgr.cpp', 'template_mgr.cpp'
 ]
 
 libmgrs = static_library('mgrs',

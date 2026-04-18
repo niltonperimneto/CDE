@@ -87,9 +87,6 @@ XtEnum _DtPrintVerifyXPrinter(
 			      String printer_spec,
 			      String* new_printer_spec,
 			      Display** new_display
-#if 0 && defined(PRINTING_SUPPORTED)
-                              ,XPContext* new_context
-#endif /* PRINTING_SUPPORTED */
                               );
 
 

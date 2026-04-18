@@ -74,8 +74,8 @@ class ViewMsgDialog : public DialogShell, public AbstractEditorParent {
     ViewMsgDialog(RoamMenuWindow*, WidgetClass wc=xmDialogShellWidgetClass);
     virtual ~ViewMsgDialog();
     
-    virtual void initialize();
-    virtual void quit();
+    virtual void initialize(void);
+    virtual void quit(void);
 
     virtual const char *const className () { return "ViewMsg"; }
     void propsChanged(void);
@@ -93,62 +93,62 @@ class ViewMsgDialog : public DialogShell, public AbstractEditorParent {
     void append(const char *, const unsigned long);
     void text(const char *, const unsigned long);
     
-    void popped_down();
-    void popped_up();
+    void popped_down(void);
+    void popped_up(void);
     
 // SR - Added methods below
 
-    void raise();
-    DtMailEditor* get_editor();
+    void raise(void);
+    DtMailEditor* get_editor(void);
 
     DtMailGenDialog *genDialog() { return _genDialog; }
 
-    void    auto_show_cursor_off();
-    void    auto_show_cursor_restore();
-    void    set_to_top();
+    void    auto_show_cursor_off(void);
+    void    auto_show_cursor_restore(void);
+    void    set_to_top(void);
 
   // SR - Text-selection callbacks.
 
-    virtual void text_selected();
-    virtual void text_unselected();
+    virtual void text_selected(void);
+    virtual void text_unselected(void);
 
-    void	attachment_selected();
-    void	all_attachments_deselected();
-    void	all_attachments_selected();
-    void	selectAllAttachments();
+    void	attachment_selected(void);
+    void	all_attachments_deselected(void);
+    void	all_attachments_selected(void);
+    void	selectAllAttachments(void);
     void	add_att(char *) { ; }
     void	add_att(char *, DtMailBuffer) { ; }
     void	add_att(DtMailBuffer) { ; }
 
     void	save_selected_attachment(char *);	
 
-    void	showAttachArea();
-    void	hideAttachArea();
+    void	showAttachArea(void);
+    void	hideAttachArea(void);
 
-    void	activate_default_attach_menu();
-    void	deactivate_default_attach_menu();
+    void	activate_default_attach_menu(void);
+    void	deactivate_default_attach_menu(void);
 
     void	addAttachmentActions(
 				    char **,
 				    int
 		);
-    void	removeAttachmentActions();
+    void	removeAttachmentActions(void);
     void	invokeAttachmentAction(int);	  	
 
-    virtual void manage();
+    virtual void manage(void);
 
     static void save_attachment_callback( void *, char *);    
 
   protected:
 
-    void createMenuPanes();
+    void createMenuPanes(void);
     Widget createWorkArea( Widget );  
   
-    void	construct_edit_menu();
-    void	construct_attachment_menu();
+    void	construct_edit_menu(void);
+    void	construct_attachment_menu(void);
     void	construct_attachment_popup(void);
     void	construct_text_popup(void);
-    void  construct_help_menu();
+    void  construct_help_menu(void);
 
   private:
 

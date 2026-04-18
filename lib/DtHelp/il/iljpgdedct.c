@@ -162,7 +162,7 @@ iljpgError _iljpgDeDCTCleanup (
   inverse DCT.
 
   The constants b1,..,b5 used by the fast DCT method are declared as
-  register variables; this allows the 'c89' compiler to perform the
+  variables; this allows the 'c89' compiler to perform the
   multplies as floating point 32 bit multiplies rather than promoting
   to double followed by a double to float conversion.
   (4/29/92, V. Bhaskaran)

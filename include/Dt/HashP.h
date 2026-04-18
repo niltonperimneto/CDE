@@ -113,9 +113,9 @@ extern "C" {
  */
 typedef XtPointer DtHashKey;
 
-typedef DtHashKey (*DtGetHashKeyFunc)();
-typedef Boolean (*DtHashEnumerateFunc)();
-typedef void (*DtReleaseKeyProc)();
+typedef DtHashKey (*DtGetHashKeyFunc)(void);
+typedef Boolean (*DtHashEnumerateFunc)(void);
+typedef void (*DtReleaseKeyProc)(void);
 
 typedef struct _DtHashEntryPartRec {
     unsigned int	type:16;

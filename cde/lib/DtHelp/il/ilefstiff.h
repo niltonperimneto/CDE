@@ -61,11 +61,7 @@
 #endif
 
 #ifndef NeedFunctionPrototypes
-#if defined(FUNCPROTO) || defined(__STDC__) || defined(__cplusplus) || defined(c_plusplus)
 #define NeedFunctionPrototypes 1
-#else
-#define NeedFunctionPrototypes 0
-#endif /* __STDC__ */
 #endif /* NeedFunctionPrototypes */
 
 #ifndef NeedWidePrototypes

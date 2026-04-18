@@ -1262,7 +1262,7 @@ static void _DtCmdInitializeErrorMessages(void) {
 
   errorSpcTerminator = strdup(((char*)Dt11GETMESSAGE(
       3, 15,
-      "An attempt to register the output log from a remote host failed.\n\nTo "
+      "An attempt to the output log from a remote host failed.\n\nTo "
       "continue, you may need to stop an existing process.")));
 
   successHost = strdup((

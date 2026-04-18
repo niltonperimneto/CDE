@@ -76,9 +76,6 @@
 #include <Xm/DialogS.h>
 #include <Xm/Form.h>
 #include <Xm/Label.h>
-#if 0 && defined(PRINTING_SUPPORTED)
-#include <Xm/Print.h>
-#endif /* PRINTING_SUPPORTED */
 #include <Dt/Editor.h>
 #include <Dt/Print.h>
 
@@ -93,13 +90,6 @@ static void	_pjUpdatePageHeaders(
 				PrintStringTypeEnum,
 				PrintStringTypeEnum,
 				PrintStringTypeEnum);
-#if 0 && defined(PRINTING_SUPPORTED)
-static void	_pjFinishedPrintToFile(
-				Display*,
-				XPContext,
-				XPGetDocStatus,
-				XPointer);
-#endif /* PRINTING_SUPPORTED */
 static char *	_pjGetPageHeaderString(PrintJob*, PrintStringTypeEnum);
 
 static void	_pjCancelCB (Widget, XtPointer client_data, XtPointer);
@@ -378,75 +368,6 @@ _pjCreatePrintShell(PrintJob *pJob)
 	pJob->parentShell == NULL ||
 	pJob->pSetup == NULL) return;
 
-#if 0 && defined(PRINTING_SUPPORTED)
-    
-    /*
-     * Create the print shell and
-     * the print output widgets
-     */
-#ifdef PRINT_TO_VIDEO
-    /*
-     * Create a dialog shell widget on the video display.
-     */
-    pJob->pShell = XmCreateDialogShell(
-				pJob->parentShell,
-				"PrintVideo",
-				NULL, 0);
-    {
-        XmString    xms;
-
-        pJob->nextpageShell = XmCreateDialogShell(
-					pJob->parentShell,
-					"PrintNextPage",
-					NULL, 0);
-
-        xms = XmStringCreateLocalized("Push for Next Page");
-        pJob->nextpageButton = XtVaCreateManagedWidget(
-                                	"NextPageButton",
-                                	xmPushButtonWidgetClass,
-                                	pJob->nextpageShell,
-                                	XmNlabelString, xms,
-                                	XmNwidth, 200,
-                                	XmNheight, 200,
-                                	NULL);
-        XmStringFree(xms);
-
-        XtAddCallback(
-                pJob->nextpageButton,
-                XmNactivateCallback,
-                _pjPrintOnePageCB,
-                (XtPointer) pJob);
-
-        XtManageChild(pJob->nextpageShell);
-        XtRealizeWidget(pJob->nextpageShell);
-    }
-#else
-
-    /*
-     * Create an XmPrintShell widget on the print display.  
-     */ 
-    psd = pJob->printData;
-    if (psd != NULL)
-      pJob->pShell = XmPrintSetup(
-		pJob->parentShell,
-		XpGetScreenOfContext(psd->print_display, psd->print_context),
-		"Print",
-		NULL, 0);
-
-    XtAddCallback(
-                pJob->pShell,
-                XmNpageSetupCallback,
-                _pjPrintOnePageCB,
-                (XtPointer) pJob);
-    XtAddCallback(
-                pJob->pShell,
-                XmNpdmNotificationCallback,
-                _pjPdmNotificationCB,
-                (XtPointer) pJob);
-#endif
-
-    if (pJob->pShell == NULL) return;
-#endif  /* PRINTING_SUPPORTED */
 
 }
 
@@ -593,75 +514,6 @@ _pjCreateOutputWidgets(PrintJob *pJob)
 static void
 _pjDoPrint(PrintJob *pJob)
 {
-#if 0 && defined(PRINTING_SUPPORTED)
-
-    static char		buf[1024];
-    static char 	*format;
-    DtPrintSetupData    *psd = NULL;
-    int			dest = XPSpool;
-
-    /*
-     * Notify the user that we're printing
-     */
-    if (pJob->pPad != NULL) {
-	pJob->pPad->numPendingTasks++;
-        format = GETMESSAGE(14, 21, "Printing %s ...");
-        sprintf(buf, format, pJob->documentName);
-        SetStatusMessage(pJob->pPad, buf);
-	XtSetSensitive(pJob->pPad->fileStuff.fileWidgets.printBtn, False);
-    }
-
-#ifndef PRINT_TO_VIDEO
-    psd = pJob->printData;
-
-    if (psd->destination == DtPRINT_TO_FILE)
-      dest = XPGetData;
-
-    _pjRegisterActivePrintDisplay(XtDisplay(pJob->pShell));
-    XpStartJob(XtDisplay(pJob->pShell), dest);
-    XFlush(XtDisplay(pJob->pShell));
-
-    if (psd->destination == DtPRINT_TO_FILE)
-    {
-        if (FALSE == XmPrintToFile(
-				XtDisplay(pJob->pShell),
-				psd->dest_info,
-				_pjFinishedPrintToFile,
-				(XPointer) pJob))
-	{
-            char	*fmt = "%s\n%s:  %s";
-            char	*message;
-            char	*appmessage = NULL;
-	    char	*sysmessage = strerror(errno);
-
-	    appmessage = (char *) GETMESSAGE(
-			    14, 14,
-			    "'Print to File' was unsuccessful.");
-	    
-	    if (NULL == sysmessage)
-	    {
-		message = XtMalloc(strlen(appmessage) + 1);
-	        sprintf(message, "%s", appmessage);
-	    }
-	    else
-	    {
-		message = XtMalloc(
-				strlen(appmessage) +
-				strlen(sysmessage) +
-				strlen(psd->dest_info) +
-				strlen(fmt) + 1);
-	        sprintf(message, fmt, appmessage, psd->dest_info, sysmessage);
-	    }
-	    
-	    Warning(pJob->pPad, message, XmDIALOG_WARNING);
-	    XtFree(message);
-            
-            XpCancelJob(XtDisplay(pJob->pShell), False);
-	    PrintJobDestroy(pJob);
-        }
-    }
-#endif
-#endif  /* PRINTING_SUPPORTED */
 
 
 }
@@ -800,36 +652,6 @@ _pjGetPageHeaderString(PrintJob *pJob, PrintStringTypeEnum type)
  *     App-specific print data holder allocate function.
  *
  */
-#if 0 && defined(PRINTING_SUPPORTED)
-static void _pjFinishedPrintToFile(
-			Display		*display,
-			XPContext	context,
-			XPGetDocStatus	status,
-			XPointer	client_data)
-{
-    char	*message = NULL;
-    PrintJob	*pJob = (PrintJob *) client_data;
-    Editor	*pPad = pJob->pPad;
-
-    if (status != XPGetDocFinished)
-    {
-
-	message = (char *) GETMESSAGE(
-				14, 14,
-				"'Print to File' was unsuccessful.");
-	Warning(pPad, message, XmDIALOG_WARNING);
-    }
-    else if (display != PrintJobGetErrorPrintDisplay())
-    {
-
-	message = (char *) GETMESSAGE(
-				14, 15,
-				"'Print to File' completed successfully.");
-	Warning(pPad, message, XmDIALOG_INFORMATION);
-    }
-    PrintJobDestroy(pJob);
-}
-#endif /* PRINTING_SUPPORTED */
 
 
 /*
@@ -893,29 +715,6 @@ _pjPrintCB (Widget widget, XtPointer client_data, XtPointer call_data)
 static void
 _pjPdmSetupCB(Widget print_setup, XtPointer client_data, XtPointer call_data)
 {
-#if 0 && defined(PRINTING_SUPPORTED)
-    char	*pname = "_pjPdmSetupCB";
-    PrintJob	*pJob = (PrintJob *) client_data;
-    DtPrintSetupCallbackStruct
-		*pbs = (DtPrintSetupCallbackStruct *) call_data;
-
-    DtPrintCopySetupData(pJob->printData, pbs->print_data);
-    _pjCreatePrintShell(pJob);
-
-    /* Pop up the PDM */
-    if (pJob->pShell)
-    {
-	Widget	shell = print_setup;
-
-	while (! (shell == NULL || XtIsShell(shell)) )
-	  shell = XtParent(shell);
-
-	if (shell)
-          XmPrintPopupPDM(pJob->pShell, shell);
-	else
-	  fprintf(stderr, "Internal Error %s:  Missing XmPrintShell.", pname);
-    }
-#endif  /* PRINTING_SUPPORTED */
 }
 
 
@@ -926,30 +725,6 @@ _pjPdmSetupCB(Widget print_setup, XtPointer client_data, XtPointer call_data)
 static void
 _pjPdmNotificationCB (Widget widget, XtPointer client_data, XtPointer call_data)
 {
-#if 0 && defined(PRINTING_SUPPORTED)
-    PrintJob			*pJob = (PrintJob*) client_data;
-    XmPrintShellCallbackStruct	*pscbs = (XmPrintShellCallbackStruct*)call_data;
-    char			*message = NULL;
-
-    switch (pscbs->reason)
-    {
-    
-        case XmCR_PDM_NONE:
-        case XmCR_PDM_START_ERROR:
-        case XmCR_PDM_START_VXAUTH:
-        case XmCR_PDM_START_PXAUTH:
-	    message = (char *) GETMESSAGE(
-			14, 25,
-			"Print Dialog Manager error - setup failed.");
-	    break;
-	default:
-	    message = NULL;
-	    break;
-    }
-
-    if (message != NULL)
-      Warning( pJob->pPad, message, XmDIALOG_WARNING);
-#endif  /* PRINTING_SUPPORTED */
 }
 
 
@@ -965,110 +740,4 @@ _pjPrintOnePageCB(
 		XtPointer call_data
 		)
 {
-#if 0 && defined(PRINTING_SUPPORTED)
-    PrintJob	*pJob = (PrintJob *) client_data;
-
-    XmPrintShellCallbackStruct  *pscbs = (XmPrintShellCallbackStruct*)call_data;
-    int                         top = 0;
-
-    if (pJob->pOutput == NULL)
-    {
-        XtArgVal	width0, height0;
-        Dimension	width, height;
-
-        width = 0; height=0;
-        XtVaGetValues(
-                pJob->pShell,
-                XmNwidth, &width0,
-                XmNheight, &height0,
-                NULL);
-        width = (Dimension)width0;
-        height = (Dimension)height0;
-
-#if defined(PRINT_TO_VIDEO)
-        printf("PrintShell in _pjPrintOnePageCB: <W %d - H %d>\n",width,height);
-#endif
-
-	if (width < 100 || height < 100)
-	{
-            width = 2550; height=3250;
-            XtVaSetValues(
-                pJob->pShell,
-                XmNwidth, width,
-                XmNheight, height,
-                NULL);
-            width = 0; height=0;
-            XtVaGetValues(
-                pJob->pShell,
-                XmNwidth, &width,
-                XmNheight, &height,
-                NULL);
-#if defined(PRINT_TO_VIDEO)
-            printf(
-	      "PrintShell in _pjPrintOnePageCB: <W %d - H %d>\n",width,height);
-#endif
-	}
-        _pjCreateOutputWidgets(pJob);
-    }
-
-#ifdef PRINT_TO_VIDEO
-    if (pJob->npagesDone > 0 && pJob->npagesDone == pJob->npagesTotal)
-#else
-    if (pscbs->last_page)
-#endif
-    {
-        DtPrintSetupData    *psd = pJob->printData;
-
-        /*
-         * This spool job is done.  Clean up.
-	 * If this is a print to file job,
-	 * clean up in the job finished callback.
-         */
-        if (psd->destination != DtPRINT_TO_FILE)
-          PrintJobDestroy(pJob);
-        return;
-    }
-
-    if (pJob->npagesDone > 0 && PrintOutputPageDown(pJob->pOutput) == FALSE)
-    {
-#ifndef PRINT_TO_VIDEO
-        pscbs->last_page = TRUE;
-#endif
-        return;
-    }
-
-    /*
-     * Update header and footer strings.
-     */
-    pJob->npagesDone++;
-    _pjUpdatePageHeaders(
-	pJob,
-	PrintSetupGetHdrFtrSpec(pJob->pSetup, DTPRINT_OPTION_HEADER_LEFT),
-	PrintSetupGetHdrFtrSpec(pJob->pSetup, DTPRINT_OPTION_HEADER_RIGHT),
-	PrintSetupGetHdrFtrSpec(pJob->pSetup, DTPRINT_OPTION_FOOTER_LEFT),
-	PrintSetupGetHdrFtrSpec(pJob->pSetup, DTPRINT_OPTION_FOOTER_RIGHT)
-	);
-
-    /*
-     * Notify the user that we're printing
-     */
-    if (pJob->pPad != NULL)
-    {
-        static char	buf[1024];
-        char 		*format;
-
-        format = GETMESSAGE(14, 22, "Printing %s: page %d of %d ...");
-        sprintf(buf, format,
-		pJob->documentName,
-		pJob->npagesDone,
-		pJob->npagesTotal);
-        SetStatusMessage(pJob->pPad, buf);
-    }
-
-#ifndef PRINT_TO_VIDEO
-    if (pJob->npagesDone >= pJob->npagesTotal)
-      pscbs->last_page = TRUE;
-#endif
-
-#endif /* PRINTING_SUPPORTED */
 }

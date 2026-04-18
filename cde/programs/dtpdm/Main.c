@@ -191,7 +191,7 @@ PdmShellCreate(PdmShell* me,
     if(!XGetWindowAttributes(me->display, me->parent_window, &me->parent_attr))
 	return PDM_EXIT_ERROR;
     /*
-     * register interest in the DestroyNotify event for the parent window
+     * interest in the DestroyNotify event for the parent window
      */
     XSelectInput(me->display, me->parent_window, StructureNotifyMask);
     /*

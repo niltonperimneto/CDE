@@ -55,8 +55,8 @@
 #ifndef CoEdGlobals_h
 #define CoEdGlobals_h
 
-#include "CoEd.h"
-#include "CoEdSiteID.h"
+#include "CoEd.hpp"
+#include "CoEdSiteID.hpp"
 
 extern char	       *coEdProcID;
 extern int		coEdTtFd;

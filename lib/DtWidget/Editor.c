@@ -1429,7 +1429,7 @@ Initialize(
   XtManageChild( M_text(new)) ;
 
   /*
-   * If the widget is not "read only" then register it as a drop zone
+   * If the widget is not "read only" then it as a drop zone
    */
   if ( M_editable(new) == True )
      RegisterDropZone( new );
@@ -2404,7 +2404,7 @@ SetValues(
      if( M_editable(request) ) {
 
 	/*
-	 * If the widget is becoming editable, register it as a 
+	 * If the widget is becoming editable, it as a 
 	 * drop site and...
 	 */
         RegisterDropZone( new );

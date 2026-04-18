@@ -643,13 +643,8 @@ _DtCopyPathFromInput(char *input_string, char *current_dir)
     return path;
 }
 char *
-#ifdef _NO_PROTO
-_DtCopyChangeTildeToHome (input_string)
-    char *input_string;
-#else
     _DtCopyChangeTildeToHome (
     char *input_string)
-#endif
 {
     char *path;
     char *full_path;

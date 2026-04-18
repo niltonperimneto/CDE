@@ -34,9 +34,9 @@
 #ifndef _TT_DB_SERVER_DB_UTILS_H
 #define _TT_DB_SERVER_DB_UTILS_H
 
-#include "util/tt_list.h"
-#include "util/tt_table.h"
-#include "tt_db_server_db.h"
+#include "util/tt_list.hpp"
+#include "util/tt_table.hpp"
+#include "tt_db_server_db.hpp"
 
 declare_list_of(_Tt_db_server_db)
 declare_table_of(_Tt_db_server_db)

@@ -35,7 +35,7 @@
 #ifndef _TT_ISAM_FILE_UTILS_H
 #define _TT_ISAM_FILE_UTILS_H
 
-#include "tt_isam_file.h"
+#include "tt_isam_file.hpp"
 
 declare_ptr_to(_Tt_isam_file)
 

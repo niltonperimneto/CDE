@@ -35,8 +35,8 @@
 #ifndef _TT_ISAM_KEY_DESCRIPTOR_UTILS_H
 #define _TT_ISAM_KEY_DESCRIPTOR_UTILS_H
 
-#include "util/tt_list.h"
-#include "tt_isam_key_descriptor.h"
+#include "util/tt_list.hpp"
+#include "tt_isam_key_descriptor.hpp"
 
 declare_list_of(_Tt_isam_key_descriptor)
 

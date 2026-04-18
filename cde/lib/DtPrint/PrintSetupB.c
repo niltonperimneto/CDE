@@ -670,9 +670,6 @@ ClosePrintConnection(
     cbs.reason = DtPRINT_CR_CLOSE_PRINT_DISPLAY;
     psd.printer_name = old_printer_name;
     psd.print_display = PSUB_Display(psub);
-#if 0 && defined(PRINTING_SUPPORTED)
-    psd.print_context = PSUB_Context(psub);
-#endif /* PRINTING_SUPPORTED */
     XtCallCallbackList((Widget)psub,
 		       PSUB_CloseDisplayCallback(psub),
 		       (XtPointer)&cbs);
@@ -708,10 +705,6 @@ ClosePrintConnection(
     /*
      * destroy the print context
      */
-#if 0 && defined(PRINTING_SUPPORTED)
-    XpDestroyContext(PSUB_Display(psub), PSUB_Context(psub));
-    PSUB_Context(psub) = (XPContext)NULL;
-#endif /* PRINTING_SUPPORTED */
     /*
      * close the print display
      */
@@ -1599,9 +1592,6 @@ EstablishPrinter(
 		 * set the new display and context in the widget
 		 */
 		PSUB_Display(psub) = psd->print_display;
-#if 0 && defined(PRINTING_SUPPORTED)
-		PSUB_Context(psub) = psd->print_context;
-#endif /* PRINTING_SUPPORTED */
 		/*
 		 * initialize the display for use with Xt
 		 */
@@ -1678,9 +1668,6 @@ EstablishPrinter(
 	if(PSUB_PrintSetupMode(psub) == DtPRINT_SETUP_XP)
 	{
 	    psd->print_display = PSUB_Display(psub);
-#if 0 && defined(PRINTING_SUPPORTED)
-	    psd->print_context = PSUB_Context(psub);
-#endif /* PRINTING_SUPPORTED */
 	}
 	break;
 
@@ -1713,105 +1700,6 @@ static void
 GetPrintAttributes(
 		   DtPrintSetupBoxWidget psub)
 {
-#if 0 && defined(PRINTING_SUPPORTED)
-    char* attr_value;
-    XTextProperty text_prop;
-    char** list;
-    int count;
-    XmString description = (XmString)NULL;
-    char* ptr;
-    /*
-     * get the printer description, and set the description field
-     */
-    attr_value = XpGetOneAttribute(PSUB_Display(psub),
-				   PSUB_Context(psub),
-				   XPPrinterAttr,
-				   XpATTR_DESCRIPTOR);
-    if(attr_value != (char*)NULL)
-    {
-	/*
-	 * convert the description from COMPOUND_TEXT into the
-	 * codeset of the current locale
-	 */
-	text_prop.value = (unsigned char*)attr_value;
-	text_prop.encoding =
-	    XInternAtom(XtDisplay((Widget)psub), "COMPOUND_TEXT", False);
-	text_prop.format = 8;
-	text_prop.nitems = strlen((char*)text_prop.value);
-	if(Success ==
-	   XmbTextPropertyToTextList(XtDisplay((Widget)psub),
-				     &text_prop, &list, &count))
-	{
-	    if(count > 0)
-	    {
-		if((String)NULL != list[0] && '\0' != *(list[0]))
-		{
-		    /*
-		     * chop the description after the 1st line
-		     */
-		    char* ptr = Dt_strchr(list[0], '\n');
-		    if((char*)NULL != ptr)
-			*ptr = '\0';
-		}
-		description =
-		    XmStringGenerate((XtPointer)list[0], (XmStringTag)NULL,
-				     XmMULTIBYTE_TEXT, (XmStringTag)NULL);
-	    }
-	    XFreeStringList(list);    
-	}
-	else
-	{
-	    XmeWarning((Widget)psub, WARN_CT_CONVERSION);
-	}
-	XFree(attr_value);
-    }
-    /*
-     * update the printer description
-     */
-    if((XmString)NULL == description)
-	description = XmStringGenerate((XtPointer)"", (XmStringTag)NULL,
-				       XmMULTIBYTE_TEXT, (XmStringTag)NULL);
-    UpdateString(PSUB_Description(psub), 
-		 description,
-		 PSUB_StringDirection(psub));
-    XmStringFree(description);
-    /*
-     * determine if copy-count is supported
-     */
-    PSUB_CopyCountSupported(psub) = False;
-    attr_value = XpGetOneAttribute(PSUB_Display(psub), PSUB_Context(psub),
-				   XPPrinterAttr, XpATTR_DOC_ATTRS_SUPPORTED);
-    if(attr_value != (char*)NULL)
-    {
-	int token_len;
-	for(ptr = attr_value + SpanWhitespace(attr_value);
-	    *ptr != '\0';
-	    ptr += SpanWhitespace(ptr+=token_len))
-	{
-	    token_len = SpanNonWhitespace(ptr);
-	    if(0 == strncmp(ptr, XpATTR_COPY_COUNT, token_len))
-	    {
-		PSUB_CopyCountSupported(psub) = True;
-		break;
-	    }
-	}
-	XFree(attr_value);
-    }
-    if(!PSUB_CopyCountSupported(psub))
-    {
-	/*
-	 * copy-count not supported; disable the copies control
-	 */
-	if(PSUB_CopiesSpinBox(psub))
-	    XtSetSensitive(PSUB_CopiesSpinBox(psub), False);
-	if(PSUB_CopiesControl(psub))
-	{
-	    Widget copies_label =
-		XtNameToWidget(PSUB_CopiesControl(psub), "CopiesLabel");
-	    XtSetSensitive(copies_label, False);
-	}
-    }
-#endif /* PRINTING_SUPPORTED */
 }
 
 /*
@@ -1876,9 +1764,6 @@ Initialize(
      */
     PSUB_ModalPrinterSpec(new_w) = (String)NULL;
     PSUB_Display(new_w) = (Display*)NULL;
-#if 0 && defined(PRINTING_SUPPORTED)
-    PSUB_Context(new_w) = (XPContext)NULL;
-#endif /* PRINTING_SUPPORTED */
     PSUB_TimeoutId(new_w) = (XtIntervalId)NULL;
     /*
      * retrieve the XpPrinterNameMode application resource for this
@@ -2047,56 +1932,8 @@ static Boolean
 IsSetupRequired(
 		DtPrintSetupBoxWidget psub)
 {
-#if 0 && defined(PRINTING_SUPPORTED)
-    char* setup_proviso;
-#endif /* PRINTING_SUPPORTED */
     Boolean required = False;
 
-#if 0 && defined(PRINTING_SUPPORTED)
-    setup_proviso = XpGetOneAttribute(PSUB_Display(psub),
-				      PSUB_Context(psub),
-				      XPPrinterAttr,
-				      XpATTR_SETUP_PROVISO);
-    if((char*)NULL != setup_proviso)
-    {
-	char* ptr;
-	int token_len;
-
-	ptr = setup_proviso + SpanWhitespace(setup_proviso);
-	token_len = SpanNonWhitespace(ptr);
-	if(token_len && 0 == strncmp(ptr, "xp-setup-mandatory", token_len))
-	{
-	    char* setup_state;
-	    /*
-	     * setup is mandatory; check to see if it has been performed
-	     */
-	    setup_state = XpGetOneAttribute(PSUB_Display(psub),
-					    PSUB_Context(psub),
-					    XPJobAttr,
-					    XpATTR_SETUP_STATE);
-	    if((char*)NULL == setup_state)
-		required = True;
-	    else
-	    {
-		ptr = setup_state + SpanWhitespace(setup_state);
-		token_len = SpanNonWhitespace(ptr);
-		if(token_len)
-		{
-		    /*
-		     * if the value of the setup state attribute is
-		     * xp-setup-ok then setup is not required
-		     */
-		    if(0 != strncmp(ptr, "xp-setup-ok", token_len))
-			required = True;
-		}
-		else
-		    required = True;
-		XFree(setup_state);
-	    }
-	}
-	XFree(setup_proviso);
-    }
-#endif /* PRINTING_SUPPORTED */
     return required;
 }
 
@@ -2498,10 +2335,6 @@ SetPrintAttributes(
 		      XmNposition, &PSUB_Copies(psub),
 		      NULL);
 	sprintf(str, "*%s: %d\n", XpATTR_COPY_COUNT, PSUB_Copies(psub));
-#if 0 && defined(PRINTING_SUPPORTED)
-	XpSetAttributes(PSUB_Display(psub), PSUB_Context(psub),
-			XPDocAttr, str, XPAttrMerge);
-#endif /* PRINTING_SUPPORTED */
     }
 }
 
@@ -4458,9 +4291,6 @@ DtPrintCopySetupData(
 	}
 
 	target->print_display = source->print_display;
-#if 0 && defined(PRINTING_SUPPORTED)
-	target->print_context = source->print_context;
-#endif /* PRINTING_SUPPORTED */
 	target->destination = source->destination;
 	target->messages_hint = source->messages_hint;
 
@@ -4544,9 +4374,6 @@ XtEnum DtPrintFillSetupData(
 	XtEnum status;
 	String new_printer_spec;
 	Display* new_display;
-#if 0 && defined(PRINTING_SUPPORTED)
-	XPContext new_context;
-#endif /* PRINTING_SUPPORTED */
 	/*
 	 * GUI-less printing; verify the printer name and establish the
 	 * print connection without involving the print setup box.
@@ -4555,16 +4382,10 @@ XtEnum DtPrintFillSetupData(
 					print_data->printer_name,
 					&new_printer_spec,
 					&new_display
-#if 0 && defined(PRINTING_SUPPORTED)
-					,&new_context
-#endif /* PRINTING_SUPPORTED */
                                         );
 	if(status == DtPRINT_SUCCESS)
 	{
 	    print_data->print_display = new_display;
-#if 0 && defined(PRINTING_SUPPORTED)
-	    print_data->print_context = new_context;
-#endif /* PRINTING_SUPPORTED */
 	}
 	if(new_printer_spec != (String)NULL)
 	{
@@ -4770,9 +4591,6 @@ DtPrintResetConnection(
 	 * simply disavow knowledge of the X print connection
 	 */
 	PSUB_Display(psub) = (Display*)NULL;
-#if 0 && defined(PRINTING_SUPPORTED)
-	PSUB_Context(psub) = (XPContext)NULL;
-#endif /* PRINTING_SUPPORTED */
 	break;
 	
     case DtPRINT_CLOSE_CONNECTION:

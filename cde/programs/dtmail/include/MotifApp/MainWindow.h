@@ -107,19 +107,19 @@ protected:
     // The Application class automatically calls initialize() 
     // for all registered main window objects
     
-    virtual void initialize();
-    virtual void disableWorkAreaResize();
-    virtual void enableWorkAreaResize();
-    virtual void manage();   // popup the window
-    virtual void unmanage(); // pop down the window
-    virtual void iconify();
+    virtual void initialize(void);
+    virtual void disableWorkAreaResize(void);
+    virtual void enableWorkAreaResize(void);
+    virtual void manage(void);   // popup the window
+    virtual void unmanage(void); // pop down the window
+    virtual void iconify(void);
     virtual void setIconTitle(const char * title);
     virtual void setIconName(const char * name);
     virtual void title(const char *);
     virtual void flash(const int count);
     virtual void quit(Boolean delete_win = FALSE)=0;
     virtual void panicQuit()=0;
-    virtual Boolean isIconified();
+    virtual Boolean isIconified(void);
 
     // Functions to control session management.
     virtual int  smpSaveSessionGlobal(void) = 0;

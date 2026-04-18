@@ -37,7 +37,7 @@
 #ifndef _TT_DB_OBJID_TO_KEY_H
 #define _TT_DB_OBJID_TO_KEY_H
 
-#include <util/tt_string.h>
+#include <util/tt_string.hpp>
 
 extern _Tt_string _tt_db_objid_to_key (const _Tt_string &objid);
 

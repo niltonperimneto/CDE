@@ -74,7 +74,7 @@ public:
   //
   // Like initialize() except returns success status.
   //
-  Boolean		startup();
+  Boolean		startup(void);
 
   //
   // Set the search direction for find.
@@ -96,7 +96,7 @@ private:
   // data should look as if the constructor was just called and
   // before initialize().
   //
-  void		clear();
+  void		clear(void);
 
   Boolean	findMatching(Boolean findAll = False);
 
@@ -140,7 +140,7 @@ private:
   //
   // Pull all fields out of the dialog and store in _text_values;
   //
-  void		getAllFields();
+  void		getAllFields(void);
 
   unsigned int	   _num_text_fields;    	// Array size.
 

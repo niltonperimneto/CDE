@@ -75,7 +75,7 @@ class IconifyCmd : public NoUndoCmd {
     
   protected:
     
-    virtual void doit();      // Iconify all windows
+    virtual void doit(void);      // Iconify all windows
     
   public:
     

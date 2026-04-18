@@ -572,7 +572,7 @@ externaldef(termwidgetclass) WidgetClass dtTermPrimitiveWidgetClass =
 static void
 ClassInitialize(void)
 {
-    /* register our resource converters... */
+    /* our resource converters... */
     (void) _DtTermPrimInitRepTypes();
 
     return;
@@ -2391,7 +2391,7 @@ Realize(Widget w, XtValueMask *p_valueMask, XSetWindowAttributes *attributes)
 	    attributes);
 
     /*
-     * register input method, and set callbacks for on the spot
+     * input method, and set callbacks for on the spot
      * support.
      */
     (void) XmImRegister(w, 0);

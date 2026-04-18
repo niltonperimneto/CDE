@@ -35,7 +35,7 @@
 
 #include <stdlib.h>
 #include <X11/Intrinsic.h>
-#include "dtb_utils.h"
+#include "dtb_utils.hpp"
 
 /*
  * User Interface Objects

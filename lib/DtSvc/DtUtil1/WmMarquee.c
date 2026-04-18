@@ -159,7 +159,7 @@ _DtWsmAddMarqueeSelectionCallback (
     char *	sessId;
 
     /*
-     * This function register a ToolTalk pattern for every
+     * This function a ToolTalk pattern for every
      * callback added.
      */
     _DtSvcInitToolTalk(widget);

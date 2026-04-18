@@ -42,7 +42,7 @@
 #define _ModAttr_h
 
 #include <stdio.h> /* for FILENAME_MAX */
-#include "Common.h"
+#include "Common.hpp"
 
 extern DialogClass * modAttrClass;
 

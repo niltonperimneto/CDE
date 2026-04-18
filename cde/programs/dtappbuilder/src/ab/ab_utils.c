@@ -887,7 +887,7 @@ ab_post_instantiate(
 	    if (parent_w)
 	    {
 		/*
-		 * If parent widget is not realized, register expose handler
+		 * If parent widget is not realized, expose handler
 		 */
 		if (!XtIsRealized(parent_w))
 		    abobj_register_group_expose_handler(obj);

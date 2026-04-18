@@ -79,7 +79,7 @@ class Icon : public UIComponent {
 	void select(void);
 	void primitiveSelect(void);
 	void defaultAction(void);
-	void unselect();
+	void unselect(void);
 
 	// associated attachment
 	Attachment* 	parent() 		{ return ( _parent ); }

@@ -75,7 +75,7 @@ class UndoCmd : public NoUndoCmd {
     
   protected:
 
-    virtual void doit();
+    virtual void doit(void);
     
   public:
     

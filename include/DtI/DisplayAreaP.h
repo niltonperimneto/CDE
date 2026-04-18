@@ -160,9 +160,9 @@ typedef	struct _dtHelpDispAreaStruct {
 	short	decorThickness;		/* the shadow thickness plus highlight
 					   thickness of the display area    */
 
-	void	(*hyperCall)();		/* The hypertext callback */
-	void	(*resizeCall)();	/* The resize callback    */
-	int	(*exec_filter)();	/* The execution filter callback    */
+	void	(*hyperCall)(void);		/* The hypertext callback */
+	void	(*resizeCall)(void);	/* The resize callback    */
+	int	(*exec_filter)(void);	/* The execution filter callback    */
 	XtPointer	clientData;	/* The client's data for the callback */
 
 	Pixel	traversalColor;		/* The client's traversal color */

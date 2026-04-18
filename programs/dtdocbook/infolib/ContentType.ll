@@ -15,13 +15,13 @@ using namespace std;
 
 #include "dti_excs/Exceptions.hh"
 
-#include "Task.h"
-#include "SGMLName.h"
-#include "ExprList.h"
-#include "Expression.h"
+#include "Task.hpp"
+#include "SGMLName.hpp"
+#include "ExprList.hpp"
+#include "Expression.hpp"
 #include "OL_DataExpr.tab.h"
-#include "ContentType.h"
-#include "api/utility.h"
+#include "ContentType.hpp"
+#include "api/utility.hpp"
 
 /* CurrentContentPtr is used as the communication media between
  * ol_dataparse and ContentType::Parse()

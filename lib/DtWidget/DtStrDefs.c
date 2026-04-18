@@ -25,11 +25,7 @@
 /* Do not edit. */
 
 #ifndef DtConst
-#if defined(__STDC__) || !defined(NO_CONST)
 #define DtConst const
-#else
-#define DtConst
-#endif /* __STDC__ */
 #endif /* DtConst */
 
 #ifndef _DtConst

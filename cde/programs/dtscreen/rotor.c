@@ -59,11 +59,7 @@
 /*typedef unsigned char Boolean; */
 
 #define IDENT(X)	X
-#if defined (__STDC__) || defined (AIXV3)
 #define CAT(X,Y)	X##Y
-#else
-#define CAT(X,Y)	IDENT(X)Y
-#endif
 
 struct elem {
     float       angle;

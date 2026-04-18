@@ -25,6 +25,6 @@
 #define __HandlerH__
 
 #include <new>
-extern void FreeStoreException();
+extern void FreeStoreException(void);
 
 #endif

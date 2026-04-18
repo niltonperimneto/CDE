@@ -111,7 +111,7 @@ class WorkingDialogManager : public DialogManager {
 			 DialogCallback cancel = NULL,
 			 DialogCallback help   = NULL );
     
-    void unpost();    // Remove the dialog from the screen
+    void unpost(void);    // Remove the dialog from the screen
     
     void updateMessage ( char * );  // Change the text in the dialog
 };

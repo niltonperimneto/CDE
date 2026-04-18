@@ -61,7 +61,7 @@ protected:
 public:
   DialogWindow( char *, RoamMenuWindow * );
   virtual ~DialogWindow();
-  virtual void initialize();
+  virtual void initialize(void);
 
 // Accessors
 

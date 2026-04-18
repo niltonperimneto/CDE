@@ -86,7 +86,7 @@ class SelectFileCmd : public NoUndoCmd {
     
   protected:
     
-    void doit();              // Called by base class
+    void doit(void);              // Called by base class
     char * 	_ok_label;
     char *	_title;
 
@@ -103,7 +103,7 @@ class SelectFileCmd : public NoUndoCmd {
     XmString	_directory;	// The directory pointed to.
     
     virtual void fileSelected (char *);
-    virtual void fileCanceled ();
+    virtual void fileCanceled (void);
     
   public:
     
@@ -130,7 +130,7 @@ class SelectFileCmd : public NoUndoCmd {
 
     char	*getDirectory();
     char	*getSelected();
-    int		getHidden();
+    int		getHidden(void);
 
     void	setDirectory(char *);
     void	setSelected(char *);

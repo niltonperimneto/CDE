@@ -467,7 +467,7 @@ DtSaverGetWindows(
 
 /*************************************<->*************************************
  *
- *  RegisterSaverCB() - register a screen saver
+ *  RegisterSaverCB() - a screen saver
  *
  *  Description:
  *  -----------

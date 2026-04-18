@@ -323,7 +323,7 @@ _DtCm_add_registration(
 			break;
 	}
 
-	/* register the first time, insert in list in ascending order */
+	/* the first time, insert in list in ascending order */
 	if ((listitem = (_DtCm_Target_List *)calloc(1, sizeof(_DtCm_Target_List))) == NULL)
 		return (CSA_E_INSUFFICIENT_MEMORY);
 
@@ -652,8 +652,8 @@ cleanup_some_connection(_DtCm_Client_Info *dontclose)
 /*
  * check registration
  * Deergister the first target:
- * if it succeeded, the old server is still running, just re-register it;
- * else assume that it's a new server so re-register the whole list again.
+ * if it succeeded, the old server is still running, just re-it;
+ * else assume that it's a new server so re-the whole list again.
  */
 static void
 check_registration(_DtCm_Connection *conn)

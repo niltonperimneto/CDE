@@ -40,8 +40,8 @@ typedef struct _cef_browser_settings_t {
 
 // Functions
 int cef_initialize(const cef_settings_t* settings, void* app);
-void cef_shutdown();
-void cef_do_message_loop_work();
+void cef_shutdown(void);
+void cef_do_message_loop_work(void);
 
 // Mock Browser Object
 typedef struct _cef_browser_t {

@@ -36,7 +36,6 @@
 #define lex_output(c) (void)putc(c, tt_trace_out)
 #endif
 
-#if defined(__cplusplus) || defined(__STDC__)
 
 #if defined(__cplusplus) && defined(__EXTERN_C__)
 extern "C" {
@@ -75,7 +74,6 @@ void exit(int);
 }
 #endif
 
-#endif
 #define unput(c)                                                               \
   {                                                                            \
     tt_trace_tchar = (c);                                                      \
@@ -2714,11 +2712,7 @@ char *tt_trace_sptr = tt_trace_sbuf;
 int *tt_trace_fnd;
 extern struct tt_trace_svf *tt_trace_estate;
 int tt_trace_previous = TT_TRACE_NEWLINE;
-#if defined(__cplusplus) || defined(__STDC__)
 int tt_trace_look(void)
-#else
-tt_trace_look()
-#endif
 {
   struct tt_trace_svf *tt_trace_state, **lsp;
   struct tt_trace_work *tt_trace_t;
@@ -2928,11 +2922,7 @@ tt_trace_look()
 #endif
   }
 }
-#if defined(__cplusplus) || defined(__STDC__)
 int tt_trace_back(int *p, int m)
-#else
-tt_trace_back(p, m) int *p;
-#endif
 {
   if (p == 0)
     return (0);
@@ -2943,11 +2933,7 @@ tt_trace_back(p, m) int *p;
   return (0);
 }
 /* the following are only used in the lex library */
-#if defined(__cplusplus) || defined(__STDC__)
 int tt_trace_input(void)
-#else
-tt_trace_input()
-#endif
 {
 #ifndef __cplusplus
   return (input());
@@ -2955,11 +2941,7 @@ tt_trace_input()
   return (lex_input());
 #endif
 }
-#if defined(__cplusplus) || defined(__STDC__)
 void tt_trace_output(int c)
-#else
-tt_trace_output(c) int c;
-#endif
 {
 #ifndef __cplusplus
   output(c);
@@ -2967,11 +2949,7 @@ tt_trace_output(c) int c;
   lex_output(c);
 #endif
 }
-#if defined(__cplusplus) || defined(__STDC__)
 void tt_trace_unput(int c)
-#else
-tt_trace_unput(c) int c;
-#endif
 {
   unput(c);
 }

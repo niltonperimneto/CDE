@@ -246,9 +246,6 @@ void mgr_initialize( XEvent *report, XpPdmServiceRec *rec )
     rec->video_window       = strtol(list[1], (char **)NULL, 16);
     rec->print_display_str  = xpstrdup( list[2] );
     rec->print_window       = strtol(list[3], (char **)NULL, 16);
-#if 0 && defined(PRINTING_SUPPORTED)
-    rec->print_context      = strtol(list[4], (char **)NULL, 16);
-#endif /* PRINTING_SUPPORTED */
     rec->locale_hint        = xpstrdup( list[5] );
     XFreeStringList( list );
 
@@ -535,22 +532,6 @@ void mgr_fetch_pdm( XpPdmServiceRec *rec )
 	if ( setjmp( xio_quickie_jmp_buf ) == 0 ) {
 	    XSetIOErrorHandler( xio_quickie_handler );
 
-#if 0 && defined(PRINTING_SUPPORTED)
-	    if ( rec->seldpy_as_printdpy ) {
-		tptr1 = XpGetOneAttribute( rec->selection_display,
-				   rec->print_context,
-				   XPPrinterAttr, "dt-pdm-command" );
-	    }
-	    else {
-		tdpy = XOpenDisplay( rec->print_display_str );
-		if (tdpy) {
-		    tptr1 = XpGetOneAttribute( tdpy,
-                                   rec->print_context,
-                                   XPPrinterAttr, "dt-pdm-command" );
-		    XCloseDisplay( tdpy );
-		}
-	    }
-#endif /* PRINTING_SUPPORTED */
 
 	    XSetIOErrorHandler( NULL );
 	}
@@ -631,11 +612,6 @@ void mgr_fetch_pdm( XpPdmServiceRec *rec )
     sprintf( tstr, "0x%lx", rec->print_window );
     xp_add_argv( &(rec->pdm_exec_argvs), xpstrdup(tstr) );
 
-#if 0 && defined(PRINTING_SUPPORTED)
-    xp_add_argv( &(rec->pdm_exec_argvs), xpstrdup("-pcontext") );
-    sprintf( tstr, "0x%lx", rec->print_context );
-    xp_add_argv( &(rec->pdm_exec_argvs), xpstrdup(tstr) );
-#endif /* PRINTING_SUPPORTED */
 }
 
 /********************************************************************

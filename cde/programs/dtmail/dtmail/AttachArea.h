@@ -155,8 +155,8 @@ class AttachArea : public UIComponent {
     AttachArea (Widget, DtMailEditor*, char *);
     virtual 		~AttachArea();
 
-    void		initialize();
-    void		addToRowOfAttachmentsStatus();
+    void		initialize(void);
+    void		addToRowOfAttachmentsStatus(void);
     void		attachment_summary(int, int);
 	// Inline functions
     Cmd* 			openCmd()	{ return ( _open ); }
@@ -203,11 +203,11 @@ class AttachArea : public UIComponent {
 #endif /* DEAD_WOOD */
     void			undeleteLastDeletedAttachment(DtMailEnv &);
 
-    void			removeLastDeletedAttachment();
+    void			removeLastDeletedAttachment(void);
 
     virtual void		attachmentFeedback(Boolean);
 
-    virtual void 		activateDeactivate();
+    virtual void 		activateDeactivate(void);
     Widget      		getRc()	{ return (_rc ); }
     Widget      		getClipWindow()	{ return (_clipWindow ); }
     Widget      		getSWWindow()	{ return (_sw ); }
@@ -251,35 +251,35 @@ class AttachArea : public UIComponent {
     void         	setSelectedAttachmentsSize( unsigned int size )
 				{ ( _selectedAttachmentsSize = size ); }
 
-    void		selectAllAttachments();
+    void		selectAllAttachments(void);
 
-    Attachment*		getSelectedAttachment();
+    Attachment*		getSelectedAttachment(void);
     void		unselectOtherSelectedAttachments(Attachment *);
 #ifdef DEAD_WOOD
-    void			deleteAttachments();
+    void			deleteAttachments(void);
 #endif /* DEAD_WOOD */
-    void 			manageList();
+    void 			manageList(void);
     void 			CalcSizeOfAttachPane( );
 #ifdef DEAD_WOOD
     void 			CalcAttachmentPosition(Attachment *);
 #endif /* DEAD_WOOD */
-    void			CalcAllAttachmentPositions();
+    void			CalcAllAttachmentPositions(void);
     void			DisplayAttachmentsInRow(unsigned int);
     void			calculate_attachment_position(
 					Attachment *, 
 					Attachment *);
-    void			CalcLastRow();
+    void			CalcLastRow(void);
     unsigned int		getLastRow()	{ return ( _lastRow); }
     unsigned int		getCurrentRow()	{ return ( _currentRow); }
     void			SetScrollBarSize(unsigned int );
-    void			AdjustCurrentRow();
+    void			AdjustCurrentRow(void);
     void 			initialize(Widget);
     void 			initialize_send(Widget);
     void 			initialize_view(Widget);
 #ifdef DEAD_WOOD
     void			setAttachmentsLabel( );
 #endif /* DEAD_WOOD */
-    int				getSelectedIconCount();
+    int				getSelectedIconCount(void);
 #ifdef DEAD_WOOD
     void			CalcAttachmentsSize( );
     void			add_attachment( Attachment * );
@@ -296,25 +296,25 @@ class AttachArea : public UIComponent {
     // SR -- Added methods below
 
     void		attachmentSelected(Attachment *);
-    void		manage();
-    void		unmanage();
-    void		removeCurrentAttachments();
-    void		clearAttachArea();
+    void		manage(void);
+    void		unmanage(void);
+    void		removeCurrentAttachments(void);
+    void		clearAttachArea(void);
 #ifdef DEAD_WOOD
     void		saveAttachmentToFile(DtMailEnv &, char *);
 #endif /* DEAD_WOOD */
     void		deleteSelectedAttachments(DtMailEnv &);
-    Widget		ownerShellWidget();
+    Widget		ownerShellWidget(void);
     void		setOwnerShell(RoamMenuWindow *);
     void		setOwnerShell(ViewMsgDialog  *);
     void		setOwnerShell(SendMsgDialog  *);
-    Boolean		isOwnerShellEditable();
+    Boolean		isOwnerShellEditable(void);
 
     void		setPendingAction(Boolean);
-    void		resetPendingAction();
-    int			getNumPendingActions();
+    void		resetPendingAction(void);
+    int			getNumPendingActions(void);
 
-    XmString		getSelectedAttachName();
+    XmString		getSelectedAttachName(void);
     void		setSelectedAttachName(XmString );
 
     int			handleQuestionDialog(char *title, 

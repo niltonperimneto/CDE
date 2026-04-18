@@ -140,7 +140,7 @@ class RoamApp : public Application
     RoamMenuWindow	*nextRoamMenuWindow(RoamMenuWindow*);
     void		closeInactiveRoamMenuWindows(void);
     void		reopenRoamMenuWindows(void);
-    virtual void	open_catalog();  
+    virtual void	open_catalog(void);  
     char		*optionsDialog(void)
 			    { return _optionsHandle; }
     char		*print_script(){ return _print_script; }
@@ -159,17 +159,17 @@ class RoamApp : public Application
     void		setQuitSilently(void) { _quitSilently = TRUE; }
     void		setQuitQuickly(void) { _quitQuickly = TRUE; }
     void		setSession(MailSession *);
-    virtual void	shutdown();
-    void		checkForShutdown();
+    virtual void	shutdown(void);
+    void		checkForShutdown(void);
     Boolean		startVacation(Widget, Widget);
     static void		statusCallback(DtMailOperationId, DtMailEnv&, void*);
-    void		stopVacation();
+    void		stopVacation(void);
     void		unbusyAllWindows(void);
     void		unregisterActivePrintDisplay(Display *display)
 			    { _activePrintDisplays.remove(display); }
     void		unsetQuitSilently(void) { _quitSilently = FALSE; }
     void		unsetQuitQuickly(void) { _quitQuickly = FALSE; }
-    VacationCmd* vacation();
+    VacationCmd* vacation(void);
 };
 
 // This method will parse a colon/space tuples that are used in

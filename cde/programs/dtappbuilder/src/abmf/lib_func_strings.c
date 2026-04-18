@@ -5617,7 +5617,7 @@ static LibFuncRec abmfP_lrc_drop_site_register =
     "        regInfo.respondToDropsOnChildren = dropSite->dropsOnChildren;\n"
     "        dropSite->callback(widget, DTB_DND_REGISTER, &regInfo, NULL, NULL);\n"
     "\n"
-    "        /* actually register it! */\n"
+    "        /* actually it! */\n"
     "        DtDndVaDropRegister(\n"
     "	    widget, regInfo.protocols, regInfo.operations,\n"
     "	    dropSite->transferCBRec,\n"

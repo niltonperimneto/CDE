@@ -69,8 +69,8 @@
 
 class SeparatorCmd : public Cmd {
   public:
-    virtual void doit();   
-    virtual void undoit();   
+    virtual void doit(void);   
+    virtual void undoit(void);   
     SeparatorCmd( char *, char *, int );
     const char *const className () { return "SeparatorCmd"; }
 };
@@ -81,22 +81,22 @@ class SeparatorCmd : public Cmd {
 
 class ToggleButtonCmd : public Cmd {
   public:
-    virtual void doit();   
-    virtual void undoit();   
+    virtual void doit(void);   
+    virtual void undoit(void);   
     ToggleButtonCmd(
 		char *name, char *label, int active,
 		Boolean visible_when_off=TRUE,
 		unsigned char indicator_type=XmONE_OF_MANY_ROUND);
 
-    unsigned char	indicatorType();
-    Boolean		visibleWhenOff();
-    Boolean		getButtonState();
+    unsigned char	indicatorType(void);
+    Boolean		visibleWhenOff(void);
+    Boolean		getButtonState(void);
     void		setButtonState(Boolean, Boolean);
     
 #ifdef CAN_INLINE_VIRTUALS
     const char *const	className () { return "ToggleButtonCmd"; }
 #else /* ! CAN_INLINE_VIRTUALS */
-    const char *const	className ();
+    const char *const	className (void);
 #endif /* ! CAN_INLINE_VIRTUALS */
 
     unsigned char	_indicator_type;

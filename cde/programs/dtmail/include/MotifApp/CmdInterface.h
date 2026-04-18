@@ -94,7 +94,7 @@ class CmdInterface : public UIComponent {
     
     CmdInterface ( Cmd * );
     
-    virtual void activate();
-    virtual void deactivate();
+    virtual void activate(void);
+    virtual void deactivate(void);
 };
 #endif

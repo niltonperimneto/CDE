@@ -37,7 +37,7 @@
 #ifdef	HPVUE
 #include <Xvh/Xvh.h>
 #include <Xvh/QuickHelpD.h>
-#include <Xvh/HelpDialog.h>
+#include <Xvh/HelpDialog.hpp>
 
 #define	DtNcloseCallback		XmNcloseCallback
 #define	DtNcolumns			XmNcolumns

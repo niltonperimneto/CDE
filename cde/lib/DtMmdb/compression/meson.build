@@ -1,19 +1,19 @@
 flex = find_program('flex')
 
-sgml_C = custom_target('sgml.C',
+sgml_C = custom_target('sgml.cpp',
   input : 'sgml.ll',
-  output : 'sgml.C',
+  output : 'sgml.cpp',
   command : [flex, '-8', '-s', '-Psgml', '-o', '@OUTPUT@', '@INPUT@']
 )
 
-ps_C = custom_target('ps.C',
+ps_C = custom_target('ps.cpp',
   input : 'ps.ll',
-  output : 'ps.C',
+  output : 'ps.cpp',
   command : [flex, '-8', '-s', '-Pps', '-o', '@OUTPUT@', '@INPUT@']
 )
 
 libcompression_sources = [
-  'abs_agent.C', 'zip.C', 'huffman.C', 'trie.C', 'code.C', 'lzss.C',
+  'abs_agent.cpp', 'zip.cpp', 'huffman.cpp', 'trie.cpp', 'code.cpp', 'lzss.cpp',
   sgml_C, ps_C
 ]
 

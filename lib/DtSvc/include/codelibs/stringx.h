@@ -46,7 +46,6 @@ extern void *_strcmbn_privbuf;
 extern "C"
 {
 #endif
-#if defined(__cplusplus) || defined(__STDC__)
 #if !defined(sun)
     char *strnew(size_t len);
     void strfree(const char *s);
@@ -71,21 +70,6 @@ extern "C"
     const char *strcmbn(const char **vec, const char *sep);
 #endif /* __STDC__ */
 
-#else /* C */
-
-extern void   strfree();
-extern char  *strstrx(), strrstrx();
-extern int    strwcmp(), strwcmpi();
-extern char  *strwpat();
-extern char  *strend();
-extern char  *strtokx();
-
-extern unsigned   strhash();
-extern unsigned   strhashi();
-
-extern char      *strupper(), *strlower();
-
-#endif /* C */
 #if defined(__cplusplus)
 }
 

@@ -26,8 +26,7 @@ void TimerCallback(XtPointer client_data, XtIntervalId *id) {
   // Drive CEF message loop
   cef_do_message_loop_work();
 
-  // Re-register
-  XtAppAddTimeOut(app, 10, TimerCallback, NULL);
+  // Re-  XtAppAddTimeOut(app, 10, TimerCallback, NULL);
 }
 
 int main(int argc, char **argv) {

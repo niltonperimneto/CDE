@@ -206,8 +206,8 @@ typedef struct {
 } FileWidgets;
 
 typedef struct {
-    void (*pendingFileFunc)();
-    void (*pendingFileHelpFunc)();
+    void (*pendingFileFunc)(void);
+    void (*pendingFileHelpFunc)(void);
     Boolean fileExists,
 	    saveWithNewlines,
 	    readOnly;
@@ -1007,7 +1007,7 @@ extern void PrintJobExecute(
 extern void PrintJobCancel(
 	PrintJob *pJob);
 
-extern Display * PrintJobGetErrorPrintDisplay();
+extern Display * PrintJobGetErrorPrintDisplay(void);
 extern void PrintJobSetErrorPrintDisplay(Display *display);
 extern Boolean PrintJobIsActivePrintDisplay(Display *display);
 

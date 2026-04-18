@@ -1,7 +1,7 @@
 # libCliSrv - Static C++ Library for dtsearchpath
 
 libCliSrv_src = [
-  'DirIterator.C', 'Environ.C', 'TTFile.C', 'UnixEnv.C', 'cstring.C'
+  'DirIterator.cpp', 'Environ.cpp', 'TTFile.cpp', 'UnixEnv.cpp', 'cstring.cpp'
 ]
 
 libCliSrv = static_library('CliSrv',

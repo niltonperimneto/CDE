@@ -46,9 +46,6 @@
 #include "X11/Xlibint.h"
 #include "X11/Intrinsic.h"
 #include "X11/Xatom.h"
-#if 0 && defined(PRINTING_SUPPORTED)
-#include <X11/extensions/Print.h>
-#endif /* PRINTING_SUPPORTED */
 #include <X11/Xauth.h>
 
 
@@ -76,9 +73,6 @@ typedef struct
 
     char        *print_display_str;	/* Print Server Connection Info */
     Window      print_window;
-#if 0 && defined(PRINTING_SUPPORTED)
-    XPContext   print_context;
-#endif /* PRINTING_SUPPORTED */
     char        *locale_hint;
 
     Display     *selection_display;	/* Selection & Property Connection */
@@ -208,29 +202,29 @@ typedef struct
  */
 
 /* dispatch.c */
-extern void dispatch_mgr();
-extern void dispatch_mbox();
-extern void dispatch_targets();
-extern void dispatch_multiple();
-extern void dispatch_timestamp();
-extern void dispatch_not_supported();
+extern void dispatch_mgr(void);
+extern void dispatch_mbox(void);
+extern void dispatch_targets(void);
+extern void dispatch_multiple(void);
+extern void dispatch_timestamp(void);
+extern void dispatch_not_supported(void);
 
 /* dtpdmd.c */
 extern XpPdmGlobals g;
 
 /* mailbox.c */
-extern void mbox_initialize();
-extern void mbox_build();
-extern void mbox_reply();
-extern void mbox_receive();
+extern void mbox_initialize(void);
+extern void mbox_build(void);
+extern void mbox_reply(void);
+extern void mbox_receive(void);
 
 /* manager.c */
-extern void mgr_initialize();
-extern void mgr_launch_pdm();
-extern void mgr_fetch_pdm();
-extern void mgr_launch_reply();
-extern void mgr_shutdown_reply();
-extern void mgr_shutdown_scan();
+extern void mgr_initialize(void);
+extern void mgr_launch_pdm(void);
+extern void mgr_fetch_pdm(void);
+extern void mgr_launch_reply(void);
+extern void mgr_shutdown_reply(void);
+extern void mgr_shutdown_scan(void);
 
 /* records.c */
 extern XpPdmServiceRec *find_rec();
@@ -238,14 +232,14 @@ extern XpPdmServiceRec *find_rec_by_mbox_win();
 extern void delete_rec( XpPdmServiceRec *rec );
 
 /* setup.c */
-extern Bool _PdmMgrSetup();
+extern Bool _PdmMgrSetup(void);
 
 /* util.c */
 extern jmp_buf xio_quickie_jmp_buf;
-extern int xio_quickie_handler();
+extern int xio_quickie_handler(void);
 extern char *xpstrdup();
-extern int xpstrspn();
-extern int xpstrcspn();
+extern int xpstrspn(void);
+extern int xpstrcspn(void);
 extern char *xpstrtok();
-extern void xp_add_argv();
+extern void xp_add_argv(void);
 

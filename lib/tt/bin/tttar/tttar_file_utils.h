@@ -34,7 +34,7 @@
 #ifndef	_LSTAR_FILE_UTILS_H
 #define	_LSTAR_FILE_UTILS_H
 
-#include "tttar_string_map.h"
+#include "tttar_string_map.hpp"
 
 /*
  * Procedure declarations

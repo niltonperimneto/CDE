@@ -164,7 +164,7 @@ typedef struct bytearray {
 
 extern Bytearray _bytearr_getempty(), _bytearr_dup();
 extern Bytearray _bytearr_new(u_short len, char *data);
-extern void _bytearr_free();
+extern void _bytearr_free(void);
 
 
 /* Client identification - used to identify owners of locks */
@@ -177,8 +177,8 @@ extern void _bytearr_free();
 #define NOISFD		(-1)		     /* Not a valid file descriptor */
 
 extern struct fab *_isfd_find();
-extern void _isfd_delete();
-extern Isfd _isfd_insert();
+extern void _isfd_delete(void);
+extern Isfd _isfd_insert(void);
 
 /* Definitions related to File access block (isfab.c file */
 
@@ -194,8 +194,8 @@ enum readmode { RM_FIRST = 0, RM_LAST = 1, RM_NEXT = 2, RM_PREV = 3,
 /* lock flag is passed to Access Method module for every record oriented op. */
 /* Bit position in the lock flag: */
 
-enum openmode _getopenmode();
-enum readmode _getreadmode();
+enum openmode _getopenmode(void);
+enum readmode _getreadmode(void);
 
 /* Error code structure */
 struct errcode {
@@ -229,7 +229,7 @@ typedef struct fab {
 #define FAB_ISFDSET(fab, isfd) (fab->isfd = isfd)
 
 extern Fab *_fab_new();
-void _fab_destroy();
+void _fab_destroy(void);
 
 /* ISAM file identification for locking purposes. */
 typedef struct lckfid {
@@ -381,7 +381,7 @@ typedef struct issort {
 					     /* many records */
     int		ist_nrecs;		     /* number of records inserted */
     int		ist_currec;		     /* current position */
-    int		(*ist_compf) ();	     /* comparison function */
+    int		(*ist_compf) (void);	     /* comparison function */
     char	*ist_array;		     /* array of records */
 } Issort;
 

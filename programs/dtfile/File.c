@@ -3122,15 +3122,7 @@ DestroyIconName (
 
 
 int
-#ifdef _NO_PROTO
-GetInsertPosition( x1, x2, fontList, name )
-   int x1;
-   int x2;
-   XmFontList fontList;
-   char * name;
-#else
 GetInsertPosition( int x1, int x2, XmFontList fontList, char * name )
-#endif
 {
   int i, width, stringWidth;
   char * tmp;
@@ -4140,7 +4132,7 @@ SetHotRects (
       /* if icon gadget not yet registered as a drop site, do so now */
       if (!file_view_data->registered)
       {
-         /* register drop site for MCL but make drop site inactive */
+         /* drop site for MCL but make drop site inactive */
          XtSetArg (args[0], XmNdropSiteOperations,
                    XmDROP_COPY | XmDROP_MOVE | XmDROP_LINK);
          XtSetValues (file_view_data->widget, args, 1);
@@ -7039,7 +7031,7 @@ do_this_entry:
 #endif
 
 #ifdef DT_PERFORMANCE
-   printf("   Begin Part 2, DisplaySomeIcons (register drop sites)\n");
+   printf("   Begin Part 2, DisplaySomeIcons (drop sites)\n");
    gettimeofday(&update_time_s, NULL);
 
    /* added by Rafi  */
@@ -7075,8 +7067,7 @@ do_this_entry:
     * Register drop sites
     *
     * Note: in "as placed" mode, we defer this work and do it in
-    * CommitWorkProcUpdates instead.  Reason: need to re-register
-    * all drop sites in top-to-bottom stacking order at that time.
+    * CommitWorkProcUpdates instead.  Reason: need to re-    * all drop sites in top-to-bottom stacking order at that time.
     */
    if (! PositioningEnabledInView(file_mgr_data) &&
        file_mgr_data != trashFileMgrData)
@@ -7182,7 +7173,7 @@ CommitWorkProcUpdates(
    }
 
    /*
-    * In "as placed" mode, need to register drop sites now.
+    * In "as placed" mode, need to drop sites now.
     * (If not "as placed" mode, this was already done in DisplaySomeIcons.)
     */
    if (PositioningEnabledInView(file_mgr_data))
@@ -8956,7 +8947,7 @@ RepositionIcons (
    /*
     * Reregister the desktop hotspots.
     * Even if the caller told us that late binding was needed, if no new
-    * objects were specified, then we need to register hotspots now, because
+    * objects were specified, then we need to hotspots now, because
     * the layout function will never be called because the directory never
     * really changed.  This situation can occur when an icon is dropped on
     * the desktop from a regular dtfile view, but that icon is already on

@@ -34,23 +34,12 @@
 #ifndef _TTDND_H
 #define _TTDND_H
 
-#if defined(__STDC__) 
 /* ANSI C */
 #	define _TT_CONST const
 #	define _TT_EXTERN_FUNC(type,name,list) type name list
-#elif defined(__cplusplus)
-/* C++ 2.0 or later*/
-#	define _TT_CONST const
-#	define _TT_EXTERN_FUNC(type,name,list) extern "C" { type name list; }
-#else
-/* Sun C (K&R C, almost) */
-#	define _TT_CONST
-#	define _TT_EXTERN_FUNC(type,name,list) type name()
-#endif
 
 #define TTDND_ATM_TARGET "_SUN_TOOLTALK"
 
-#if defined(__cplusplus) || defined(__STDC__)
 typedef int (Ttdnd_send_data_func)(int chunknumber, int maxchunk,
 				   const char *type,
 				   void *buffer, int *chunksize,
@@ -59,11 +48,6 @@ typedef int (Ttdnd_receive_data_func)(int chunknumber, const char *type,
 				      void *buffer, int chunksize,
 				      int is_last);
 typedef void Ttdnd_input_func(void);
-#else
-typedef int (Ttdnd_send_data_func)();
-typedef int (Ttdnd_receive_data_func)();
-typedef void Ttdnd_input_func();
-#endif
 
 _TT_EXTERN_FUNC(int,
 		ttdnd_init,(int Xid, _TT_CONST char **validtypes,

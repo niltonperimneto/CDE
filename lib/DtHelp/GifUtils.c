@@ -74,11 +74,7 @@
 #include <Xm/XmPrivate.h>
 #include "GifUtilsI.h"
 
-#ifndef __STDC__
-#define debug1(s, x)  s <<  "x" << " = " << (x) << "\n"
-#else
 #define debug1(s, x)  s << #x << " = " << (x) << "\n"
-#endif
 
 #define MAX_GHANDS 16   /* maximum # of GRAF handles */
 

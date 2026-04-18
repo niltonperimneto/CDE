@@ -36,7 +36,7 @@
 #ifndef _pdmPrinterBox_h
 #define _pdmPrinterBox_h
 
-#include "MainWindow.h"
+#include "MainWindow.hpp"
 
 /*
  * public PdmPrinterBox methods

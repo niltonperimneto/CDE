@@ -1,6 +1,6 @@
 libdti_excs_sources = [
-  'Jump_Environment.C', 'Exceptions.C', 'Exception.C',
-  'Destructable.C', 'terminate.C'
+  'Jump_Environment.cpp', 'Exceptions.cpp', 'Exception.cpp',
+  'Destructable.cpp', 'terminate.cpp'
 ]
 
 libdti_excs = static_library('dti_excs',

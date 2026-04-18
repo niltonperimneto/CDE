@@ -1,3 +1,5 @@
+#include <fcntl.h>
+#include <unistd.h>
 /*
  * CDE - Common Desktop Environment
  *

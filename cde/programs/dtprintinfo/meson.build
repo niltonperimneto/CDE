@@ -6,34 +6,34 @@ dtprintinfo_inc = include_directories(
 
 # Source lists
 util_src = [
-  'util/Invoke.C', 'util/Process.C'
+  'util/Invoke.cpp', 'util/Process.cpp'
 ]
 
 libui_src = [
-  'libUI/BaseUI.C', 'libUI/MotifUI/Application.C', 'libUI/MotifUI/LabelObj.C',
-  'libUI/MotifUI/Button.C', 'libUI/MotifUI/MainWindow.C', 'libUI/MotifUI/ComboBoxObj.C',
-  'libUI/MotifUI/MenuBar.C', 'libUI/MotifUI/Container.C', 'libUI/MotifUI/Menu.C',
-  'libUI/MotifUI/Dialog.C', 'libUI/MotifUI/MotifThread.C', 'libUI/MotifUI/DtDND.C',
-  'libUI/MotifUI/MotifUI.C', 'libUI/MotifUI/Group.C', 'libUI/MotifUI/Prompt.C',
-  'libUI/MotifUI/HelpSystem.C', 'libUI/MotifUI/ScaleObj.C', 'libUI/MotifUI/Sep.C',
-  'libUI/MotifUI/IconObj.C', 'libUI/MotifUI/Debug.c', 'libUI/MotifUI/Icon.c',
+  'libUI/BaseUI.cpp', 'libUI/MotifUI/Application.cpp', 'libUI/MotifUI/LabelObj.cpp',
+  'libUI/MotifUI/Button.cpp', 'libUI/MotifUI/MainWindow.cpp', 'libUI/MotifUI/ComboBoxObj.cpp',
+  'libUI/MotifUI/MenuBar.cpp', 'libUI/MotifUI/Container.cpp', 'libUI/MotifUI/Menu.cpp',
+  'libUI/MotifUI/Dialog.cpp', 'libUI/MotifUI/MotifThread.cpp', 'libUI/MotifUI/DtDND.cpp',
+  'libUI/MotifUI/MotifUI.cpp', 'libUI/MotifUI/Group.cpp', 'libUI/MotifUI/Prompt.cpp',
+  'libUI/MotifUI/HelpSystem.cpp', 'libUI/MotifUI/ScaleObj.cpp', 'libUI/MotifUI/Sep.cpp',
+  'libUI/MotifUI/IconObj.cpp', 'libUI/MotifUI/Debug.c', 'libUI/MotifUI/Icon.c',
   'libUI/MotifUI/WorkArea.c'
 ]
 
 obj_src = [
-  'objects/BaseObj.C', 'objects/PrintObj/ParseJobs.C', 'objects/PrintObj/PrintSubSys.C',
-  'objects/PrintObj/PrintJob.C', 'objects/PrintObj/Queue.C'
+  'objects/BaseObj.cpp', 'objects/PrintObj/ParseJobs.cpp', 'objects/PrintObj/PrintSubSys.cpp',
+  'objects/PrintObj/PrintJob.cpp', 'objects/PrintObj/Queue.cpp'
 ]
 
 ui_src = [
-  'UI/DtActions.C', 'UI/DtProps.C', 'UI/DtFindSet.C', 'UI/DtSetPref.C',
-  'UI/DtApp.C', 'UI/DtPrtJobIcon.C', 'UI/DtWorkArea.C', 'UI/DtMainW.C',
-  'UI/DtPrtProps.C', 'UI/DtDetailsLabel.C', 'UI/DtPrinterIcon.C', 'UI/DtFindD.C',
-  'UI/DtSetModList.C'
+  'UI/DtActions.cpp', 'UI/DtProps.cpp', 'UI/DtFindSet.cpp', 'UI/DtSetPref.cpp',
+  'UI/DtApp.cpp', 'UI/DtPrtJobIcon.cpp', 'UI/DtWorkArea.cpp', 'UI/DtMainW.cpp',
+  'UI/DtPrtProps.cpp', 'UI/DtDetailsLabel.cpp', 'UI/DtPrinterIcon.cpp', 'UI/DtFindD.cpp',
+  'UI/DtSetModList.cpp'
 ]
 
 dtprintinfo_sources = [
-  'DtPrintinfo.C'
+  'DtPrintinfo.cpp'
 ] + util_src + libui_src + obj_src + ui_src
 
 # Message generation

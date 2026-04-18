@@ -2758,7 +2758,7 @@ init_calendar(int argc, char **argv)
         paint_icon(calendar);
 
 	/*
-	 * set version of cms and register client
+	 * set version of cms and client
 	 */
 	_DtTurnOnHourGlass(calendar->frame);
 

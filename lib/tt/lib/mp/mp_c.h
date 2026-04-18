@@ -33,13 +33,13 @@
 #ifndef _MP_C_H
 #define _MP_C_H
 
-#include <mp/mp_c_global.h>
-#include <mp/mp_arg.h>
-#include <mp/mp_c_file.h>
-#include <mp/mp_c_message.h>
-#include <mp/mp_c_procid.h>
-#include <mp/mp_c_session.h>
-#include <mp/mp_c_mp.h>
-#include <mp/mp_pattern.h>
+#include <mp/mp_c_global.hpp>
+#include <mp/mp_arg.hpp>
+#include <mp/mp_c_file.hpp>
+#include <mp/mp_c_message.hpp>
+#include <mp/mp_c_procid.hpp>
+#include <mp/mp_c_session.hpp>
+#include <mp/mp_c_mp.hpp>
+#include <mp/mp_pattern.hpp>
 
 #endif				/* _MP_C_H */

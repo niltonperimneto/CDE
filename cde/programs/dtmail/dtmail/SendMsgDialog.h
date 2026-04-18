@@ -237,7 +237,7 @@ class SendMsgDialog : public MenuWindow, public AbstractEditorParent {
     
     DtMailBoolean _log_msg;
     
-    void   mkAutoSavePath();
+    void   mkAutoSavePath(void);
     static void autoSaveCallback(XtPointer, XtIntervalId *id);
     void   doAutoSave(void);
     void   doAutoSave(char *);
@@ -262,10 +262,10 @@ class SendMsgDialog : public MenuWindow, public AbstractEditorParent {
 			MenuBar *menubar,
 			CmdList *cmdlist,
 			Widget  menu);
-    void   createAliasPopupMenus();
-    void   destroyAliasPopupMenus();
-    void   createFormatMenu();
-    void   createMenuPanes();
+    void   createAliasPopupMenus(void);
+    void   destroyAliasPopupMenus(void);
+    void   createFormatMenu(void);
+    void   createMenuPanes(void);
     Widget createWorkArea(Widget);
     void   createHeaders(Widget header);
     void   doDynamicHeaderMenus(void);
@@ -281,7 +281,7 @@ class SendMsgDialog : public MenuWindow, public AbstractEditorParent {
     // Return a message handle -- internal data structure of a mail message.
     DtMail::Message * makeMessage(void);
     // Clear Compose window text fields to prepare for re-use.
-    void reset();
+    void reset(void);
 
     // Find a header in the list by name.
     //
@@ -299,21 +299,21 @@ class SendMsgDialog : public MenuWindow, public AbstractEditorParent {
     SendMsgDialog();
     virtual ~SendMsgDialog();
     virtual const char *const className () { return "SendMsgDialog"; }
-    void initialize();
+    void initialize(void);
     void send_message( const char *, int );
 
     void include_file(char *);
     void add_att(char *);
     void add_att(char *, DtMailBuffer);
     void add_att(DtMailBuffer);
-    void setMsgHnd();    // initialize _msgHandle.
+    void setMsgHnd(void);    // initialize _msgHandle.
     void startAutoSave(void);
     void stopAutoSave(void);
     void setLogState(DtMailBoolean state) { _log_msg = state; }
     void propsChanged(void);
     Boolean isMsgValid(void);	// checks to see whether _msgHandle is NULL
     
-    void setLastAttBP();
+    void setLastAttBP(void);
     void setLastAttBP(DtMail::BodyPart *);
     void setFirstBPHandled(Boolean);
 
@@ -348,7 +348,7 @@ class SendMsgDialog : public MenuWindow, public AbstractEditorParent {
     // Check if a message has addressees.  If a message is Sent and
     // it has no addressees, we need to barf.
 
-    Boolean hasAddressee();
+    Boolean hasAddressee(void);
 
     // The changeHeaderState method toggles the dynamic headers between
     // shown an hidden. It will also update the menu label accordingly.
@@ -358,7 +358,7 @@ class SendMsgDialog : public MenuWindow, public AbstractEditorParent {
     // unfilled_headers returns TRUE if no header has a value.
     // FaLSE if any header has a value
 
-    Boolean unfilled_headers();
+    Boolean unfilled_headers(void);
 
     // The set/clear Status methods will set and clear the status line.
     //
@@ -367,13 +367,13 @@ class SendMsgDialog : public MenuWindow, public AbstractEditorParent {
 
     // XSMP support
     static void		restoreSession(char*);
-    virtual int		smpSaveSessionGlobal();
-    virtual void	smpSaveSessionLocal();
+    virtual int		smpSaveSessionGlobal(void);
+    virtual void	smpSaveSessionLocal(void);
     
     // These are public so that the check point routine can call
     // updateMsgHnd, and include/forward routines can call updateMsgHndAtt.
-    void updateMsgHnd();
-    void updateMsgHndAtt();
+    void updateMsgHnd(void);
+    void updateMsgHndAtt(void);
     
     char *text();
     
@@ -385,11 +385,11 @@ class SendMsgDialog : public MenuWindow, public AbstractEditorParent {
     void text( const char * );
     void append( const char * );
     void quit(Boolean delete_win = FALSE);
-    void panicQuit();
+    void panicQuit(void);
 
     // Method to check if self has content in it.
-    Boolean checkDirty();
-    Boolean handleQuitDialog();
+    Boolean checkDirty(void);
+    Boolean handleQuitDialog(void);
     void    goAway(Boolean);
 
     // Add the specified file (first parameter) as attachment.
@@ -406,42 +406,42 @@ class SendMsgDialog : public MenuWindow, public AbstractEditorParent {
     
     // SR - Text-selection callbacks.
     
-    virtual void text_selected();
-    virtual void text_unselected();
-    void attachment_selected();
-    void all_attachments_deselected();
-    void all_attachments_selected();
-    void selectAllAttachments(); 
+    virtual void text_selected(void);
+    virtual void text_unselected(void);
+    void attachment_selected(void);
+    void all_attachments_deselected(void);
+    void all_attachments_selected(void);
+    void selectAllAttachments(void); 
     
     
     DtMailGenDialog *genDialog() { return _genDialog; }  
     
-    void showAttachArea();
-    void hideAttachArea();
+    void showAttachArea(void);
+    void hideAttachArea(void);
     
-    void activate_default_attach_menu();
-    void deactivate_default_attach_menu();
+    void activate_default_attach_menu(void);
+    void deactivate_default_attach_menu(void);
     
     // Activate and deactivate paste stuff
     void activate_edit_paste() { _edit_paste->activate(); }
     void activate_edit_paste_indented() {_edit_paste_special[0]->activate();}
     void activate_edit_paste_bracketed() {_edit_paste_special[1]->activate();}
     
-    void delete_selected_attachments();
+    void delete_selected_attachments(void);
     
-    void undelete_last_deleted_attachment();
+    void undelete_last_deleted_attachment(void);
     
     void save_selected_attachment(char *);
     void save_selected_msg_text(char *);
     
-    Boolean renameAttachmentOK();
+    Boolean renameAttachmentOK(void);
     
     void addAttachmentActions(char **, int);
-    void removeAttachmentActions();
+    void removeAttachmentActions(void);
     void invokeAttachmentAction(int);   
 
-    virtual void manage();
-    virtual void unmanage();
+    virtual void manage(void);
+    virtual void unmanage(void);
 
 };
 

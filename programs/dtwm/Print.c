@@ -46,11 +46,7 @@
 #include "Parse.h"
 #include <stdint.h>
 
-#ifdef __STDC__
 const char *szWM_TOOL_CLASS = DtWM_TOOL_CLASS;
-#else
-char *szWM_TOOL_CLASS = DtWM_TOOL_CLASS;
-#endif /* __STDC__ */
 
 
 

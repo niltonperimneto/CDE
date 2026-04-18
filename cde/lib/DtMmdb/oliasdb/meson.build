@@ -1,8 +1,8 @@
 liboliasdb_sources = [
-  'asciiIn_filters.C', 'collectionIterator.C', 'dlp_hd.C',
-  'doc_hd.C', 'graphic_hd.C', 'locator_hd.C', 'mark.C',
-  'mark_base.C', 'mmdb.C', 'node_hd.C', 'olias_funcs.C',
-  'stylesheet_hd.C', 'toc_hd.C', 'user_base.C'
+  'asciiIn_filters.cpp', 'collectionIterator.cpp', 'dlp_hd.cpp',
+  'doc_hd.cpp', 'graphic_hd.cpp', 'locator_hd.cpp', 'mark.cpp',
+  'mark_base.cpp', 'mmdb.cpp', 'node_hd.cpp', 'olias_funcs.cpp',
+  'stylesheet_hd.cpp', 'toc_hd.cpp', 'user_base.cpp'
 ]
 
 liboliasdb = static_library('oliasdb',

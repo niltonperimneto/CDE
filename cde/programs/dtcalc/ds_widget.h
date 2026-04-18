@@ -57,7 +57,7 @@ struct cW_struct {                 /* Choice widget structure. */
   Widget *choices ;                /* xmToggleButtonWidgetClass. */
   int maxno ;                      /* Number of choice elements. */
   int isexclusive ;                /* Exclusive choice. */
-  void (*func)() ;                 /* Callback (if any) for this choice. */
+  void (*func)(void) ;                 /* Callback (if any) for this choice. */
 } ;
 
 struct tW_struct {                 /* Text widget structure. */

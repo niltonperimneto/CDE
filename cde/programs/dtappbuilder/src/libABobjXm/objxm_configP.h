@@ -99,7 +99,7 @@ typedef struct _XM_CONFIG_INFO_REC {
 extern int	abxm_init_obj_config_info(
 		);
 
-/* Function to register XmConfigInfo for a single object type 
+/* Function to XmConfigInfo for a single object type 
  */
 extern void    	abxm_register_config_info(
             	    XmConfigInfo cfginfo

@@ -84,28 +84,28 @@
             other than what might be done by Init().
         */
 typedef struct {
-    ilError           (*CheckFormat)();         /* reserved: MUST BE IL_NPF! */
+    ilError           (*CheckFormat)(void);         /* reserved: MUST BE IL_NPF! */
     unsigned int        srcFormatCode;          /* see above */
-    ilError           (*AddElement)();          /* see above */
+    ilError           (*AddElement)(void);          /* see above */
     const ilImageDes    *pDstDes;               /* ptr to new des or null */
     const ilImageFormat *pDstFormat;            /* ptr to new format or null */
     size_t              nBytesPrivate;
-    ilError           (*Init)();
-    ilError           (*Cleanup)();
-    ilError           (*Destroy)();
-    ilError           (*Execute)();
+    ilError           (*Init)(void);
+    ilError           (*Cleanup)(void);
+    ilError           (*Destroy)(void);
+    ilError           (*Execute)(void);
     } ilConvertRec, *ilConvertPtr;
 
         /*  Standard definition for a format filter added by ilConvert().
             Basically a subset of an ilConvertRec; see above.
         */
 typedef struct {
-    ilError           (*AddElement)();          /* see above */
+    ilError           (*AddElement)(void);          /* see above */
     unsigned int        nBytesPrivate;
-    ilError           (*Init)();
-    ilError           (*Cleanup)();
-    ilError           (*Destroy)();
-    ilError           (*Execute)();
+    ilError           (*Init)(void);
+    ilError           (*Cleanup)(void);
+    ilError           (*Destroy)(void);
+    ilError           (*Execute)(void);
     } ilFormatRec, *ilFormatPtr;
 
 

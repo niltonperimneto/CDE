@@ -1372,7 +1372,7 @@ InitializePosthook(
     DtIconGadget lw = (DtIconGadget)new;
 
     /*
-     * - register parts in cache.
+     * - parts in cache.
      * - update cache pointers
      * - and free req
      */
@@ -1562,7 +1562,7 @@ SetValuesPosthook(
     XmWidgetExtData             ext;
 
     /*
-     * - register parts in cache.
+     * - parts in cache.
      * - update cache pointers
      * - and free req
      */

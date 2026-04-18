@@ -1,4 +1,4 @@
-libbtree_sources = ['btree.C']
+libbtree_sources = ['btree.cpp']
 
 libbtree = static_library('btree',
   libbtree_sources,

@@ -38,60 +38,28 @@
 typedef unsigned long SbInputId;
 
 typedef void (*SbInputCallbackProc)
-#if defined(__STDC__) || defined(__cplusplus) || defined(c_plusplus)
    (void* data, int *fd, SbInputId *id);
-#else
-   ();
-#endif
     
 extern SbInputId (*SbAddInput_hookfn)
-#if defined(__STDC__) || defined(__cplusplus) || defined(c_plusplus)
     (int fd, SbInputCallbackProc proc, void* data);
-#else
-    ();
-#endif
     
 extern SbInputId (*SbAddException_hookfn)
-#if defined(__STDC__) || defined(__cplusplus) || defined(c_plusplus)
     (int fd, SbInputCallbackProc proc, void* data);
-#else
-   ();
-#endif
 
 extern void  (*SbRemoveInput_hookfn)    
-#if defined(__STDC__) || defined(__cplusplus) || defined(c_plusplus)
    (SbInputId id);
-#else
-   ();
-#endif
 
 extern void  (*SbRemoveException_hookfn)
-#if defined(__STDC__) || defined(__cplusplus) || defined(c_plusplus)
    (SbInputId id);
-#else
-   ();
-#endif
 
 extern void  (*SbMainLoopUntil_hookfn)  
-#if defined(__STDC__) || defined(__cplusplus) || defined(c_plusplus)
    (Boolean *flag);
-#else
-   ();
-#endif
 
 extern void XeCall_SbMainLoopUntil
-#if defined(__STDC__) || defined(__cplusplus) || defined(c_plusplus)
    (Boolean *flag);
-#else
-   ();
-#endif
 
 extern void  (*SbBreakMainLoop_hookfn)  
-#if defined(__STDC__) || defined(__cplusplus) || defined(c_plusplus)
    (void);
-#else
-   ();
-#endif
 
 
 #endif /* _SbEvent_h */

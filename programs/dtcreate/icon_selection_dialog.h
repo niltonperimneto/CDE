@@ -37,7 +37,7 @@
 #include <Xm/MwmUtil.h>
 #include <Xm/DialogS.h>
 #include <Xm/MenuShell.h>
-#include "UxXt.h"
+#include "UxXt.hpp"
 
 #include <Xm/List.h>
 #include <Xm/ScrolledW.h>
@@ -94,22 +94,22 @@ typedef struct
         unsigned char   *Uxcontainer_title;
         int     UxnumberOfTopButtons;
         unsigned char   *Uxtop_button_one_label;
-        void    (*Uxtop_button_one_cb)();
+        void    (*Uxtop_button_one_cb)(void);
         unsigned char   *Uxtop_button_two_label;
-        void    (*Uxtop_button_two_cb)();
+        void    (*Uxtop_button_two_cb)(void);
         unsigned char   *Uxtop_button_three_label;
-        void    (*Uxtop_button_three_cb)();
+        void    (*Uxtop_button_three_cb)(void);
         int     Uxuse_icon_name_field;
         unsigned char   *Uxname_field_title;
         int     UxnumberOfBottomButtons;
         unsigned char   *Uxbottom_button_one_label;
-        void    (*Uxbottom_button_one_cb)();
+        void    (*Uxbottom_button_one_cb)(void);
         unsigned char   *Uxbottom_button_two_label;
-        void    (*Uxbottom_button_two_cb)();
+        void    (*Uxbottom_button_two_cb)(void);
         unsigned char   *Uxbottom_button_three_label;
-        void    (*Uxbottom_button_three_cb)();
+        void    (*Uxbottom_button_three_cb)(void);
         unsigned char   *Uxbottom_button_four_label;
-        void    (*Uxbottom_button_four_cb)();
+        void    (*Uxbottom_button_four_cb)(void);
 } _UxCicon_selection_dialog;
 
 #ifdef CONTEXT_MACRO_ACCESS

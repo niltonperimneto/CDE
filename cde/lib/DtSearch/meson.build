@@ -11,7 +11,7 @@ dtsearch_sources = [
   'strupr.c', 'userint.c', 'vedelete.c', 'vestatis.c', 'vstfunct.c'
 ]
 
-# Handle boolyac.y — use bison's -o/--defines to write directly to output
+# Handle boolyac.y â use bison's -o/--defines to write directly to output
 yacc = find_program('yacc', 'bison')
 boolyac_c_h = custom_target('boolyac',
   input : 'boolyac.y',
@@ -45,7 +45,7 @@ cargo_builder = custom_target('dtsearch_rs_static',
   output : 'libdtsearch_rs.a',
   command : [
     'sh', '-c', 
-    'cargo build --release --manifest-path @SOURCE_ROOT@/cde/lib/DtSearch/rust/Cargo.toml --target-dir @OUTDIR@/cargo_build && cp @OUTDIR@/cargo_build/release/libdtsearch_rs.a @OUTPUT@'
+    'cargo build --locked --release --manifest-path @SOURCE_ROOT@/cde/lib/DtSearch/rust/Cargo.toml --target-dir @OUTDIR@/cargo_build && cp @OUTDIR@/cargo_build/release/libdtsearch_rs.a @OUTPUT@'
   ],
   build_by_default : true,
   console : true

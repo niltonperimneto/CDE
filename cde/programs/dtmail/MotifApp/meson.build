@@ -1,14 +1,14 @@
 # MotifApp - Static Library
 
 motifapp_src = [
-  'Application.C', 'AskFirstCmd.C', 'BasicComponent.C', 'BusyPixmap.C',
-  'ButtonInterface.C', 'Cmd.C', 'CmdInterface.C', 'CmdList.C',
-  'DialogManager.C', 'Help.C', 'IconifyCmd.C', 'InfoDialogManager.C',
-  'InterruptibleCmd.C', 'Main.C', 'MainWindow.C', 'ManageCmd.C',
-  'MenuBar.C', 'MenuWindow.C', 'MotifCmds.C', 'NoUndoCmd.C',
-  'PixmapCycler.C', 'PromptDialogManager.C', 'QuestionDialogManager.C',
-  'QuitCmd.C', 'ScrollingList.C', 'SelectFileCmd.C', 'ToggleButtonInterface.C',
-  'UIComponent.C', 'UndoCmd.C', 'WarnNoUndoCmd.C', 'WorkingDialogManager.C'
+  'Application.cpp', 'AskFirstCmd.cpp', 'BasicComponent.cpp', 'BusyPixmap.cpp',
+  'ButtonInterface.cpp', 'Cmd.cpp', 'CmdInterface.cpp', 'CmdList.cpp',
+  'DialogManager.cpp', 'Help.cpp', 'IconifyCmd.cpp', 'InfoDialogManager.cpp',
+  'InterruptibleCmd.cpp', 'Main.cpp', 'MainWindow.cpp', 'ManageCmd.cpp',
+  'MenuBar.cpp', 'MenuWindow.cpp', 'MotifCmds.cpp', 'NoUndoCmd.cpp',
+  'PixmapCycler.cpp', 'PromptDialogManager.cpp', 'QuestionDialogManager.cpp',
+  'QuitCmd.cpp', 'ScrollingList.cpp', 'SelectFileCmd.cpp', 'ToggleButtonInterface.cpp',
+  'UIComponent.cpp', 'UndoCmd.cpp', 'WarnNoUndoCmd.cpp', 'WorkingDialogManager.cpp'
 ]
 
 # Includes: -I../include/MotifApp -I../include -I../include/utils

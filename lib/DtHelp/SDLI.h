@@ -723,7 +723,7 @@ typedef	struct {
 
 typedef	struct {
 	SDLMask	mask[SDL_MASK_LEN];
-	int	(*model)();
+	int	(*model)(void);
 } SDLContent;
 
 enum	SdlStructType {

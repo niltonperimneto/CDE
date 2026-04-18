@@ -1366,7 +1366,7 @@ static int	sig_flg = 0;		/* flag for signal		*/
  * contents : 	write character patterns to the specified SNF file
  * values   : 	0  : terminated normally
  *		-1 : terminated abnormally
- *	      1xxx : process is not completed ��xxx:persents finished��
+ *	      1xxx : process is not completed Ã¯Â¿Â½Ã¯Â¿Â½xxx:persents finishedÃ¯Â¿Â½Ã¯Â¿Â½
  *
  *
  */

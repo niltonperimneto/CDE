@@ -645,8 +645,8 @@ csa_register_callback(
 	}
 
 	/*
-	 * register interest only if we have a new flag
-	 * NOTE: It's OK to register more than once, even if it's
+	 * interest only if we have a new flag
+	 * NOTE: It's OK to more than once, even if it's
 	 * the same calendar, same reason.  The customer is always right.
 	 */
 	if (((cal->all_reasons | reason) ^ cal->all_reasons) &&

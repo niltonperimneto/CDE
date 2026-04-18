@@ -50,10 +50,10 @@ typedef	struct _compressInfo{
     int     size;
 } CECompressInfo, *CECompressInfoPtr;
 
-extern BufFilePtr   __DtBufFileCreate ();
-extern BufFilePtr   _DtHelpCeBufFilePushZ ();
-extern BufFilePtr   _DtHelpCeBufFileOpenWr ();
-extern int	    _DtHelpCeBufFileFlush ();
+extern BufFilePtr   __DtBufFileCreate (void);
+extern BufFilePtr   _DtHelpCeBufFilePushZ (void);
+extern BufFilePtr   _DtHelpCeBufFileOpenWr (void);
+extern int	    _DtHelpCeBufFileFlush (void);
 #define BufFileGet(f)	((f)->left-- ? *(f)->bufp++ : (*(f)->io) (f))
 #define BufFilePut(c,f)	(--(f)->left ? *(f)->bufp++ = (c) : (*(f)->io) (c,f))
 #define BufFilePutBack(c,f) { (f)->left++; *(--(f)->bufp) = (c); }

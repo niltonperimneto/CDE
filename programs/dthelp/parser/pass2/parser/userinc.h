@@ -27,11 +27,11 @@
 
 #include <stdio.h>
 #include "basic.h"
-#include "trie.h"
+#include "trie.hpp"
 #include "dtdext.h"
 #include "parser.h"
 #include "delim.h"
 #include "entext.h"
 #include "signonx.h"
 #include "pval.h"
-#include "version.h"
+#include "version.hpp"

@@ -4,7 +4,7 @@
 /* $XConsortium: ReplaceIdIdref.l /main/3 1996/11/19 16:54:45 drk $ */
   
 /* exported interfaces... */
-#include "NodeData.h"
+#include "NodeData.hpp"
   
 /* imported interfaces... */
 #include <iostream>
@@ -13,20 +13,20 @@
 #include <stdio.h>
 #include <assert.h>
 
-#include "misc/unique_id.h"
-#include "Token.h"
-#include "FlexBuffer.h"
-#include "NodeTask.h"
-#include "SearchEng.h"
-#include "OLAF.h"
-#include "SGMLName.h"
-#include "OL_Data.h"
-#include "BookTasks.h"
-#include "DataBase.h"
-#include "BookCaseDB.h"
-#include "GraphicsTask.h"
-#include "Dispatch.h"
-#include "api/utility.h"
+#include "misc/unique_id.hpp"
+#include "Token.hpp"
+#include "FlexBuffer.hpp"
+#include "NodeTask.hpp"
+#include "SearchEng.hpp"
+#include "OLAF.hpp"
+#include "SGMLName.hpp"
+#include "OL_Data.hpp"
+#include "BookTasks.hpp"
+#include "DataBase.hpp"
+#include "BookCaseDB.hpp"
+#include "GraphicsTask.hpp"
+#include "Dispatch.hpp"
+#include "api/utility.hpp"
 
 // Debugging macro
 #ifdef DEBUG

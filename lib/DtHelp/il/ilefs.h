@@ -52,11 +52,7 @@
 #endif
 
 #ifndef NeedFunctionPrototypes
-#if defined(FUNCPROTO) || defined(__STDC__) || defined(__cplusplus) || defined(c_plusplus)
 #define NeedFunctionPrototypes 1
-#else
-#define NeedFunctionPrototypes 0
-#endif /* __STDC__ */
 #endif /* NeedFunctionPrototypes */
 
 #ifndef NeedWidePrototypes
@@ -140,14 +136,14 @@ typedef struct {
                                    [IL_EFS_MAX_EXTENSION_CHARS];
     unsigned long       openModes;
     unsigned long       attributes;
-    ilBool            (*Escape)();
-    ilPtr             (*Open)();
-    ilBool            (*Seek)();
-    ilBool            (*GetPageInfo)();
-    ilBool            (*ReadImage)();
-    ilBool            (*WriteImage)();
-    ilBool            (*Close)();
-    ilBool            (*Destroy)();
+    ilBool            (*Escape)(void);
+    ilPtr             (*Open)(void);
+    ilBool            (*Seek)(void);
+    ilBool            (*GetPageInfo)(void);
+    ilBool            (*ReadImage)(void);
+    ilBool            (*WriteImage)(void);
+    ilBool            (*Close)(void);
+    ilBool            (*Destroy)(void);
     long                reserved [IL_EFS_TYPE_RESERVED_SIZE];
     } ilEFSFileTypeInfo;
 

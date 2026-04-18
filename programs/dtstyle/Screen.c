@@ -1973,7 +1973,7 @@ timeOutvalueChangedCB(
       else
 	screen.newTimeout = MIN(screen.saverTimeout, screen.lockTimeout) * 60;
 	
-    /* register new timeout with X */
+    /* new timeout with X */
      XSetScreenSaver(style.display, screen.newTimeout, 
          screen.interval, screen.new_blanking, screen.exposures);
 
@@ -2000,7 +2000,7 @@ no_svr_ext_timeOutvalueChangedCB(
     /* set newTimeout to the value of saver scale */
     screen.newTimeout = screen.saverTimeout * 60;
 	
-    /* register new timeout with X */
+    /* new timeout with X */
      XSetScreenSaver(style.display, screen.newTimeout, 
          screen.interval, screen.new_blanking, screen.exposures);
     screen.systemDefaultFlag = False;
@@ -2163,7 +2163,7 @@ no_svr_ext_saverToggleCB(
 	XtSetSensitive(screen.timeOutLabel, True);
 	XtSetSensitive(screen.timeOutScale, True);
 	XtSetSensitive(screen.saverMinutesLabel , True);
-	/* register the new timeout with the X server - note that since */
+	/* the new timeout with the X server - note that since */
 	/* screen saver is enabled, the new timeout is now the value of the */
 	/* saver slider */
 	screen.newTimeout = screen.saverTimeout * 60;
@@ -2203,7 +2203,7 @@ lockToggleCB(
 	XtSetSensitive(screen.lockOutScale, False);
 	XtSetSensitive(screen.lockMinutesLabel, False);
 
-	/* register the new timeout with the X server - note that since */
+	/* the new timeout with the X server - note that since */
 	/* lock is disabled, the new timeout is now the value of the */
 	/* saver slider or zero if saver is disabled */
 	if (XmToggleButtonGadgetGetState(screen.saverOn))
@@ -2226,7 +2226,7 @@ lockToggleCB(
 	XtSetSensitive(screen.lockOutScale, True);
 	XtSetSensitive(screen.lockMinutesLabel, True);
 
-	/* register the new timeout with the X server - note that since */
+	/* the new timeout with the X server - note that since */
 	/* lock is disabled, the new timeout is now the value of the */
 	/* lock slider or the minimum of the two timeout sliders */
 	if (!XmToggleButtonGadgetGetState(screen.saverOn))
@@ -2353,7 +2353,7 @@ systemDefaultCB(
   XmToggleButtonGadgetSetState(screen.saverOn, True, True);
   
   screen.newTimeout = MIN(SAVER_DEFAULT, LOCK_DEFAULT) * 60; 
-  /* register new timeout with X */
+  /* new timeout with X */
   XSetScreenSaver(style.display, screen.newTimeout, 
 		  screen.interval, screen.new_blanking, screen.exposures);
   screen.systemDefaultFlag = True;
@@ -2385,7 +2385,7 @@ no_svr_ext_systemDefaultCB(
   XmToggleButtonGadgetSetState(screen.useSaversOn, True, True);
 
   screen.newTimeout = SAVER_DEFAULT * 60;
-  /* register new timeout with X */
+  /* new timeout with X */
   XSetScreenSaver(style.display, screen.newTimeout, 
 		  screen.interval, screen.new_blanking, screen.exposures);
   

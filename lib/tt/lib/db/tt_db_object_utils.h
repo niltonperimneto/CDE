@@ -34,8 +34,8 @@
 #ifndef _TT_DB_OBJECT_UTILS_H
 #define _TT_DB_OBJECT_UTILS_H
 
-#include "util/tt_table.h"
-#include "db/tt_db_object.h"
+#include "util/tt_table.hpp"
+#include "db/tt_db_object.hpp"
 
 declare_list_of(_Tt_db_object)
 declare_table_of(_Tt_db_object)

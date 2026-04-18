@@ -35,7 +35,7 @@
  */
 #ifndef _DBCK_H
 #define _DBCK_H
-#include "options.h"
+#include "options.hpp"
 
 extern char *progname;		// from argv[0]
 extern FILE *tstream;		// for calling print() methods in dbx

@@ -8,11 +8,11 @@
 #include <string.h>
 #include <memory.h>
 #include <stdlib.h>
-#include "mp/mp_arg.h"
-#include "mp_otype.h"
-#include "mp_ptype.h"
-#include "mp_signature.h"
-#include "mp_types_table.h"
+#include "mp/mp_arg.hpp"
+#include "mp_otype.hpp"
+#include "mp_ptype.hpp"
+#include "mp_signature.hpp"
+#include "mp_types_table.hpp"
 
 extern int yyleng;
 extern char yytext[];

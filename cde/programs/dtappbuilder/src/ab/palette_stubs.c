@@ -335,7 +335,7 @@ register_palette_info(
                 break;
         }        
         case AB_TYPE_SCALE:
-        /* Need to register the children of the XmScale widget because
+        /* Need to the children of the XmScale widget because
          * if we don't, then the drag operation won't work.  Other
          * palette items have to do the same thing, such as spinbox.
          * The spinbox's children are registered in create_dt_widgets(),

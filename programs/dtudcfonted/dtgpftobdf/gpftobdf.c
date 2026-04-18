@@ -301,7 +301,7 @@ int main( int argc, char *argv[] )
 	}
 
 	/*
-	 *��output to BDF information
+	 *Â¡Â¡output to BDF information
 	 */
 	bufp = buf;
 	memcpy(bufp,"STARTFONT 2.1\n",14);

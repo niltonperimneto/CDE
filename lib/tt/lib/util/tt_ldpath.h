@@ -33,7 +33,7 @@
  */
 #ifndef _TT_LDPATH_H
 #define _TT_LDPATH_H
-#include <util/tt_string.h>
+#include <util/tt_string.hpp>
 
 /* 
  * Attempts to find the best path to a dynamic library named by libname.

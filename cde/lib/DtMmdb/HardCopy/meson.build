@@ -1,6 +1,6 @@
 libHardCopy_sources = [
-  'FPset.C', 'HardCopyFP.C', 'TemplatesAutoNumber.C',
-  'autoNumber.C', 'autoNumberFP.C'
+  'FPset.cpp', 'HardCopyFP.cpp', 'TemplatesAutoNumber.cpp',
+  'autoNumber.cpp', 'autoNumberFP.cpp'
 ]
 
 libHardCopy = static_library('HardCopy',

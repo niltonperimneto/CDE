@@ -1607,7 +1607,7 @@ Tt_status _DtInitializeToolTalk(Widget w) {
   /* char* procid; -- Unused */
   Tt_status status;
   /* int fd; -- Unused */
-  Tt_pattern pat; /* pattern to register for exec*  messages */
+  Tt_pattern pat; /* pattern to for exec*  messages */
   char* session_id;
   extern Widget _DtInitTtContextWidget;
 
@@ -1649,7 +1649,7 @@ Tt_status _DtInitializeToolTalk(Widget w) {
     tt_pattern_register(pat);
 
     /*
-     * Create/register a new pattern for the done callback
+     * Create/a new pattern for the done callback
      */
     pat = tt_pattern_create();
 

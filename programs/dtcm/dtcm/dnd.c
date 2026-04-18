@@ -154,7 +154,7 @@ handle_animate_cb(
 
 #ifdef NOT
 			strcpy(filename, "/tmp/cmXXXXXX");
-			mktemp(filename);
+			({ int _fd = mkstemp(filename); if (_fd != -1) close(_fd); filename; });
 #endif
 
 			if (!dnd_filename[0]){
@@ -241,7 +241,7 @@ handle_drop_cb(
 			 * Save data to a file so we can pass it to drag_load_proc().
 			 */
 			strcpy(dnd_filename, "/tmp/cmXXXXXX");
-			mktemp(dnd_filename);
+			({ int _fd = mkstemp(dnd_filename); if (_fd != -1) close(_fd); dnd_filename; });
 	
 			if ((fp = fopen(dnd_filename, "w")) == 0) {
 				transfer_info->status = DtDND_FAILURE;

@@ -54,7 +54,7 @@ class Dialog : public UIComponent {
     Dialog(RoamMenuWindow *);		// For custom dialogs.
 
     virtual ~Dialog();
-    virtual void initialize();
+    virtual void initialize(void);
     
 // Accessors
     
@@ -68,9 +68,9 @@ class Dialog : public UIComponent {
     virtual void popped_down()=0;
     virtual void popup()=0;
     virtual void popdown()=0;
-    virtual void manage();
-    virtual void busyCursor();
-    virtual void normalCursor();
+    virtual void manage(void);
+    virtual void busyCursor(void);
+    virtual void normalCursor(void);
     
 
     

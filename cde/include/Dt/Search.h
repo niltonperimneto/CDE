@@ -234,7 +234,7 @@ extern int	DtSearchInit (
 			int	*dbcount);
   /* Bit values valid for switches argument: */
   #define DtSrInNOLOCALE   0x0001L  /* do not exec setlocale() */
-  #define DtSrInSIGNAL     0x0002L  /* register abort signal handlers */
+  #define DtSrInSIGNAL     0x0002L  /* abort signal handlers */
   #define DtSrInUSEROCF    0x0004L  /* (reserved) */
   #define DtSrInENAB_NOHUP 0x0008L  /* enab nohup for backgnd progms */
   #define DtSrInIDEBUG     0x0010L  /* set initialization debugging */

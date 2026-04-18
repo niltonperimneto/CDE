@@ -46,11 +46,6 @@
 
 #include <X11/Intrinsic.h>
 
-#ifndef __STDC__
-#  ifndef const
-#    define const
-#  endif
-#endif
 
 #include <bms/XeUserMsg.h>
 

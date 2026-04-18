@@ -74,7 +74,7 @@ int main(int argc, char **argv)
   /* and pagenumber */
   if ((argc < 3) || !sscanf(argv[2], " %d", &pageNo)) pageNo = 1;
 
-  /* first register our converter */
+  /* first our converter */
   _DtGrRegisterConverter("CGM",  processCGM, NULL, NULL, NULL);
 
 

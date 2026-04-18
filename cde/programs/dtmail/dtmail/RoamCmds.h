@@ -87,7 +87,7 @@ class RoamCmd : public NoUndoCmd {
 
 class OpenMsgCmd : public RoamCmd {
 public:
-  virtual void doit();
+  virtual void doit(void);
   OpenMsgCmd(char *, char *, int, RoamMenuWindow *);
   virtual const char *const className() { return "OpenMsgCmd"; }
 };
@@ -95,7 +95,7 @@ public:
 #ifdef DEAD_WOOD
 class SaveCmd : public RoamCmd {
   public:
-    virtual void doit();   
+    virtual void doit(void);   
     SaveCmd( char *, char *, int, RoamMenuWindow * );
     virtual const char *const className () { return "SaveCmd"; }
 };
@@ -119,7 +119,7 @@ class UnifiedSelectFileCmd : public SelectFileCmd {
 
   protected:
     DtMailGenDialog	*_genDialog;
-    void		updateUnifiedData();
+    void		updateUnifiedData(void);
 
   public:
     UnifiedSelectFileCmd(
@@ -131,7 +131,7 @@ class UnifiedSelectFileCmd : public SelectFileCmd {
 
     virtual const char *const
 			className() { return "UnifiedSelectFileCmd"; }
-    virtual void	doit();
+    virtual void	doit(void);
 };
 
 
@@ -154,7 +154,7 @@ class UnifiedSelectMailboxCmd : public SelectFileCmd {
   protected:
     DtMailGenDialog	*_genDialog;
 
-    void		updateUnifiedData();
+    void		updateUnifiedData(void);
     void		unifiedMailboxSelected(
 				FileCallback	cb,
 				void		*client_data,
@@ -172,7 +172,7 @@ class UnifiedSelectMailboxCmd : public SelectFileCmd {
 
     virtual const char *const
 			className() { return "UnifiedSelectMailboxCmd"; }
-    virtual void	doit();
+    virtual void	doit(void);
 };
 
 
@@ -210,7 +210,7 @@ class MoveCopyCmd : public UnifiedSelectMailboxCmd {
     void setDefault( Widget );
 
     virtual const char *const className () { return "MoveCopyCmd"; }
-    virtual void doit();
+    virtual void doit(void);
 };
 
 
@@ -218,7 +218,7 @@ class CopyCmd : public RoamCmd {
   protected:
     MoveCopyCmd	*_move_copy_cmd;
   public:
-    virtual void doit();
+    virtual void doit(void);
     CopyCmd( char *, char *, int, RoamMenuWindow *, MoveCopyCmd * );
     ~CopyCmd ();
     virtual const char *const className () { return "CopyCmd"; }
@@ -229,7 +229,7 @@ class MoveCmd : public RoamCmd {
   protected:
     MoveCopyCmd	*_move_copy_cmd;
   public:
-    virtual void doit();
+    virtual void doit(void);
     MoveCmd( char *, char *, int, RoamMenuWindow *, MoveCopyCmd * );
     ~MoveCmd ();
     virtual const char *const className () { return "MoveCmd"; }
@@ -238,7 +238,7 @@ class MoveCmd : public RoamCmd {
 
 class NextCmd : public RoamCmd {
   public:
-    virtual void doit();   
+    virtual void doit(void);   
     NextCmd( char *, char *, int, RoamMenuWindow * );
     virtual const char *const className () { return "NextCmd"; }
 };
@@ -246,7 +246,7 @@ class NextCmd : public RoamCmd {
 
 class PrevCmd : public RoamCmd {
   public:
-    virtual void doit();   
+    virtual void doit(void);   
     PrevCmd( char *, char *, int, RoamMenuWindow * );
     virtual const char *const className () { return "PrevCmd"; }
 };
@@ -255,7 +255,7 @@ class PrevCmd : public RoamCmd {
 #ifdef DEAD_WOOD
 class MessagesCmd : public RoamCmd {
   public:
-    virtual void doit();   
+    virtual void doit(void);   
     MessagesCmd( char *, char *, int, RoamMenuWindow * );
     virtual const char *const className () { return "MessagesCmd"; }
 };
@@ -271,7 +271,7 @@ class ChooseCmd : public NoUndoCmd {
     
     
   public:
-    virtual void doit();   
+    virtual void doit(void);   
     ChooseCmd( char *, char *, int, RoamMenuWindow * );
     virtual const char *const className () { return "ChooseCmd"; }
     DtMailMessageHandle    msgno() { return _msgno; }
@@ -284,7 +284,7 @@ class ClearCmd : public NoUndoCmd {
     
     class RoamMenuWindow	*parent;
   public:
-    virtual void doit();   
+    virtual void doit(void);   
     ClearCmd( char *, char *, int, RoamMenuWindow * );
     virtual const char *const className () { return "ClearCmd"; }
 };
@@ -298,12 +298,12 @@ class SearchCmd : public InterruptibleCmd {
     char 		*_criteria;
     long		_msgs_fetched;
     int h_index;
-    virtual void doit();   
-    virtual void undoit(); 
+    virtual void doit(void);   
+    virtual void undoit(void); 
     
   public:
     SearchCmd ( char *, char *, int, RoamMenuWindow * );
-    virtual void execute();    
+    virtual void execute(void);    
     virtual void execute ( TaskDoneCallback, void * );
     void	set_criteria( char *criteria ) { _criteria=criteria; };
     virtual void updateMessage ( char * );
@@ -318,7 +318,7 @@ class CheckForNewMailCmd : public NoUndoCmd {
     class RoamMenuWindow *_menuwindow;
 
   public:
-    virtual void doit();   
+    virtual void doit(void);   
     CheckForNewMailCmd( char *, char *, int, RoamMenuWindow * );
     virtual const char *const className () { return "CheckForNewMailCmd"; }
 };
@@ -331,11 +331,11 @@ class OpenContainerCmd : public RoamInterruptibleCmd {
   protected:
     RoamMenuWindow	*_menuWindow;
     
-    virtual	void	doit();
-    virtual	void	undoit();
-    virtual	void	post_dialog();
-    virtual	void	unpost_dialog();
-    virtual void check_if_done();
+    virtual	void	doit(void);
+    virtual	void	undoit(void);
+    virtual	void	post_dialog(void);
+    virtual	void	unpost_dialog(void);
+    virtual void check_if_done(void);
     
   public:
 
@@ -350,7 +350,7 @@ class OpenContainerCmd : public RoamInterruptibleCmd {
     DtMailBoolean		_open_lock_flag;
 
     OpenContainerCmd(char *, char *, int, RoamMenuWindow *);
-    virtual void execute();
+    virtual void execute(void);
     virtual void execute(RoamTaskDoneCallback, void *);
     void   set_create_lock_flags(DtMailBoolean, DtMailBoolean);
     virtual void updateMessage ( char * );
@@ -363,8 +363,8 @@ class OpenInboxCmd : public Cmd {
     RoamMenuWindow *_menuWindow;
 	
   protected:
-    virtual	void	doit();
-    virtual	void	undoit();
+    virtual	void	doit(void);
+    virtual	void	undoit(void);
 
   public:
     OpenInboxCmd(char*, char *, int, RoamMenuWindow *);
@@ -388,25 +388,25 @@ class ConvertContainerCmd : public RoamInterruptibleCmd {
     int			_num_converted;
     int			_num_to_be_converted;
 
-    virtual void doit();   
-    virtual void undoit(); 
-    virtual	void	post_dialog();
-    virtual	void	unpost_dialog();
-    virtual void check_if_done();
+    virtual void doit(void);   
+    virtual void undoit(void); 
+    virtual	void	post_dialog(void);
+    virtual	void	unpost_dialog(void);
+    virtual void check_if_done(void);
 
   public:
     ConvertContainerCmd ( char *, char *, int, RoamMenuWindow *);
-    virtual void execute();    
+    virtual void execute(void);    
     virtual void execute(RoamTaskDoneCallback, void *);
     
     virtual void updateDialog ( char * );
-    virtual void updateAnimation();
+    virtual void updateAnimation(void);
     virtual const char *const className () { return "ConvertContainerCmd"; }
 
     void	set_data(char *, char *, ConversionStatusCB);
     void	set_convert_data(int, int);
-    int		get_num_converted();
-    char *	get_destination_name();
+    int		get_num_converted(void);
+    char *	get_destination_name(void);
 };
 
 
@@ -418,8 +418,8 @@ class SelectAllCmd : public Cmd {
     class RoamMenuWindow *_menuwindow;
  
   public:
-    virtual void doit();
-    virtual void undoit();
+    virtual void doit(void);
+    virtual void undoit(void);
  
     SelectAllCmd(char *, char *, int, RoamMenuWindow * );
     virtual const char *const className() { return "SelectAllCmd"; }
@@ -433,8 +433,8 @@ class DeleteCmd : public Cmd {
     
     
   public:
-    virtual void doit();   
-    virtual void undoit();   
+    virtual void doit(void);   
+    virtual void undoit(void);   
     DeleteCmd( char *, char *, int, RoamMenuWindow * );
     virtual const char *const className () { return "DeleteCmd"; }
     DtMailMessageHandle    msgno() { return _msgno; }
@@ -445,8 +445,8 @@ class DestroyCmd : public Cmd {
     RoamMenuWindow	*_menuwindow;
 
   public:
-    virtual void doit();
-    virtual void undoit();
+    virtual void doit(void);
+    virtual void undoit(void);
 
     DestroyCmd(char *, char *, int active, RoamMenuWindow *);
     virtual const char *const className() { return "DestroyCmd"; }
@@ -460,7 +460,7 @@ class ContainerMenuCmd : public RoamCmd {
     ContainerOp	_operation;
 
   public:
-    virtual void doit();
+    virtual void doit(void);
     ContainerMenuCmd( char *, char *, int, RoamMenuWindow *, ContainerOp);
     virtual ~ContainerMenuCmd();
     char *containerName(void) { return(_container_name); }
@@ -471,7 +471,7 @@ class ContainerMenuCmd : public RoamCmd {
 
 class MoveToInboxCmd : public RoamCmd {
   public:
-    virtual void doit();
+    virtual void doit(void);
     MoveToInboxCmd( char *, char *, int, RoamMenuWindow * );
     virtual ~MoveToInboxCmd();
     virtual const char *const className () { return "MoveToInboxCmd"; }
@@ -479,7 +479,7 @@ class MoveToInboxCmd : public RoamCmd {
 
 class CopyToInboxCmd : public RoamCmd {
   public:
-    virtual void doit();
+    virtual void doit(void);
     CopyToInboxCmd( char *, char *, int, RoamMenuWindow * );
     virtual ~CopyToInboxCmd();
     virtual const char *const className () { return "CopyToInboxCmd"; }
@@ -490,8 +490,8 @@ class DoUndeleteCmd : public Cmd {
   protected:
     class UndelFromListDialog *_undelDialog;
   public:
-    virtual void doit();
-    virtual void undoit();
+    virtual void doit(void);
+    virtual void undoit(void);
     DoUndeleteCmd(char *, char *, int, UndelFromListDialog * );
     virtual ~DoUndeleteCmd();
     virtual const char *const className () { return "DoUndeleteCmd";}
@@ -501,8 +501,8 @@ class CloseUndelCmd : public Cmd {
   protected:
     class UndelFromListDialog *_undelDialog;
   public:
-    virtual void doit();
-    virtual void undoit();
+    virtual void doit(void);
+    virtual void undoit(void);
     CloseUndelCmd(char *, char *, int, UndelFromListDialog *);
     virtual ~CloseUndelCmd();
     virtual const char *const className () { return "CloseUndelCmd";}
@@ -512,7 +512,7 @@ class CloseUndelCmd : public Cmd {
 class UndeleteCmd : public ChooseCmd {
     
   public:
-    virtual void doit();   
+    virtual void doit(void);   
     UndeleteCmd( char *, char *, int, RoamMenuWindow *, Boolean );
     ~UndeleteCmd();
     UndelFromListDialog *dialog() { return _undelFromList; }
@@ -528,7 +528,7 @@ class UndeleteCmd : public ChooseCmd {
 
 class PrintCmd : public ChooseCmd {
   public:
-    virtual void doit();   
+    virtual void doit(void);   
     PrintCmd( char *, char *, int, int silent, RoamMenuWindow * );
     virtual const char *const className () { return "PrintCmd"; }
     void printit(int);
@@ -554,7 +554,7 @@ class PopupCmd : public NoUndoCmd {
     RoamMenuWindow *parent;
     PopupWindow *(RoamMenuWindow::* pmpopup) ( void );
   public:
-    virtual void doit();   
+    virtual void doit(void);   
     PopupCmd( char *, char *, int, PopupWindow * (RoamMenuWindow::*) (void), RoamMenuWindow * );
     virtual const char *const className () { return "PopupCmd"; }
 };
@@ -564,7 +564,7 @@ class OnItemCmd : public NoUndoCmd {
   private:
     UIComponent *_parent;
   public:
-    virtual void doit();
+    virtual void doit(void);
     OnItemCmd( char *, char *, int, UIComponent * );
     virtual const char *const className () { return "OnItemCmd"; }
 };
@@ -573,7 +573,7 @@ class OnAppCmd : public NoUndoCmd {
   private:
     UIComponent *_parent;
   public:
-    virtual void doit();
+    virtual void doit(void);
     OnAppCmd( char *, char *, int, UIComponent * );
     virtual const char *const className () { return "OnAppCmd"; }
 };
@@ -582,7 +582,7 @@ class TasksCmd : public NoUndoCmd {
   private:
     UIComponent *_parent;
   public:
-    virtual void doit();
+    virtual void doit(void);
     TasksCmd( char *, char *, int, UIComponent * );
     virtual const char *const className () { return "TasksCmd"; }
 };
@@ -591,7 +591,7 @@ class ReferenceCmd : public NoUndoCmd {
   private:
     UIComponent *_parent;
   public:
-    virtual void doit();
+    virtual void doit(void);
     ReferenceCmd( char *, char *, int, UIComponent * );
     virtual const char *const className () { return "ReferenceCmd"; }
 };
@@ -600,7 +600,7 @@ class UsingHelpCmd : public NoUndoCmd {
   private:
     UIComponent *_parent;
   public:
-    virtual void doit();
+    virtual void doit(void);
     UsingHelpCmd( char *, char *, int, UIComponent * );
     virtual const char *const className () { return "UsingHelpCmd"; }
 };
@@ -611,7 +611,7 @@ class RelNoteCmd : public NoUndoCmd {
     UIComponent		*_parent;
 
   public:
-    virtual void doit();
+    virtual void doit(void);
     RelNoteCmd( char *, char *, int, UIComponent * );
     virtual const char *const className () { return "RelNoteCmd"; }
     ~RelNoteCmd();
@@ -619,7 +619,7 @@ class RelNoteCmd : public NoUndoCmd {
 
 class FindCmd : public RoamCmd {
   public:
-    virtual void doit();   
+    virtual void doit(void);   
     FindCmd( char *, char *, int, RoamMenuWindow * );
     virtual const char *const className () { return "FindCmd"; }
 };
@@ -631,8 +631,8 @@ class StartCmd : public Cmd {
     //  VacationPopup	*parent;
     int parent;
   public:
-    virtual void doit();   
-    virtual void undoit();   
+    virtual void doit(void);   
+    virtual void undoit(void);   
     //  StartCmd( char *, char *, int, VacationPopup * );
     StartCmd( char *, char *, int );
     virtual const char *const className () { return "StartCmd"; }
@@ -640,8 +640,8 @@ class StartCmd : public Cmd {
 
 class ChangeCmd : public Cmd {
   public:
-    virtual void doit();   
-    virtual void undoit();   
+    virtual void doit(void);   
+    virtual void undoit(void);   
     ChangeCmd( char *, char *, int );
     virtual const char *const className () { return "ChangeCmd"; }
 };
@@ -650,8 +650,8 @@ class StopCmd : public Cmd {
   private:
     RoamMenuWindow *parent;
   public:
-    virtual void doit();   
-    virtual void undoit();   
+    virtual void doit(void);   
+    virtual void undoit(void);   
     StopCmd( char *, char *, int, RoamMenuWindow * );
     virtual const char *const className () { return "StopCmd"; }
 };
@@ -662,7 +662,7 @@ class SendCmd : public NoUndoCmd {
     SendMsgDialog	*_parent;
     int _default_trans;
   public:
-    virtual void doit();
+    virtual void doit(void);
     SendCmd( char *, char *, int, SendMsgDialog *, int );
     virtual const char *const className () { return "SendCmd"; }
 };
@@ -678,7 +678,7 @@ class SaveAsTextCmd : public UnifiedSelectFileCmd {
     static void writeText(XtPointer, char*);
 
   public:
-    virtual void doit();
+    virtual void doit(void);
     SaveAsTextCmd(
 		char *, char *, char * title, int, Editor *,
 		RoamMenuWindow *, Widget);
@@ -695,7 +695,7 @@ class SaveAttachCmd : public UnifiedSelectFileCmd {
     static void updateCallback( Widget, XtPointer, XtPointer);
 
   public:
-    virtual void doit();   
+    virtual void doit(void);   
     SaveAttachCmd(char *, char *, char *, int, FileCallback, RoamMenuWindow *, Widget);
     SaveAttachCmd(char *, char *, char *, int, FileCallback, ViewMsgDialog *, Widget);
     SaveAttachCmd(char *, char *, char *, int, FileCallback, SendMsgDialog *, Widget);
@@ -709,8 +709,8 @@ class DeleteAttachCmd : public Cmd {
 
   protected:
     
-    virtual void doit();   
-    virtual void undoit(); 
+    virtual void doit(void);   
+    virtual void undoit(void); 
 
   public:
     
@@ -724,8 +724,8 @@ class UndeleteAttachCmd : public Cmd {
 
   protected:
     
-    virtual void doit();   
-    virtual void undoit(); 
+    virtual void doit(void);   
+    virtual void undoit(void); 
 
   public:
     
@@ -746,8 +746,8 @@ private:
 
   protected:
     
-    virtual void doit();   
-    virtual void undoit(); 
+    virtual void doit(void);   
+    virtual void undoit(void); 
 
   public:
     
@@ -764,8 +764,8 @@ class AttachmentActionCmd : public Cmd {
 
   protected:
     
-    virtual void doit();   
-    virtual void undoit(); 
+    virtual void doit(void);   
+    virtual void undoit(void); 
 
   public:
     
@@ -784,8 +784,8 @@ private:
 
   protected:
     
-    virtual void doit();   
-    virtual void undoit(); 
+    virtual void doit(void);   
+    virtual void undoit(void); 
 
   public:
     
@@ -808,8 +808,8 @@ private:
 
   protected:
     
-    virtual void doit();   
-    virtual void undoit(); 
+    virtual void doit(void);   
+    virtual void undoit(void); 
 
   public:
     
@@ -824,8 +824,8 @@ private:
 
   protected:
     
-    virtual void doit();   
-    virtual void undoit(); 
+    virtual void doit(void);   
+    virtual void undoit(void); 
 
   public:
     
@@ -840,7 +840,7 @@ class CloseCmd : public NoUndoCmd {
   public:
 	Widget menubar_w;
 
-	virtual void doit();
+	virtual void doit(void);
 	CloseCmd( char *, char *, int, Widget, SendMsgDialog * );
 	virtual const char *const className () { return "CloseCmd"; }
 };
@@ -849,7 +849,7 @@ class EditUndoCmd : public NoUndoCmd {
   private:
     Editor *editor;
   public:
-	virtual void doit();
+	virtual void doit(void);
 	EditUndoCmd( char *, char *, int, AbstractEditorParent * );
 	virtual const char *const className () { return "EditUndoCmd"; }
 };
@@ -862,7 +862,7 @@ class EditCutCmd : public NoUndoCmd {
     Editor *editor;
     SendMsgDialog *_compose_dialog;
   public:
-    virtual void doit();
+    virtual void doit(void);
     EditCutCmd( char *, char *, int, AbstractEditorParent * );
     virtual const char *const className () { return "EditCutCmd"; }
 };
@@ -875,7 +875,7 @@ class EditCopyCmd : public NoUndoCmd {
     Editor *editor;	
     SendMsgDialog *_compose_dialog;
   public:
-    virtual void doit();
+    virtual void doit(void);
     EditCopyCmd( char *, char *, int, AbstractEditorParent * );
     virtual const char *const className () { return "EditCopyCmd"; }
 };
@@ -887,7 +887,7 @@ class EditPasteCmd : public NoUndoCmd {
   private:
     Editor *editor;
   public:
-    virtual void doit();
+    virtual void doit(void);
     EditPasteCmd( char *, char *, int, AbstractEditorParent * );
     virtual const char *const className () { return "EditPasteCmd"; }
 };
@@ -900,7 +900,7 @@ class EditPasteSpecialCmd : public NoUndoCmd {
     Editor *editor;
     Editor::InsertFormat insert_format;
   public:
-    virtual void doit();
+    virtual void doit(void);
     EditPasteSpecialCmd( char *, char *, int, AbstractEditorParent *, Editor::InsertFormat );
     virtual const char *const className () { return "EditPasteSpecialCmd"; }
 };
@@ -913,7 +913,7 @@ class EditClearCmd : public NoUndoCmd {
   private:
     Editor *editor;
   public:
-    virtual void doit();
+    virtual void doit(void);
     EditClearCmd( char *, char *, int, AbstractEditorParent * );
     virtual const char *const className () { return "EditClearCmd"; }
 };
@@ -925,7 +925,7 @@ class EditDeleteCmd : public NoUndoCmd {
   private:
     Editor *editor;
   public:
-    virtual void doit();
+    virtual void doit(void);
     EditDeleteCmd( char *, char *, int, AbstractEditorParent * );
     virtual const char *const className () { return "EditDeleteCmd"; }
 };
@@ -936,7 +936,7 @@ class EditSelectAllCmd : public NoUndoCmd {
   private:
     Editor *editor;
   public:
-    virtual void doit();
+    virtual void doit(void);
     EditSelectAllCmd( char *, char *, int, AbstractEditorParent * );
     virtual const char *const className () { return "EditSelectAllCmd"; }
 };
@@ -949,10 +949,10 @@ class WordWrapCmd : public ToggleButtonCmd {
     Editor *editor;
     Boolean cur_setting;
   public:
-    virtual void doit();
+    virtual void doit(void);
     virtual void undoit() {};
     WordWrapCmd( char *, char *, int, AbstractEditorParent * );
-    Boolean wordWrap();
+    Boolean wordWrap(void);
 };
 
 //	CDEM_DtWidgetEditor *editor;
@@ -962,7 +962,7 @@ class FindChangeCmd : public NoUndoCmd {
   private:
     Editor *editor;
   public:
-    virtual void doit();
+    virtual void doit(void);
     FindChangeCmd( char *, char *, int, AbstractEditorParent * );
     virtual const char *const className () { return "FindChangeCmd"; }
 };
@@ -971,7 +971,7 @@ class SpellCmd : public NoUndoCmd {
   private:
     Editor *editor;
   public:
-    virtual void doit();
+    virtual void doit(void);
     SpellCmd( char *, char *, int, AbstractEditorParent * );
     virtual const char *const className () { return "SpellCmd"; }
 };
@@ -981,7 +981,7 @@ class AliasCmd : public NoUndoCmd {
     Widget _header;
     char   *_alias;
   public:
-    virtual void doit();
+    virtual void doit(void);
     AliasCmd(char *, char *, int, Widget);
     virtual ~AliasCmd();
     virtual const char *const className () { return "AliasCmd"; }
@@ -991,7 +991,7 @@ class OtherAliasesCmd : public NoUndoCmd {
   private:
     Widget _header;
   public:
-    virtual void doit();
+    virtual void doit(void);
     OtherAliasesCmd(char *, char *, int);
     virtual ~OtherAliasesCmd();
     virtual const char *const className () { return "OtherAliasesCmd"; }
@@ -1001,7 +1001,7 @@ class FormatCmd : public NoUndoCmd {
   private:
     Editor *editor;
   public:
-    virtual void doit();
+    virtual void doit(void);
     FormatCmd( char *, char *, int, AbstractEditorParent * );
     virtual const char *const className () { return "FormatCmd"; }
 };
@@ -1013,7 +1013,7 @@ class LogMsgCmd : public ToggleButtonCmd {
     SendMsgDialog * _send;
 
   public:
-	virtual void doit();
+	virtual void doit(void);
 	virtual void undoit() {};
 	LogMsgCmd( char *, char *, int, SendMsgDialog *);
     int LogMsg(void) { return ((ToggleButtonCmd *)this)->getButtonState(); }
@@ -1035,23 +1035,23 @@ class VacationCmd : public Cmd {
     VacationCmd(char *, char *);
     ~VacationCmd();
 
-    virtual void doit();
+    virtual void doit(void);
     virtual void undoit() {};
 
     int		startVacation(char *, char*);
-    void	stopVacation();
+    void	stopVacation(void);
 
     int		handleMessageFile(char *, char *);
-    int		handleForwardFile();
-    Boolean	priorVacationRunning();
+    int		handleForwardFile(void);
+    Boolean	priorVacationRunning(void);
 
     int		backupFile(char *);
     int		recoverForwardFile(char *);
 
-    char *	subject();
-    char *      body();
+    char *	subject(void);
+    char *      body(void);
 
-    void        parseVacationMessage();
+    void        parseVacationMessage(void);
     void	setGenDialog(DtMailGenDialog *dialog) { _dialog = dialog; }
 };
 

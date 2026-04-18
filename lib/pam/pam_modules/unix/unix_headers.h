@@ -172,9 +172,9 @@ mutex_t _priv_lock;
 /*
  * Function Declarations
  */
-extern int		defopen();
+extern int		defopen(void);
 extern char		*defread();
-extern int		key_setnet();
+extern int		key_setnet(void);
 
 /* from unix_utils.c */
 extern int		ck_perm(pam_handle_t *, int,

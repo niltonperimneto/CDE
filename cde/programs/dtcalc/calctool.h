@@ -430,7 +430,7 @@ struct button {
   enum op_type opdisp ;     /* Is button selected during operation? */
   enum menu_type mtype ;    /* Type of popup menu (if any). */
   char *resname ;           /* Button resource name. */
-  void (*func)() ;          /* Function to obey on button press. */
+  void (*func)(void) ;          /* Function to obey on button press. */
 } ;
 extern struct button buttons[] ;           /* Calculator button values. */
 extern struct button mode_buttons[] ;      /* Special "mode" buttons. */
@@ -479,8 +479,8 @@ struct calcVars {                     /* Calctool variables and options. */
   int MPerrors ;                      /* If set, output errors to stderr. */
   int MPdisp_val[MP_SIZE] ;           /* Value of the current display. */
   int MPlast_input[MP_SIZE] ;         /* Previous number input by user. */
-  int MPmvals[MAXREGS][MP_SIZE] ;     /* Memory register values. */
-  double MPfvals[FINREGS] ;           /* Financial Memory register values. */
+  int MPmvals[MAXREGS][MP_SIZE] ;     /* Memory values. */
+  double MPfvals[FINREGS] ;           /* Financial Memory values. */
   int *MPnumstack[MAXSTACK] ;         /* Numeric stack for parens. */
   int MPresult[MP_SIZE] ;             /* Current calculator total value. */
   int MPtresults[3][MP_SIZE] ;        /* Current trigonometric results. */
@@ -515,9 +515,8 @@ struct calcVars {                     /* Calctool variables and options. */
   int pending_op ;    /* Arithmetic operation for pending command. */
   int pointed ;       /* Whether a decimal point has been given. */
   int row ;           /* Row number of current key/mouse press. */
-  int rstate ;        /* Indicates if memory register frame is displayed. */
-  int frstate ;       /* Indicates if financial memory register 
-                         frame is displayed. */
+  int rstate ;        /* Indicates if memory frame is displayed. */
+  int frstate ;       /* Indicates if financial memory                          frame is displayed. */
   int show_paren ;    /* Set if we wish to show DISPLAYITEM during parens. */
   int started ;       /* Set just before window is displayed. */
   int toclear ;       /* Indicates if display should be cleared. */

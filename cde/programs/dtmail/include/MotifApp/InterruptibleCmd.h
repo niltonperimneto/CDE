@@ -86,15 +86,15 @@ class InterruptibleCmd : public NoUndoCmd {
     XtWorkProcId     _wpId;         // The ID of the workproc
     TaskDoneCallback _callback;     // Application-defined callback
     void            *_clientData;
-    Boolean workProc ();
+    Boolean workProc (void);
     static Boolean  workProcCallback ( XtPointer );
     static void     interruptCallback ( void * );
-    void interrupt(); 
+    void interrupt(void); 
     
   protected:
     
     Boolean      _done;         // TRUE if the task has been completed
-    virtual void cleanup();     // Called when task ends
+    virtual void cleanup(void);     // Called when task ends
     virtual void updateMessage ( char * );
     
     // Derived classes implement doit(), declared by Cmd
@@ -104,7 +104,7 @@ class InterruptibleCmd : public NoUndoCmd {
     InterruptibleCmd ( char *, char *, int );
     virtual ~InterruptibleCmd();
     
-    virtual void execute();  // Overrides base class member function
+    virtual void execute(void);  // Overrides base class member function
     virtual void execute ( TaskDoneCallback, void * );
 };
 #endif

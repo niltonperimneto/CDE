@@ -75,7 +75,7 @@ class WarnNoUndoCmd : public AskFirstCmd {
     
   protected:
     
-    virtual void undoit();
+    virtual void undoit(void);
     
   public:
     

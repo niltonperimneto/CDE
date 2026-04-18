@@ -151,8 +151,8 @@ class RoamMenuWindow : public MenuWindow, public AbstractEditorParent
   public:	
     		RoamMenuWindow(char*);
     virtual	~RoamMenuWindow();  
-    virtual void initialize();
-    virtual void manage();
+    virtual void initialize(void);
+    virtual void manage(void);
 
     void	Full(Boolean);
     Widget	GetMainWin() { return _main; }
@@ -172,29 +172,29 @@ class RoamMenuWindow : public MenuWindow, public AbstractEditorParent
 		msgListDragStart(Widget, XEvent*, String*, Cardinal*);
     		// DND: Drop Site
     static void msgListConvertCallback( Widget, XtPointer, XtPointer);
-    void	msgListDropRegister();
-    void	msgListDropEnable();
-    void	msgListDropDisable();
+    void	msgListDropRegister(void);
+    void	msgListDropEnable(void);
+    void	msgListDropDisable(void);
     static void msgListDragFinishCallback(Widget, XtPointer, XtPointer);
-    void	msgListDragSetup();
+    void	msgListDragSetup(void);
     static Bool msgListLookForButton(Display*, XEvent*, XPointer);
     static void msgListProcessPress(Widget, XEvent*, String*, Cardinal*);
     static void	msgListTransferCallback(Widget, XtPointer, XtPointer);
     void	open(DtMailEnv &, DtMailBoolean, DtMailBoolean);
     void	open_and_load(DtMailEnv &, DtMailBoolean, DtMailBoolean);
-    virtual void panicQuit();
+    virtual void panicQuit(void);
     void	postErrorDialog(DtMailEnv&);
     void	propsChanged(void);
     virtual void quit(Boolean delete_win = FALSE);
-    void	quit_silently();
-    void	reopen_mail_file();
+    void	quit_silently(void);
+    void	reopen_mail_file(void);
     void	removeVacationTitle(void);
     void	setVacationTitle(void);
     void	setTitle(char *suffix);
-    void 	startAutoSave();
-    void 	stopAutoSave();
-    void 	sync_work_area_size();
-    Boolean	vacation();
+    void 	startAutoSave(void);
+    void 	stopAutoSave(void);
+    void 	sync_work_area_size(void);
+    Boolean	vacation(void);
     void	view_mail_file(char*, DtMailBoolean create = DTM_FALSE);
 
 	
@@ -228,20 +228,20 @@ class RoamMenuWindow : public MenuWindow, public AbstractEditorParent
 	    // Mutators
 //-----------------------------------------------------------------------
 	    
-    void	addToRowOfButtons();
+    void	addToRowOfButtons(void);
     void  	addToRowOfLabels(MsgScrollingList *msglist);
-    void  	addToRowOfMessageStatus();
+    void  	addToRowOfMessageStatus(void);
 
     void	clearStatus(void);
     void	forwardFilename(char*);
     char 	*forwardFilename();
     void	fullHeader(Boolean flag);
     ViewMsgDialog *ifViewExists(DtMailMessageHandle msg_num);
-    Boolean	inbox();
+    Boolean	inbox(void);
     SortBy	last_sorted_by(void) { return _last_sorted_by; }
     void	last_sorted_by(SortBy type);
     void	message( char * );
-    void	message_summary();
+    void	message_summary(void);
     void	message_summary(int msgn, int nmsgs, int nnew, int ndeleted);
     void	message_selected(int msgn, int nmsgs, int nnew, int ndeleted);
     void	mailboxName( char *name)
@@ -260,53 +260,53 @@ class RoamMenuWindow : public MenuWindow, public AbstractEditorParent
     void	showMessageFullHeaders(Boolean);
     void	unregisterDialog(ViewMsgDialog*);  
     
-    void	construct_file_menu();
-    void	construct_message_menu();
-    void	construct_edit_menu();
-    void	construct_view_menu();
-    void	construct_compose_menu();
-    void	construct_move_menu();
-    void	construct_attachment_menu();
+    void	construct_file_menu(void);
+    void	construct_message_menu(void);
+    void	construct_edit_menu(void);
+    void	construct_view_menu(void);
+    void	construct_compose_menu(void);
+    void	construct_move_menu(void);
+    void	construct_attachment_menu(void);
     void	construct_attachment_popup(void);
     void	construct_text_popup(void);
-    void	construct_message_popup();
-    void	construct_help_menu();
+    void	construct_message_popup(void);
+    void	construct_help_menu(void);
 
     UndelFromListDialog
 		*get_undel_dialog() {return _msg_undelete_from_list->dialog();}
     DtMail::MailRc
 		*get_mail_rc();
-    void	clear_message();
+    void	clear_message(void);
     int		inList(char *filename, DtVirtArray<ContainerMenuCmd *> *);
     void	addToCachedContainerList(char *filename);
-    void	syncCachedContainerList();
+    void	syncCachedContainerList(void);
     void	newMailIndicators(void);
     void	expunge(void);
     int		queryExpunge(void);
     Boolean	requiredConversion()	{return _required_conversion;}
     
-    virtual void text_selected();
-    virtual void text_unselected();
+    virtual void text_selected(void);
+    virtual void text_unselected(void);
 
-    void	attachment_selected();
-    void	all_attachments_deselected();
-    void	all_attachments_selected();
-    void	selectAllAttachments();
+    void	attachment_selected(void);
+    void	all_attachments_deselected(void);
+    void	all_attachments_selected(void);
+    void	selectAllAttachments(void);
     void	add_att(char *) { ; }
     void	add_att(char *, DtMailBuffer)	{ ; }
     void	add_att(DtMailBuffer)		{ ; }
-    void	activate_default_attach_menu();
-    void	deactivate_default_attach_menu();
-    void	activate_default_message_menu();
-    void	deactivate_default_message_menu();	
-    void	showAttachArea();
-    void	hideAttachArea();
+    void	activate_default_attach_menu(void);
+    void	deactivate_default_attach_menu(void);
+    void	activate_default_message_menu(void);
+    void	deactivate_default_message_menu(void);	
+    void	showAttachArea(void);
+    void	hideAttachArea(void);
     void	addAttachmentActions(char **, int);
-    void	removeAttachmentActions();
+    void	removeAttachmentActions(void);
     void	invokeAttachmentAction(int);
     void	save_selected_attachment(char *);
     int		showConversionStatus(int, int);
-    void	conversionFinished();
+    void	conversionFinished(void);
     void	convert(char *, char *);
     void	resetCacheList(int new_size);
 
@@ -536,8 +536,8 @@ class RoamMenuWindow : public MenuWindow, public AbstractEditorParent
     DtMailGenDialog	*_genDialog;
     
     Widget	createWorkArea ( Widget );
-    void	createMenuPanes();
-    void	createContainerList();
+    void	createMenuPanes(void);
+    void	createContainerList(void);
     void	createOpenContainerList(CmdList *);
     void	createCopyList(CmdList *);
     void	configurenotify(
@@ -546,7 +546,7 @@ class RoamMenuWindow : public MenuWindow, public AbstractEditorParent
 		    unsigned int, 
 		    unsigned int,
 		    unsigned int);
-    void	mapnotify();
+    void	mapnotify(void);
 
     
   private:

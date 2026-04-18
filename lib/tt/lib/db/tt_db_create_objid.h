@@ -31,7 +31,7 @@
  * Copyright (c) 1992 by Sun Microsystems, Inc.
  */
 
-#include "util/tt_string.h"
+#include "util/tt_string.hpp"
 #include "db/tt_db_key_utils.h"
 
 extern _Tt_string _tt_db_create_objid (const _Tt_db_key_ptr&,

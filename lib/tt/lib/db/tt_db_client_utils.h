@@ -34,8 +34,8 @@
 #ifndef _TT_DB_CLIENT_UTILS_H
 #define _TT_DB_CLIENT_UTILS_H
 
-#include "util/tt_table.h"
-#include "db/tt_db_client.h"
+#include "util/tt_table.hpp"
+#include "db/tt_db_client.hpp"
 
 declare_list_of(_Tt_db_client)
 declare_table_of(_Tt_db_client)

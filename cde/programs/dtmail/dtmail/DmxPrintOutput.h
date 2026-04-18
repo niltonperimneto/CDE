@@ -126,8 +126,8 @@ public:
     void		setTopPosition(int);
 
     static void		appendContents(void*, char*);
-    void		appendNewLine();
-    void		appendPageBreak();
+    void		appendNewLine(void);
+    void		appendPageBreak(void);
     void		clearContents(void);
 
 private:
@@ -149,7 +149,7 @@ private:
     Dimension		_margin_bottom;
     Dimension		_margin_left;
 
-    int			doGetLinesPerPage();
+    int			doGetLinesPerPage(void);
     void		setInnerPageDimensions(
 						Dimension,
 						Dimension,

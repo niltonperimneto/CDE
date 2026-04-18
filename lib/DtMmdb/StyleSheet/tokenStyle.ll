@@ -36,15 +36,15 @@
 
 %{
 #include <string.h>
-#include "ParserConst.h"
-#include "Expression.h"
-#include "FeatureValue.h"
-#include "PathTable.h"
-#include "SSPath.h"
-#include "PathQualifier.h"
-#include "StyleSheetExceptions.h"
+#include "ParserConst.hpp"
+#include "Expression.hpp"
+#include "FeatureValue.hpp"
+#include "PathTable.hpp"
+#include "SSPath.hpp"
+#include "PathQualifier.hpp"
+#include "StyleSheetExceptions.hpp"
 #include "style.tab.h"
-#include "Debug.h"
+#include "Debug.hpp"
 #include <iostream>
 
 istream *g_stylein = 0;

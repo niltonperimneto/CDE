@@ -70,11 +70,7 @@
    The following makes PROTOTYPES default to 0 if it has not already
    been defined with C compiler flags.
    */
-#if defined(__STDC__) || defined(__cplusplus)
 #define PROTOTYPES 1
-#else
-#define PROTOTYPES 0
-#endif
 
 /* POINTER defines a generic pointer type */
 typedef unsigned char *POINTER;
@@ -89,8 +85,4 @@ typedef unsigned long int UINT4;
    If using PROTOTYPES, then PROTO_LIST returns the list, otherwise it
    returns an empty list.
    */
-#if PROTOTYPES
 #define PROTO_LIST(list) list
-#else
-#define PROTO_LIST(list) ()
-#endif

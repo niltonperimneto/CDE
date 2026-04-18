@@ -5,8 +5,8 @@
 #include <ctype.h>
 #include <sstream>
 #include <iostream>
-#include "Debug.h"
-#include "FeatureDefDictionary.h"
+#include "Debug.hpp"
+#include "FeatureDefDictionary.hpp"
 
 def_list_t* g_def_list = 0;
 

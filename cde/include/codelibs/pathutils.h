@@ -50,10 +50,8 @@ extern "C" {
 extern char *pathcollapse(const char *src, 
 			  char *dst = NULL, 
 			  boolean show_dir = FALSE);
-#elif defined(__STDC__)
+#else
 extern char *pathcollapse(const char *src, char *dst, boolean show_dir);
-#else /* old-style C */
-extern char *pathcollapse();
 #endif
 
 #ifdef __cplusplus

@@ -45,8 +45,8 @@
 #define _DTMAIL_H
 
 #include <Tt/tttk.h>
-#include "DtMailTypes.h"
-#include "DtMailProps.h"
+#include "DtMailTypes.hpp"
+#include "DtMailProps.hpp"
 #include "DtMailError.hh"
 #include "DtMailValues.hh"
 
@@ -54,7 +54,6 @@
 extern "C" {
 #endif
 
-#if defined(__STDC__) || defined(__cplusplus)
     /* Mail Session and Administration API */
     /* API spec sections 3.2.1 - 3.2.8 */
 
@@ -288,10 +287,6 @@ extern "C" {
 					DtMailEnv *,
 					DtMailMessage);
 
-#else /* __STDC__ */
-
-
-#endif /* __STDC__ */
 
 #ifdef __cplusplus
 }

@@ -37,7 +37,7 @@
 #ifndef  _TT_DB_NETWORK_PATH_H
 #define  _TT_DB_NETWORK_PATH_H
 
-#include <util/tt_string.h>
+#include <util/tt_string.hpp>
 #include <db/tt_db_results.h>
 
 extern _Tt_db_results _tt_db_network_path(const _Tt_string &path, 

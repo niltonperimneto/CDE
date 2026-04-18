@@ -97,7 +97,7 @@ class DialogManager : public UIComponent {
     
   // Called to get a new dialog
 
-    Widget getDialog(); 
+    Widget getDialog(void); 
     Widget getDialog(Widget );
     
     virtual Widget createDialog ( Widget ) = 0;   

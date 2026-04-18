@@ -104,7 +104,7 @@ extern "C" {
 #endif /* XmIsView */
 
 
-extern Widget _DtCreateView(); 
+extern Widget _DtCreateView(void); 
 
 extern WidgetClass dtViewWidgetClass;
 

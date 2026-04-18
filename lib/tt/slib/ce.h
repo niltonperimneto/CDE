@@ -62,15 +62,9 @@ typedef void *CE_ENTRY;
 /* Attribute handle */
 typedef void *CE_ATTRIBUTE;
 
-#if defined(__cplusplus) || defined(__STDC__)
 typedef void *(*CE_NAMESPACE_MAP_FUNCTION)(CE_NAMESPACE, void *);
 typedef void *(*CE_ENTRY_MAP_FUNCTION)(CE_NAMESPACE, CE_ENTRY, void *);
 typedef void *(*CE_ATTR_MAP_FUNCTION)(CE_ATTRIBUTE, char *, void *);
-#else
-typedef void *(*CE_NAMESPACE_MAP_FUNCTION)();
-typedef void *(*CE_ENTRY_MAP_FUNCTION)();
-typedef void *(*CE_ATTR_MAP_FUNCTION)();
-#endif
 
 /* the extern routines for the classing engine */
 

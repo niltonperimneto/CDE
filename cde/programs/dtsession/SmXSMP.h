@@ -160,6 +160,6 @@ void SaveYourselfReqProc(SmsConn smsConn, SmPointer managerData, int saveType,
 
 void CloseDownClient(ClientRecPtr client);
 
-void XSMPExit();
+void XSMPExit(void);
 
 #endif /*_smxsmp_h*/

@@ -62,11 +62,11 @@ extern "C" {
 #endif /* OPT_TLI */
 
 #include <sys/types.h>
-#include "util/tt_object.h"
-#include "util/tt_ptr.h"
-#include "util/tt_int_rec.h"
+#include "util/tt_object.hpp"
+#include "util/tt_ptr.hpp"
+#include "util/tt_int_rec.hpp"
 #include "mp/mp_rpc_fns.h"
-#include "util/tt_host_utils.h"
+#include "util/tt_host_utils.hpp"
 
 enum _Tt_rpcsrv_err {
 	_TT_RPCSRV_OK,

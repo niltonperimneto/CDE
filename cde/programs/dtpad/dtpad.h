@@ -1008,7 +1008,7 @@ extern void PrintJobExecute(
 extern void PrintJobCancel(
 	PrintJob *pJob);
 
-extern Display * PrintJobGetErrorPrintDisplay();
+extern Display * PrintJobGetErrorPrintDisplay(void);
 extern void PrintJobSetErrorPrintDisplay(Display *display);
 extern Boolean PrintJobIsActivePrintDisplay(Display *display);
 

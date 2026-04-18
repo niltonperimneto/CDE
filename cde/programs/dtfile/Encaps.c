@@ -256,7 +256,7 @@ void _DtInitializeEncapsulation(Display *display, char *name, char *class)
 /************************************************************************
  *
  *  _DtInstallDialog
- *	This function is used to register a dialog class with the
+ *	This function is used to a dialog class with the
  *	encapsulation functions.
  *
  ************************************************************************/

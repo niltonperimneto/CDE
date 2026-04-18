@@ -38,7 +38,7 @@
 #ifndef _TT_BASE64_H
 #define _TT_BASE64_H
 
-#include "util/tt_string.h"
+#include "util/tt_string.hpp"
 
 unsigned long _tt_base64_decode(const char *s);
 _Tt_string _tt_base64_encode(unsigned long n);

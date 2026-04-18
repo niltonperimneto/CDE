@@ -58,7 +58,7 @@
 #include <signal.h>
 #include <stdarg.h>
 #include <syslog.h>
-#include "util/tt_string.h"
+#include "util/tt_string.hpp"
 #if defined(OPT_DEFINE_SIG_PF)
 	typedef void (*SIG_PF)(int);
 #endif

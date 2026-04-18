@@ -1,6 +1,6 @@
 libhmphf_sources = [
-  'buckets.C', 'mphf_funcs.C', 'mphf_hash_table.C',
-  'params.C', 'pattern.C', 'sorter.C'
+  'buckets.cpp', 'mphf_funcs.cpp', 'mphf_hash_table.cpp',
+  'params.cpp', 'pattern.cpp', 'sorter.cpp'
 ]
 
 libhmphf = static_library('hmphf',

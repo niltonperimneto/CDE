@@ -261,7 +261,7 @@ static Position visibleY;
 static Position hiddenY;
 
 void LockDisplay(Boolean lockNow) {
-  register int i;
+  int i;
   int screenNum;
   Widget parent = NULL, lockDlg;
   XColor xcolors[2];
@@ -865,7 +865,7 @@ static void EventDetected(Widget w, XtPointer client_data, XEvent *ev,
  *  --------
  *
  *************************************<->***********************************/
-static void CheckString(register char *s, register int i) {
+static void CheckString(char *s, int i) {
   /* maximum supported length of password */
 #if defined(SIA)
 #define MAX_PASSWORD_LENGTH SIAMXPASSWORD
@@ -1577,7 +1577,7 @@ static Boolean localAuthenticate(char *name, uid_t uid, char *passwd)
 #else
 
 {
-  register struct passwd *pwent;
+  struct passwd *pwent;
   char *p, *q;
   char *p, *q;
   Boolean rc = True;
@@ -1708,7 +1708,7 @@ static Boolean localAuthenticate(char *name, uid_t uid, char *passwd)
 #if defined(_AIX) && defined(_POWER)
 
 static Boolean Authenticate(char *name, uid_t uid, char *passwd) {
-  register struct passwd *pwent;
+  struct passwd *pwent;
   char *p, *q;
   char *p, *q;
   Boolean rc = True;

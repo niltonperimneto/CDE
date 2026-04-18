@@ -4583,7 +4583,7 @@ dtb_drop_site_register(
         regInfo.respondToDropsOnChildren = dropSite->dropsOnChildren;
         dropSite->callback(widget, DTB_DND_REGISTER, &regInfo, NULL, NULL);
 
-        /* actually register it! */
+        /* actually it! */
         DtDndVaDropRegister(
 	    widget, regInfo.protocols, regInfo.operations,
 	    dropSite->transferCBRec,

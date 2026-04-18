@@ -108,7 +108,7 @@ strcasecmp(const char *s1,
 
 /*
  * Add a palette item into the palette item table
- * and register the widget for palette drag events
+ * and the widget for palette drag events
  */
 void
 pal_register_item_info(

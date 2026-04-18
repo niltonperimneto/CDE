@@ -1816,7 +1816,7 @@ ControlSetBehavior (ControlData * control_data,
 /************************************************************************
  *
  *  ControlCreateAndRegister
- *	Create the control, add it callbacks, register it, as needed, 
+ *	Create the control, add it callbacks, it, as needed, 
  *      as dropable, as an embedded client, as a push recall client, its
  *      animations.
  *
@@ -1887,9 +1887,9 @@ ControlCreateAndRegister (Widget        parent,
    /*  Set the drop zone for the icon  */
       
    /*  Since all file controls have CONTROL_DROP_ACTIONS by default, only    */
-   /*  register the ones that are either a data type that is an action or    */
+   /*  the ones that are either a data type that is an action or    */
    /*  a file type the has either move, copy or link actions associated with */
-   /*  it.  Also register non-file controls that have drop actions as copy.  */
+   /*  it.  Also non-file controls that have drop actions as copy.  */
 
    if (control_data->element_values[CONTROL_DROP_ACTION].parsed_value
                                                                    != NULL)
@@ -2187,7 +2187,7 @@ SwitchCreate (BoxData * box_data)
       ControlSetBehavior (control_data, al, &ac, False, &exp_file_name);
 
 
-      /*  Call the function used to create and register the control  */
+      /*  Call the function used to create and the control  */
       
       control_data->icon = 
          ControlCreateAndRegister (box_data->switch_form, 
@@ -2456,7 +2456,7 @@ ControlCreate (Widget         parent,
       ControlSetBehavior (control_data[i], al, &ac, False, &exp_file_name);
 
 
-      /*  Call the function used to create and register the control  */
+      /*  Call the function used to create and the control  */
 
       control_data[i]->icon = 
          ControlCreateAndRegister (parent, control_data[i], False, al, ac);
@@ -3038,7 +3038,7 @@ SubpanelControlCreate (SubpanelData * subpanel_data,
    ControlSetBehavior (control_data, al, &ac, True, &exp_file_name);
 
 
-   /*  Call the function used to create and register the control  */
+   /*  Call the function used to create and the control  */
 
    control_icon = 
       ControlCreateAndRegister(subpanel_data->form, control_data, main, al, ac);
@@ -4000,7 +4000,7 @@ ToggleDefaultControl (ControlData  * main_control_data,
    ControlSetBehavior (control_data, al, &ac, False, &exp_file_name);
 
 
-   /*  Call the function used to create and register the control  */
+   /*  Call the function used to create and the control  */
 
    control_icon = control_data->icon;
 

@@ -1535,7 +1535,7 @@ static int fal_cmp_data(FalFontData *op1, FalFontData *key, int mask) {
 }
 
 /* sort flag                      */
-/* return data ¡§   sort    ... 1 */
+/* return data ÃÂ¡ÃÂ§   sort    ... 1 */
 /*                  no sort ... 0 */
 
 static int new_target(FalFontData *target, FalFontData *choose) {

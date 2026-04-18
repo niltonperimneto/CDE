@@ -127,13 +127,6 @@ class DmxPrintJob : public UIComponent
 	void		createPrintShell (void);
 	void		createOutputWidgets (void);
 	void		doPrint (void);
-#if 0 && defined(PRINTING_SUPPORTED)
-	static void	finishedPrintToFile(
-					Display*,
-					XPContext,
-					XPGetDocStatus,
-					XPointer);
-#endif /* PRINTING_SUPPORTED */
 	char *		getPageHeaderString( DmxMsg*, DmxStringTypeEnum);
 	Boolean		loadOutputWidgets (void);
 	void		updatePageHeaders(

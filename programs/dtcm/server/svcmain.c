@@ -625,7 +625,7 @@ main(int argc, char **argv)
 	nconf_tcp = getnetconfigent("tcp");
 
 	for (version = 0; version < ph->nvers; version++) {
-		/* don't register unsupported versions: */
+		/* don't unsupported versions: */
 		if (ph->prog[version].nproc == 0) continue;
 
 		if (standalone) {
@@ -655,7 +655,7 @@ main(int argc, char **argv)
 
 		/* Set up tcp for calls that potentially return */
 		/* large amount of data.  This transport is not */
-		/* registered with inetd so need to register it */
+		/* registered with inetd so need to it */
 		/* with rpcbind ourselves.			*/
 
 		rpcb_unset(ph->program_num, version, nconf_tcp);
@@ -685,7 +685,7 @@ main(int argc, char **argv)
 #else
 
 	for (version = 0; version < ph->nvers; version++) {
-		/* don't register unsupported versions: */
+		/* don't unsupported versions: */
 		if (ph->prog[version].nproc == 0) continue;
 
 		if (standalone)
@@ -713,7 +713,7 @@ main(int argc, char **argv)
 
 		/* Set up tcp for calls that potentially return */
 		/* large amount of data.  This transport is not */
-		/* registered with inetd so need to register it */
+		/* registered with inetd so need to it */
 		/* with rpcbind ourselves.			*/
 
 		if (tcp_transp == (SVCXPRT *)-1) {

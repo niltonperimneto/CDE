@@ -4,11 +4,11 @@
 /* $XConsortium: RemoteId.l /main/3 1996/11/19 16:54:33 drk $ */
 
 /* imported interfaces */
-#include "FlexBuffer.h"
+#include "FlexBuffer.hpp"
 
-#include "BTCollectable.h"
-#include "dti_cc/CC_String.h"
-#include "dti_cc/cc_hdict.h"
+#include "BTCollectable.hpp"
+#include "dti_cc/CC_String.hpp"
+#include "dti_cc/cc_hdict.hpp"
 
 
 static int my_input ( char *, int );

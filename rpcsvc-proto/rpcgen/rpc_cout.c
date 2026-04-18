@@ -723,7 +723,7 @@ emit_inline (int indent, declaration * decl, int flag)
       tabify (fout, indent);
       f_print (fout, "{\n");
       tabify (fout, indent + 1);
-      f_print (fout, "register %s *genp;\n\n", decl->type);
+      f_print (fout, "%s *genp;\n\n", decl->type);
       tabify (fout, indent + 1);
       f_print (fout,
 	       "for (i = 0, genp = objp->%s;\n", decl->name);

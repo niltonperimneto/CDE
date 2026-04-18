@@ -38,7 +38,7 @@
 #ifndef _TTTAR_API_H
 #define _TTTAR_API_H
 
-#include "tttar_string_map.h"
+#include "tttar_string_map.hpp"
 
 #define CURRENT_ARCHIVE_VERSION 1
 

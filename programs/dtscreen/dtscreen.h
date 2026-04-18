@@ -72,17 +72,17 @@ extern int  reinittime;
 extern Bool usefirst;
 extern Bool mono;
 extern Bool create;
-extern void (*callback) ();
-extern void (*init) ();
+extern void (*callback) (void);
+extern void (*init) (void);
 
-extern void GetResources();
-extern void CheckResources();
-extern void hsbramp();
-extern void error();
-extern long seconds();
-extern void usage();
-extern void hide_hft_ring();
-extern void unhide_hft_ring();
+extern void GetResources(void);
+extern void CheckResources(void);
+extern void hsbramp(void);
+extern void error(void);
+extern long seconds(void);
+extern void usage(void);
+extern void hide_hft_ring(void);
+extern void unhide_hft_ring(void);
 
 
 /* System V Release 4 redefinitions of BSD functions and structures */

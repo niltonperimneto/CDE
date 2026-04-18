@@ -32,7 +32,7 @@
 #define _DtButtonP_h
 
 #include <Xm/XmP.h>
-#include "Button.h"
+#include "Button.hpp"
 #include <Xm/GadgetP.h>
 #include <Xm/ManagerP.h>
 

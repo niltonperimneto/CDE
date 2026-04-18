@@ -617,13 +617,13 @@ parameters do not share all possible values */
 #define NOAUTOSCALE 2
 
 /* the values for these elements are significant...they are used to set
- * TeX register values which are later tested by  macros
+ * TeX values which are later tested by  macros
  */
 #define COMMAND 1
 #define KEYS2 2
 
 /* the values for these elements are significant...they are used to set
- * TeX register values which are later tested by  macros
+ * TeX values which are later tested by  macros
  */
 #define TWO 2
 #define FOUR 4

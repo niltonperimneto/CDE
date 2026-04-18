@@ -239,7 +239,7 @@ long                       srcBytesAbove, srcBytesBelow;
                 cannot point to left edge, because "colAcc" is > 0 (checked above), which
                 will cause pSrc to be inc'd below.  Set "right" to 1 if at right edge
                 (reuse middle pixel), else to 2 to use pixel to the right.
-                Pre-fetch all memory values, to avoid RISC register interlock.
+                Pre-fetch all memory values, to avoid RISC interlock.
             */
         pSrc -= 3;                                  /* point pSrc one to left */
         pSrcEnd = pSrc + 3 * pPriv->srcWidth - 3;   /* pSrc at right edge when here */
@@ -461,7 +461,7 @@ long                       srcBytesAbove, srcBytesBelow;
                 cannot point to left edge, because "colAcc" is > 0 (checked above), which
                 will cause pSrc to be inc'd below.  Set "right" to 1 if at right edge
                 (reuse middle pixel), else to 2 to use pixel to the right.
-                Pre-fetch all memory values, to avoid RISC register interlock.
+                Pre-fetch all memory values, to avoid RISC interlock.
             */
         pSrc--;                                     /* point pSrc one to left */
         pSrcEnd = pSrc + pPriv->srcWidth - 1;       /* pSrc at right edge when here */

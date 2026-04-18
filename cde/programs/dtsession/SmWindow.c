@@ -111,7 +111,7 @@ static WindowInfo
 GetTopLevelWindowInfo(
         Window window )
 {
-    register int i;
+    int i;
     Window parent,root,*children;
     WindowInfo retInfo;
     Atom actualType;

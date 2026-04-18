@@ -1,9 +1,9 @@
 # dtsearchpath - executable
 
 dtsearchpath_src = [
-  'AppSearchPath.C', 'DbSearchPath.C', 'HelpSearchPath.C',
-  'IconSearchPath.C', 'InfoLibSearchPath.C', 'ManSearchPath.C',
-  'Options.C', 'SearchPath.C', 'dtsearchpath.C'
+  'AppSearchPath.cpp', 'DbSearchPath.cpp', 'HelpSearchPath.cpp',
+  'IconSearchPath.cpp', 'InfoLibSearchPath.cpp', 'ManSearchPath.cpp',
+  'Options.cpp', 'SearchPath.cpp', 'dtsearchpath.cpp'
 ]
 
 executable('dtsearchpath',

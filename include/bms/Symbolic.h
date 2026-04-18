@@ -67,7 +67,7 @@ typedef struct _XeSymbol {
 This type is used for the XeRegisterFunction() routine.
 */
 
-typedef void (*XeAnyFunction) ();
+typedef void (*XeAnyFunction) (void);
 
 
 /*
@@ -98,7 +98,7 @@ data, hash functions, compare functions, etc.
 #if defined(__STDC__) || defined(__cplusplus) || defined(c_plusplus)
    typedef int (*XeSymFn_cmp) (void *, void *);     /* 0 mean match */
 #else
-   typedef int (*XeSymFn_cmp) ();
+   typedef int (*XeSymFn_cmp) (void);
 #endif
 
 
@@ -120,7 +120,7 @@ data, hash functions, compare functions, etc.
 #if defined(__STDC__) || defined(__cplusplus) || defined(c_plusplus)
    typedef unsigned int (*XeSymFn_hash)  (void *, unsigned int);
 #else
-   typedef unsigned int (*XeSymFn_hash)  ();
+   typedef unsigned int (*XeSymFn_hash)  (void);
 #endif
 
 /* INIT_FN:  								*/
@@ -156,7 +156,7 @@ data, hash functions, compare functions, etc.
 #if defined(__STDC__) || defined(__cplusplus) || defined(c_plusplus)
    typedef void * (*XeSymFn_init)(void *, unsigned int);
 #else
-   typedef void * (*XeSymFn_init)();
+   typedef void * (*XeSymFn_init)(void);
 #endif
 
 /* CLEAN_FN:  								*/
@@ -186,7 +186,7 @@ data, hash functions, compare functions, etc.
 #if defined(__STDC__) || defined(__cplusplus) || defined(c_plusplus)
    typedef void (*XeSymFn_clean)  (void *);
 #else
-   typedef void (*XeSymFn_clean)  ();
+   typedef void (*XeSymFn_clean)  (void);
 #endif
    
 /* This is what an internal symbol table entry looks like: */

@@ -69,12 +69,6 @@
 #define FALSE 0
 #define TRUE 1
 
-#ifndef __STDC__
-#ifdef NULL
-#undef NULL
-#endif
-#define NULL 0
-#endif
 
     /*  IL_EXTERN is declared in place of "extern" for functions / data
         that are external (in other another source file) but not public
@@ -142,7 +136,7 @@ typedef struct {
     ilObjectPublicRec   p;                  /* /ilinc/il.h , e.g. "context" */
     unsigned long       refCount;           /* see notes */
     ilPtr               pNext, pPrev;       /* private to /ilc/ilobject.c */
-    void                (*Destroy)();       /* private to /ilc/ilobject.c */
+    void                (*Destroy)(void);       /* private to /ilc/ilobject.c */
     } ilObjectRec, *ilObjectPtr;
 
 

@@ -127,7 +127,7 @@ extern	char	*newstradded(/* src1, src2, src3 */);
 extern	int	str_to_int(/* ptr, val */);
 extern	bool	str_to_bool(char *ptr, bool def_val);
 extern	char	*trim_line(/* ptr */);
-extern	char	**parse_strlist(register char *ptr, char sep_ch);
+extern	char	**parse_strlist(char *ptr, char sep_ch);
 extern	int	pack_strlist(/* ptr, listp, sep_ch */);
 extern	void	free_strlist(/* pp */);
 extern	bool	parse_dpy_str(/* display_str, host, dnum, snum, dnet */);

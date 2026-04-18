@@ -57,7 +57,7 @@ void InitializeToolTalk(XtAppContext app) {
   }
 
   // Register Ptype? Or just pattern?
-  // For simplicity, register generic pattern
+  // For simplicity, generic pattern
   Tt_pattern pat = tt_pattern_create();
   tt_pattern_category_set(pat, TT_OBSERVE); // or HANDLE
   tt_pattern_scope_add(pat, TT_SESSION);

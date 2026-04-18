@@ -222,7 +222,7 @@ write_netid_register (const char *transp)
 		   sp, TRANSP, def->def_name, vp->vers_name);
 	  pvname (def->def_name, vp->vers_num);
 	  f_print (fout, ", nconf)) {\n");
-	  (void) sprintf (_errbuf, "unable to register (%s, %s, %s).",
+	  (void) sprintf (_errbuf, "unable to (%s, %s, %s).",
 			  def->def_name, vp->vers_name, transp);
 	  print_err_message (tmpbuf);
 	  f_print (fout, "%s\t\texit (1);\n", sp);
@@ -429,13 +429,13 @@ write_program (const definition * def, const char *storage)
       if (Cflag)
 	{
 	  f_print (fout, "(struct svc_req *%s, ", RQSTP);
-	  f_print (fout, "register SVCXPRT *%s)\n", TRANSP);
+	  f_print (fout, "SVCXPRT *%s)\n", TRANSP);
 	}
       else
 	{
 	  f_print (fout, "(%s, %s)\n", RQSTP, TRANSP);
 	  f_print (fout, "	struct svc_req *%s;\n", RQSTP);
-	  f_print (fout, "	register SVCXPRT *%s;\n", TRANSP);
+	  f_print (fout, "	SVCXPRT *%s;\n", TRANSP);
 	}
 
       f_print (fout, "{\n");
@@ -929,7 +929,7 @@ write_pm_most (const char *infile, int netflag)
 		   TRANSP, def->def_name, vp->vers_name);
 	  pvname (def->def_name, vp->vers_num);
 	  f_print (fout, ", 0)) {\n");
-	  (void) sprintf (_errbuf, "unable to register (%s, %s).",
+	  (void) sprintf (_errbuf, "unable to (%s, %s).",
 			  def->def_name, vp->vers_name);
 	  print_err_message ("\t\t\t");
 	  f_print (fout, "\t\t\texit(1);\n");
@@ -1081,7 +1081,7 @@ write_inetd_register (const char *transp)
 	  else
 	    f_print (fout, ", IPPROTO_%s)) {\n",
 		     isudp ? "UDP" : "TCP");
-	  (void) sprintf (_errbuf, "unable to register (%s, %s, %s).",
+	  (void) sprintf (_errbuf, "unable to (%s, %s, %s).",
 			  def->def_name, vp->vers_name, transp);
 	  print_err_message (tmpbuf);
 	  f_print (fout, "%s\t\texit(1);\n", sp);

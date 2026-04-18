@@ -38,9 +38,6 @@
 #include <Xm/Form.h>
 #include <Xm/LabelG.h>
 #include <Xm/DialogS.h>
-#if 0 && defined(PRINTING_SUPPORTED)
-#include <Xm/Print.h>
-#endif /* PRINTING_SUPPORTED */
 #include <Xm/Protocols.h>
 #include <Xm/PushBG.h>
 #include <Xm/SeparatoG.h>
@@ -875,32 +872,6 @@ clearSetupData(_DtCmPrintData *pd)
 static void
 createPrintShell(Calendar *c)
 {
-#if 0 && defined(PRINTING_SUPPORTED)
-  _DtCmPrintData *pd = (_DtCmPrintData *)c->print_data;
-
-#ifdef GR_DEBUG
-  if (inDebugMode(c))
-  {
-    if (pd->printShell != (Widget)NULL)
-      XtDestroyWidget(pd->printShell);
-
-    pd->printShell = XmCreateDialogShell(c->frame, "Print",
-					 0, NULL);
-  }
-  else
-#endif
-  if (pd->printShell == (Widget)NULL)
-  {
-    pd->printShell =
-      XmPrintSetup(pd->pdb,
-		   XpGetScreenOfContext(pd->setupData.print_display,
-					pd->setupData.print_context),
-		   "Print", NULL, 0);
-
-    XtAddCallback(pd->printShell, XmNpdmNotificationCallback,
-		  pdm_notify_cb, (XtPointer)c);
-  }
-#endif  /* PRINTING_SUPPORTED */
 }
 
 void
@@ -1257,35 +1228,6 @@ report_error(Calendar *c, char *title, char *errText)
 static void
 pdm_notify_cb(Widget w, XtPointer uData, XtPointer cbData)
 {
-#if 0 && defined(PRINTING_SUPPORTED)
-  XmPrintShellCallbackStruct *cbStruct =
-    (XmPrintShellCallbackStruct *)cbData;
-  Calendar *c = (Calendar *)uData;
-  char *errText = (char *)NULL;
-  char *title;
-
-  switch (cbStruct->reason)
-  {
-  case XmCR_PDM_NONE:
-  case XmCR_PDM_START_ERROR:
-  case XmCR_PDM_EXIT_ERROR:
-    errText = XtNewString(CATGETS(c->DT_catd, 1, 1112, pdmErrorText));
-    break;
-
-  default:
-    break;
-  }
-
-  if (errText)
-  {
-    title = XtNewString(CATGETS(c->DT_catd, 1, 1111, setupErrorTitle));
-
-    report_error(c, title, errText);
-
-    XtFree(title);
-    XtFree(errText);
-  }
-#endif  /* PRINTING_SUPPORTED */
 }
 
 /*
@@ -1335,38 +1277,6 @@ print_cb(Widget w, XtPointer data, XtPointer cbDataP)
 static void
 print_setup_cb(Widget w, XtPointer uData, XtPointer cbData)
 {
-#if 0 && defined(PRINTING_SUPPORTED)
-  Calendar *c = (Calendar *)uData;
-  _DtCmPrintData *pd = (_DtCmPrintData *)c->print_data;
-  DtPrintSetupCallbackStruct *cbStruct =
-    (DtPrintSetupCallbackStruct *)cbData;
-
-  clearSetupData(pd);
-  DtPrintCopySetupData(&pd->setupData, cbStruct->print_data);
-  pd->setupDataValid = True;
-
-#ifdef GR_DEBUG
-  /* Force debug mode off. */
-  if (inDebugMode(c))
-    XmToggleButtonGadgetSetState(pd->debugToggle, False, False);
-#endif
-
-  createPrintShell(c);
-
-  if (XmPrintPopupPDM(pd->printShell, w) != XmPDM_NOTIFY_SUCCESS)
-  {
-    char *errText = XtNewString(CATGETS(c->DT_catd, 1, 1112,
-					pdmErrorText));
-    char *title = XtNewString(CATGETS(c->DT_catd, 1, 1111, setupErrorTitle));
-
-    report_error(c, title, errText);
-
-    XtFree(title);
-    XtFree(errText);
-  }
-
-  clearSetupData(pd);
-#endif  /* PRINTING_SUPPORTED */
 }
 
 /*

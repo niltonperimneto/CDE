@@ -35,8 +35,8 @@
 #ifndef _TT_CLIENT_ISAM_RECORD_UTILS_H
 #define _TT_CLIENT_ISAM_RECORD_UTILS_H
 
-#include "util/tt_list.h"
-#include "db/tt_client_isam_record.h"
+#include "util/tt_list.hpp"
+#include "db/tt_client_isam_record.hpp"
 
 declare_list_of(_Tt_client_isam_record)
 

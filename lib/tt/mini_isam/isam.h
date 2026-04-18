@@ -52,11 +52,11 @@ SMI */
 #define LONG_BIT 32
 #endif
 
-extern short ldint();
-extern long ldlong();
-extern float ldfloat();
-extern double lddbl();
-extern short ldshort();
+extern short ldint(void);
+extern long ldlong(void);
+extern float ldfloat(void);
+extern double lddbl(void);
+extern short ldshort(void);
 extern int ldchar(), stchar(), stlong(), stdbl();
 extern int stint(short val, char *p);
 extern int stfloat(float f, char *p);

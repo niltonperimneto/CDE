@@ -35,7 +35,7 @@
 #include <Xm/Xm.h>
 #include <Xm/MwmUtil.h>
 #include <Xm/MenuShell.h>
-#include "UxXt.h"
+#include "UxXt.hpp"
 #include "dtcreate.h"
 
 #include <Xm/Text.h>

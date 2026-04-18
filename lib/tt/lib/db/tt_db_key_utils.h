@@ -34,7 +34,7 @@
 #ifndef _TT_DB_KEY_UTILS_H
 #define _TT_DB_KEY_UTILS_H
 
-#include "db/tt_db_key.h"
+#include "db/tt_db_key.hpp"
 
 declare_ptr_to(_Tt_db_key)
 

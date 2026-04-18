@@ -7,10 +7,10 @@
 #include <sstream>
 
 #ifdef DEBUG
-#include "oliasdb/olias_consts.h"
+#include "oliasdb/olias_consts.hpp"
 GR_TYPE gtype;
 #else
-#include "GraphicsTask.h"
+#include "GraphicsTask.hpp"
 extern GR_TYPE gtype;
 #endif
 

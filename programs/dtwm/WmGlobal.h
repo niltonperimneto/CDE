@@ -37,11 +37,7 @@
  */
 
 /* ANSI C definitions,  This should be the first thing in WmGlobal.h */
-#ifdef __STDC__
 #define Const const
-#else
-#define Const /**/
-#endif
 
 
 /*
@@ -417,7 +413,7 @@ typedef unsigned long Context;
 typedef unsigned long Behavior;
 typedef unsigned long GroupArg;
 
-typedef Boolean (*WmFunction) ();
+typedef Boolean (*WmFunction) (void);
 
 #define NO_MODIFIER	0		/* value for state field */
 

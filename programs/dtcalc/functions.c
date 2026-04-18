@@ -187,7 +187,7 @@ do_business(void)     /* Perform special business mode calculations. */
              return;
           }
           else
-             /* set FV register */
+             /* set FV */
              mpcmd(v->MPdisp_val, &(v->MPfvals[4]));
       }
       else
@@ -225,7 +225,7 @@ do_business(void)     /* Perform special business mode calculations. */
              return;
           }
           else
-             /* set Payment register */
+             /* set Payment */
              mpcmd(v->MPdisp_val, &(v->MPfvals[3]));
       }
       else
@@ -263,7 +263,7 @@ do_business(void)     /* Perform special business mode calculations. */
              return;
           }
           else
-             /* set PV register */
+             /* set PV */
              mpcmd(v->MPdisp_val, &(v->MPfvals[2]));
       }
       else
@@ -305,7 +305,7 @@ do_business(void)     /* Perform special business mode calculations. */
              v->accuracy = 2;
              display_number = make_number(v->MPdisp_val, FALSE);
              MPstr_to_num(display_number, DEC, v->MPdisp_val);
-             /* set RATE register */
+             /* set RATE */
              mpcmd(v->MPdisp_val, &(v->MPfvals[1]));
              v->accuracy = accSav;
           }
@@ -386,7 +386,7 @@ do_business(void)     /* Perform special business mode calculations. */
              return;
           }
           else
-             /* set Term register */
+             /* set Term */
              mpcmd(v->MPdisp_val, &(v->MPfvals[0]));
       }
       else
@@ -427,19 +427,19 @@ do_business(void)     /* Perform special business mode calculations. */
 
        mpcim(&zero, MP1) ;
 
-       /* clear Term register */
+       /* clear Term */
        mpcmd(MP1, &(v->MPfvals[0])) ;
 
-       /* clear %/YR register */
+       /* clear %/YR */
        mpcmd(MP1, &(v->MPfvals[1])) ;
 
-       /* clear PV register */
+       /* clear PV */
        mpcmd(MP1, &(v->MPfvals[2])) ;
 
-       /* clear Payment register */
+       /* clear Payment */
        mpcmd(MP1, &(v->MPfvals[3])) ;
 
-       /* clear FV register */
+       /* clear FV */
        mpcmd(MP1, &(v->MPfvals[4])) ;
 
        zero = 12;

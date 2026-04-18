@@ -96,7 +96,7 @@ void _DtTermPrimInitRepTypes(void)
 
     _DtTermProcessLock();
     if (first) {
-	/* register our resource converters... */
+	/* our resource converters... */
 #ifdef NotDefined
 	(void) XtSetTypeConverter(XmRString, DtRDtTermTerminalSize,
 		CvtStringToTerminalSize, NULL, 0, XtCacheNone,

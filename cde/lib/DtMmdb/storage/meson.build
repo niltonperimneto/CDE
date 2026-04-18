@@ -1,9 +1,9 @@
 libstorage_sources = [
-  'abs_storage.C', 'chunks_index.C', 'heap_comp_funcs.C',
-  'lru.C', 'page.C', 'page_cache.C', 'page_rep.C',
-  'page_storage.C', 'rep_cell.C', 'rep_policy.C',
-  'store_test.C', 'unixf_storage.C', 'version.C',
-  'vm_storage.C'
+  'abs_storage.cpp', 'chunks_index.cpp', 'heap_comp_funcs.cpp',
+  'lru.cpp', 'page.cpp', 'page_cache.cpp', 'page_rep.cpp',
+  'page_storage.cpp', 'rep_cell.cpp', 'rep_policy.cpp',
+  'store_test.cpp', 'unixf_storage.cpp', 'version.cpp',
+  'vm_storage.cpp'
 ]
 
 libstorage = static_library('storage',

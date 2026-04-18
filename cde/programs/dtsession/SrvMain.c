@@ -144,7 +144,7 @@ int main(int argc, char **argv) {
   display =
       XtOpenDisplay(app, NULL, argv[0], "Customize", NULL, 0, &argc, argv);
 
-  /* Go register the DT error handler */
+  /* Go the DT error handler */
   XeProgName = argv[0];
 
   result = InitializeDtcolor(display, DEFAULT_SESSION);

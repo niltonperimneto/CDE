@@ -102,9 +102,9 @@ class AskFirstCmd : public Cmd {
     
     void setQuestion ( char *str );
     
-    virtual void execute(); // Overrides the Cmd member function
+    virtual void execute(void); // Overrides the Cmd member function
 
-    virtual void doYesCallback();
+    virtual void doYesCallback(void);
     
     virtual const char *const className ()  { return "AskFirstCmd"; }
 };

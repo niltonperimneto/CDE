@@ -37,9 +37,9 @@
 #ifndef _TTDBCK_H
 #define _TTDBCK_H
 
-#include "spec.h"
-#include "options_tt.h"
-#include "mp_typedb.h"
+#include "spec.hpp"
+#include "options_tt.hpp"
+#include "mp_typedb.hpp"
 
 extern char *progname;			// from argv[0]
 extern Spec_list_ptr specs_to_repair;

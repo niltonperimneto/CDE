@@ -29,7 +29,7 @@
 #ifndef _CA_AUX_H_INCLUDED
 #define _CA_AUX_H_INCLUDED
 
-#include "UxXt.h"
+#include "UxXt.hpp"
 
 #if !defined(_DIRENT_H)
 #include <dirent.h>

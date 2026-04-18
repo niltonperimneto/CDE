@@ -1,6 +1,6 @@
 # dtmailpr - Mail Printer
 
-dtmailpr_src = ['main.C', 'message.C', 'mailbox.C', 'utils.C']
+dtmailpr_src = ['main.cpp', 'message.cpp', 'mailbox.cpp', 'utils.cpp']
 
 executable('dtmailpr',
   dtmailpr_src,

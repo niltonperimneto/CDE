@@ -82,7 +82,7 @@ class BusyPixmap : public PixmapCycler {
     
     GC     _gc, _inverseGC; // Used to draw Pixmaps
     Widget _w;              // Widget whose colors are to be used 
-    void createPixmaps();   // Overrides base class pure virtual
+    void createPixmaps(void);   // Overrides base class pure virtual
     virtual Pixmap createBusyPixmap ( int, int );
     
   public:

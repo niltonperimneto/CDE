@@ -75,7 +75,7 @@ class ManageCmd : public NoUndoCmd {
     
   protected:
     
-    virtual void doit();      // Manage all windows
+    virtual void doit(void);      // Manage all windows
     
   public:
     

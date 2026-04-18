@@ -79,7 +79,7 @@ class NoUndoCmd : public Cmd {
     virtual void doit()   = 0;  // Specific actions must be defined    
 #endif
     
-    virtual void undoit();
+    virtual void undoit(void);
     
   public:
     

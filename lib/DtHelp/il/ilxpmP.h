@@ -260,10 +260,6 @@ FUNC(xpm_znormalizeimagebits, int, (unsigned char *bp,
 */
 
 
-#if defined(__STDC__)
 #define Const const
-#else
-#define Const				/**/
-#endif
 
 #endif

@@ -50,9 +50,6 @@ typedef enum {
  */
 static const char* PdmXpGetQualifier(PdmXp* me);
 static char* PdmXpBuildResourceName(PdmXp* me, PdmOid id_att);
-#if 0 && defined(PRINTING_SUPPORTED)
-static XrmDatabase PdmXpLoadPool(PdmXp* me, XPAttributes type);
-#endif /* PRINTING_SUPPORTED */
 
 
 /*
@@ -131,26 +128,8 @@ PdmXpOpen(PdmXp* me,
 	/*
 	 * check to see if the display is a print server
 	 */
-#if 0 && defined(PRINTING_SUPPORTED)
-	if(XpQueryExtension(me->display, &event_base, &error_base))
-	{
-	    /*
-	     * set the passed print context on the print display
-	     */
-	    me->context = strtoul(context_str, (char**)NULL, 0);
-	    /*
-	     * load the resource DB qualifier
-	     */
-	    PdmXpGetQualifier(me);
-	}
-	else
-	{
-#endif /* PRINTING_SUPPORTED */
 	    XCloseDisplay(me->display);
 	    me->display = (Display*)NULL;
-#if 0 && defined(PRINTING_SUPPORTED)
-	}
-#endif /* PRINTING_SUPPORTED */
     }
 
     return me->display;
@@ -186,9 +165,6 @@ PdmXpClose(PdmXp* me)
 	}
 	XCloseDisplay(me->display);
 	me->display = NULL;
-#if 0 && defined(PRINTING_SUPPORTED)
-	me->context = (XPContext)NULL;
-#endif /* PRINTING_SUPPORTED */
     }
 }
 
@@ -205,59 +181,6 @@ PdmXpClose(PdmXp* me)
  *     
  *
  */
-#if 0 && defined(PRINTING_SUPPORTED)
-static XrmDatabase
-PdmXpLoadPool(PdmXp* me, XPAttributes type)
-{
-    PdmXpPoolIndex i;
-    /*
-     * determine the index into the pool array based on the Xp pool type
-     */
-    switch(type)
-    {
-    case XPJobAttr:
-	i = PDMXP_JOB;
-	break;
-    case XPDocAttr:
-	i = PDMXP_DOC;
-	break;
-    case XPPrinterAttr:
-	i = PDMXP_PRINTER;
-	break;
-    case XPServerAttr:
-	i = PDMXP_SERVER;
-	break;
-    default:
-	return (XrmDatabase)NULL;
-	break;
-    }
-    /*
-     * get the attributes from the X print server
-     */
-    if(me->pool[i] == (XrmDatabase)NULL)
-    {
-	XTextProperty text_prop;
-	char** list;
-	int count;
-	
-	text_prop.value = (unsigned char*)
-	    XpGetAttributes(me->display, me->context, type);
-	text_prop.encoding = XInternAtom(me->display, "COMPOUND_TEXT", False);
-	text_prop.format = 8;
-	text_prop.nitems = strlen((char*)text_prop.value);
-	if(Success ==
-	   XmbTextPropertyToTextList(me->display, &text_prop, &list, &count))
-	{
-	    if(count > 0)
-		me->pool[i] = XrmGetStringDatabase(list[0]);
-
-	    XFreeStringList(list);	    
-	}
-    }
-
-    return me->pool[i];
-}
-#endif /* PRINTING_SUPPORTED */
 
 /*
  * ------------------------------------------------------------------------
@@ -276,20 +199,6 @@ PdmXpGetQualifier(PdmXp* me)
 {
     if(me->qualifier == (char*)NULL)
     {
-#if 0 && defined(PRINTING_SUPPORTED)
-	if(PdmXpLoadPool(me, XPPrinterAttr) != (XrmDatabase)NULL)
-	{
-	    char* str_type;
-	    XrmValue value;
-	    
-	    if(XrmGetResource(me->pool[PDMXP_PRINTER],
-			      "qualifier", "qualifier", &str_type, &value))
-	    {
-		me->qualifier = XtNewString((char*)value.addr);
-		me->qualifier_len = strlen(me->qualifier);
-	    }
-	}
-#endif /* PRINTING_SUPPORTED */
     }
     return me->qualifier;
 }
@@ -353,19 +262,6 @@ PdmXpBuildResourceName(PdmXp* me, PdmOid id_att)
  *     pdmoid_none if the attribute value is not found.
  *
  */
-#if 0 && defined(PRINTING_SUPPORTED)
-PdmOid
-PdmXpGetValue(PdmXp* me,
-	      XPAttributes type,
-	      PdmOid id_att)
-{
-    const char* value;
-    
-    value = PdmXpGetStringValue(me, type, id_att);
-
-    return PdmOidFromString(value);
-}
-#endif /* PRINTING_SUPPORTED */
 
 /*
  * ------------------------------------------------------------------------
@@ -381,36 +277,6 @@ PdmXpGetValue(PdmXp* me,
  *     representation type is not a string.
  *
  */
-#if 0 && defined(PRINTING_SUPPORTED)
-const char*
-PdmXpGetStringValue(PdmXp* me,
-		    XPAttributes type,
-		    PdmOid id_att)
-{
-    char* res_name;
-    char* str_type;
-    XrmValue value;
-    Bool found;
-    
-    XrmDatabase pool;
-    
-    pool = PdmXpLoadPool(me, type);
-    if(pool == (XrmDatabase)NULL)
-	return (const char*)NULL;
-
-    res_name = PdmXpBuildResourceName(me, id_att);
-    found = XrmGetResource(pool, res_name, res_name, &str_type, &value);
-    XtFree(res_name);
-    
-    /*
-     * return
-     */
-    if(found)
-	return (const char*)value.addr;
-    else
-	return (const char*)NULL;
-}
-#endif /* PRINTING_SUPPORTED */
 
 /*
  * ------------------------------------------------------------------------
@@ -425,16 +291,6 @@ PdmXpGetStringValue(PdmXp* me,
  *     
  *
  */
-#if 0 && defined(PRINTING_SUPPORTED)
-void
-PdmXpSetValue(PdmXp* me,
-	      XPAttributes type,
-	      PdmOid id_att,
-	      PdmOid id_val)
-{
-    PdmXpSetStringValue(me, type, id_att, PdmOidString(id_val));
-}
-#endif /* PRINTING_SUPPORTED */
 
 /*
  * ------------------------------------------------------------------------
@@ -449,26 +305,6 @@ PdmXpSetValue(PdmXp* me,
  *     
  *
  */
-#if 0 && defined(PRINTING_SUPPORTED)
-void
-PdmXpSetStringValue(PdmXp* me,
-		    XPAttributes type,
-		    PdmOid id_att,
-		    const char* str_val)
-{
-    char* res_name;
-   
-    XrmDatabase pool;
-    
-    pool = PdmXpLoadPool(me, type);
-    if(pool == (XrmDatabase)NULL)
-	return;
-
-    res_name = PdmXpBuildResourceName(me, id_att);
-    XrmPutStringResource(&pool, res_name, (char*)str_val);
-    XtFree(res_name);
-}
-#endif /* PRINTING_SUPPORTED */
 
 
 /*
@@ -487,81 +323,4 @@ PdmXpSetStringValue(PdmXp* me,
 void
 PdmXpUpdateAttributes(PdmXp* me)
 {
-#if 0 && defined(PRINTING_SUPPORTED)
-    char fname[L_tmpnam];
-    
-    if(tmpnam(fname))
-    {
-	int i;
-	XrmDatabase pool;
-	XPAttributes type;
-	FILE* fp;
-	struct stat stbuf;
-	int retlen;
-	char* data = NULL;
-	int data_size = 0;
-	XTextProperty text_prop;
-
-	for(i = 0; i < PDMXP_POOL_COUNT; i++)
-	{
-	    if(me->pool[i] != (XrmDatabase)NULL)
-	    {
-		switch(i)
-		{
-		case PDMXP_JOB:
-		    type = XPJobAttr;
-		    break;
-		case PDMXP_DOC:
-		    type = XPDocAttr;
-		    break;
-		default:
-		    continue;
-		}
-		/*
-		 * write out the attribute pool to a file Xrm DB
-		 */
-		XrmPutFileDatabase(me->pool[i], fname);
-		/*
-		 * open the new file Xrm DB
-		 */
-		if(fp = fopen(fname, "r"))
-		{
-		    /*
-		     * read the file to create a string Xrm DB
-		     */
-		    fstat(fileno(fp), &stbuf);
-		    if(stbuf.st_size + 1 > data_size)
-		    {
-			data_size = stbuf.st_size + 1;
-			data = XtRealloc(data, data_size);
-		    }
-		    retlen = read(fileno(fp), data, stbuf.st_size);
-		    fclose(fp);
-		    unlink(fname);
-		    data[retlen] = '\0';
-		    /*
-		     * convert to compund text
-		     */
-		    if(Success == 
-		       XmbTextListToTextProperty(me->display,
-						 &data, 1,
-						 XCompoundTextStyle,
-						 &text_prop))
-		    {
-			/*
-			 * use the string Xrm DB to update the Xp server
-			 */
-			XpSetAttributes(me->display, me->context,
-					type, (char*)text_prop.value,
-					XPAttrMerge);
-			if(text_prop.value)
-			    XFree(text_prop.value);
-		    }
-		}
-	    }
-
-	}
-	XtFree(data);
-    }
-#endif /* PRINTING_SUPPORTED */
 }

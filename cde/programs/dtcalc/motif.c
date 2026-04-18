@@ -2012,9 +2012,9 @@ void make_modewin(void) /* Draw special mode frame plus buttons. */
   switch_mode(v->modetype);
 }
 
-/* Calculate memory register frame values. */
+/* Calculate memory frame values. */
 void make_registers(int type) {
-  char line[MAXLINE]; /* Current memory register line. */
+  char line[MAXLINE]; /* Current memory line. */
   char *ptr, *tmp, *tmpStr;
   int i;
   /*  int savAcc;*/

@@ -1415,8 +1415,7 @@ void GettyMessage(struct display *d, int msgnum) {
  *	  /etc/utmp, looking for a login process on the respective device.
  *	  However, the child Dtlogin spawned by the master Dtlogin to
  *	  handle this display also is a "login process" according to
- *	  /etc/utmp.  It provides a login path and therefore must register
- *	  itself as so.  If a getty is also running, there are actually two
+ *	  /etc/utmp.  It provides a login path and therefore must  *	  itself as so.  If a getty is also running, there are actually two
  *	  login processes running against the same device at the same time.
  *
  *	  The child Dtlogin dies before the scan of /etc/utmp is made.

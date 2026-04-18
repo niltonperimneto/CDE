@@ -247,11 +247,7 @@ static sigjmp_buf pingTime;
 
 static SIGVAL catchAlrm(int arg) { siglongjmp(pingTime, 1); }
 
-#if defined(__STDC__)
 static int FileNameCompare(const void *a, const void *b)
-#else
-static int FileNameCompare(char *a, char *b)
-#endif
 {
   return strcoll(*(char **)a, *(char **)b);
 }
@@ -1515,11 +1511,7 @@ static SIGVAL waitAbort(int arg) { siglongjmp(tenaciousClient, 1); }
 
 static int AbortClient(int pid) {
   int sig = SIGTERM;
-#ifdef __STDC__
   volatile int i;
-#else
-  int i;
-#endif
   int retId;
   for (i = 0; i < 4; i++) {
     if (killpg(pid, sig) == -1) {

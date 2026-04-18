@@ -24,7 +24,7 @@ dthelp_rust_lib = custom_target(
     output: 'libdthelp_engine.a',
     command: [
         'sh', '-c',
-        'cargo build --release --manifest-path @0@/rust/engine/Cargo.toml --target-dir @0@/rust/engine/target && cp @0@/rust/engine/target/release/libdthelp_engine.a @OUTPUT@'.format(meson.current_source_dir())
+        'cargo build --locked --release --manifest-path @0@/rust/engine/Cargo.toml --target-dir @0@/rust/engine/target && cp @0@/rust/engine/target/release/libdthelp_engine.a @OUTPUT@'.format(meson.current_source_dir())
     ],
     build_by_default: true
 )

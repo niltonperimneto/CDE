@@ -36,9 +36,6 @@
 #ifndef _PdmXp_h
 #define _PdmXp_h
 
-#if 0 && defined(PRINTING_SUPPORTED)
-#include <X11/extensions/Print.h>
-#endif /* PRINTING_SUPPORTED */
 
 #include "PdmOid.h"
 
@@ -53,9 +50,6 @@ typedef struct _PdmXp
      * print server connection info
      */
     Display* display;
-#if 0 && defined(PRINTING_SUPPORTED)
-    XPContext context;
-#endif /* PRINTING_SUPPORTED */
     /*
      * printing attribute pools
      */
@@ -71,28 +65,12 @@ typedef struct _PdmXp
 /*
  * PdmXp public methods
  */
-extern PdmXp* PdmXpNew();
+extern PdmXp* PdmXpNew(void);
 extern Display* PdmXpOpen(PdmXp* me,
 			  char* display_spec,
 			  char* context_str);
 extern void PdmXpClose(PdmXp* me);
 extern void PdmXpDelete(PdmXp* me);
-#if 0 && defined(PRINTING_SUPPORTED)
-extern PdmOid PdmXpGetValue(PdmXp* me,
-			    XPAttributes type,
-			    PdmOid id_att);
-extern const char* PdmXpGetStringValue(PdmXp* me,
-				       XPAttributes type,
-				       PdmOid id_att);
-extern void PdmXpSetValue(PdmXp* me,
-			  XPAttributes type,
-			  PdmOid id_att,
-			  PdmOid id_val);
-extern void PdmXpSetStringValue(PdmXp* me,
-				XPAttributes type,
-				PdmOid id_att,
-				const char* str_val);
-#endif /* PRINTING_SUPPORTED */
 extern void PdmXpUpdateAttributes(PdmXp* me);
 
 

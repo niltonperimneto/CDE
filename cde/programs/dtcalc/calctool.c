@@ -387,7 +387,7 @@ do_dtcalc(int argc, char **argv)
   if(v->display[0] == 0)
      do_clear() ;                /* Initialize and clear display. */
 
-  if (v->rstate == TRUE)      /* Show the memory register window? */
+  if (v->rstate == TRUE)      /* Show the memory window? */
     {
       make_registers(MEM) ;
       if (!v->iconic) win_display(FCP_REG, TRUE) ;
@@ -875,8 +875,8 @@ init_vars(void)
   v->dtype      = FIX ;      /* Initial number display mode. */
   v->ttype      = DEG ;      /* Initial trigonometric type. */
   v->modetype   = SCIENTIFIC;    /* Initial calculator mode. */
-  v->rstate     = 0 ;        /* No memory register frame display initially. */
-  v->frstate    = 0 ;        /* No fin. memory register frame display 
+  v->rstate     = 0 ;        /* No memory frame display initially. */
+  v->frstate    = 0 ;        /* No fin. memory frame display 
                                 initially. */
   v->iconic     = FALSE ;    /* Calctool not iconic by default. */
   v->MPdebug    = FALSE ;    /* No debug info by default. */
@@ -1666,7 +1666,7 @@ write_rcfile(enum menu_type mtype, int exists, int cfno, char *val, char *commen
       if (access(rcname, F_OK) == 0) rcexists = 1 ;
     }
   strcpy(tmp_filename, "/tmp/.dtcalcrcXXXXXX") ;
-  mktemp(tmp_filename) ;
+  ({ int _fd = mkstemp(tmp_filename); if (_fd != -1) close(_fd); tmp_filename; }) ;
   if ((tmpfd = fopen(tmp_filename, "w+")) == NULL) return ;
 
   if (rcexists)

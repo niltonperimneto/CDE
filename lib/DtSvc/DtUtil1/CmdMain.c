@@ -1440,7 +1440,7 @@ _DtCmdInitializeErrorMessages( void )
     * Do not post a dialog, write to the error log file only.
     */
 
-   errorSpcTerminator = strdup (((char *)Dt11GETMESSAGE(3, 15, "An attempt to register the output log from a remote host failed.\n\nTo continue, you may need to stop an existing process.")));
+   errorSpcTerminator = strdup (((char *)Dt11GETMESSAGE(3, 15, "An attempt to the output log from a remote host failed.\n\nTo continue, you may need to stop an existing process.")));
 
    successHost = strdup (((char *)Dt11GETMESSAGE(3, 21, "The action \"%s\" was successfully executed on host \"%s\".")));
 

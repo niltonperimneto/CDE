@@ -38,45 +38,21 @@
 #include <bms/SbEvent.h>
 
 extern SbInputId SPCD_AddInput
-#if defined(__STDC__) || defined(__cplusplus) || defined(c_plusplus)
     (int fd, SbInputCallbackProc proc, void* data);
-#else
-    ();
-#endif
     
 extern SbInputId SPCD_AddException
-#if defined(__STDC__) || defined(__cplusplus) || defined(c_plusplus)
     (int fd, SbInputCallbackProc proc, void* data);
-#else
-   ();
-#endif
 
 extern void SPCD_RemoveInput
-#if defined(__STDC__) || defined(__cplusplus) || defined(c_plusplus)
    (SbInputId id);
-#else
-   ();
-#endif
 
 extern void SPCD_RemoveException
-#if defined(__STDC__) || defined(__cplusplus) || defined(c_plusplus)
    (SbInputId id);
-#else
-   ();
-#endif
 
 extern void SPCD_MainLoopUntil
-#if defined(__STDC__) || defined(__cplusplus) || defined(c_plusplus)
    (Boolean *flag);
-#else
-   ();
-#endif
 
 extern void SPCD_BreakMainLoop
-#if defined(__STDC__) || defined(__cplusplus) || defined(c_plusplus)
    (void);
-#else
-   ();
-#endif
 
 #endif	/* _SPCD_event_h */

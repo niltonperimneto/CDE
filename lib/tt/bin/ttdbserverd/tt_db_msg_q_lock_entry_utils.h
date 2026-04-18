@@ -35,8 +35,8 @@
 #ifndef _TT_DB_MSG_Q_LOCK_ENTRY_UTILS_H
 #define _TT_DB_MSG_Q_LOCK_ENTRY_UTILS_H
 
-#include "util/tt_list.h"
-#include "tt_db_msg_q_lock_entry.h"
+#include "util/tt_list.hpp"
+#include "tt_db_msg_q_lock_entry.hpp"
 
 declare_list_of(_Tt_db_msg_q_lock_entry)
 

@@ -36,7 +36,7 @@
 #ifndef _TT_STRING_MAP_UTILS_H
 #define _TT_STRING_MAP_UTILS_H
 
-#include "util/tt_string_map.h"
+#include "util/tt_string_map.hpp"
 
 declare_derived_ptr_to(_Tt_string_map, _Tt_object)
 

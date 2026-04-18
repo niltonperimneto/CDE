@@ -59,7 +59,7 @@ typedef struct {
 } Cdata;
 
 extern Cdata	*get_cdata();
-extern void	free_cd_from_blist();
+extern void	free_cd_from_blist(void);
 #endif
 extern void	reset_values(void);
 extern void	backup_values(void);

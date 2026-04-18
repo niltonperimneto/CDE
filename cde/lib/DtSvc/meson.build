@@ -1,8 +1,8 @@
 dtsvc_sources = [
-  'DtCodelibs/buf.C', 'DtCodelibs/filegen.C', 'DtCodelibs/mbschr.C',
-  'DtCodelibs/pathcollapse.C', 'DtCodelibs/privbuf.C', 'DtCodelibs/shellscan.C',
-  'DtCodelibs/strcase.C', 'DtCodelibs/strend.C', 'DtCodelibs/strhash.C',
-  'DtCodelibs/stringio.C', 'DtCodelibs/strtokx.C', 'DtCodelibs/strwcmp.C',
+  'DtCodelibs/buf.cpp', 'DtCodelibs/filegen.cpp', 'DtCodelibs/mbschr.cpp',
+  'DtCodelibs/pathcollapse.cpp', 'DtCodelibs/privbuf.cpp', 'DtCodelibs/shellscan.cpp',
+  'DtCodelibs/strcase.cpp', 'DtCodelibs/strend.cpp', 'DtCodelibs/strhash.cpp',
+  'DtCodelibs/stringio.cpp', 'DtCodelibs/strtokx.cpp', 'DtCodelibs/strwcmp.cpp',
   'DtEncap/bmsglob.c', 'DtEncap/connect.c', 'DtEncap/local.c', 'DtEncap/MemoryMgr.c',
   'DtEncap/nls.c', 'DtEncap/noio.c', 'DtEncap/pathwexp.c', 'DtEncap/pipe.c',
   'DtEncap/pty.c', 'DtEncap/remote.c', 'DtEncap/SbEvent.c', 'DtEncap/sbstdinc.c',

@@ -1152,7 +1152,7 @@ _DtCm_register_callback_4_svc(Registration_4 *r, struct svc_req *svcrq)
 	}
 }
 
-/* de-register an rpc callback proc from the client */
+/* de-an rpc callback proc from the client */
 extern Registration_Status_4 *
 _DtCm_deregister_callback_4_svc(Registration_4 *r, struct svc_req *svcrq)
 {

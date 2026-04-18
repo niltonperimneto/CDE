@@ -1,4 +1,4 @@
-libdiskhash_sources = ['disk_bucket.C', 'bucket_array.C', 'disk_hash.C']
+libdiskhash_sources = ['disk_bucket.cpp', 'bucket_array.cpp', 'disk_hash.cpp']
 
 libdiskhash = static_library('diskhash',
   libdiskhash_sources,

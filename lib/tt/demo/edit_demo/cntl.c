@@ -287,7 +287,7 @@ cntl_init_tt()
 	}
 	ttfd = tt_fd();
 
-	/* register a dynamic pattern to catch whenever the remote */
+	/* a dynamic pattern to catch whenever the remote */
 	/* editor creates a sub-file object so that we can update our */
 	/* object query panel. */
 

@@ -253,7 +253,7 @@ extern int	objxm_set_post_instantiate_callback(
 		);
 
 
-		/* Function to register XmConfigInfo 
+		/* Function to XmConfigInfo 
 		 * for a single object type
  		 */
 extern void     objxm_register_config_info(

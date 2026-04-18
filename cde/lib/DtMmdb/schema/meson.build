@@ -1,9 +1,9 @@
 yacc = find_program('yacc', 'bison')
 flex = find_program('flex')
 
-sheet_C = custom_target('sheet.C',
+sheet_C = custom_target('sheet.cpp',
   input : 'sheet.yy',
-  output : ['sheet.C', 'sheet.tab.h'],
+  output : ['sheet.cpp', 'sheet.tab.h'],
   command : [
     'sh', '-c', 
     yacc.full_path() + ' -l -d -p schema -b sheet @INPUT@ && mv sheet.tab.c $1', 
@@ -11,15 +11,15 @@ sheet_C = custom_target('sheet.C',
   ]
 )
 
-token_C = custom_target('token.C',
+token_C = custom_target('token.cpp',
   input : 'token.ll',
-  output : 'token.C',
+  output : 'token.cpp',
   command : [flex, '-8', '-s', '-Pschema', '-o', '@OUTPUT@', '@INPUT@']
 )
 
 libschema_sources = [
-  'desc.C', 'store_desc.C', 'object_dict.C', 'stored_object_desc.C',
-  'index_desc.C', 'inv_desc.C', 'agent_desc.C', 'container_desc.C',
+  'desc.cpp', 'store_desc.cpp', 'object_dict.cpp', 'stored_object_desc.cpp',
+  'index_desc.cpp', 'inv_desc.cpp', 'agent_desc.cpp', 'container_desc.cpp',
   sheet_C, token_C
 ]
 

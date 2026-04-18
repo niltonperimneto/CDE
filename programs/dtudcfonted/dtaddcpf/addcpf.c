@@ -254,7 +254,7 @@ int main(int argc, char *argv[])
 	ep = (char *)strchr( codeset, '\0' ) ;
 	code_no = (int)strtol( codeset, &cbuf, 10 ) ;
 	if ( cbuf == codeset || cbuf != ep ) {
-		USAGE2("%s : The codeset number is not right.�� %s ��\n",
+		USAGE2("%s : The codeset number is not right.Â¡Ã %s Â¡Ã\n",
 			argv[0], codeset );
 		exit( 1 );
 	}

@@ -190,7 +190,7 @@ cmtt_init(
 
 #ifdef FNS_DEMO
 	/*
-	 * Declare our ptype, and register the callback to handle
+	 * Declare our ptype, and the callback to handle
 	 * Edit/Display/Compose requests
 	 */
 	status = ttmedia_ptype_declare(ptype, 0, load_cb, (void *)c, 1);

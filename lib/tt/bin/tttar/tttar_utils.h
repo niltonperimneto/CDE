@@ -35,7 +35,7 @@
 #define	_LSTAR_UTILS_H
 
 #include <Tt/tt_c.h>
-#include <util/tt_string.h>
+#include <util/tt_string.hpp>
 
 
 /*
@@ -72,12 +72,7 @@ extern char		our_process_name[];
  * stringify() - Turn a macro argument into a string.
  *	gross Reiserism, use # in ANSI C
  */
-#if defined(__STDC__)
 #define stringify(s) #s
-#else
-/* gross Reiserism, use # in ANSI C */
-#define stringify(s) "s"
-#endif
 
 /*
  * note_err() - Note any error corresponding to this Tt_status

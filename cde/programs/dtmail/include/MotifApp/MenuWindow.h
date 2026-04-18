@@ -86,7 +86,7 @@ protected:
     
     MenuBar *_menuBar;
     
-    virtual void initialize();           // Called by Application
+    virtual void initialize(void);           // Called by Application
     virtual void createMenuPanes() = 0;  // Defined by derived
                                          // classes to specify the
                                          // contents of the menu

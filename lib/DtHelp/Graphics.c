@@ -2706,7 +2706,7 @@ void _DtGrRegisterConverter(
 	}
     }    
     
-    /* If we make it here, we've got a new image type to register */
+    /* If we make it here, we've got a new image type to */
     new_registry = (_DtGrRegistryRec *) XtRealloc ((char *) new_registry, 
                     sizeof(_DtGrRegistryRec) * (new_registry_count + 1));
     new_registry[new_registry_count].image_type = XtNewString (image_type);

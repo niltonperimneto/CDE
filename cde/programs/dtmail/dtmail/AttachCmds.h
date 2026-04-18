@@ -48,8 +48,8 @@ private:
 
   protected:
     
-    virtual void doit();   
-    virtual void undoit(); 
+    virtual void doit(void);   
+    virtual void undoit(void); 
 
   public:
     
@@ -71,8 +71,8 @@ private:
 
   protected:
     
-    virtual void doit();   
-    virtual void undoit(); 
+    virtual void doit(void);   
+    virtual void undoit(void); 
 
   public:
     
@@ -94,8 +94,8 @@ private:
 
   protected:
     
-    virtual void doit();   
-    virtual void undoit(); 
+    virtual void doit(void);   
+    virtual void undoit(void); 
 
   public:
     
@@ -123,8 +123,8 @@ private:
 
   protected:
     
-    virtual void doit();   
-    virtual void undoit(); 
+    virtual void doit(void);   
+    virtual void undoit(void); 
 
   public:
     
@@ -150,8 +150,8 @@ private:
 
   protected:
     
-    virtual void doit();   
-    virtual void undoit(); 
+    virtual void doit(void);   
+    virtual void undoit(void); 
 
   public:
     
@@ -176,8 +176,8 @@ private:
 
   protected:
     
-    virtual void doit();   
-    virtual void undoit(); 
+    virtual void doit(void);   
+    virtual void undoit(void); 
 
   public:
     
@@ -206,8 +206,8 @@ private:
 
   protected:
     
-    virtual void doit();   
-    virtual void undoit(); 
+    virtual void doit(void);   
+    virtual void undoit(void); 
 
   public:
     
@@ -229,8 +229,8 @@ private:
 
   protected:
     
-    virtual void doit();   
-    virtual void undoit(); 
+    virtual void doit(void);   
+    virtual void undoit(void); 
 
   public:
     
@@ -252,8 +252,8 @@ private:
 
   protected:
     
-    virtual void doit();   
-    virtual void undoit(); 
+    virtual void doit(void);   
+    virtual void undoit(void); 
 
   public:
     
@@ -275,8 +275,8 @@ private:
 
   protected:
     
-    virtual void doit();   
-    virtual void undoit(); 
+    virtual void doit(void);   
+    virtual void undoit(void); 
 
   public:
     
@@ -299,8 +299,8 @@ private:
 
   protected:
     
-    virtual void doit();   
-    virtual void undoit(); 
+    virtual void doit(void);   
+    virtual void undoit(void); 
 
   public:
     

@@ -81,7 +81,7 @@ extern int	_DtIsSameHost( const char *host1, const char *host2 );
 extern void	_DtRemoveTrailingBlanksInPlace(char **s);
 extern int	_DtExecuteAccess(const char *path);
 
-extern DtActionInvocationID _DtActAllocID();
+extern DtActionInvocationID _DtActAllocID(void);
 extern _DtActInvRecT *_DtActAllocInvRec();
 extern _DtActChildRecT *_DtActAllocChildRec( _DtActInvRecT *recp );
 extern int _DtActDeleteInvRec( DtActionInvocationID id);

@@ -225,11 +225,7 @@ static void PingHosts(XtPointer closure, XtIntervalId *id) {
 char **NameTable;
 int NameTableSize;
 
-#if defined(__STDC__)
 static int HostnameCompare(const void *a, const void *b)
-#else
-static int HostnameCompare(char *a, char *b)
-#endif
 {
   return strcmp(*(char **)a, *(char **)b);
 }

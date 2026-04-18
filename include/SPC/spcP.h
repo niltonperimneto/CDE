@@ -50,7 +50,7 @@
 
 #include "chars.h"
 #include "spcE.h"
-#include "spc-obj.h"
+#include "spc-obj.hpp"
 
 /* ---------------------------------------------------------------------- */
 

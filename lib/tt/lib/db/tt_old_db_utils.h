@@ -34,9 +34,9 @@
 #ifndef _TT_OLD_DB_UTILS_H
 #define _TT_OLD_DB_UTILS_H
 
-#include "util/tt_list.h"
-#include "util/tt_table.h"
-#include "db/tt_old_db.h"
+#include "util/tt_list.hpp"
+#include "util/tt_table.hpp"
+#include "db/tt_old_db.hpp"
 
 declare_list_of(_Tt_old_db)
 declare_table_of(_Tt_old_db)

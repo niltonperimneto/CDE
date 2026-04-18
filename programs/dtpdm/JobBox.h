@@ -36,7 +36,7 @@
 #ifndef _pdmJobBox_h
 #define _pdmJobBox_h
 
-#include "MainWindow.h"
+#include "MainWindow.hpp"
 
 /*
  * public PdmJobBox methods

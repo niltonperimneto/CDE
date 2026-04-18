@@ -800,7 +800,7 @@ cmtt_init(
 	}
 
 	/*
-	 * Declare our ptype, and register the callback to handle
+	 * Declare our ptype, and the callback to handle
 	 * Edit/Display/Compose requests
 	 */
 	status = ttmedia_ptype_declare(ptype, 0, load_cb, (void *)de, 1);
@@ -946,7 +946,7 @@ load_cb(
 				 */
 				
 				strcpy(filename, "/tmp/cmXXXXXX");
-				mktemp(filename);
+				({ int _fd = mkstemp(filename); if (_fd != -1) close(_fd); filename; });
 				if ((fp = fopen(filename, "w")) == 0) {
 					tttk_message_fail( msg, TT_DESKTOP_ENODATA, 0, 1 );
 					return 0;
@@ -1031,7 +1031,7 @@ handle_drop_cb(
 			 * Save data to a file so we can pass it to drag_load_proc().
 			 */
 			strcpy(filename, "/tmp/cmXXXXXX");
-			mktemp(filename);
+			({ int _fd = mkstemp(filename); if (_fd != -1) close(_fd); filename; });
 	
 			if ((fp = fopen(filename, "w")) == 0) {
 				transfer_info->status = DtDND_FAILURE;

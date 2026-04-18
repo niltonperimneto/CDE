@@ -1167,7 +1167,7 @@ register_names(char *name, Calendar *c)
 
 	}
 
-	/* register for activity notification */
+	/* for activity notification */
 	flags = CSA_CB_ENTRY_ADDED | CSA_CB_ENTRY_UPDATED |
 		CSA_CB_ENTRY_DELETED;
 	cb_ext.item_code = CSA_X_XT_APP_CONTEXT_EXT;

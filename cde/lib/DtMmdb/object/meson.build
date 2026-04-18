@@ -1,8 +1,8 @@
 libobject_sources = [
-  'composite.C', 'compressed_pstring.C', 'cset.C', 'dl_list.C',
-  'dl_list_cell.C', 'handler.C', 'integer.C', 'long_pstring.C',
-  'oid.C', 'oid_list.C', 'oid_t.C', 'primitive.C', 'pstring.C',
-  'random_gen.C', 'root.C', 'short_list.C', 'tuple.C'
+  'composite.cpp', 'compressed_pstring.cpp', 'cset.cpp', 'dl_list.cpp',
+  'dl_list_cell.cpp', 'handler.cpp', 'integer.cpp', 'long_pstring.cpp',
+  'oid.cpp', 'oid_list.cpp', 'oid_t.cpp', 'primitive.cpp', 'pstring.cpp',
+  'random_gen.cpp', 'root.cpp', 'short_list.cpp', 'tuple.cpp'
 ]
 
 libobject = static_library('object',

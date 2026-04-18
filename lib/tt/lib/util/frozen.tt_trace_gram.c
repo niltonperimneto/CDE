@@ -390,12 +390,7 @@ int tt_trace_char;    /* current input token number */
 **	If i<255, i itself is the token.  If i>255 but the neither
 **	of the 30th or 31st bit is on, i is already a token.
 */
-#if defined(__STDC__) || defined(__cplusplus)
 int tt_trace_cvtok(int i)
-#else
-int tt_trace_cvtok(i)
-int i;
-#endif
 {
   int first = 0;
   int last = TT_TRACE_NMBCHARS - 1;
@@ -430,11 +425,7 @@ int i;
 /*
 ** tt_trace_parse - return 0 if worked, 1 if syntax error not recovered from
 */
-#if defined(__STDC__) || defined(__cplusplus)
 int tt_trace_parse(void)
-#else
-int tt_trace_parse()
-#endif
 {
   TT_TRACE_STYPE *tt_trace_pvt; /* top of value stack for $vars */
 
@@ -775,7 +766,7 @@ int tt_trace_parse()
     /*
     ** Look in goto table for next state
     ** Sorry about using tt_trace__state here as temporary
-    ** register variable, but why not, if it works...
+    ** variable, but why not, if it works...
     ** If tt_trace_r2[ tt_trace__n ] doesn't have the low order bit
     ** set, then there is no action to be done for
     ** this reduction.  So, no saving & unsaving of

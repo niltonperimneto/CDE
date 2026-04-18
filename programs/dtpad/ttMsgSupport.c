@@ -490,7 +490,7 @@ TTmedia_ptype_declareCB(
 		m,			/* Tt_message */
 		TTSaveContractCB,	/* Ttdt_contract_cb */
 		pPad->mainWindow,	/* client data - not currently used */
-		1);			/* register it */
+		1);			/* it */
 
     /* -----> Set the DtEditor widget contents. */
     if (pPad->ttEditReq.contents) {
@@ -583,7 +583,7 @@ TTstartDesktopMediaExchange(
 		    1))			/* call tt_ptype_declare() */
 		!= TT_OK) {
 	    fprintf(stderr,
-                    "Could not register as %s tool class handler: %s\n",
+                    "Could not as %s tool class handler: %s\n",
                     DTPAD_TOOL_CLASS,
 		    tt_status_message(status)) ;
 	    return(status);
@@ -591,7 +591,7 @@ TTstartDesktopMediaExchange(
 
 	/*
 	 * Join the default session,
-	 * and register to deal with standard Desktop requests in the following
+	 * and to deal with standard Desktop requests in the following
 	 * manner (controlled by the Ttdt_contract_cb and shell arguments): 
 	 *
 	 *    type	requests		handled				notes

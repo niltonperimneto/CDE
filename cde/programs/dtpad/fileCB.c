@@ -431,7 +431,7 @@ FilePrintCB(
     /* -----> Load the action database */
     if (! ActionDBInitialized) {
 	StartDbUpdate( (XtPointer) NULL );
-	/* register interest in Action DB changes (for printing) */
+	/* interest in Action DB changes (for printing) */
 	DtDbReloadNotify( StartDbUpdate, (XtPointer) NULL );
     }
 

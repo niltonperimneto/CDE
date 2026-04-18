@@ -35,7 +35,7 @@
 #ifndef _TT_CLIENT_ISAM_FILE_UTILS_H
 #define _TT_CLIENT_ISAM_FILE_UTILS_H
 
-#include "db/tt_client_isam_file.h"
+#include "db/tt_client_isam_file.hpp"
 
 declare_ptr_to(_Tt_client_isam_file)
 

@@ -37,7 +37,7 @@
 #ifndef  _TT_FILE_SYSTEM_ENTRY_UTILS_H
 #define  _TT_FILE_SYSTEM_ENTRY_UTILS_H
 
-#include "util/tt_list.h"
+#include "util/tt_list.hpp"
 
 declare_list_of(_Tt_file_system_entry)
 

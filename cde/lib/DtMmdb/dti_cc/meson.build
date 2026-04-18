@@ -1,7 +1,7 @@
 libdti_cc_sources = [
-  'CC_Dlist.C', 'CC_Listbase.C', 'CC_Slist.C', 'CC_Stack.C',
-  'CC_String.C', 'CC_Tokenizer.C', 'cc_exceptions.C', 'cc_hdict.C',
-  'cc_povec.C', 'cc_pvect.C', 'cc_vvect.C', 'hdictinit.C', 'vectinit.C'
+  'CC_Dlist.cpp', 'CC_Listbase.cpp', 'CC_Slist.cpp', 'CC_Stack.cpp',
+  'CC_String.cpp', 'CC_Tokenizer.cpp', 'cc_exceptions.cpp', 'cc_hdict.cpp',
+  'cc_povec.cpp', 'cc_pvect.cpp', 'cc_vvect.cpp', 'hdictinit.cpp', 'vectinit.cpp'
 ]
 
 libdti_cc = static_library('dti_cc',

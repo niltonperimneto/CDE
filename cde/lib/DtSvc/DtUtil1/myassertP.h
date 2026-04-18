@@ -42,21 +42,12 @@
 #define MY_ASSERT_INCLUDED
 
 #ifndef NDEBUG
-#if defined(__STDC__) || defined(__cplusplus) || defined(c_plusplus)
 /* ANSI Version */
 #define myassert(EX)                                                                              \
   ((void)((EX) ? 1                                                                                \
                : (fprintf(stderr, "STDC Assertion failed: \"" #EX "\"\n\tFile: %s\n\tLine: %d\n", \
                           __FILE__, __LINE__),                                                    \
                   0)))
-#else
-/* NON-ANSI C */
-#define myassert(EX)                                                                           \
-  ((void)((EX) ? 1                                                                             \
-               : (fprintf(stderr, "NOSTDC Assertion failed: \"EX\"\n\tFile: %s\n\tLine: %d\n", \
-                          __FILE__, __LINE__),                                                 \
-                  0)))
-#endif /* STD_C */
 #else
 #define myassert(EX) (1)
 #endif

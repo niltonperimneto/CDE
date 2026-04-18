@@ -39,7 +39,7 @@
 #include <rpc/rpc.h>
 #include "Tt/tt_c.h"
 #include "mp_s_message_utils.h"
-#include "mp_s_pattern_utils.h"
+#include "mp_s_pattern_utils.hpp"
 #include "mp_s_procid_utils.h"
 
 struct _Tt_s_add_pattern_args: public _Tt_allocated {

@@ -47,9 +47,6 @@
 #include <sys/wait.h>
 #include <time.h>
 #include <unistd.h>
-#if 0 && defined(PRINTING_SUPPORTED)
-#include <X11/extensions/Print.h>
-#endif /* PRINTING_SUPPORTED */
 #include <X11/Xauth.h>
 
 /*****************************************************************************
@@ -74,9 +71,6 @@ typedef struct {
 
   char *print_display_str; /* Print Server Connection Info */
   Window print_window;
-#if 0 && defined(PRINTING_SUPPORTED)
-    XPContext   print_context;
-#endif /* PRINTING_SUPPORTED */
   char *locale_hint;
 
   Display *selection_display; /* Selection & Property Connection */
@@ -227,7 +221,7 @@ extern void mgr_launch_pdm(XpPdmServiceRec *rec);
 extern void mgr_fetch_pdm(XpPdmServiceRec *rec);
 extern void mgr_launch_reply(XpPdmServiceRec *rec);
 extern void mgr_shutdown_reply(XpPdmServiceRec *rec);
-extern void mgr_shutdown_scan();
+extern void mgr_shutdown_scan(void);
 
 /* records.c */
 extern XpPdmServiceRec *find_rec(Window requestor);

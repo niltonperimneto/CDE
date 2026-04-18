@@ -33,9 +33,9 @@
  */
 #ifndef MP_S_PROCID_UTILS_H
 #define MP_S_PROCID_UTILS_H
-#include "util/tt_list.h"
-#include "util/tt_table.h"
-#include "mp/mp_procid_utils.h"
+#include "util/tt_list.hpp"
+#include "util/tt_table.hpp"
+#include "mp/mp_procid_utils.hpp"
 
 declare_derived_list_of(_Tt_s_procid,_Tt_procid)
 declare_table_of(_Tt_s_procid)

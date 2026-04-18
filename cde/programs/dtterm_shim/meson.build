@@ -10,7 +10,7 @@ if get_option('with_alacritty') and fs.exists(alacritty_manifest)
     install : true,
     install_dir : get_option('bindir'),
     console : true,
-    command : ['sh', '-c', 'cargo build --release --manifest-path @SOURCE_ROOT@/cde/programs/alacritty/Cargo.toml --target-dir @SOURCE_ROOT@/cde/programs/alacritty/target && cp @SOURCE_ROOT@/cde/programs/alacritty/target/release/alacritty @OUTPUT@']
+    command : ['sh', '-c', 'cargo build --locked --release --manifest-path @SOURCE_ROOT@/cde/programs/alacritty/Cargo.toml --target-dir @OUTDIR@/cargo_build && cp @OUTDIR@/cargo_build/release/alacritty @OUTPUT@']
   )
 else
   message('Skipping Alacritty build (missing submodule or with_alacritty=false).')
@@ -23,5 +23,5 @@ custom_target('dtterm_bin',
   install : true,
   install_dir : get_option('bindir'),
   console : true,
-  command : ['sh', '-c', 'cargo build --release --manifest-path @SOURCE_ROOT@/cde/programs/dtterm_shim/Cargo.toml --target-dir @SOURCE_ROOT@/cde/programs/dtterm_shim/target && cp @SOURCE_ROOT@/cde/programs/dtterm_shim/target/release/dtterm_shim @OUTPUT@']
+  command : ['sh', '-c', 'cargo build --locked --release --manifest-path @SOURCE_ROOT@/cde/programs/dtterm_shim/Cargo.toml --target-dir @OUTDIR@/cargo_build && cp @OUTDIR@/cargo_build/release/dtterm_shim @OUTPUT@']
 )

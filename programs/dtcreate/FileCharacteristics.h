@@ -37,7 +37,7 @@
 #include <Xm/MwmUtil.h>
 #include <Xm/DialogS.h>
 #include <Xm/MenuShell.h>
-#include "UxXt.h"
+#include "UxXt.hpp"
 
 #include <Xm/RowColumn.h>
 #include <Xm/Form.h>

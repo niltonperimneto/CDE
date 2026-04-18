@@ -6,20 +6,20 @@
 #include <sstream>
 #include <iostream>
 #include <assert.h>
-#include "StyleSheetExceptions.h"
-#include "VariableTable.h"
-#include "FeatureValue.h"
-#include "Expression.h"
-#include "SSPath.h"
-#include "PathTable.h"
-#include "Renderer.h"
-#include "PathQualifier.h"
-#include "Debug.h"
-#include "ParserConst.h"
-#include "FeatureDefDictionary.h"
-#include <utility/funcs.h>
+#include "StyleSheetExceptions.hpp"
+#include "VariableTable.hpp"
+#include "FeatureValue.hpp"
+#include "Expression.hpp"
+#include "SSPath.hpp"
+#include "PathTable.hpp"
+#include "Renderer.hpp"
+#include "PathQualifier.hpp"
+#include "Debug.hpp"
+#include "ParserConst.hpp"
+#include "FeatureDefDictionary.hpp"
+#include <utility/funcs.hpp>
 
-#include "HardCopy/autoNumberFP.h"
+#include "HardCopy/autoNumberFP.hpp"
 extern autoNumberFP gAutoNumberFP;
 
 extern void yyerror(char*);

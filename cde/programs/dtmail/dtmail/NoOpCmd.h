@@ -74,8 +74,8 @@ class NoOpCmd : public Cmd {
     
   protected:
     
-    virtual void doit();   
-    virtual void undoit(); 
+    virtual void doit(void);   
+    virtual void undoit(void); 
 //    virtual void okCallback(void *);
 
   public:
@@ -91,8 +91,8 @@ protected:
     virtual void doit() {}
     virtual void undoit() {}
 #else /* ! CAN_INLINE_VIRTUALS */
-    virtual void doit();
-    virtual void undoit();
+    virtual void doit(void);
+    virtual void undoit(void);
 #endif /* ! CAN_INLINE_VIRTUALS */
 
 public:
@@ -102,7 +102,7 @@ public:
     virtual const char *const className () { return "LabelCmd"; }
 #else /* CAN_INLINE_VIRTUALS */
     ~LabelCmd();
-    virtual const char *const className ();
+    virtual const char *const className (void);
 #endif /* CAN_INLINE_VIRTUALS */
 };
 

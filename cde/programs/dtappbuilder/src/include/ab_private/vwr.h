@@ -206,11 +206,11 @@ Vwr vwr_create(VMethods m);
 
 void vwr_destroy(Vwr v);
 
-VNode vwr_create_node();
+VNode vwr_create_node(void);
 
 void vwr_destroy_node(VNode bnode);
 
-ViewerNodeElm vwr_create_elm();
+ViewerNodeElm vwr_create_elm(void);
 
 ViewerNodeElm vwr_destroy_elm(VNodeElm belm);
 

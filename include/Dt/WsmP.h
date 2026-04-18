@@ -184,7 +184,7 @@ typedef struct _DtWmHints
 /**********************************************************************
  * Marquee selection callback prototype
  **********************************************************************/
-typedef void (*DtWsmMarqueeSelectionProc) ();
+typedef void (*DtWsmMarqueeSelectionProc) (void);
 /*
     Widget		widget;
     int			type;
@@ -324,7 +324,7 @@ typedef struct _DtMarqueeSelectProp
 /**********************************************************************
  * Workspace change callback context (opaque)
  **********************************************************************/
-typedef void (*DtWsmCBProc) ();
+typedef void (*DtWsmCBProc) (void);
 struct _DtWsmCBContext
 {
     Tt_pattern		pattern;

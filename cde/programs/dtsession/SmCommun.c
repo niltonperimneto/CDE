@@ -351,8 +351,8 @@ handleSessionMgrRequest(
  *
  *  Description:
  *  -----------
- *  Initialize the BMS and register the session manager with it.  Then
- *  register all requests and notifications that the session manager is
+ *  Initialize the BMS and the session manager with it.  Then
+ *  all requests and notifications that the session manager is
  *  interested in.
  *
  *

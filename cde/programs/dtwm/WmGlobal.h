@@ -37,11 +37,7 @@
  */
 
 /* ANSI C definitions,  This should be the first thing in WmGlobal.h */
-#ifdef __STDC__
 #define Const const
-#else
-#define Const /**/
-#endif
 
 /*
  * Included Files:

@@ -11,9 +11,9 @@
 /* $XConsortium: defToken.l /main/5 1996/11/19 16:54:10 drk $ */
 
 #include <string.h>
-#include "FeatureDefDictionary.h"
+#include "FeatureDefDictionary.hpp"
 #include "defParser.tab.h"
-#include "Debug.h"
+#include "Debug.hpp"
 #include <iostream>
 using namespace std;
 

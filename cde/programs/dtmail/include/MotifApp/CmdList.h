@@ -85,8 +85,8 @@ class CmdList : public Cmd {
     int   _numElements; // Current size of list
     Widget _pane;
 
-    virtual void doit();  
-    virtual void undoit();  
+    virtual void doit(void);  
+    virtual void undoit(void);  
 
   public:
  

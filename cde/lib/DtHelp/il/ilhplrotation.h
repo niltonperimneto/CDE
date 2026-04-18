@@ -51,11 +51,7 @@
 */
 
 #ifndef NeedFunctionPrototypes
-#if defined(FUNCPROTO) || defined(__STDC__) || defined(__cplusplus) || defined(c_plusplus)
 #define NeedFunctionPrototypes 1
-#else
-#define NeedFunctionPrototypes 0
-#endif /* __STDC__ */
 #endif /* NeedFunctionPrototypes */
 
 
@@ -121,7 +117,7 @@ extern void _il_Rotate_Get_Row(
  */
 
 
-extern void _il_Rotate_Image_End();
+extern void _il_Rotate_Image_End(void);
 /*
  * Must be called when done with rotation to free any memory created during
  * the rotation process.

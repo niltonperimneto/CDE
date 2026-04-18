@@ -47,7 +47,7 @@
 #include <Xm/Label.h>
 #include <Xm/Form.h>
 
-#include "UxXt.h"
+#include "UxXt.hpp"
 
 /*******************************************************************************
        The definition of the context structure:

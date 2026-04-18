@@ -35,7 +35,7 @@
 %p 20000
 
 %{
-#include "store_desc.h"
+#include "store_desc.hpp"
 #include "sheet.tab.h"
 extern char replace_string[PATHSIZ];
 extern int replace_string_len;

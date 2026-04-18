@@ -53,7 +53,7 @@ static boolean_t new_appct(XtAppContext apptct);
  *****************************************************************************/
 
 /*
- * register callback for all file descriptors that's set
+ * callback for all file descriptors that's set
  * (since we don't know which one is ours).
  */
 void
@@ -73,7 +73,7 @@ _DtCm_register_xtcallback(XtAppContext appct)
 	for (i = 0; i < FD_SETSIZE; i++) {
           if (FD_ISSET(i, &svc_fdset))
             {
-              /* register callback with XtAppAddInput
+              /* callback with XtAppAddInput
                * for rpc input
                */
               id = XtAppAddInput(appct, i,

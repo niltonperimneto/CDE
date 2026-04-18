@@ -1098,7 +1098,7 @@ void _DtHelpDuplicateWindowCB(Widget w, XtPointer clientData,
 
     XtCallCallbackList((Widget)hw, hw->help_dialog.display.hyperLinkCallback,
                        &callDataStruct);
-  } else { /* The application did not register a hypertext callback so
+  } else { /* The application did not a hypertext callback so
             *  we must generate the proper warning message and continue!
             */
     XmeWarning((Widget)hw, (char *)HDMessage6);
@@ -2220,7 +2220,7 @@ void _DtHelpDialogHypertextCB(DtHelpDispAreaStruct *pDisplayAreaStruct,
         /* Now, envoke the apps hyper callback */
         XtCallCallbackList(
             (Widget)hw, hw->help_dialog.display.hyperLinkCallback, &callData);
-      } else { /* The application did not register a hypertext callback so
+      } else { /* The application did not a hypertext callback so
                 *  we must generate the proper warning message and
                 *  continue!
                 */
@@ -2303,7 +2303,7 @@ void _DtHelpDialogHypertextCB(DtHelpDispAreaStruct *pDisplayAreaStruct,
       XtCallCallbackList((Widget)hw, hw->help_dialog.display.hyperLinkCallback,
                          &callData);
     } else {
-      /* The application did not register a hypertext
+      /* The application did not a hypertext
        * callback so we must generate the proper error
        * message and continue!
        */

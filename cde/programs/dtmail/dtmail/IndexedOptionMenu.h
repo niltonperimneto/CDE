@@ -87,7 +87,7 @@ public:
     ~IndexedOptionMenu (void);
 
     void	addMenuButtonCallback(char*, XtCallbackProc, XtPointer);
-    int		getIndexSpec();
+    int		getIndexSpec(void);
     char	*getStringSpec();
     void	*getDataSpec();
     void	setSpec(int);

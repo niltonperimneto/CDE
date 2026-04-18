@@ -56,16 +56,10 @@
 #include "RFCMIME.h"
 
 #include <X11/Intrinsic.h>
-#if 0 && defined(PRINTING_SUPPORTED)
-#include <X11/extensions/Print.h>
-#endif /* PRINTING_SUPPORTED */
 
 #include <Xm/Xm.h>
 #include <Xm/DialogS.h>
 #include <Xm/DrawingA.h>
-#if 0 && defined(PRINTING_SUPPORTED)
-#include <Xm/Print.h>
-#endif /* PRINTING_SUPPORTED */
 
 // cm_18n.c
 void _converter_( void *from, unsigned long from_len,
@@ -507,10 +501,6 @@ typedef struct _CMGraphicsInfo
 static void local_dayname(Calendar *, char **, int);
 static void local_dayname3(Calendar *, char **, int);
 static char *get_report_type_string(CMGraphicsInfo *);
-#if 0 && defined(PRINTING_SUPPORTED)
-static void filePrintDoneCB(Display *, XPContext, XPGetDocStatus,
-			    XPointer);
-#endif /* PRINTING_SUPPORTED */
 static void filePrintReportStatus(Calendar *, Boolean);
 static void showBadAllocError(Calendar *);
 
@@ -2101,22 +2091,6 @@ get_report_type_string(CMGraphicsInfo *gInfo)
   return reportStrs[reportType];
 }
 
-#if 0 && defined(PRINTING_SUPPORTED)
-static void
-filePrintDoneCB(Display *dsp, XPContext context, XPGetDocStatus status,
-		XPointer uData)
-{
-  Calendar *c = (Calendar *)uData;
-
-  if (pd_get_bad_alloc_error(c))
-  {
-      showBadAllocError(c);
-      pd_set_bad_alloc_error(c, False);
-  }
-  else
-      filePrintReportStatus(c, (status == XPGetDocFinished));
-}
-#endif /* PRINTING_SUPPORTED */
 
 static void
 filePrintReportStatus(Calendar *c, Boolean ok)
@@ -2242,43 +2216,6 @@ x_open_file(Calendar *c)
 			    NULL, 0);
 #endif
 
-#if 0 && defined(PRINTING_SUPPORTED)
-
-#ifdef GR_DEBUG
-  if (!inDebugMode(c))
-  {
-#endif
-    if (pd_print_to_file(c))
-    {
-      char *fileName = pd_get_file_name(c);
-
-      /* Protocol says XpStartJob() MUST be called before XmPrintToFile() */
-      XpStartJob(XtDisplay(printShell), XPGetData);
-
-      XFlush(XtDisplay(printShell));
-
-      if (!XmPrintToFile(XtDisplay(printShell), fileName,
-			 filePrintDoneCB, (XtPointer)c))
-      {
-	  XpCancelJob(XtDisplay(printShell), False);
-
-	  XtFree(fileName);
-	  XtFree((char *)gInfo);
-
-	  filePrintReportStatus(c, False);
-
-	  return (void *)NULL;
-      }
-      XtFree(fileName);
-    }
-    else
-    {
-      XpStartJob(XtDisplay(printShell), XPSpool);
-    }
-#ifdef GR_DEBUG
-  }
-#endif
-#endif  /* PRINTING_SUPPORTED */
 
 
   nargs = 0;
@@ -2386,9 +2323,6 @@ x_print_file(void *gInfoP, Calendar *c)
   if (!inDebugMode(c))
 #endif
   {
-#if 0 && defined(PRINTING_SUPPORTED)
-    XpEndJob(dsp);
-#endif /* PRINTING_SUPPORTED */
 
     /* Make sure we know about a BadAlloc if it happens. */
     XSync(XtDisplay(gInfo->drawingArea), FALSE);
@@ -2426,17 +2360,6 @@ x_init_printer(void *gInfoP, short orientation)
   int inchWd;
   Dimension daWd, daHt;
 
-#if 0 && defined(PRINTING_SUPPORTED)
-#ifdef GR_DEBUG
-  if (inDebugMode(gInfo->c))
-  {
-    XtAddCallback(w, XmNexposeCallback,
-		  tmpFn, (XtPointer)NULL);
-  }
-  else
-#endif
-    XpStartPage(XtDisplay(w), XtWindow(XtParent(w)));
-#endif /* PRINTING_SUPPORTED */
 
   /* XpStartPage() sets the shell width/height correctly. */
   nargs = 0;
@@ -2967,9 +2890,6 @@ x_finish_printer(void *gInfoP)
     tmpSpin(w);
   else
 #endif
-#if 0 && defined(PRINTING_SUPPORTED)
-    XpEndPage(XtDisplay(w));
-#endif /* PRINTING_SUPPORTED */
 }
 
 void

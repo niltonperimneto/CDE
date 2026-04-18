@@ -97,7 +97,7 @@ struct _XDisplay {
   XID resource_mask;               /* resource ID mask bits */
   XID resource_id;                 /* allocator current ID */
   int resource_shift;              /* allocator shift to correct bits */
-  XID (*resource_alloc)();         /* allocator function */
+  XID (*resource_alloc)(void);         /* allocator function */
   int byte_order;                  /* screen byte order, LSBFirst, MSBFirst */
   int bitmap_unit;                 /* padding and data requirements */
   int bitmap_pad;                  /* padding requirements on bitmaps */
@@ -116,7 +116,7 @@ struct _XDisplay {
   char *bufmax;                    /* Output buffer maximum+1 address. */
   unsigned max_request_size;       /* maximum number 32 bit words in request*/
   struct _XrmHashBucketRec *db;
-  int (*synchandler)();         /* Synchronization handler */
+  int (*synchandler)(void);         /* Synchronization handler */
   char *display_name;           /* "host:display" string used on this connect*/
   int default_screen;           /* default screen for operations */
   int nscreens;                 /* number of screens on this server*/
@@ -148,7 +148,7 @@ struct _XDisplay {
   struct _XInternalAsync *async_handlers; /* for internal async */
   unsigned long bigreq_size;              /* max size of big requests */
   struct _XLockPtrs *lock_fns;            /* pointers to threads functions */
-  void (*idlist_alloc)();                 /* XID list allocator function */
+  void (*idlist_alloc)(void);                 /* XID list allocator function */
   /* things above this line should not move, for binary compatibility */
   struct _XKeytrans *key_bindings; /* for XLookupString */
   Font cursor_font;                /* for XCreateFontCursor */
@@ -175,7 +175,7 @@ struct _XDisplay {
   struct _XConnWatchInfo *conn_watchers; /* XAddConnectionWatch */
   int watcher_count;                     /* number of conn_watchers */
   XPointer filedes;             /* struct pollfd cache for _XWaitForReadable */
-  int (*savedsynchandler)();    /* user synchandler when Xlib usurps */
+  int (*savedsynchandler)(void);    /* user synchandler when Xlib usurps */
   XID resource_max;             /* allocator max ID */
   int xcmisc_opcode;            /* major opcode for XC-MISC */
   struct _XkbInfoRec *xkb_info; /* XKB info */
@@ -217,7 +217,7 @@ typedef struct _XSQEvent {
 #include <string.h>
 #else
 char *malloc(), *realloc(), *calloc();
-void exit();
+void exit(void);
 #ifdef SYSV
 #include <string.h>
 #else
@@ -239,8 +239,8 @@ void exit();
 
 struct _XLockPtrs {
   /* used by all, including extensions; do not move */
-  void (*lock_display)();
-  void (*unlock_display)();
+  void (*lock_display)(void);
+  void (*unlock_display)(void);
 };
 
 typedef struct _LockInfoRec *LockInfoPtr;
@@ -665,7 +665,7 @@ extern int errno; /* Internal system error number. */
 
 typedef struct _XInternalAsync {
   struct _XInternalAsync *next;
-  Bool (*handler)();
+  Bool (*handler)(void);
   XPointer data;
 } _XAsyncHandler;
 
@@ -691,15 +691,15 @@ typedef struct _XAsyncEState {
  * This structure is private to the library.
  */
 typedef struct _XFreeFuncs {
-  void (*atoms)();         /* _XFreeAtomTable */
-  int (*modifiermap)();    /* XFreeModifierMap */
-  void (*key_bindings)();  /* _XFreeKeyBindings */
-  void (*context_db)();    /* _XFreeContextDB */
-  void (*defaultCCCs)();   /* _XcmsFreeDefaultCCCs */
-  void (*clientCmaps)();   /* _XcmsFreeClientCmaps */
-  void (*intensityMaps)(); /* _XcmsFreeIntensityMaps */
-  void (*im_filters)();    /* _XFreeIMFilters */
-  void (*xkb)();           /* _XkbFreeInfo */
+  void (*atoms)(void);         /* _XFreeAtomTable */
+  int (*modifiermap)(void);    /* XFreeModifierMap */
+  void (*key_bindings)(void);  /* _XFreeKeyBindings */
+  void (*context_db)(void);    /* _XFreeContextDB */
+  void (*defaultCCCs)(void);   /* _XcmsFreeDefaultCCCs */
+  void (*clientCmaps)(void);   /* _XcmsFreeClientCmaps */
+  void (*intensityMaps)(void); /* _XcmsFreeIntensityMaps */
+  void (*im_filters)(void);    /* _XFreeIMFilters */
+  void (*xkb)(void);           /* _XkbFreeInfo */
 } _XFreeFuncRec;
 
 /*
@@ -708,18 +708,18 @@ typedef struct _XFreeFuncs {
 typedef struct _XExten {      /* private to extension mechanism */
   struct _XExten *next;       /* next in list */
   XExtCodes codes;            /* public information, all extension told */
-  int (*create_GC)();         /* routine to call when GC created */
-  int (*copy_GC)();           /* routine to call when GC copied */
-  int (*flush_GC)();          /* routine to call when GC flushed */
-  int (*free_GC)();           /* routine to call when GC freed */
-  int (*create_Font)();       /* routine to call when Font created */
-  int (*free_Font)();         /* routine to call when Font freed */
-  int (*close_display)();     /* routine to call when connection closed */
-  int (*error)();             /* who to call when an error occurs */
-  char *(*error_string)();    /* routine to supply error string */
+  int (*create_GC)(void);         /* routine to call when GC created */
+  int (*copy_GC)(void);           /* routine to call when GC copied */
+  int (*flush_GC)(void);          /* routine to call when GC flushed */
+  int (*free_GC)(void);           /* routine to call when GC freed */
+  int (*create_Font)(void);       /* routine to call when Font created */
+  int (*free_Font)(void);         /* routine to call when Font freed */
+  int (*close_display)(void);     /* routine to call when connection closed */
+  int (*error)(void);             /* who to call when an error occurs */
+  char *(*error_string)(void);    /* routine to supply error string */
   char *name;                 /* name of this extension */
-  void (*error_values)();     /* routine to supply error values */
-  void (*before_flush)();     /* routine to call when sending data */
+  void (*error_values)(void);     /* routine to supply error values */
+  void (*before_flush)(void);     /* routine to call when sending data */
   struct _XExten *next_flush; /* next in list of those with flushes */
 } _XExtension;
 
@@ -728,7 +728,7 @@ typedef struct _XExten {      /* private to extension mechanism */
 _XFUNCPROTOBEGIN
 
 #ifdef DataRoutineIsProcedure
-extern void Data();
+extern void Data(void);
 #endif
 extern int _XError(Display * /* dpy */, xError * /* rep */
 );

@@ -1518,7 +1518,7 @@ void _DtActExecutionLeafNodeCleanup(DtActionInvocationID id, DtActionArg* newArg
    * If 'newArgp' is nothing but DtACTION_NULLARGS, free it and the
    * following code will respond correctly.
    *
-   * If the user did not register a callback, then free 'newArgp'
+   * If the user did not a callback, then free 'newArgp'
    * since it won't be going anywhere.
    */
   if (!(invRecP->cb)) {

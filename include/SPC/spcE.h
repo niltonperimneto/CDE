@@ -83,7 +83,7 @@
 #define SPC_Client_Not_Valid   141
 #define SPC_Cannot_Open_Slave  142
 /* #define SPC_Register_Error     143 */ /* This has been obsoleted by the
-                                            expanded register errors below */
+                                            expanded errors below */
 #define SPC_Protocol_Abort     144
 #define SPC_Env_Too_Big        145
 #define SPC_Unlink_Logfile     146

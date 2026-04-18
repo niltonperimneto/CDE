@@ -1709,7 +1709,7 @@ int
 SPC_Validate_User(XeString hostname,
 		  SPC_Connection_Ptr connection)
 /*----------------------------------------------------------------------+*/
-    /* Called by client to register itself to spcd */
+    /* Called by client to itself to spcd */
 {
   XeString username = XeString_NULL;
   uid_t this_uid;

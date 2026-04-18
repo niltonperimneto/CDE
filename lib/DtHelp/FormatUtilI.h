@@ -53,11 +53,11 @@ typedef	struct	sdlMatchData {
 } SdlMatchData;
 
 typedef struct  _frmtUiInfo {
-	_DtCvValue	(*load_graphic)();
-	_DtCvValue	(*resolve_spc)();
-	void            (*load_font)();
-	int	        (*exec_filter)();
-	void	        (*destroy_region)();
+	_DtCvValue	(*load_graphic)(void);
+	_DtCvValue	(*resolve_spc)(void);
+	void            (*load_font)(void);
+	int	        (*exec_filter)(void);
+	void	        (*destroy_region)(void);
 	_DtCvPointer    client_data;
 	_DtCvUnit	line_width;
 	_DtCvUnit	line_height;

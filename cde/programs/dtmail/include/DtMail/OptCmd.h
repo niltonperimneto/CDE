@@ -86,55 +86,55 @@ class OptCmd: public WarnNoUndoCmd {
     
   protected:
 
-    virtual void doit();      // Call exit
+    virtual void doit(void);      // Call exit
     DtbOptionsDialogInfo _opt_dlog;
 
   public:
     
     OptCmd ( char *, char *, int, Widget parent);
     virtual ~OptCmd();
-    void create_dlog();
-    void unmanage();
+    void create_dlog(void);
+    void unmanage(void);
     virtual const char *const className () { return "OptCmd"; }
-    virtual void execute(); // Overrides the AskFirstCmd member function
+    virtual void execute(void); // Overrides the AskFirstCmd member function
 
-    void update_panes(); // sync up ui with hash tables
+    void update_panes(void); // sync up ui with hash tables
     void updateUiFromBackEnd(DtVirtArray<PropUiItem *> *list);
 
-    void update_source();
+    void update_source(void);
     void updateBackEndFromUi(DtVirtArray<PropUiItem *> *list);
 
-    int  doFileLockingCheck();
-    void doVacationCheck();
-    void setVacationChanged();
-    void set_vaca_msg_Changed();
-    Boolean startVacation();
-    void stopVacation();
+    int  doFileLockingCheck(void);
+    void doVacationCheck(void);
+    void setVacationChanged(void);
+    void set_vaca_msg_Changed(void);
+    Boolean startVacation(void);
+    void stopVacation(void);
     void help_button_CB(Widget pane); 
-    void setNewCategoryStr();
-    void setOldCategoryStr();
+    void setNewCategoryStr(void);
+    void setOldCategoryStr(void);
     DtMailGenDialog *genDialog() { return generalDialog; }
     void setCurrentPane(Widget pane) { CurrentPane = pane; }
     Widget currentPane() { return CurrentPane; }
 
-    void displayAliasesOptionsPane();
-    void displayPrintingOptionsPane();
-    Boolean optionsAreValid();
-    void displayMailRetrievalOptionsPane();
+    void displayAliasesOptionsPane(void);
+    void displayPrintingOptionsPane(void);
+    Boolean optionsAreValid(void);
+    void displayMailRetrievalOptionsPane(void);
 
   private:
-    virtual void init_panes(); // hook up front and back ends
+    virtual void init_panes(void); // hook up front and back ends
 
-    virtual void init_msg_hdr_pane();
-    virtual void init_msg_view_pane();
-    virtual void init_compose_pane();
-    virtual void init_msg_filing_pane();
-    virtual void init_vacation_pane();
-    virtual void init_template_pane();
-    virtual void init_aliases_pane();
-    virtual void init_advanced_pane();
-    virtual void init_printing_pane();
-    virtual void init_mailretrieval_pane();
+    virtual void init_msg_hdr_pane(void);
+    virtual void init_msg_view_pane(void);
+    virtual void init_compose_pane(void);
+    virtual void init_msg_filing_pane(void);
+    virtual void init_vacation_pane(void);
+    virtual void init_template_pane(void);
+    virtual void init_aliases_pane(void);
+    virtual void init_advanced_pane(void);
+    virtual void init_printing_pane(void);
+    virtual void init_mailretrieval_pane(void);
     
     DtVirtArray<PropUiItem *> *mh_pane_list;
     DtVirtArray<PropUiItem *> *msg_view_pane_list;

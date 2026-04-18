@@ -260,7 +260,7 @@ _DtDtsMMCreateDb(DtDirPaths *dirs, const char *CacheFile, int override)
 	
         if ( !dirs )
         {
-		myassert(dirs);	/* register an assertion failure */
+		myassert(dirs);	/* an assertion failure */
 		_DtSvcProcessUnlock();
                 return(0);
 	}
@@ -293,7 +293,7 @@ _DtDtsMMCreateDb(DtDirPaths *dirs, const char *CacheFile, int override)
 
 	/* 
          * we may eventually want to return a count of the new records.
-         * for now we return a non-zero value to register success.
+         * for now we return a non-zero value to success.
          */
 
 	if ((!_DtDtsMMCreateFile(dirs, CacheFile)) ||

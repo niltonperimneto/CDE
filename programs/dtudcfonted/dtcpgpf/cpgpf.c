@@ -983,11 +983,11 @@ check_width_height(char *prog_name, char *len_str, int mode)
 	if ((tmp == len_str) || (ret < MIN_FONT_WIDTH) || (ret > MAX_FONT_WIDTH)) {
 		switch( mode ) {
 		case 0:
-			USAGE2("%s : The specification of the character width is improper.\"%s\"��\n",
+			USAGE2("%s : The specification of the character width is improper.\"%s\"Â¡Â¥\n",
 			    prog_name, len_str);
 			break;
 		case 1:
-			USAGE2("%s : The specification of the character height is improper.\"%s\"��\n",
+			USAGE2("%s : The specification of the character height is improper.\"%s\"Â¡Â¥\n",
 			    prog_name, len_str);
 			break;
 		default:
@@ -1052,15 +1052,15 @@ FalGlyphRegion	*gr)
 	if (err_flg) {
 	    switch( mode ) {
 	    case 0:
-		USAGE2("%s : The specification of the extract start code is improper.\"%s\"��\n",
+		USAGE2("%s : The specification of the extract start code is improper.\"%s\"Â¡Â¥\n",
 		    prog_name, code_str);
 		break;
 	    case 1:
-		USAGE2("%s : The specification of the extract end code is improper.\"%s\"��\n",
+		USAGE2("%s : The specification of the extract end code is improper.\"%s\"Â¡Â¥\n",
 		    prog_name, code_str);
 		break;
 	    default:
-		USAGE2("%s : The specification of the extract code is improper.\"%s\"��\n",
+		USAGE2("%s : The specification of the extract code is improper.\"%s\"Â¡Â¥\n",
 		    prog_name, code_str);
 	    }
 	    return(-1);

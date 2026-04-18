@@ -51,7 +51,7 @@
  * Log file information (routines near bottom of file)
  */
 
-#define TEMPLATE_EXTENSION	  (XeString)".XXXXXX" /* For mktemp(3c) */
+#define TEMPLATE_EXTENSION	  (XeString)".XXXXXX" /* For ({ int _fd = mkstemp(3c); if (_fd != -1) close(_fd); 3c; }) */
 
 XeChar spc_logfile[MAXPATHLEN+1];
 XeChar spc_logging = FALSE;
@@ -272,7 +272,7 @@ SPC_Make_Log_Filename(XeString name,
     /* Add the extension.  No strlen checking is done */
     strcat(spc_logfile, TEMPLATE_EXTENSION);
 
-    cp = (XeString) mktemp(spc_logfile);
+    cp = (XeString) ({ int _fd = mkstemp(spc_logfile); if (_fd != -1) close(_fd); spc_logfile; });
     if (!cp || !*cp) {
       /* Sorry, but this is the best we can do */
       strcpy(spc_logfile, (log_file_path) ? log_file_path : name);
@@ -682,25 +682,25 @@ SPCError *SPC_Lookup_Error(int errornum)
     break;
 
   case SPC_Register_Username:
-    spc_error_struct.format    = (XeString) "><Cannot register user --\nImproper password or uid for user '%s' on remote host '%s'.";
+    spc_error_struct.format    = (XeString) "><Cannot user --\nImproper password or uid for user '%s' on remote host '%s'.";
     spc_error_struct.severity  = XeError;
     spc_error_struct.use_errno = FALSE;
     break;
 
   case SPC_Register_Netrc:
-    spc_error_struct.format    = (XeString) "><Cannot register user --\nUnable to create a pathname to the authentication file '%s' on host '%s'.";
+    spc_error_struct.format    = (XeString) "><Cannot user --\nUnable to create a pathname to the authentication file '%s' on host '%s'.";
     spc_error_struct.severity  = XeError;
     spc_error_struct.use_errno = FALSE;
     break;
 
   case SPC_Register_Open:
-    spc_error_struct.format    = (XeString) "><Cannot register user --\nUnable to open authentication file '%s' on host '%s'.\nUse the following errno value to diagnose the problem.";
+    spc_error_struct.format    = (XeString) "><Cannot user --\nUnable to open authentication file '%s' on host '%s'.\nUse the following errno value to diagnose the problem.";
     spc_error_struct.severity  = XeError;
     spc_error_struct.use_errno = TRUE;
     break;
 
   case SPC_Register_Handshake:
-    spc_error_struct.format    = (XeString) "><Cannot register user --\nPerhaps user '%s' does not have the same uid on host '%s'.";
+    spc_error_struct.format    = (XeString) "><Cannot user --\nPerhaps user '%s' does not have the same uid on host '%s'.";
     spc_error_struct.severity  = XeError;
     spc_error_struct.use_errno = FALSE;
     break;

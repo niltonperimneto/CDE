@@ -636,7 +636,7 @@ externaldef(dttermviewwidgetclass) WidgetClass dtTermViewWidgetClass =
 static void
 ClassInitialize(void)
 {
-    /* register our resource converters... */
+    /* our resource converters... */
     (void) _DtTermPrimInitRepTypes();
 
     return;
