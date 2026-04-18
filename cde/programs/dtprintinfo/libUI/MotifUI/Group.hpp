@@ -49,8 +49,8 @@ class Group : public MotifUI {
 
    const Widget InnerWidget()         { return _rc; }
    const UI_Class UIClass()           { return GROUP; }
-   const int UISubClass()             { return _group_type; }
-   const char *const UIClassName()    { return "Group"; }
+   int UISubClass()             { return _group_type; }
+   const char * UIClassName()    { return "Group"; }
 
    // Override SetName, need to set label name, not BaseWidget
    boolean SetName(char *);

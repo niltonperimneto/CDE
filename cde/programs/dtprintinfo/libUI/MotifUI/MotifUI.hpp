@@ -190,7 +190,7 @@ class MotifUI : public BaseUI {
 	     int level = 0);
 
    // returns a classname to be used in GetResources
-   virtual const char *const className() { return "MotifUI"; }
+   virtual const char * className() { return "MotifUI"; }
 
 };
 

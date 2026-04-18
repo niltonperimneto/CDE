@@ -62,7 +62,7 @@ class ComboBoxObj : public MotifUI {
 
    const Widget InnerWidget()         { return _combo_box; }
    const UI_Class UIClass()           { return COMBO_BOX; }
-   const char *const UIClassName()    { return "ComboBox"; }
+   const char * UIClassName()    { return "ComboBox"; }
 
 };
 

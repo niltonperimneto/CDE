@@ -45,7 +45,7 @@ class MenuBar : public MotifUI {
    void SetHelpMenu(Menu *); 
 
    const UI_Class UIClass()        { return MENU_BAR; }
-   const char *const UIClassName() { return "MenuBar"; }
+   const char * UIClassName() { return "MenuBar"; }
 
 };
 

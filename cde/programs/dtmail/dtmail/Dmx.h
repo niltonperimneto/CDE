@@ -88,7 +88,7 @@
 #include <DtMail/DtMailValues.hh>
 #include <Dt/Dts.h>
 
-extern const char *const	dmxversion;
+extern const char *dmxversion;
 
 typedef enum {
     DMX_NONE_STRING,

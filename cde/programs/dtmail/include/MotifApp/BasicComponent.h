@@ -88,7 +88,7 @@ class BasicComponent {
     virtual ~BasicComponent();
     virtual void manage(void);   // Manage and unmanage widget tree
     virtual void unmanage(void);
-    const Widget baseWidget() { return _w; }
+    Widget baseWidget() { return _w; }
 };
 #endif
 

@@ -128,8 +128,7 @@ ToggleButtonCmd::setButtonState(
 }
 
 #ifndef CAN_INLINE_VIRTUALS
-const char *const
-ToggleButtonCmd::className( void )
+const char *ToggleButtonCmd::className( void )
 {
     return "ToggleButtonCmd";
 }

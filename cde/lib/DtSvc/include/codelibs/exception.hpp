@@ -37,7 +37,7 @@
 #include <setjmp.h>
 
 
-typedef const char *const Exception;
+typedef const char *Exception;
 
 class _Exception
 {

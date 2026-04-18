@@ -89,7 +89,7 @@
 // between the outside edge of the page (_form) and the inner
 // page that is written on.
 //
-const char *const DmxPrintOutput::_default_margin = ".5in";
+const char *DmxPrintOutput::_default_margin = ".5in";
 
 DmxPrintOutput::DmxPrintOutput (
 				Widget pshell

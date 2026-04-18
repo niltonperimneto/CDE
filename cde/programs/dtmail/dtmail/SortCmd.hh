@@ -30,7 +30,7 @@ class SortCmd : public ToggleButtonCmd {
     virtual void doit();   
     SortCmd( char *, char *, int, RoamMenuWindow *, enum sortBy);
     //SortCmd( char *, int, RoamMenuWindow * );
-    //virtual const char *const className () { return "SortCmd"; }
+    //virtual const char * className () { return "SortCmd"; }
   private:
     RoamMenuWindow	*_sortparent;
     enum sortBy		_sortstyle;

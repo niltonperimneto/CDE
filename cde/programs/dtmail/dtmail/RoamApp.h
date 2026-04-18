@@ -112,8 +112,7 @@ class RoamApp : public Application
     virtual ~RoamApp();     
 
     void		busyAllWindows(const char * msg = NULL);
-    virtual const char *const
-			className()
+    virtual const char * className()
 			    { return "RoamApp"; }
     void		closeAllWindows(void);
     char		*default_mailbox()

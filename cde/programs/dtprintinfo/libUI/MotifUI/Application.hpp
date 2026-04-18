@@ -77,7 +77,7 @@ class Application : public MotifUI {
 
    const UI_Class UIClass()        { return APPLICATION; }
 
-   const char *const UIClassName() { return "Application"; }
+   const char * UIClassName() { return "Application"; }
 
 };
 

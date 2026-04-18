@@ -131,8 +131,7 @@ public:
     void		clearContents(void);
 
 private:
-    static const char* const
-			_default_margin;
+    static const char *_default_margin;
 
     Widget		_pshell;
     Widget		_form;

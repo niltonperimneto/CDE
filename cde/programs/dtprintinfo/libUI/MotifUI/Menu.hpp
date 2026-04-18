@@ -80,8 +80,8 @@ class Menu : public MotifUI {
    boolean SetActivity(boolean flag);
 
    const UI_Class UIClass()         { return MENU; }
-   const int UISubClass()           { return _menu_type; }
-   const char *const UIClassName()  { return "Menu"; }
+   int UISubClass()           { return _menu_type; }
+   const char * UIClassName()  { return "Menu"; }
 
 };
 

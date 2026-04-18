@@ -92,9 +92,9 @@ class Container : public MotifUI {
    const Widget InnerWidget()            { return _workArea; }
 
    const UI_Class UIClass()              { return CONTAINER; }
-   const int UISubClass()                { return _container_type; }
+   int UISubClass()                { return _container_type; }
 
-   const char *const UIClassName()       { return "Container"; }
+   const char * UIClassName()       { return "Container"; }
 };
 
 #endif /* CONTAINER_H */

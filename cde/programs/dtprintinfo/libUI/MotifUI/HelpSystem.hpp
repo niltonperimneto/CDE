@@ -74,8 +74,8 @@ class HelpSystem : public MotifUI {
    void LocationID(char *location);
 
    const UI_Class UIClass()           { return HELP_SYSTEM; }
-   const int UISubClass()             { return _style; }
-   const char *const UIClassName()    { return "HelpSystem"; }
+   int UISubClass()             { return _style; }
+   const char * UIClassName()    { return "HelpSystem"; }
 
 };
 

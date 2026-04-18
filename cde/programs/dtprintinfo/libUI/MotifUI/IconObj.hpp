@@ -131,7 +131,7 @@ class IconObj : public MotifUI {
    int NumberFields(void);
 
    const UI_Class UIClass()           { return ICON; }
-   const char *const UIClassName()    { return "IconObj"; }
+   const char * UIClassName()    { return "IconObj"; }
 
 };
 

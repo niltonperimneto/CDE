@@ -462,9 +462,9 @@ class BaseUI {
 			  BaseUI ***items = nullptr);
 
    virtual const UI_Class UIClass() { return BASE_UI; }
-   virtual const int UISubClass() { return NO_SUBCLASS; }
+   virtual int UISubClass() { return NO_SUBCLASS; }
 
-   virtual const char *const UIClassName() { return "BaseUI"; }
+   virtual const char * UIClassName() { return "BaseUI"; }
 
 };
 

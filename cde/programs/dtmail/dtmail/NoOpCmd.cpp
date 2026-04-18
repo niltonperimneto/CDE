@@ -130,8 +130,7 @@ LabelCmd::undoit(void)
     return;
 }
 
-const char *const
-LabelCmd::className(void)
+const char *LabelCmd::className(void)
 {
     return "LabelCmd";
 }

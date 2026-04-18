@@ -119,9 +119,9 @@ class UIComponent : public BasicComponent {
     
     // Public access functions
 #ifdef CAN_INLINE_VIRTUALS
-    virtual const char *const className() { return "UIComponent"; }
+    virtual const char * className() { return "UIComponent"; }
 #else
-    virtual const char *const className(void);
+    virtual const char * className(void);
 #endif
 	
     //

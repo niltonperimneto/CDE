@@ -238,8 +238,8 @@ class BaseObj {
    char * Details(void);
    char * AttributeValue(char *ReferenceName);
    BaseObj * Parent()             { return _parent; }
-   const int NumActions()         { return _numActions; }
-   const int NumAttributes()      { return _numAttributes; }
+   int NumActions()         { return _numActions; }
+   int NumAttributes()      { return _numAttributes; }
    Action **Actions()             { return _actions; }
    Attribute **Attributes()       { return _attributes; }
    BaseObj ** Children(void);
@@ -268,7 +268,7 @@ class BaseObj {
    void DumpHierarchy(boolean verbose = false,
 		      int level = 0);
 
-   virtual const char *const ObjectClassName() { return "BaseObj"; }
+   virtual const char * ObjectClassName() { return "BaseObj"; }
 
 };
 

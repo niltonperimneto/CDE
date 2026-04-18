@@ -51,7 +51,7 @@ class LabelObj : public MotifUI {
    LabelType LabelStyle()             { return _style; }
    const Widget InnerWidget()         { return _label; }
    const UI_Class UIClass()           { return LABEL; }
-   const char *const UIClassName()    { return "LabelObj"; }
+   const char * UIClassName()    { return "LabelObj"; }
 
 };
 

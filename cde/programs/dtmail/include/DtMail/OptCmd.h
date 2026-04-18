@@ -95,7 +95,7 @@ class OptCmd: public WarnNoUndoCmd {
     virtual ~OptCmd();
     void create_dlog(void);
     void unmanage(void);
-    virtual const char *const className () { return "OptCmd"; }
+    virtual const char * className () { return "OptCmd"; }
     virtual void execute(void); // Overrides the AskFirstCmd member function
 
     void update_panes(void); // sync up ui with hash tables

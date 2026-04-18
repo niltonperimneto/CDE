@@ -156,8 +156,8 @@ class Dialog : public MotifUI {
    const boolean Answer()           { return _rc; }
 
    const UI_Class UIClass()         { return DIALOG; }
-   const int UISubClass()           { return _dialog_type; }
-   const char *const UIClassName()  { return "Dialog"; }
+   int UISubClass()           { return _dialog_type; }
+   const char * UIClassName()  { return "Dialog"; }
 };
 
 #endif /* DIALOG_H */

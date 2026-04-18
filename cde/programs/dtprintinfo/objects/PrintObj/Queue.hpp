@@ -104,7 +104,7 @@ class Queue : public BaseObj {
    boolean RemoteUp() { return remote_up; }
    void ParseRemoteStatus(char *output);
 
-   virtual const char *const ObjectClassName() { return QUEUE; }
+   virtual const char * ObjectClassName() { return QUEUE; }
 
 };
 

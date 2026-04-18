@@ -101,7 +101,7 @@ extern DtEditorErrorCode
  * between the outside edge of the page (_form) and the inner
  * page that is written on.
  */
-const char *const _poDefaultMargin = ".5in";
+const char *_poDefaultMargin = ".5in";
 
 /************************************************************************
  * PrintOutputCreate

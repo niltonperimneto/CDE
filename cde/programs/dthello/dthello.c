@@ -1075,7 +1075,7 @@ void DrawBox(void) {
   XDrawLine(dpy, welcome, gc, LBX + L_middle, LBY, LTX + L_middle, LTY);
 }
 
-int Xestrcmp(const char *const s1, const char *const s2) {
+int Xestrcmp(const char *s1, const char *s2) {
   if (s1 == s2)
     return 0;
   {

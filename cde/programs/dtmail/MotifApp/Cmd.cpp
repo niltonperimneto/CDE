@@ -257,8 +257,7 @@ void Cmd::undo()
 }
 
 #ifndef CAN_INLINE_VIRTUALS
-const char *const
-Cmd::className(void)
+const char *Cmd::className(void)
 {
     return "Cmd";
 }

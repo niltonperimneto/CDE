@@ -95,8 +95,8 @@ class ScaleObj : public MotifUI {
 
    const Widget InnerWidget()         { return _scale; }
    const UI_Class UIClass()           { return SCALE; }
-   const int UISubClass()             { return _style; }
-   const char *const UIClassName()    { return "Scale"; }
+   int UISubClass()             { return _style; }
+   const char * UIClassName()    { return "Scale"; }
 
 };
 

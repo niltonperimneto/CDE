@@ -108,7 +108,7 @@ class MsgScrollingList : public ScrollingList {
     int       position(MsgStruct* a_msg_struct);
 #endif /* DEAD_WOOD */
     
-    virtual const char *const className() {return ("MsgScrollingList");}
+    virtual const char * className() {return ("MsgScrollingList");}
     virtual void insertMsg(DtMailMessageHandle);
     virtual void insertDeletedMsg(DtMailMessageHandle);
     virtual void deleteSelected(Boolean silent = TRUE);

@@ -88,6 +88,6 @@ class ColorView : public UIComponent {
   public:
     
     virtual void  update ( ColorModel * ) = 0;  
-    virtual const char *const className() { return "ColorView"; }
+    virtual const char * className() { return "ColorView"; }
 };
 #endif

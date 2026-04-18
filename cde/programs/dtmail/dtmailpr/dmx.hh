@@ -79,7 +79,7 @@
 #include <DtMail/DtMailValues.hh>
 #include <Dt/Dts.h>
 
-extern const char *const	dmxversion;
+extern const char *dmxversion;
 
 enum DmxHeaderType { MSGLIST, MSGHEADER, NUMHDRTYPES };
 enum DmxHeaders

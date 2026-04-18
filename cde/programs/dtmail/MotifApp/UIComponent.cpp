@@ -251,8 +251,7 @@ UIComponent::setDefaultResources( const Widget w,
 #endif /* DEAD_WOOD */
 
 #ifndef CAN_INLINE_VIRTUALS
-const char *const
-UIComponent::className(void)
+const char *UIComponent::className(void)
 {
     return "UIComponent";
 }
