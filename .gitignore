@@ -19,6 +19,7 @@ target/
 .vscode/
 *.swp
 *~
+.claude
 
 # Object files and libraries (be careful if some are checked in, but generally safe for new builds)
 *.o

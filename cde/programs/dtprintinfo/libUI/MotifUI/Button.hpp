@@ -78,7 +78,7 @@ class Button : public MotifUI {
    const char *IconFile()	    { return _iconFile; }
    void IconFile(char *);
 
-   const UI_Class UIClass()         { return BUTTON; }
+   UI_Class UIClass()         { return BUTTON; }
    int UISubClass()           { return _button_type; }
    const char * UIClassName()  { return "Button"; }
 };

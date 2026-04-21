@@ -47,7 +47,7 @@ class DtDetailsLabel : public MotifUI {
    DtDetailsLabel(MotifUI *parent);
    void Update(boolean show_only_my_jobs);
 
-   const UI_Class UIClass()           { return LABEL; }
+   UI_Class UIClass()           { return LABEL; }
    const char * UIClassName()    { return "DtDetailsLabel"; }
 };
 

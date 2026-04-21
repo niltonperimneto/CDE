@@ -60,8 +60,8 @@ class ComboBoxObj : public MotifUI {
    char * Item(char *item);
    char * Item(int index);
 
-   const Widget InnerWidget()         { return _combo_box; }
-   const UI_Class UIClass()           { return COMBO_BOX; }
+   Widget InnerWidget()         { return _combo_box; }
+   UI_Class UIClass()           { return COMBO_BOX; }
    const char * UIClassName()    { return "ComboBox"; }
 
 };

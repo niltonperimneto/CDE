@@ -47,7 +47,7 @@ class Sep : public MotifUI {
        MotifUI * parent,
        SeparatorStyle style = SHADOW_ETCHED_IN);
 
-   const UI_Class UIClass()           { return SEPARATOR; }
+   UI_Class UIClass()           { return SEPARATOR; }
    int UISubClass()             { return _style; }
    const char * UIClassName()    { return "Sep"; }
 

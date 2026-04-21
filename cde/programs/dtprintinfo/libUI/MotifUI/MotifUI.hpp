@@ -183,8 +183,8 @@ class MotifUI : public BaseUI {
    void SetAddTimeOut(TimeOutCallback, void *callback_data, long interval);
    void DumpUIHierarchy(boolean verbose = false, int level = 0);
 
-   const Widget BaseWidget()             { return _w; }
-   virtual const Widget InnerWidget()    { return _w; }
+   Widget BaseWidget()             { return _w; }
+   virtual Widget InnerWidget()    { return _w; }
 
    void Dump(boolean verbose = false,
 	     int level = 0);

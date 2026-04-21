@@ -88,10 +88,10 @@ class Container : public MotifUI {
 
    void OpenAnimation(MotifUI *obj);
    void SelectionPolicy(SelectionType);
-   const SelectionType SelectionPolicy() { return _select_type; }
-   const Widget InnerWidget()            { return _workArea; }
+   SelectionType SelectionPolicy() { return _select_type; }
+   Widget InnerWidget()            { return _workArea; }
 
-   const UI_Class UIClass()              { return CONTAINER; }
+   UI_Class UIClass()              { return CONTAINER; }
    int UISubClass()                { return _container_type; }
 
    const char * UIClassName()       { return "Container"; }

@@ -47,8 +47,8 @@ class Group : public MotifUI {
 	 char *name,
 	 GroupType group_type = RADIO_GROUP);
 
-   const Widget InnerWidget()         { return _rc; }
-   const UI_Class UIClass()           { return GROUP; }
+   Widget InnerWidget()         { return _rc; }
+   UI_Class UIClass()           { return GROUP; }
    int UISubClass()             { return _group_type; }
    const char * UIClassName()    { return "Group"; }
 

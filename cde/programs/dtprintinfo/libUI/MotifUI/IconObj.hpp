@@ -130,7 +130,7 @@ class IconObj : public MotifUI {
 	      boolean *active);
    int NumberFields(void);
 
-   const UI_Class UIClass()           { return ICON; }
+   UI_Class UIClass()           { return ICON; }
    const char * UIClassName()    { return "IconObj"; }
 
 };

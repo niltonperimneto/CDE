@@ -243,7 +243,7 @@ public:
   //	printf("%s %d", (const char*)error, (DTMailError_t)error);
   //
   operator const char*();
-  operator const Tt_message() const;
+  operator Tt_message() const;
   operator DTMailError_t() const;
 
   //
@@ -403,7 +403,7 @@ DtMailEnv::operator const char*()
 }
 
 inline
-DtMailEnv::operator const Tt_message() const
+DtMailEnv::operator Tt_message() const
 {
   return(_tt_message);
 }
