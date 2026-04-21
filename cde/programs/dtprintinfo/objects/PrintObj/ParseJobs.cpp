@@ -277,7 +277,7 @@ JobOutputType DetermineOutput(char *output)
 #endif
 
    s = output;
-   if (s1 = strchr(s, '\n'))
+   if ((s1 = strchr(s, '\n')))
       s1++;
    i = 0;
    while (i < 10 && s && *s)
@@ -304,7 +304,7 @@ JobOutputType DetermineOutput(char *output)
 	 return AIX_V2_OUTPUT;
 #endif
       s = s1;
-      if (s1 = strchr(s, '\n'))
+      if ((s1 = strchr(s, '\n')))
          s1++;
       i++;
     }
@@ -1008,7 +1008,7 @@ int ParseBSDPrintJobs(char *printer, char *jobs,
 	 for (s1 = s; *s1 == ' '; s1++)
 	    ;
 	 hostname = s1;
-	 if (s = strchr(hostname, '.'))
+	 if ((s = strchr(hostname, '.')))
 	    *s = '\0';
 	 else
 	    *(strchr(hostname, ']')) = '\0';
@@ -1103,7 +1103,7 @@ int ParseAIXv3PrintJobs(char *_printer, char *jobs,
    static int prev_buf_size = 0;
 
    snprintf(printer, sizeof(printer), "%s", _printer);
-   if (s = strchr(printer, ':'))
+   if ((s = strchr(printer, ':')))
       *s = '\0';
 	
    if (prev_buf_size == 0)
@@ -1123,7 +1123,7 @@ int ParseAIXv3PrintJobs(char *_printer, char *jobs,
    s = s1 + 1;
    s1 = strchr(s, '\n');
    s = s1 + 1;
-   if (s1 = strchr(s, '\n'))
+   if ((s1 = strchr(s, '\n')))
       *s1++ = '\0';
    if (strstr(s, "DOWN"))
       rc = 0;
@@ -1139,7 +1139,7 @@ int ParseAIXv3PrintJobs(char *_printer, char *jobs,
       if (!(jnumber && *jnumber))
        {
          s = s1;
-         if (s1 = strchr(s, '\n'))
+         if ((s1 = strchr(s, '\n')))
             *s1++ = '\0';
 	 continue;
        }
@@ -1147,7 +1147,7 @@ int ParseAIXv3PrintJobs(char *_printer, char *jobs,
       if (!(jname && *jname))
        {
          s = s1;
-         if (s1 = strchr(s, '\n'))
+         if ((s1 = strchr(s, '\n')))
             *s1++ = '\0';
 	 continue;
        }
@@ -1168,7 +1168,7 @@ int ParseAIXv3PrintJobs(char *_printer, char *jobs,
 	 ;
       jname = c;
       s = s1;
-      if (s1 = strchr(s, '\n'))
+      if ((s1 = strchr(s, '\n')))
          *s1++ = '\0';
       sdate = strtok(s, " ");
       stime = strtok(nullptr, " ");
@@ -1176,7 +1176,7 @@ int ParseAIXv3PrintJobs(char *_printer, char *jobs,
       strtok(nullptr, " ");
       jsize = strtok(nullptr, " ");
       s = s1;
-      if (s1 = strchr(s, '\n'))
+      if ((s1 = strchr(s, '\n')))
          *s1++ = '\0';
       c = strtok(s, " \n");
       if (strstr(c, jname))
@@ -1196,7 +1196,7 @@ int ParseAIXv3PrintJobs(char *_printer, char *jobs,
       current_size += len;
       (*return_n_jobs)++;
       s = s1;
-      if (s1 = strchr(s, '\n'))
+      if ((s1 = strchr(s, '\n')))
          *s1++ = '\0';
     }
    *(job_list + current_size) = '\0';
@@ -1263,7 +1263,7 @@ int ParseAIXv2PrintJobs(char *printer, char *jobs,
    s = s1 + 1;
    s1 = strchr(s, '\n');
    s = s1 + 1;
-   if (s1 = strchr(s, '\n'))
+   if ((s1 = strchr(s, '\n')))
       *s1++ = '\0';
    while (s)
     {
@@ -1277,11 +1277,11 @@ int ParseAIXv2PrintJobs(char *printer, char *jobs,
 	 break;
        }
       s = s1;
-      if (s1 = strchr(s, '\n'))
+      if ((s1 = strchr(s, '\n')))
          *s1++ = '\0';
     }
    s = s1;
-   if (s1 = strchr(s, '\n'))
+   if ((s1 = strchr(s, '\n')))
       *s1++ = '\0';
    while (s)
     {
@@ -1290,7 +1290,7 @@ int ParseAIXv2PrintJobs(char *printer, char *jobs,
        {
          s = s1;
          if (s1)
-	    if (s1 = strchr(s, '\n'))
+	    if ((s1 = strchr(s, '\n')))
                *s1++ = '\0';
 	 continue;
        }
@@ -1300,7 +1300,7 @@ int ParseAIXv2PrintJobs(char *printer, char *jobs,
       strtok(nullptr, " ");
       strtok(nullptr, " ");
       stime = strtok(nullptr, " ");
-      if (c = strchr(owner, '.'))
+      if ((c = strchr(owner, '.')))
          *c = '\0';
       sprintf(buf, "%s|%s|%s|%s|%s|%s|%d\n", printer, jname, jnumber,
 	      owner, sdate, stime, atoi(jsize) * 512);
@@ -1312,7 +1312,7 @@ int ParseAIXv2PrintJobs(char *printer, char *jobs,
       current_size += len;
       (*return_n_jobs)++;
       s = s1;
-      if (s1 = strchr(s, '\n'))
+      if ((s1 = strchr(s, '\n')))
          *s1++ = '\0';
     }
    *(job_list + current_size) = '\0';

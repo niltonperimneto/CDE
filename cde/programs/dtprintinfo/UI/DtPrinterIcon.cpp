@@ -305,7 +305,7 @@ char *DtPrinterIcon::CreateActionFile()
     }
    if (create_file)
     {
-      if (fp = fopen(filename, "w"))
+      if ((fp = fopen(filename, "w")))
        {
          time_t secs;
          time(&secs);
@@ -366,7 +366,7 @@ void DtPrinterIcon::DndCB(BaseUI *obj, char **value, int * /*len*/,
          sprintf(buf, "%s_Print", printer->queue->Name());
       else
        {
-	 if (old_LPDEST = STRDUP(getenv("LPDEST")))
+	 if ((old_LPDEST = STRDUP(getenv("LPDEST"))))
 	  {
             sprintf(buf, "LPDEST=%s", printer->queue->Name());
 	    putenv(buf);

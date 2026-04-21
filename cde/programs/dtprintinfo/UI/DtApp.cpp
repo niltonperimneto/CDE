@@ -841,7 +841,7 @@ void DtApp::ActionCB(BaseUI *obj, char *actionReferenceName)
 	 confirm->Visible(true);
 	 boolean answer = confirm->Answer();
 	 delete confirm;
-	 delete title;
+	 delete [] title;
 	 delete [] message;
 	 if (answer == false)
 	    return;
@@ -1267,7 +1267,7 @@ void DtApp::RestoreApp()
    window->setPrefD->Apply();
 
    int interval = 30;
-   if (value = Restore("UpdateInterval"))
+   if ((value = Restore("UpdateInterval")))
     {
       interval = atoi(value);
       if (interval < 5 || interval > 300)
@@ -1298,7 +1298,7 @@ void DtApp::RestoreApp()
 	  }
        }
       UpdateStatusLine();
-      delete attribute;
+      delete [] attribute;
     }
    else
     {

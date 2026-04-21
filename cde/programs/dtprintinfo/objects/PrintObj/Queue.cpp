@@ -147,7 +147,7 @@ void Queue::LoadAttributes(int /*n_attrs*/, Attribute **attrs)
    int i;
    for (i = 0; i < 3; i++)
     {
-      if (s1 = strchr(s, ':'))
+      if ((s1 = strchr(s, ':')))
          *s1++ = '\0';
       else if (s1 = strchr(s, '\n'))
          *s1++ = '\0';
