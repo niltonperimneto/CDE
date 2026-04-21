@@ -75,3 +75,28 @@ debug = true
 # Keep symbols for CDE native library debugging; LTO is opt-in per crate.
 strip = false
 lto   = false
+
+# ---------------------------------------------------------------------------
+# Sanitizer profiles — enable via RUSTFLAGS environment variable
+#
+# AddressSanitizer (ASan): detects memory errors (use-after-free, buffer overflow,
+# memory leaks, double-free, etc). Requires `cargo +nightly`.
+#
+# UndefinedBehaviorSanitizer (UBSan): detects undefined behavior (integer
+# overflow, misaligned pointers, out-of-bounds shifts, etc).
+# Requires `cargo +nightly`.
+#
+# Build instructions:
+#   cargo +nightly build --workspace -Z build-std --target x86_64-unknown-linux-gnu
+#   RUSTFLAGS="-Z sanitizer=address" cargo +nightly build --workspace
+#   RUSTFLAGS="-Z sanitizer=undefined" cargo +nightly build --workspace
+# ---------------------------------------------------------------------------
+[profile.asan]
+inherits = "dev"
+opt-level = 1
+lto = false
+
+[profile.ubsan]
+inherits = "dev"
+opt-level = 1
+lto = false

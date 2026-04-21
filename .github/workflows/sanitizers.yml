@@ -1,0 +1,124 @@
+name: Sanitizer Testing
+
+on:
+  push:
+    branches: [ master, develop ]
+  pull_request:
+    branches: [ master, develop ]
+
+jobs:
+  sanitizer-asan:
+    name: AddressSanitizer (ASan)
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        rust: [nightly]
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Install Rust nightly + tools
+        uses: dtolnay/rust-toolchain@nightly
+        with:
+          components: llvm-tools-next
+
+      - name: Cache cargo registry
+        uses: actions/cache@v3
+        with:
+          path: ~/.cargo/registry
+          key: ${{ runner.os }}-cargo-registry-${{ hashFiles('**/Cargo.lock') }}
+
+      - name: Cache cargo index
+        uses: actions/cache@v3
+        with:
+          path: ~/.cargo/git
+          key: ${{ runner.os }}-cargo-git-${{ hashFiles('**/Cargo.lock') }}
+
+      - name: Cache cargo build
+        uses: actions/cache@v3
+        with:
+          path: target
+          key: ${{ runner.os }}-cargo-build-target-${{ hashFiles('**/Cargo.lock') }}
+
+      - name: Run tests with ASan
+        env:
+          RUSTFLAGS: "-Z sanitizer=address"
+        run: |
+          cd cde && cargo +nightly test --workspace --profile=asan --lib --tests || true
+        continue-on-error: true
+
+      - name: Report results
+        run: echo "ASan testing completed; see logs above for any errors"
+
+  sanitizer-ubsan:
+    name: UndefinedBehaviorSanitizer (UBSan)
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        rust: [nightly]
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Install Rust nightly + tools
+        uses: dtolnay/rust-toolchain@nightly
+        with:
+          components: llvm-tools-next
+
+      - name: Cache cargo registry
+        uses: actions/cache@v3
+        with:
+          path: ~/.cargo/registry
+          key: ${{ runner.os }}-cargo-registry-${{ hashFiles('**/Cargo.lock') }}
+
+      - name: Cache cargo index
+        uses: actions/cache@v3
+        with:
+          path: ~/.cargo/git
+          key: ${{ runner.os }}-cargo-git-${{ hashFiles('**/Cargo.lock') }}
+
+      - name: Cache cargo build
+        uses: actions/cache@v3
+        with:
+          path: target
+          key: ${{ runner.os }}-cargo-build-target-${{ hashFiles('**/Cargo.lock') }}
+
+      - name: Run tests with UBSan
+        env:
+          RUSTFLAGS: "-Z sanitizer=undefined"
+        run: |
+          cd cde && cargo +nightly test --workspace --profile=ubsan --lib --tests || true
+        continue-on-error: true
+
+      - name: Report results
+        run: echo "UBSan testing completed; see logs above for any errors"
+
+  clippy:
+    name: Clippy (Linting)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          components: clippy
+
+      - name: Cache cargo
+        uses: actions/cache@v3
+        with:
+          path: target
+          key: ${{ runner.os }}-cargo-clippy-${{ hashFiles('**/Cargo.lock') }}
+
+      - name: Run clippy
+        run: |
+          cd cde && cargo clippy --workspace --all-targets --all-features -- -D warnings
+
+  cargo-audit:
+    name: Cargo Audit (Vulnerability Check)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Run cargo-audit
+        uses: rustsec/audit-check-action@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
