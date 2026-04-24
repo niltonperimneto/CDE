@@ -6,6 +6,32 @@
 // Alias cde_xdr as xdr_codec so xdrgen-generated code and existing imports work unchanged.
 extern crate cde_xdr as xdr_codec;
 
+// ---------------------------------------------------------------------------
+// ffi_guard! — catch panics at the FFI boundary.
+//
+// A Rust panic unwinding through an `extern "C"` frame is **undefined
+// behaviour** on every platform CDE targets.  Every FFI entry point that
+// performs non-trivial work wraps its body in `ffi_guard!` so
+// any unexpected panic becomes a logged error plus a typed C return value.
+// ---------------------------------------------------------------------------
+#[macro_export]
+macro_rules! ffi_guard {
+    ($fallback:expr, $body:block) => {{
+        let result = ::std::panic::catch_unwind(::std::panic::AssertUnwindSafe(|| $body));
+        match result {
+            Ok(value) => value,
+            Err(_) => {
+                ::std::eprintln!(
+                    "[libcsa_xdr] panic caught at FFI boundary in {}:{}: returning fallback",
+                    file!(),
+                    line!()
+                );
+                $fallback
+            }
+        }
+    }};
+}
+
 // Include generated modules
 pub mod agent {
     #![allow(non_snake_case)]

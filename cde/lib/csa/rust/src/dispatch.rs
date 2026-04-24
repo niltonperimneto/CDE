@@ -148,6 +148,7 @@ extern "C" {
 /// while falling back to C for legacy versions (v2-v4).
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn rs_rpc_open_calendar(cal: *mut Calendar) -> CSA_return_code {
+    crate::ffi_guard!(CSA_E_SERVICE_UNAVAILABLE, {
     if cal.is_null() {
         return CSA_E_INVALID_PARAMETER;
     }
@@ -209,6 +210,7 @@ pub unsafe extern "C" fn rs_rpc_open_calendar(cal: *mut Calendar) -> CSA_return_
         // Legacy protocol (v2-v4) - delegate to C implementation
         _DtCm_rpc_open_calendar_legacy(cal)
     }
+    })
 }
 
 /// Rust implementation of the v5 RPC create calendar logic
@@ -218,6 +220,7 @@ pub unsafe extern "C" fn rs_rpc_create_calendar(
     num_attrs: c_ulong,
     attrs: *mut CSA_attribute,
 ) -> CSA_return_code {
+    crate::ffi_guard!(CSA_E_SERVICE_UNAVAILABLE, {
     if cal.is_null() {
         return CSA_E_INVALID_PARAMETER;
     }
@@ -290,4 +293,5 @@ pub unsafe extern "C" fn rs_rpc_create_calendar(
     } else {
         _DtCm_rpc_create_calendar_legacy(cal, num_attrs, attrs)
     }
+    })
 }

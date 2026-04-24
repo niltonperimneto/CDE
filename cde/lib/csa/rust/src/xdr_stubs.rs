@@ -6,45 +6,36 @@ macro_rules! impl_xdr_func {
     ($func_name:ident, $type_path:path) => {
         #[unsafe(no_mangle)]
         pub extern "C" fn $func_name(xdrs: *mut XDR, obj: *mut $type_path) -> i32 {
-            let op = unsafe { (*xdrs).x_op };
-            let mut stream = unsafe { XdrStream::new(xdrs) };
+            crate::ffi_guard!(0, {
+                let op = unsafe { (*xdrs).x_op };
+                let mut stream = unsafe { XdrStream::new(xdrs) };
 
-            match op {
-                bindings::xdr_op_XDR_ENCODE => {
-                    let val = unsafe { &*obj };
-                    match xdr_codec::pack(val, &mut stream) {
-                        Ok(_) => 1,  // TRUE
-                        Err(_) => 0, // FALSE
+                match op {
+                    bindings::xdr_op_XDR_ENCODE => {
+                        let val = unsafe { &*obj };
+                        match xdr_codec::pack(val, &mut stream) {
+                            Ok(_) => 1,  // TRUE
+                            Err(_) => 0, // FALSE
+                        }
                     }
-                }
-                bindings::xdr_op_XDR_DECODE => match xdr_codec::unpack(&mut stream) {
-                    Ok((val, _sz)) => {
+                    bindings::xdr_op_XDR_DECODE => match xdr_codec::unpack(&mut stream) {
+                        Ok((val, _sz)) => {
+                            unsafe {
+                                std::ptr::write(obj, val);
+                            }
+                            1
+                        }
+                        Err(_) => 0,
+                    },
+                    bindings::xdr_op_XDR_FREE => {
                         unsafe {
-                            std::ptr::write(obj, val);
+                            std::ptr::drop_in_place(obj);
                         }
                         1
                     }
-                    Err(_) => 0,
-                },
-                bindings::xdr_op_XDR_FREE => {
-                    // XDR_FREE means "release any heap data that the XDR decode
-                    // step allocated inside *obj". The surrounding struct itself
-                    // belongs to the C caller and must NOT be freed here.
-                    //
-                    // drop_in_place runs Rust Drop glue, freeing inner
-                    // String/Box heap buffers. Unlike C structs, many generated
-                    // Rust types do not implement Default and cannot be safely
-                    // reset with a synthetic placeholder value here.
-                    //
-                    // As with traditional xdr_free(3), callers must treat *obj
-                    // as no longer holding a valid value after free.
-                    unsafe {
-                        std::ptr::drop_in_place(obj);
-                    }
-                    1
+                    _ => 0,
                 }
-                _ => 0,
-            }
+            })
         }
     };
 }

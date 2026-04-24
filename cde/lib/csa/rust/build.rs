@@ -288,6 +288,8 @@ fn main() {
         .allowlist_type("bool_t")
         .allowlist_type("enum_t")
         .allowlist_function("xdr_.*")
+        .blocklist_function("xdr_rpc.*")
+        .blocklist_function("xdr_netbuf")
         .derive_default(true)
         .generate()
     {
