@@ -1,16 +1,16 @@
 project('cde', ['c', 'cpp'],
   version : '2.5.3',
   meson_version: '>= 1.0.0',
-  default_options : ['warning_level=2', 'c_std=gnu23', 'cpp_std=gnu++23', 'b_pie=true'])
+  default_options : ['warning_level=2', 'c_std=c23', 'cpp_std=gnu++23', 'b_pie=true'])
 
 
 cc = meson.get_compiler('c')
 
 if get_option('with_hardening')
-  hardening_args = ['-fstack-protector-strong']
+  hardening_args = ['-fstack-protector-strong', '-fstack-clash-protection']
   opt_level = get_option('optimization')
   if opt_level != '0' and opt_level != 'g'
-    hardening_args += '-D_FORTIFY_SOURCE=2'
+    hardening_args += '-D_FORTIFY_SOURCE=3'
   endif
   add_project_arguments(
     hardening_args,
@@ -31,9 +31,10 @@ endif
 # Global defines from configure.ac
 add_project_arguments('-DANSICPP', '-DMULTIBYTE', '-DNLS16', '-D_GNU_SOURCE', '-DTT_VERSION_STRING="2.5.3"', '-DHAVE_POLL_H', language : ['c', 'cpp'])
 
-# Strict C23 compliance flags
+# Strict C23 compliance flags - K&R function definitions are forbidden
 add_project_arguments(
   '-Wstrict-prototypes',
+  '-Werror=old-style-definition',
   '-Wold-style-definition',
   '-Wimplicit-int',
   '-Werror=incompatible-pointer-types',

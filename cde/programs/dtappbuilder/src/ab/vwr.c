@@ -537,10 +537,7 @@ draw_icon(pixmap, x, y, node)
  * Draw an up-pointing arrow at the given point.
  */
 static void
-draw_arrow(pixmap, x, y)
-	Pixmap	pixmap;
-	int	x;
-	int	y;
+draw_arrow(Pixmap pixmap, int x, int y)
 {
 #define pcount 7
 

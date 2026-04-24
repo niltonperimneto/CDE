@@ -290,8 +290,7 @@ edit_receive_tt_message(client_data, fid, id)
  * Handle the "edit" op.
  */
 int
-edit_edit(msg)
-     Tt_message msg;
+edit_edit(Tt_message msg)
 {
 	int	mark = tt_mark();
 	char	*file = tt_message_file(msg);
@@ -325,8 +324,7 @@ edit_edit(msg)
  * Handle the "save" op.
  */
 int
-edit_save(msg)
-     Tt_message msg;
+edit_save(Tt_message msg)
 {
 	int		mark = tt_mark();
 	char		*new_file;
@@ -369,8 +367,7 @@ edit_save(msg)
  * Handle the "close" op.
  */
 int
-edit_close(msg)
-     Tt_message msg;
+edit_close(Tt_message msg)
 {
 	Atom wmchs;
 	Window w;
@@ -403,8 +400,7 @@ edit_close(msg)
  * Handle the "hilite_obj" op.
  */
 int
-edit_hilite_obj(msg)
-     Tt_message msg;
+edit_hilite_obj(Tt_message msg)
 {
 	int	mark = tt_mark();
 	char	*objid = tt_message_arg_val(msg, 0);
@@ -447,9 +443,7 @@ edit_hilite_obj(msg)
  * a notification that an object has been created in this file.
  */
 void
-edit_ui_make_object(widget, client_data, call_data)
-	Widget widget;
-	XtPointer  client_data, call_data;
+edit_ui_make_object(Widget widget, XtPointer client_data, XtPointer call_data)
 {
 	int		mark = tt_mark();
 	char		*objid;

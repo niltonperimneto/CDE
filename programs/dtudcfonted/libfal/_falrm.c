@@ -334,8 +334,7 @@ void falrmInitialize(void) {
   XrmQANY = falrmPermStringToQuark("?");
 }
 
-XrmDatabase falrmGetDatabase(display)
-Display *display;
+XrmDatabase falrmGetDatabase(Display *display)
 {
   XrmDatabase retval;
   LockDisplay(display);

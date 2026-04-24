@@ -561,10 +561,7 @@ caddr_t	call_data;	/*  data from widget class  */
 **      wschangecb - callback for workspace switch
 */
 DtWsmWsChangeProc
-wschangecb (w, atom, client_data)
-Widget  w;
-Atom    atom;
-XtPointer client_data;
+wschangecb(Widget w, Atom atom, XtPointer client_data)
 {
     ShowCurrentWorkspaceInfo ();
 }

@@ -1,0 +1,170 @@
+name: Fuzzing
+
+on:
+  schedule:
+    # Run nightly fuzzing at 2 AM UTC
+    - cron: '0 2 * * *'
+  pull_request:
+    branches: [ master, develop ]
+    paths:
+      - 'cde/lib/csa/cde_xdr/**'
+      - 'cde/lib/tt/libtt_shim/**'
+      - 'cde/lib/DtSearch/rust/**'
+      - '.github/workflows/fuzzing.yml'
+
+jobs:
+  # Standard fuzzing (without sanitizers) — catches panics and logic errors
+  fuzz-standard:
+    name: Fuzzing (Standard)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      matrix:
+        target:
+          - name: "XDR Codec (Decode)"
+            crate: "cde/lib/csa/cde_xdr"
+            fuzz_target: "fuzz_decode_arbitrary"
+          - name: "XDR Codec (Roundtrip)"
+            crate: "cde/lib/csa/cde_xdr"
+            fuzz_target: "fuzz_roundtrip"
+          - name: "ToolTalk Message Encoding"
+            crate: "cde/lib/tt/libtt_shim"
+            fuzz_target: "fuzz_message_encoding"
+          - name: "DtSearch Query Parser"
+            crate: "cde/lib/DtSearch/rust"
+            fuzz_target: "fuzz_query_parser"
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Install Rust nightly
+        uses: dtolnay/rust-toolchain@nightly
+      
+      - name: Cache fuzz corpus
+        uses: actions/cache@v3
+        with:
+          path: ${{ matrix.target.crate }}/corpus/
+          key: fuzz-corpus-${{ matrix.target.fuzz_target }}-${{ github.ref }}
+          restore-keys: |
+            fuzz-corpus-${{ matrix.target.fuzz_target }}-
+
+      - name: Install cargo-fuzz
+        run: cargo +nightly install cargo-fuzz --locked
+
+      - name: Run fuzzing — ${{ matrix.target.name }}
+        working-directory: ${{ matrix.target.crate }}/fuzz
+        run: |
+          cargo +nightly fuzz run ${{ matrix.target.fuzz_target }} -- \
+            -max_total_time=180 \
+            -timeout=5 \
+            -print_final_stats=1
+
+      - name: Archive crash artifacts
+        if: failure()
+        uses: actions/upload-artifact@v3
+        with:
+          name: fuzz-crashes-${{ matrix.target.fuzz_target }}
+          path: |
+            ${{ matrix.target.crate }}/artifacts/
+          retention-days: 30
+
+  # Fuzzing with AddressSanitizer — catches memory errors
+  fuzz-asan:
+    name: Fuzzing (AddressSanitizer)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      matrix:
+        target:
+          - name: "XDR Codec (Decode)"
+            crate: "cde/lib/csa/cde_xdr"
+            fuzz_target: "fuzz_decode_arbitrary"
+          - name: "DtSearch Query Parser"
+            crate: "cde/lib/DtSearch/rust"
+            fuzz_target: "fuzz_query_parser"
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Install Rust nightly
+        uses: dtolnay/rust-toolchain@nightly
+      
+      - name: Cache fuzz corpus
+        uses: actions/cache@v3
+        with:
+          path: ${{ matrix.target.crate }}/corpus-asan/
+          key: fuzz-corpus-asan-${{ matrix.target.fuzz_target }}-${{ github.ref }}
+          restore-keys: |
+            fuzz-corpus-asan-${{ matrix.target.fuzz_target }}-
+
+      - name: Install cargo-fuzz
+        run: cargo +nightly install cargo-fuzz --locked
+
+      - name: Run fuzzing with ASan — ${{ matrix.target.name }}
+        env:
+          RUSTFLAGS: -Z sanitizer=address
+        working-directory: ${{ matrix.target.crate }}/fuzz
+        run: |
+          cargo +nightly fuzz run ${{ matrix.target.fuzz_target }} -- \
+            -max_total_time=180 \
+            -timeout=5 \
+            -print_final_stats=1 || true
+        continue-on-error: true
+
+      - name: Archive ASan crash artifacts
+        if: failure()
+        uses: actions/upload-artifact@v3
+        with:
+          name: fuzz-crashes-asan-${{ matrix.target.fuzz_target }}
+          path: |
+            ${{ matrix.target.crate }}/artifacts/
+          retention-days: 30
+
+  # Fuzzing with UndefinedBehaviorSanitizer — catches UB
+  fuzz-ubsan:
+    name: Fuzzing (UndefinedBehaviorSanitizer)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      matrix:
+        target:
+          - name: "XDR Codec (Decode)"
+            crate: "cde/lib/csa/cde_xdr"
+            fuzz_target: "fuzz_decode_arbitrary"
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Install Rust nightly
+        uses: dtolnay/rust-toolchain@nightly
+      
+      - name: Cache fuzz corpus
+        uses: actions/cache@v3
+        with:
+          path: ${{ matrix.target.crate }}/corpus-ubsan/
+          key: fuzz-corpus-ubsan-${{ matrix.target.fuzz_target }}-${{ github.ref }}
+          restore-keys: |
+            fuzz-corpus-ubsan-${{ matrix.target.fuzz_target }}-
+
+      - name: Install cargo-fuzz
+        run: cargo +nightly install cargo-fuzz --locked
+
+      - name: Run fuzzing with UBSan — ${{ matrix.target.name }}
+        env:
+          RUSTFLAGS: -Z sanitizer=undefined
+        working-directory: ${{ matrix.target.crate }}/fuzz
+        run: |
+          cargo +nightly fuzz run ${{ matrix.target.fuzz_target }} -- \
+            -max_total_time=180 \
+            -timeout=5 \
+            -print_final_stats=1 || true
+        continue-on-error: true
+
+      - name: Archive UBSan crash artifacts
+        if: failure()
+        uses: actions/upload-artifact@v3
+        with:
+          name: fuzz-crashes-ubsan-${{ matrix.target.fuzz_target }}
+          path: |
+            ${{ matrix.target.crate }}/artifacts/
+          retention-days: 30

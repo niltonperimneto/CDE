@@ -34,6 +34,10 @@
  * rpc_main.c, Top level of the RPC protocol compiler.
  */
 
+#ifndef _GNU_SOURCE
+#define _GNU_SOURCE
+#endif
+
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif
@@ -41,6 +45,7 @@
 #include <errno.h>
 #include <stdio.h>
 #include <string.h>
+#include <strings.h>
 #include <unistd.h>
 #include <locale.h>
 #include <ctype.h>

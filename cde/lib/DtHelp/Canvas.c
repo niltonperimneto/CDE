@@ -75,9 +75,7 @@ static _DtCvUnit DrawText(_DtCanvasStruct *canvas, _DtCvDspLine *line,
 /********    End Private Function Declarations    ********/
 
 /* TEMP K&R TEST */
-int test_kr_func(a, b)
-int a;
-int b;
+int test_kr_func(int a, int b)
 {
   return a + b;
 }

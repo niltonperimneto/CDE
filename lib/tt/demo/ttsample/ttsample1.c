@@ -121,9 +121,8 @@ main(argc, argv)
  * When the button is pressed, broadcast the new slider value.
  */
 void
-broadcast_value(widget, client_data, call_data)
-	Widget widget;
-	XtPointer client_data, call_data;
+void
+broadcast_value(Widget widget, XtPointer client_data, XtPointer call_data)
 {
 	int slider_value;
 	Tt_message msg_out;
