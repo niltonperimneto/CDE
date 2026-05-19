@@ -42,7 +42,6 @@
 
 extern XeString XeProgName; /* saves value of arg[0] */
 
-#if defined(__STDC__) || defined(__cplusplus) || defined(c_plusplus)
 typedef enum {
   XeIgnore,
   XeInformation,
@@ -51,15 +50,6 @@ typedef enum {
   XeFatalError,
   XeInternalError
 } XeSeverity;
-#else
-# define XeIgnore 0
-# define XeInformation 1
-# define XeWarning 2
-# define XeError 3
-# define XeFatalError 4
-# define XeInternalError 5
-  typedef int XeSeverity;
-#endif
 
 #define export	              /* Use this noop to mark non-static procedures. */
 

@@ -99,7 +99,7 @@ static unsigned int mask[] =
 
 #if defined(SVR4) && !defined(sun)
 static unsigned int
-gethostid()
+gethostid(void)
 {
   char buffer[256];
   sysinfo (SI_HW_SERIAL, buffer, sizeof (buffer));

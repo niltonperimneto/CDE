@@ -440,7 +440,8 @@ parseString
 
 /* the following is to allow for a single main function in the code... */
 #define	parserMain	main
-parserMain()
+int
+parserMain(void)
 {
     parserContext   context;
 

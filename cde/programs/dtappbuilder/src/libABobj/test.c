@@ -395,7 +395,7 @@ show_salient_ui_tree(ABObj tree)
 }
 
 static ABObj
-build_test_project()
+build_test_project(void)
 {
     ABObj	project= NULL;
     

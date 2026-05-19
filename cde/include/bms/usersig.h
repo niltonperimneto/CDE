@@ -45,17 +45,9 @@
 #define XE_SIG_NOT_IN_TABLE -2
 
 extern int XeNameToSignal
-#if defined(__STDC__) || defined(__cplusplus) || defined(c_plusplus)
     (XeString name);
-#else
-    ();
-#endif
 
 extern XeString XeSignalToName
-#if defined(__STDC__) || defined(__cplusplus) || defined(c_plusplus)
     (int sig);
-#else
-    ();
-#endif
 
 #endif /* _usersig_h */

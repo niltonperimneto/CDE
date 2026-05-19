@@ -137,26 +137,13 @@ extern XeString spc_user_environment_file;
 /* spc.c */
 
 
-#if defined(__STDC__) || defined(__cplusplus) || defined(c_plusplus)
-# define EXTERN_DECL(type, name, arglist) type name arglist
-# if defined(__cplusplus) && defined(__c_callable)
-#  define EXTERN_C_CALLABLE(type, name, arglist) \
-          extern "C" { type name arglist ; }
-# else
-#  define EXTERN_C_CALLABLE(type, name, arglist) \
-          EXTERN_DECL(type, name, arglist)
-# endif
-#else
-#ifdef _AIX
+#define EXTERN_DECL(type, name, arglist) type name arglist
+#if defined(__cplusplus) && defined(__c_callable)
 # define EXTERN_C_CALLABLE(type, name, arglist) \
-	 extern type name arglist 
-# define EXTERN_DECL(type, name, arglist) \
-	 type name arglist
-#else /* _AIX */
-# define EXTERN_DECL(type, name, arglist) name arglist
-# define EXTERN_C_DECL(type, name, arglist) EXTERN_DECL(type, name, arglist)
-
-#endif /* (_AIX) */
+         extern "C" { type name arglist ; }
+#else
+# define EXTERN_C_CALLABLE(type, name, arglist) \
+         EXTERN_DECL(type, name, arglist)
 #endif
 
 EXTERN_C_CALLABLE(SPC_Channel_Ptr, XeSPCOpen, (XeString hostname, int iomode));
