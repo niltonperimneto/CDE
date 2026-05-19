@@ -1025,7 +1025,7 @@ dtb_save_toplevel_widget(
 }
 
 Widget
-dtb_get_toplevel_widget()
+dtb_get_toplevel_widget(void)
 {
 	return(dtb_project_toplevel_widget);
 }
@@ -1083,7 +1083,7 @@ dtb_save_command(
 
 
 char * 
-dtb_get_command() 
+dtb_get_command(void)
 {
     return(dtb_save_command_str); 
 }
@@ -1297,7 +1297,7 @@ dtb_more_help_dispatch(
 ** main menubar's "Help" menu.
 */
 void
-dtb_do_onitem_help()
+dtb_do_onitem_help(void)
 {
     Widget	target;
 
@@ -1526,7 +1526,7 @@ dtb_session_save(
  * dtb_get_client_session_saveCB()
  */
 DtbClientSessionSaveCB
-dtb_get_client_session_saveCB()
+dtb_get_client_session_saveCB(void)
 {
     return(dtb_client_session_saveCB);
 
@@ -1610,7 +1610,7 @@ dtb_set_client_session_restoreCB(
  * dtb_get_client_session_restoreCB()
  */
 DtbClientSessionRestoreCB
-dtb_get_client_session_restoreCB()
+dtb_get_client_session_restoreCB(void)
 {
     return(dtb_client_session_restoreCB);
 
@@ -4097,7 +4097,7 @@ dtb_set_tt_msg_quitCB(
  * dtb_get_tt_msg_quitCB()
  */
 static DtbTTMsgHandlerCB
-dtb_get_tt_msg_quitCB()
+dtb_get_tt_msg_quitCB(void)
 {
     return(dtb_tt_msg_quitCB);
 }
@@ -4137,8 +4137,8 @@ dtb_set_tt_msg_do_commandCB(
  * dtb_get_tt_msg_do_commandCB()
  */ 
 static DtbTTMsgHandlerCB
-dtb_get_tt_msg_do_commandCB()
-{ 
+dtb_get_tt_msg_do_commandCB(void)
+{
     return(dtb_tt_msg_do_commandCB);
 }
  
@@ -4177,8 +4177,8 @@ dtb_set_tt_msg_get_statusCB(
  * dtb_get_tt_msg_get_statusCB()
  */ 
 static DtbTTMsgHandlerCB
-dtb_get_tt_msg_get_statusCB()
-{ 
+dtb_get_tt_msg_get_statusCB(void)
+{
     return(dtb_tt_msg_get_statusCB);
 }
  
@@ -4217,8 +4217,8 @@ dtb_set_tt_msg_pause_resumeCB(
  * dtb_get_tt_msg_pause_resumeCB()
  */ 
 static DtbTTMsgHandlerCB
-dtb_get_tt_msg_pause_resumeCB()
-{ 
+dtb_get_tt_msg_pause_resumeCB(void)
+{
     return(dtb_tt_msg_pause_resumeCB);
 }
  
@@ -4302,7 +4302,7 @@ dtb_tt_contractCB(
  * Close ToolTalk Connection
  */
 void
-dtb_tt_close()
+dtb_tt_close(void)
 {
     ttdt_close(NULL, NULL, True);
 }

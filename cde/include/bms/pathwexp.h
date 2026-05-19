@@ -36,10 +36,6 @@
 #define	_pathwexp_h
 
 extern XeString Xe_shellexp
-#if defined(__STDC__) || defined(__cplusplus) || defined(c_plusplus)
    (XeString path);
-#else
-   ();
-#endif
 
 #endif	/* _pathwexp_h */

@@ -785,7 +785,7 @@ static BOOL     lalign_tab_inited= FALSE;
 #define lalign_tab_check_init() (lalign_tab_inited? 0:lalign_tab_init())
  
 static int
-lalign_tab_init()
+lalign_tab_init(void)
 {
 #define lat lalign_tab
     lalign_tab_inited= TRUE;

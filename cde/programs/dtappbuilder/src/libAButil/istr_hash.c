@@ -235,7 +235,8 @@ void
     return NULL;
 }
 
-main()
+int
+main(void)
 {
 int a,b,c,d;
 int *x,*y,*z;

@@ -165,7 +165,7 @@ static char SCCSID[] = "OSF/Motif: @(#)_DtosP.h	4.16 91/09/12";
  * Some System V boxes extract alloca.o from /lib/libPW.a; if you
  * decide that you don't want to use alloca, you might want to fix it here.
  */
-char *alloca();
+char *alloca(void);
 #   define ALLOCATE_LOCAL(size) alloca((int)(size))
 #   define DEALLOCATE_LOCAL(ptr)  /* as nothing */
 #  endif /* who does alloca */

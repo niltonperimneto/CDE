@@ -1284,7 +1284,8 @@ _DtTermPrintBuffer
 */
 /* the following is to allow for a single main function in the code... */
 #define       termBufMain     main
-termBufMain()
+int
+termBufMain(void)
 {
     TermBuffer  myTB;
 

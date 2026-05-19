@@ -65,7 +65,8 @@ print_str(ISTRING istr)
 }
 
 
-main()
+int
+main(void)
 {
     ISTRING             a,
                         b,

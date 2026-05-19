@@ -44,26 +44,14 @@ typedef struct _XeStringBuffer {
 
 
 int XeAppendToStringBuffer 
-#if defined(__STDC__) || defined(__cplusplus) || defined(c_plusplus)
    (XeStringBuffer buffer, XeString string);
-#else
-   ();
-#endif
 
 XeStringBuffer XeMakeStringBuffer 
-#if defined(__STDC__) || defined(__cplusplus) || defined(c_plusplus)
    (int increment_size);
-#else
-   ();
-#endif
 
 	/* erase the contents (but don't deallocate any space). */
 void XeClearStringBuffer 
-#if defined(__STDC__) || defined(__cplusplus) || defined(c_plusplus)
    (XeStringBuffer buffer);
-#else
-   ();
-#endif
 
 /*** add nothing after the following endif ***/
 #endif /* _stringbuf_h */

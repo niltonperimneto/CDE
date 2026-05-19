@@ -40,11 +40,8 @@ extern "C" {
 #endif
 
 int XeParseFileString 
-#if defined(__STDC__) || defined(__cplusplus) || defined(c_plusplus)
    (XeString line, XeString *host_addr, XeString *path_addr);
-#else
-   ();
-#endif
+
 #if defined(__cplusplus) && defined(__c_callable)
 }
 #endif
@@ -56,18 +53,11 @@ int XeParseFileString
 */
      
 extern XeString XeFindHost 
-#if defined(__STDC__) || defined(__cplusplus) || defined(c_plusplus)
    (XeString host_spec);
-#else
-   ();
-#endif
 
 extern XeString XeFindShortHost 
-#if defined(__STDC__) || defined(__cplusplus) || defined(c_plusplus)
    (XeString host_spec);
-#else
-   ();
-#endif
+
 /*
 	Returns a host name corresponding to host_spec. 
 
@@ -80,11 +70,7 @@ extern XeString XeFindShortHost
 */
 
 extern int Xegethostname 
-#if defined(__STDC__) || defined(__cplusplus) || defined(c_plusplus)
    (XeString hostname, unsigned int size);
-#else
-   ();
-#endif
 
 #if defined(__cplusplus) && defined(__c_callable)
 extern "C" {
@@ -92,11 +78,8 @@ extern "C" {
 extern 
 #endif   
 int Xegetshorthostname 
-#if defined(__STDC__) || defined(__cplusplus) || defined(c_plusplus)
    (XeString hostname, unsigned int size);
-#else
-   ();
-#endif
+
 #if defined(__cplusplus) && defined(__c_callable)
 }
 #endif
@@ -118,11 +101,8 @@ extern "C" {
 extern 
 #endif   
 Boolean XeIsLocalHostP
-#if defined(__STDC__) || defined(__cplusplus) || defined(c_plusplus)
    (XeString hostname);
-#else
-   ();
-#endif
+
 #if defined(__cplusplus) && defined(__c_callable)
 }
 #endif
@@ -142,11 +122,8 @@ extern "C" {
 extern
 #endif   
 Boolean XeIsSameHostP
-#if defined(__STDC__) || defined(__cplusplus) || defined(c_plusplus)
    (XeString host1, XeString host2);
-#else
-   ();
-#endif
+
 #if defined(__cplusplus) && defined(__c_callable)
 }
 #endif
@@ -160,11 +137,8 @@ Boolean XeIsSameHostP
 */
 
 extern Boolean XeIsSameHostP 
-#if defined(__STDC__) || defined(__cplusplus) || defined(c_plusplus)
    (XeString host1, XeString host2);
-#else
-   ();
-#endif
+
 /*
 	Returns true if host1 and host2 specify the same host.  This is
 	needed, because either or both hosts may be specified with or
@@ -174,11 +148,8 @@ extern Boolean XeIsSameHostP
 */
 
 XeString XeCreateContextString 
-#if defined(__STDC__) || defined(__cplusplus) || defined(c_plusplus)
    (XeString host, XeString directory, XeString file);
-#else
-   ();
-#endif
+
 /* 
 	XeCreateContextString changes the given context into a
 	label which is exactly the same as the one shown in a
@@ -196,23 +167,17 @@ XeString XeCreateContextString
 */	
 
 int Xechdir
-#if defined(__STDC__) || defined(__cplusplus) || defined(c_plusplus)   
 	   (const char *path);
-#else
-	   ();
-#endif
+
 /*
 	performs a chdir and caches the new directory in $PWD so that
 	Xegetcwd() can get the current directory without slow stat calls
 */
 
 char *Xegetcwd
-#if defined(__STDC__) || defined(__cplusplus) || defined(c_plusplus)
 		(char *buf,
 		 int size);
-#else
-		();
-#endif
+
 /*
 	version of getcwd() which uses cached $PWD (or $PWD from shell)
 	if available and calls getcwd only when PWD not set

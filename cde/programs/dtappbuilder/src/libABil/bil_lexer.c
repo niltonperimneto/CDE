@@ -389,8 +389,8 @@ yyerror(const char *message)
 /*
  * Called by lexical analyzer at EOF.  Returning 1 ends parsing.
  */
-int 
-yywrap()
+int
+yywrap(void)
 {
     return 1;
 }

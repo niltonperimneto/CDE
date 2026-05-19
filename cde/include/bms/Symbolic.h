@@ -221,23 +221,13 @@ typedef struct _XeSymTable
 /* hash function (no checking is done to ensure this).                   */
 /* --------------------------------------------------------------------- */
 XeSymTable Xe_new_symtab
-#if defined(__STDC__) || defined(__cplusplus) || defined(c_plusplus)
    (unsigned int hashsize);
-#else
-   ();
-#endif
-
 
 /* Create the default symbol table.  If already created, just */
 /* return the symtable pointer. 			      */
 /* ---------------------------------------------------------- */
 XeSymTable Xe_default_symtab
-#if defined(__STDC__) || defined(__cplusplus) || defined(c_plusplus)
    (void);
-#else
-   ();
-#endif
-
 
 /* Configure user defined function for use with symtab routines.   */
 /* NOTE: Be sure you understand the interaction of these functions */
@@ -246,16 +236,11 @@ XeSymTable Xe_default_symtab
 /*       installed value.					   */
 /* --------------------------------------------------------------- */
 XeSymTable Xe_set_sym_fns
-#if defined(__STDC__) || defined(__cplusplus) || defined(c_plusplus)
    (XeSymTable     t, 
     XeSymFn_cmp    cmp_fn, 
     XeSymFn_init   init_fn,
     XeSymFn_clean  clean_fn, 
     XeSymFn_hash   hash_fn);
-#else
-   ();
-#endif
-
 
 /* Find or create a symbol for "name".  Its "value" is set to NULL.  */
 /* None of the user defined init/cmp, etc functions are honored by   */
@@ -263,12 +248,7 @@ XeSymTable Xe_set_sym_fns
 /* WARNING: Read the notes for the function typedef's above.         */
 /* ----------------------------------------------------------------- */
 XeSymbol Xe_intern 
-#if defined(__STDC__) || defined(__cplusplus) || defined(c_plusplus)
    (XeSymTable t, ConstXeString const name);
-#else
-   ();
-#endif
-
 
 /* Find the symbol for "name".  NULL is returned if not found.       */
 /* None of the user defined init/cmp, etc functions are honored by   */
@@ -276,12 +256,7 @@ XeSymbol Xe_intern
 /* WARNING: Read the notes for the function typedef's above.         */
 /* ----------------------------------------------------------------- */
 XeSymbol Xe_lookup
-#if defined(__STDC__) || defined(__cplusplus) || defined(c_plusplus)
    (XeSymTable t, ConstXeString const name);
-#else
-   ();
-#endif
- 
 
 /****************************************************************************/
 /*  LISTS 								    */
@@ -294,12 +269,7 @@ typedef struct _XeList {
 /* make a list from data and rest */
 /* ------------------------------ */
 XeList Xe_make_list 
-#if defined(__STDC__) || defined(__cplusplus) || defined(c_plusplus)
    (void *data, XeList rest);
-#else
-   ();
-#endif
-
 
 /****************************************************************************/
 /* QUEUES 								    */
@@ -313,50 +283,26 @@ typedef struct _XeQueue {
 /* for static or auto struct queues */
 /* -------------------------------- */
 XeQueue Xe_init_queue 
-#if defined(__STDC__) || defined(__cplusplus) || defined(c_plusplus)
    (XeQueue q, void * nullval);
-#else
-   ();
-#endif
-	
+
 XeQueue Xe_make_queue 
-#if defined(__STDC__) || defined(__cplusplus) || defined(c_plusplus)
    (void * nullval);
-#else
-   ();
-#endif
 
 void Xe_release_queue 
-#if defined(__STDC__) || defined(__cplusplus) || defined(c_plusplus)
    (XeQueue q);
-#else
-   ();
-#endif
 
 /* nullval returned if queue empty */
 /* ------------------------------- */
 void * Xe_pop_queue 
-#if defined(__STDC__) || defined(__cplusplus) || defined(c_plusplus)
    (XeQueue q);
-#else
-   ();
-#endif
 
 /* nullval returned if not found   */
 /* ------------------------------- */
 void * Xe_delete_queue_element 
-#if defined(__STDC__) || defined(__cplusplus) || defined(c_plusplus)
    (XeQueue q, void * val);
-#else
-   ();
-#endif
 
 void Xe_push_queue 
-#if defined(__STDC__) || defined(__cplusplus) || defined(c_plusplus)
    (XeQueue q, void * val);
-#else
-   ();
-#endif
 
 /* user declares his own "type var" */
 /* -------------------------------- */

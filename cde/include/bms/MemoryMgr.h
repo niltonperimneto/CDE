@@ -38,18 +38,10 @@
 #define  _MemoryMgr_h
 
 void *XeMalloc   
-#if defined(__STDC__) || defined(__cplusplus) || defined(c_plusplus)
    (size_t size);
-#else
-   ();
-#endif
 
 void XeFree   
-#if defined(__STDC__) || defined(__cplusplus) || defined(c_plusplus)
    (void * ptr);
-#else
-   ();
-#endif
 
 #define Xe_make_struct(type)     ((struct type *)XeMalloc(sizeof(struct type)))
 #define Xe_make_ntype(n, type)   ((type *)       XeMalloc((n)*sizeof(type)))

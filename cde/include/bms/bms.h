@@ -65,11 +65,7 @@ extern XeString         XeProgName;                  /* From noXinit.c     */
 
 extern XeString				/* Returns Malloc'ed memory */
 XeSBTempPath
-#if defined(__STDC__) || defined(__cplusplus) || defined(c_plusplus)
    (XeString);
-#else
-   ();
-#endif
 
 /* DON'T ADD STUFF AFTER THIS #endif */
 #endif /* _bms_h */

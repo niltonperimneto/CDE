@@ -197,7 +197,8 @@ $INTROBEG$: _DtLcx example usage
 $1LINER$: Examples of how to _DtLcx
 $EXAMPLE$:
 #include <LocaleXlate.h>
-main()
+int
+main(void)
 {
    _DtXlateDb db = NULL;
    int  ret;
